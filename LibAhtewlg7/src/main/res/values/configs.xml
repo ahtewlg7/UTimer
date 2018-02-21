@@ -1,0 +1,28 @@
+<resources>
+    <string name="configs_simple_app_name">UTimer</string>
+    <string name="config_log_file_name">log.txt</string>
+    <string name="config_datetime_format">YYYYMMdd_HHmm</string>
+
+    <string name="configs_app_working_dir_data">data</string>
+    <string name="configs_app_working_dir_db">db</string>
+    <string name="configs_app_working_dir_note">notebook</string>
+    <string name="configs_app_working_dir_backup">backup</string>
+    <string name="configs_app_working_dir_font">font</string>
+    <string name="configs_app_working_dir_save">save</string>
+    <string name="configs_app_working_dir_tmp">tmp</string>
+    <string name="configs_app_working_dir_plugin">plugin</string>
+    <string name="configs_app_working_dir_log">log</string>
+    <string name="configs_app_working_dir_cache">cache</string>
+
+    <string name="config_note_doc_dir_name">doc</string>
+    <string name="config_note_inbox_dir_name">Inbox</string>
+    <string name="config_note_project_dir_name">Project</string>
+    <string name="config_note_trash_dir_name">Trash</string>
+    <string name="config_note_reference_dir_name">Reference</string>
+    <string name="config_note_incubator_dir_name">Incubator</string>
+    <string name="config_note_done_dir_name">Done</string>
+    <string name="config_note_doitnow_dir_name">DoItNow</string>
+    <string name="config_note_delegate_dir_name">Delegate</string>
+    <string name="config_note_datebook_dir_name">DateBook</string>
+    <string name="config_note_todolist_dir_name">ToDoList</string>
+</resources>

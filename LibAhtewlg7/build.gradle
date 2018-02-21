@@ -1,0 +1,62 @@
+apply plugin: 'com.android.library'
+apply plugin: 'org.greenrobot.greendao' // apply plugin
+
+greendao {
+    schemaVersion 3
+    daoPackage 'ahtewlg7.utimer.db.autogen'
+    targetGenDir 'src/main/java'
+}
+
+
+android {
+    compileSdkVersion 26
+    buildToolsVersion '26.0.2'
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+        publishNonDefault true
+        multiDexEnabled true
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    testCompile 'junit:junit:4.12'
+
+    //add these dependencies by me
+    compile 'com.android.support:multidex:1.0.2'
+    compile 'com.blankj:utilcode:1.9.2'
+    compile 'com.orhanobut:logger:2.1.1'
+    compile 'com.snatik:storage:2.1.0'
+    compile 'joda-time:joda-time:2.9.9'
+    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    /*compile 'io.reactivex.rxjava2:rxjavafx:2.2.0'*/
+    compile 'com.jakewharton.rxbinding2:rxbinding:2.0.0'
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+
+    compile 'org.greenrobot:greendao:3.2.2'
+
+    compile 'com.alibaba:fastjson:1.2.44'
+
+    compile('com.google.code.findbugs:jsr305:2.0.1')
+    compile 'com.google.guava:guava:24.0-android'
+
+    compile 'com.trello.rxlifecycle2:rxlifecycle:2.2.1'
+    compile 'com.trello.rxlifecycle2:rxlifecycle-android:2.2.1'
+    compile 'com.trello.rxlifecycle2:rxlifecycle-components:2.2.1'
+
+}

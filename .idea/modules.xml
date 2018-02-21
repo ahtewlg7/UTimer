@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/AppUTimer/AppUTimer.iml" filepath="$PROJECT_DIR$/AppUTimer/AppUTimer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LibAhtewlg7/LibAhtewlg7.iml" filepath="$PROJECT_DIR$/LibAhtewlg7/LibAhtewlg7.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LibBypass/LibBypass.iml" filepath="$PROJECT_DIR$/LibBypass/LibBypass.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LibViewKnifeTextEditor/LibViewKnifeTextEditor.iml" filepath="$PROJECT_DIR$/LibViewKnifeTextEditor/LibViewKnifeTextEditor.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LibViewPagerIndicator/LibViewPagerIndicator.iml" filepath="$PROJECT_DIR$/LibViewPagerIndicator/LibViewPagerIndicator.iml" />
+      <module fileurl="file://$PROJECT_DIR$/UTimer.iml" filepath="$PROJECT_DIR$/UTimer.iml" />
+    </modules>
+  </component>
+</project>
