@@ -27,11 +27,6 @@ public class WelcomeActivity extends BaseBinderActivity {
     @BindView(R.id.fullscreen_content)
     TextView fullscreenContent;
 
-    //todo: just for test
-//    String noteEntityId;
-//    String gtdEntityId;
-//    Observable<MotionEvent> motionEventObservable;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,25 +39,6 @@ public class WelcomeActivity extends BaseBinderActivity {
         toDelayFinish();
     }
 
-    /*@Override
-    protected void onServiceBinderConnected(ComponentName name) {
-        serviceBinderProxy.toTest();
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Logcat.i(TAG,"onActivityResult requestCode = " + requestCode +", resultCode = " + resultCode);
-        try{
-            switch (requestCode){
-                case MdEditorActivity.ACTIVITY_START_RESULT:
-                    handleStartResult(data);
-                    break;
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }    }*/
-
-
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         /*if(event.getKeyCode() == KeyEvent.KEYCODE_VOLUME_UP)
@@ -72,47 +48,14 @@ public class WelcomeActivity extends BaseBinderActivity {
         return super.onKeyUp(keyCode, event);
     }
 
-    /*@Override
-    public boolean onTouchEvent(final MotionEvent event) {
-        if(motionEventObservable == null)
-            motionEventObservable = Observable.defer(new Callable<ObservableSource<? extends MotionEvent>>() {
-                @Override
-                public ObservableSource<? extends MotionEvent> call() throws Exception {
-                    return Observable.just(event);
-                }
-            });
-        if(event.getAction() == MotionEvent.ACTION_UP)
-            motionEventObservable.subscribe(new Consumer<MotionEvent>() {
-                        @Override
-                        public void accept(MotionEvent motionEvent) throws Exception {
-                            startNoteActivity(gtdEntityId,noteEntityId);
-                        }
-                    });
-
-        return super.onTouchEvent(event);
-    }*/
-
     private void toDelayFinish(){
         Observable.timer(3, TimeUnit.SECONDS)
                 .subscribe(new Consumer<Long>() {
                     @Override
                     public void accept(Long aLong) throws Exception {
-//                        startNoteActivity(gtdEntityId,noteEntityId);//todo: just for test
                         ActivityUtils.startActivity(FunctionMainActivity.class);
                         WelcomeActivity.this.finish();
                     }
                 });
     }
-
-    //todo: just for test
-    /*private void handleStartResult(Intent intent){
-        noteEntityId = intent.getStringExtra(MdEditorActivity.EXTRA_KEY_NOTE_ID);
-        gtdEntityId  = intent.getStringExtra(MdEditorActivity.EXTRA_KEY_GTD_ID);
-        Logcat.i(TAG,"handleStartResult noteEntityId = " + noteEntityId + ", gtdEntityId = " + gtdEntityId);
-        AGtdEntity gtdEntity  = new GtdEntityFactory().getEntity(GtdType.INBOX,gtdEntityId);
-        NoteEntity noteEntity = new NoteEntityFactory().getNoteEntity(noteEntityId);
-        Logcat.i(TAG,"handleStartResult gtdEntity : " + gtdEntity.toString());
-        Logcat.i(TAG,"handleStartResult noteEntity : " + noteEntity.toString());
-    }
-    */
 }
