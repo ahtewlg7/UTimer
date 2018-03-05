@@ -5,6 +5,8 @@ import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSON;
 
+import org.reactivestreams.Publisher;
+
 import ahtewlg7.utimer.db.dao.GtdEntityDaoAction;
 import ahtewlg7.utimer.db.dao.NoteEntityDaoAction;
 import ahtewlg7.utimer.db.entity.GtdEntityGdBean;
@@ -17,10 +19,10 @@ import ahtewlg7.utimer.enumtype.DbErrCode;
 import ahtewlg7.utimer.enumtype.GtdType;
 import ahtewlg7.utimer.exception.DataBaseException;
 import ahtewlg7.utimer.util.Logcat;
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
+import io.reactivex.flowables.GroupedFlowable;
 import io.reactivex.functions.Function;
-import io.reactivex.observables.GroupedObservable;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -31,8 +33,8 @@ public class EntityDbAction implements IEntityWAction, IEntityRAction{
     public static final String TAG = EntityDbAction.class.getSimpleName();
 
     @Override
-    public Observable<NoteEntity> loadNoteEntity() {
-        return Observable.fromIterable(NoteEntityDaoAction.getInstance().loadAll())
+    public Flowable<NoteEntity> loadNoteEntity() {
+        return Flowable.fromIterable(NoteEntityDaoAction.getInstance().loadAll())
                 .map(new Function<NoteEntityGdBean, NoteEntity>() {
                     @Override
                     public NoteEntity apply(NoteEntityGdBean noteEntityGdBean) throws Exception {
@@ -59,18 +61,18 @@ public class EntityDbAction implements IEntityWAction, IEntityRAction{
 
 
     @Override
-    public Observable<AGtdEntity> loadGtdEntity() {
-        return Observable.fromIterable(GtdEntityDaoAction.getInstance().loadAll())
+    public Flowable<AGtdEntity> loadGtdEntity() {
+        return Flowable.fromIterable(GtdEntityDaoAction.getInstance().loadAll())
                 .groupBy(new Function<GtdEntityGdBean, GtdType>() {
                     @Override
                     public GtdType apply(GtdEntityGdBean gtdEntityGdBean) throws Exception {
                         return gtdEntityGdBean.getGtdType();
                     }
                 })
-                .flatMap(new Function<GroupedObservable<GtdType, GtdEntityGdBean>, ObservableSource<AGtdEntity>>() {
+                .flatMap(new Function<GroupedFlowable<GtdType, GtdEntityGdBean>, Publisher<AGtdEntity>>() {
                     @Override
-                    public ObservableSource<AGtdEntity> apply(GroupedObservable<GtdType, GtdEntityGdBean> groupedObservable) throws Exception {
-                        return groupedObservable.map(new Function<GtdEntityGdBean, AGtdEntity>() {
+                    public Publisher<AGtdEntity> apply(GroupedFlowable<GtdType, GtdEntityGdBean> groupedFlowable) throws Exception {
+                        return groupedFlowable.map(new Function<GtdEntityGdBean, AGtdEntity>() {
                             @Override
                             public AGtdEntity apply(GtdEntityGdBean gtdEntityGdBean) throws Exception {
                                 return parseGtdBean(gtdEntityGdBean);

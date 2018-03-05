@@ -9,6 +9,7 @@ import ahtewlg7.utimer.entity.gtd.GtdNewEntity;
 import ahtewlg7.utimer.enumtype.GtdType;
 import ahtewlg7.utimer.storagerw.EntityDbAction;
 import ahtewlg7.utimer.util.Logcat;
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 
 /**
@@ -26,7 +27,7 @@ public class GtdEntityFactory {
         dbAction = new EntityDbAction();
     }
 
-    public Observable<AGtdEntity> loadAll(){
+    public Flowable<AGtdEntity> loadAll(){
         return dbAction.loadGtdEntity();
     }
 

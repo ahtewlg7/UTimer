@@ -14,6 +14,9 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.utimer.R;
 import com.utimer.view.recyclerview.GtdSectionRecylerView;
 
+import org.reactivestreams.Publisher;
+import org.reactivestreams.Subscription;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -25,15 +28,15 @@ import ahtewlg7.utimer.enumtype.GtdType;
 import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MyRInfo;
 import butterknife.BindView;
+import io.reactivex.Flowable;
+import io.reactivex.FlowableSubscriber;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.flowables.GroupedFlowable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
-import io.reactivex.observables.GroupedObservable;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -97,24 +100,24 @@ public class GtdFragment extends AFunctionFragement {
     private void toInitAdapter(){
         final List<GtdType> sectionList = new ArrayList<GtdType>();
         loadAllGtd().observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<GtdSectionRecylerView.GtdSectionEntity>() {
+                .subscribe(new FlowableSubscriber<GtdSectionRecylerView.GtdSectionEntity>() {
                     @Override
-                    public void onSubscribe(Disposable d) {
+                    public void onSubscribe(Subscription s) {
                         Logcat.i(TAG,"toInitAdapter onSubscribe");
                     }
 
                     @Override
-                    public void onNext(GtdSectionRecylerView.GtdSectionEntity value) {
+                    public void onNext(GtdSectionRecylerView.GtdSectionEntity gtdSectionEntity) {
                         Logcat.i(TAG,"toInitAdapter onNext");
-                        GtdType valueGtdType = value.getGtdType();
+                        GtdType valueGtdType = gtdSectionEntity.getGtdType();
                         if(!sectionList.contains(valueGtdType))
                             sectionList.add(valueGtdType);
-                        gtdSectionEntityList.add(value);
+                        gtdSectionEntityList.add(gtdSectionEntity);
                     }
 
                     @Override
-                    public void onError(Throwable e) {
-                        Logcat.i(TAG,"toInitAdapter onError : " + e.getMessage());
+                    public void onError(Throwable t) {
+                        Logcat.i(TAG,"toInitAdapter onError : " + t.getMessage());
                     }
 
                     @Override
@@ -123,27 +126,28 @@ public class GtdFragment extends AFunctionFragement {
                         if(!sectionList.contains(GtdType.INBOX))
                             gtdSectionEntityList.add(new GtdSectionRecylerView.GtdSectionEntity(true,GtdType.INBOX,false));
                         sectionRecylerView.init(GtdFragment.this.getActivity(), gtdSectionEntityList, sectionItemClickListener , sectionItemChildClickListener);
+
                     }
                 });
     }
 
-    private Observable<GtdSectionRecylerView.GtdSectionEntity> loadAllGtd(){
+    private Flowable<GtdSectionRecylerView.GtdSectionEntity> loadAllGtd(){
        return gtdEntityFactory.loadAll().groupBy(new Function<AGtdEntity, GtdType>() {
                     @Override
                     public GtdType apply(AGtdEntity gtdEntityGdBean) throws Exception {
                         return gtdEntityGdBean.getTaskType();
                     }
                 })
-               .flatMap(new Function<GroupedObservable<GtdType, AGtdEntity>, ObservableSource<GtdSectionRecylerView.GtdSectionEntity>>() {
+               .flatMap(new Function<GroupedFlowable<GtdType, AGtdEntity>, Publisher<GtdSectionRecylerView.GtdSectionEntity>>() {
                    @Override
-                   public ObservableSource<GtdSectionRecylerView.GtdSectionEntity> apply(GroupedObservable<GtdType, AGtdEntity> groupedObservable) throws Exception {
-                        return groupedObservable.map(new Function<AGtdEntity, GtdSectionRecylerView.GtdSectionEntity>() {
-                            @Override
-                            public GtdSectionRecylerView.GtdSectionEntity apply(AGtdEntity gtdEntity) throws Exception {
-                                return new GtdSectionRecylerView.GtdSectionEntity(gtdEntity);
-                            }
-                        })
-                        .startWith(new GtdSectionRecylerView.GtdSectionEntity(true,groupedObservable.getKey(),true));
+                   public Publisher<GtdSectionRecylerView.GtdSectionEntity> apply(GroupedFlowable<GtdType, AGtdEntity> groupedFlowable) throws Exception {
+                       return groupedFlowable.map(new Function<AGtdEntity, GtdSectionRecylerView.GtdSectionEntity>() {
+                           @Override
+                           public GtdSectionRecylerView.GtdSectionEntity apply(AGtdEntity gtdEntity) throws Exception {
+                               return new GtdSectionRecylerView.GtdSectionEntity(gtdEntity);
+                           }
+                       })
+                       .startWith(new GtdSectionRecylerView.GtdSectionEntity(true,groupedFlowable.getKey(),true));
                    }
                })
                .subscribeOn(Schedulers.io());
