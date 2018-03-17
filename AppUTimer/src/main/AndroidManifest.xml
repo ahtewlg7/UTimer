@@ -17,6 +17,8 @@
             android:name=".ui.FunctionMainActivity"
             android:theme="@style/StyledIndicators"/>
 
+        <activity android:name=".ui.SingleGtdItemActivity"/>
+
         <activity android:name=".ui.MdEditorActivity"/>
 
         <service android:name="ahtewlg7.utimer.ui.BinderService"/>
