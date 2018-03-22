@@ -5,4 +5,9 @@ package ahtewlg7.utimer.entity;
  */
 
 public interface IUtimerEntity {
+    /*public String getId();
+    public String getTitle();
+    public String getDetail();
+    public DateTime getCreatedDateTime();
+    public DateTime getLastModifyDateTime()*/;
 }

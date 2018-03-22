@@ -20,7 +20,6 @@ import ahtewlg7.utimer.enumtype.GtdType;
 import ahtewlg7.utimer.exception.DataBaseException;
 import ahtewlg7.utimer.util.Logcat;
 import io.reactivex.Flowable;
-import io.reactivex.Observable;
 import io.reactivex.flowables.GroupedFlowable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
@@ -45,7 +44,7 @@ public class EntityDbAction implements IEntityWAction, IEntityRAction{
     }
 
     @Override
-    public Observable<NoteEntity> getNoteEntity(@NonNull Observable<String> idObservable) {
+    public Flowable<NoteEntity> getNoteEntity(@NonNull Flowable<String> idObservable) {
         return idObservable.map(new Function<String, NoteEntity>() {
             @Override
             public NoteEntity apply(String id) throws Exception {
@@ -84,7 +83,7 @@ public class EntityDbAction implements IEntityWAction, IEntityRAction{
 
 
     @Override
-    public Observable<AGtdEntity> getGtdEntity(Observable<String> idObservable) {
+    public Flowable<AGtdEntity> getGtdEntity(Flowable<String> idObservable) {
         return  idObservable.map(new Function<String, AGtdEntity>() {
             @Override
             public AGtdEntity apply(String id) throws Exception {

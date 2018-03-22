@@ -3,7 +3,7 @@ package com.utimer.ui;
 import android.support.annotation.NonNull;
 
 import com.utimer.R;
-import com.utimer.view.recyclerview.GtdSectionRecylerView;
+import com.utimer.view.GtdBaseSectionRecyclerView;
 
 import butterknife.BindView;
 
@@ -15,7 +15,7 @@ public class HistoryFragment extends AFunctionFragement {
     public static final String TAG = HistoryFragment.class.getSimpleName();
 
     @BindView(R.id.fragment_note_recyclerview)
-    GtdSectionRecylerView sectionRecylerView;
+    GtdBaseSectionRecyclerView sectionRecylerView;
 
     @Override
     @NonNull

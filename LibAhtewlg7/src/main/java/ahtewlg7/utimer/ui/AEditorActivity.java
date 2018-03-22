@@ -11,6 +11,7 @@ import com.jakewharton.rxbinding2.widget.TextViewTextChangeEvent;
 import com.trello.rxlifecycle2.android.ActivityEvent;
 
 import org.joda.time.DateTime;
+import org.reactivestreams.Publisher;
 
 import java.io.File;
 
@@ -28,8 +29,8 @@ import ahtewlg7.utimer.enumtype.GtdType;
 import ahtewlg7.utimer.exception.DataBaseException;
 import ahtewlg7.utimer.util.DateTimeAction;
 import ahtewlg7.utimer.util.Logcat;
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
@@ -109,7 +110,7 @@ public abstract class AEditorActivity extends BaseBinderActivity {
     }
 
     protected void handleIntent(Intent intent){
-        Observable.mergeDelayError(onNoteInit(intent), onGtdInit(intent))
+        Flowable.mergeDelayError(onNoteInit(intent), onGtdInit(intent))
             .compose(this.<IUtimerEntity>bindUntilEvent(ActivityEvent.DESTROY))
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(new Consumer<IUtimerEntity>() {
@@ -181,16 +182,16 @@ public abstract class AEditorActivity extends BaseBinderActivity {
         writeNoteContext(noteEntity, noteContext);
     }
 
-    protected Observable<NoteEntity> onNoteInit(@NonNull Intent intent){
-        return Observable.just(intent)
-                .flatMap(new Function<Intent, ObservableSource<NoteEntity>>() {
+    protected Flowable<NoteEntity> onNoteInit(@NonNull Intent intent){
+        return Flowable.just(intent)
+                .flatMap(new Function<Intent, Publisher<NoteEntity>>() {
                     @Override
-                    public ObservableSource<NoteEntity> apply(Intent intent) throws Exception {
+                    public Publisher<NoteEntity> apply(Intent intent) throws Exception {
                         noteEntityId = intent.getStringExtra(getNoteIdExtrKey());
                         Logcat.i(TAG,"onNoteInit ：noteEntityId = " + noteEntityId);
                         if(TextUtils.isEmpty(noteEntityId))
                             throw new DataBaseException(DbErrCode.ERR_DB_ID_EMPTY);
-                        return noteEntityFactory.getNoteEntity(Observable.just(noteEntityId));
+                        return noteEntityFactory.loadEntity(Flowable.just(noteEntityId));
                     }
                 })
                 .doOnError(new Consumer<Throwable>() {
@@ -212,16 +213,16 @@ public abstract class AEditorActivity extends BaseBinderActivity {
                     }
                 });
     }
-    protected Observable<AGtdEntity> onGtdInit(@NonNull Intent intent) {
-        return Observable.just(intent)
-                .flatMap(new Function<Intent, ObservableSource<AGtdEntity>>() {
+    protected Flowable<AGtdEntity> onGtdInit(@NonNull Intent intent) {
+        return Flowable.just(intent)
+                .flatMap(new Function<Intent, Publisher<AGtdEntity>>() {
                     @Override
-                    public ObservableSource<AGtdEntity> apply(Intent intent) throws Exception {
+                    public Publisher<AGtdEntity> apply(Intent intent) throws Exception {
                         gtdEntityId  = intent.getStringExtra(getGtdIdExtrKey());
                         Logcat.i(TAG,"handleIntent ：gtdEntityId = " + gtdEntityId);
                         if(TextUtils.isEmpty(gtdEntityId))
                             throw new DataBaseException(DbErrCode.ERR_DB_ID_EMPTY);
-                        return gtdEntityFactory.getEntity(Observable.just(gtdEntityId));
+                        return gtdEntityFactory.loadEntity(Flowable.just(gtdEntityId));
                     }
                 })
                 .doOnError(new Consumer<Throwable>() {

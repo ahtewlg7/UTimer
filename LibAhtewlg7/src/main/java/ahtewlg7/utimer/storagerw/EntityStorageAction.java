@@ -6,7 +6,6 @@ import ahtewlg7.utimer.common.FileSystemAction;
 import ahtewlg7.utimer.entity.NoteEntity;
 import ahtewlg7.utimer.entity.gtd.AGtdEntity;
 import io.reactivex.Flowable;
-import io.reactivex.Observable;
 
 /**
  * Created by lw on 2018/1/14.
@@ -27,7 +26,7 @@ public class EntityStorageAction implements IEntityWAction, IEntityRAction{
     }
 
     @Override
-    public Observable<NoteEntity> getNoteEntity(@NonNull Observable<String> idObservable) {
+    public Flowable<NoteEntity> getNoteEntity(@NonNull Flowable<String> idObservable) {
         return null;
     }
 
@@ -37,7 +36,7 @@ public class EntityStorageAction implements IEntityWAction, IEntityRAction{
     }
 
     @Override
-    public Observable<AGtdEntity> getGtdEntity(@NonNull Observable<String> idObservable) {
+    public Flowable<AGtdEntity> getGtdEntity(@NonNull Flowable<String> idObservable) {
         return null;
     }
 

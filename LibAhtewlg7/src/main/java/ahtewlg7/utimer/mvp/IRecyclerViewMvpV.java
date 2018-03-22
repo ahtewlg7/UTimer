@@ -12,9 +12,12 @@ import io.reactivex.Flowable;
  */
 
 public interface IRecyclerViewMvpV<T> {
-    public void initView(List<BaseSectionEntity> dataList);
-    public void resetView(List<BaseSectionEntity> dataList);
-    public void toStartNoteActivity(String gtdEntityId, String noteEntityId);
+    public void initRecyclerView(List<BaseSectionEntity> dataList);
+    public void resetRecyclerView(List<BaseSectionEntity> dataList);
+
+    public void onRecyclerViewInitStart();
+    public void onRecyclerViewInitErr();
+    public void onRecyclerViewInitEnd();
 
     public Flowable<BaseSectionEntity> mapBean(@NonNull Flowable<T> sourceBeanFlowable);
 }

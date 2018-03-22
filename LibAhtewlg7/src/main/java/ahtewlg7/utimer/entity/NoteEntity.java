@@ -18,9 +18,11 @@ public class NoteEntity implements IUtimerEntity {
 
     public NoteEntity(){
     }
+
     public void setId(String id){
         this.id = id;
     }
+
     public String getId() {
         return id;
     }

@@ -1,21 +1,20 @@
 package ahtewlg7.utimer.GTD;
 
-import android.support.annotation.NonNull;
-
 import org.joda.time.DateTime;
 
 import ahtewlg7.utimer.common.IdAction;
 import ahtewlg7.utimer.entity.NoteEntity;
+import ahtewlg7.utimer.mvp.IRecyclerViewMvpM;
 import ahtewlg7.utimer.storagerw.EntityDbAction;
 import ahtewlg7.utimer.util.DateTimeAction;
 import ahtewlg7.utimer.util.Logcat;
-import io.reactivex.Observable;
+import io.reactivex.Flowable;
 
 /**
  * Created by lw on 2017/12/28.
  */
 
-public class NoteEntityFactory {
+public class NoteEntityFactory implements IRecyclerViewMvpM<NoteEntity> {
     public static final String TAG = NoteEntityFactory.class.getSimpleName();
 
     private EntityDbAction dbAction;
@@ -26,7 +25,14 @@ public class NoteEntityFactory {
         dateTimeAction = new DateTimeAction();
     }
 
-    public Observable<NoteEntity> getNoteEntity(@NonNull Observable<String> idObservable){
+    @Deprecated
+    @Override
+    public Flowable<NoteEntity> loadAll() {
+        return null;
+    }
+
+    @Override
+    public Flowable<NoteEntity> loadEntity(Flowable<String> idObservable) {
         return dbAction.getNoteEntity(idObservable);
     }
 

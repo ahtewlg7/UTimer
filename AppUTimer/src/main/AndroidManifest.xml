@@ -17,7 +17,7 @@
             android:name=".ui.FunctionMainActivity"
             android:theme="@style/StyledIndicators"/>
 
-        <activity android:name=".ui.SingleGtdItemActivity"/>
+        <activity android:name=".ui.GtdInboxActivity"/>
 
         <activity android:name=".ui.MdEditorActivity"/>
 

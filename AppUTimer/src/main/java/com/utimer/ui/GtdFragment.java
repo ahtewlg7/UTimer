@@ -22,7 +22,7 @@ import java.util.List;
 
 import ahtewlg7.utimer.entity.gtd.AGtdEntity;
 import ahtewlg7.utimer.enumtype.GtdType;
-import ahtewlg7.utimer.mvp.IRecyclerViewMvpV;
+import ahtewlg7.utimer.mvp.IGtdRecyclerViewMvpV;
 import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MyRInfo;
 import ahtewlg7.utimer.view.BaseSectionEntity;
@@ -35,7 +35,7 @@ import io.reactivex.functions.Function;
  * Created by lw on 2018/1/24.
  */
 
-public class GtdFragment extends AFunctionFragement implements IRecyclerViewMvpV<AGtdEntity> {
+public class GtdFragment extends AFunctionFragement implements IGtdRecyclerViewMvpV<AGtdEntity> {
     public static final String TAG = GtdFragment.class.getSimpleName();
 
     public static final String EXTRA_KEY_GTD_ID  = MyRInfo.getStringByID(R.string.extra_gtd_id);
@@ -92,14 +92,26 @@ public class GtdFragment extends AFunctionFragement implements IRecyclerViewMvpV
 
 
     @Override
-    public void initView(List<BaseSectionEntity> dataList) {
+    public void initRecyclerView(List<BaseSectionEntity> dataList) {
         sectionRecylerView.init(GtdFragment.this.getActivity(), dataList,
                 sectionItemClickListener , sectionItemChildClickListener);
     }
 
     @Override
-    public void resetView(List<BaseSectionEntity> dataList) {
+    public void resetRecyclerView(List<BaseSectionEntity> dataList) {
         sectionRecylerView.resetNewData(dataList);
+    }
+
+    @Override
+    public void onRecyclerViewInitStart() {
+    }
+
+    @Override
+    public void onRecyclerViewInitErr() {
+    }
+
+    @Override
+    public void onRecyclerViewInitEnd() {
     }
 
     @Override

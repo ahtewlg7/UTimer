@@ -7,17 +7,17 @@ import ahtewlg7.utimer.entity.gtd.AGtdEntity;
 import ahtewlg7.utimer.entity.gtd.GtdInboxEntity;
 import ahtewlg7.utimer.entity.gtd.GtdNewEntity;
 import ahtewlg7.utimer.enumtype.GtdType;
+import ahtewlg7.utimer.mvp.IGtdInfoMvpM;
 import ahtewlg7.utimer.mvp.IRecyclerViewMvpM;
 import ahtewlg7.utimer.storagerw.EntityDbAction;
 import ahtewlg7.utimer.util.Logcat;
 import io.reactivex.Flowable;
-import io.reactivex.Observable;
 
 /**
  * Created by lw on 2017/12/28.
  */
 
-public class GtdEntityFactory implements IRecyclerViewMvpM<AGtdEntity> {
+public class GtdEntityFactory implements IRecyclerViewMvpM<AGtdEntity>,IGtdInfoMvpM <AGtdEntity>{
     public static final String TAG = GtdEntityFactory.class.getSimpleName();
 
     private IdAction idAction;
@@ -34,7 +34,12 @@ public class GtdEntityFactory implements IRecyclerViewMvpM<AGtdEntity> {
     }
 
     @Override
-    public Observable<AGtdEntity> getEntity(Observable<String> idObservable){
+    public Flowable<AGtdEntity> loadEntity(String entityID) {
+        return loadEntity(Flowable.just(entityID));
+    }
+
+    @Override
+    public Flowable<AGtdEntity> loadEntity(Flowable<String> idObservable){
         return dbAction.getGtdEntity(idObservable);
     }
 

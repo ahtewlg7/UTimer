@@ -9,6 +9,7 @@ import ahtewlg7.utimer.view.BaseSectionEntity;
  */
 
 public class GtdSectionEntity extends BaseSectionEntity<AGtdEntity> {
+    public static final String TAG = GtdSectionEntity.class.getSimpleName();
     private GtdType gtdType;
 
     public GtdSectionEntity(boolean isHeader, GtdType gtdType, boolean isMore){

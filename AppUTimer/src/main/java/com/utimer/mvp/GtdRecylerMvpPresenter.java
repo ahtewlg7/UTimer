@@ -2,6 +2,7 @@ package com.utimer.mvp;
 
 import android.support.annotation.NonNull;
 
+import com.google.common.collect.Lists;
 import com.utimer.entity.GtdSectionEntity;
 
 import org.reactivestreams.Subscription;
@@ -13,13 +14,13 @@ import ahtewlg7.utimer.GTD.GtdEntityFactory;
 import ahtewlg7.utimer.entity.gtd.AGtdEntity;
 import ahtewlg7.utimer.entity.gtd.GtdInboxEntity;
 import ahtewlg7.utimer.enumtype.GtdType;
+import ahtewlg7.utimer.mvp.IGtdRecyclerViewMvpV;
 import ahtewlg7.utimer.mvp.IRecyclerViewMvpM;
 import ahtewlg7.utimer.mvp.IRecyclerViewMvpP;
-import ahtewlg7.utimer.mvp.IRecyclerViewMvpV;
 import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.view.BaseSectionEntity;
+import io.reactivex.Flowable;
 import io.reactivex.FlowableSubscriber;
-import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 
@@ -30,14 +31,15 @@ import io.reactivex.functions.Consumer;
 public class GtdRecylerMvpPresenter implements IRecyclerViewMvpP<BaseSectionEntity>{
     public static final String TAG = GtdRecylerMvpPresenter.class.getSimpleName();
 
-    protected IRecyclerViewMvpV<AGtdEntity> mvpView;
+    protected IGtdRecyclerViewMvpV<AGtdEntity> mvpView;
     protected IRecyclerViewMvpM<AGtdEntity> mvpModel;
 
     private List<BaseSectionEntity> gtdSectionEntityList;
 
-    public GtdRecylerMvpPresenter(@NonNull IRecyclerViewMvpV mvpView){
+    public GtdRecylerMvpPresenter(@NonNull IGtdRecyclerViewMvpV mvpView){
         this.mvpView = mvpView;
         mvpModel     = new GtdEntityFactory();
+        gtdSectionEntityList = Lists.newArrayList();
     }
 
     @Override
@@ -48,6 +50,7 @@ public class GtdRecylerMvpPresenter implements IRecyclerViewMvpP<BaseSectionEnti
                 @Override
                 public void onSubscribe(Subscription s) {
                     Logcat.i(TAG,"loadAllData onSubscribe");
+                    mvpView.onRecyclerViewInitStart();
                 }
 
                 @Override
@@ -62,14 +65,16 @@ public class GtdRecylerMvpPresenter implements IRecyclerViewMvpP<BaseSectionEnti
                 @Override
                 public void onError(Throwable t) {
                     Logcat.i(TAG,"loadAllData onError : " + t.getMessage());
+                    mvpView.onRecyclerViewInitErr();
                 }
 
                 @Override
                 public void onComplete() {
                     Logcat.i(TAG,"loadAllData onComplete");
+                    mvpView.onRecyclerViewInitEnd();
                     if(!sectionList.contains(GtdType.INBOX))
                         gtdSectionEntityList.add(new GtdSectionEntity(true,GtdType.INBOX,false));
-                    mvpView.initView(gtdSectionEntityList);
+                    mvpView.initRecyclerView(gtdSectionEntityList);
                 }
             });
     }
@@ -77,14 +82,14 @@ public class GtdRecylerMvpPresenter implements IRecyclerViewMvpP<BaseSectionEnti
     @Override
     public void addData(@NonNull Object obj) {
         String entityId = (String)obj;
-        mvpModel.getEntity(Observable.just(entityId))
+        mvpModel.loadEntity(Flowable.just(entityId))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<AGtdEntity>() {
                     @Override
                     public void accept(AGtdEntity gtdEntity) throws Exception {
                         GtdSectionEntity gtdSectionEntity = new GtdSectionEntity(gtdEntity);
                         gtdSectionEntityList.add(gtdSectionEntity);
-                        mvpView.resetView(gtdSectionEntityList);
+                        mvpView.resetRecyclerView(gtdSectionEntityList);
                     }
                 });
     }
