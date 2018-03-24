@@ -53,8 +53,7 @@ public class WelcomeActivity extends BaseBinderActivity {
                 .subscribe(new Consumer<Long>() {
                     @Override
                     public void accept(Long aLong) throws Exception {
-//                        ActivityUtils.startActivity(FunctionMainActivity.class);
-                        ActivityUtils.startActivity(SingleGtdItemActivity.class);//todo
+                        ActivityUtils.startActivity(FunctionMainActivity.class);
                         WelcomeActivity.this.finish();
                     }
                 });

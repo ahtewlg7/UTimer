@@ -39,9 +39,8 @@ public class GtdFragment extends AFunctionFragement implements IGtdRecyclerViewM
     public static final String TAG = GtdFragment.class.getSimpleName();
 
     public static final String EXTRA_KEY_GTD_ID  = MyRInfo.getStringByID(R.string.extra_gtd_id);
-    public static final String EXTRA_KEY_NOTE_ID = MyRInfo.getStringByID(R.string.extra_note_id);
 
-    private String noteEntityId, gtdEntityId;
+    private String clickedEntityId;
     private GtdRecylerMvpPresenter gtdRecylerMvpPresenter;
 
     @BindView(R.id.fragment_note_recyclerview)
@@ -69,7 +68,7 @@ public class GtdFragment extends AFunctionFragement implements IGtdRecyclerViewM
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         String entityId = intent.getStringExtra(EXTRA_KEY_GTD_ID);
-        if(TextUtils.isEmpty(entityId) || !entityId.equalsIgnoreCase(gtdEntityId))
+        if(TextUtils.isEmpty(entityId) || !entityId.equalsIgnoreCase(clickedEntityId))
             return;
         gtdRecylerMvpPresenter.addData(entityId);
     }
@@ -137,18 +136,53 @@ public class GtdFragment extends AFunctionFragement implements IGtdRecyclerViewM
     }
 
     @Override
-    public void toStartNoteActivity(String gtdEntityId, String noteEntityId){
-        if(TextUtils.isEmpty(gtdEntityId) && TextUtils.isEmpty(noteEntityId)){
-            ToastUtils.showShort("both GtdEntityId and noteEntityId are empty");
-            return;
+    public void toStartGtdActivity(String gtdEntityId, GtdType gtdType){
+        if(!toStartGtdInfoActivity(gtdEntityId, gtdType))
+            ToastUtils.showShort("GtdEntityId is empty");
+        else
+            clickedEntityId = gtdEntityId;
+    }
+
+    @Override
+    public void onHeadClick(BaseSectionEntity baseSectionEntity) {
+        Logcat.i(TAG,"onHeadClick baseSectionEntity = " + baseSectionEntity.toString());
+        if(!baseSectionEntity.isMore()){
+            toStartNoteActivity(null,((GtdSectionEntity)baseSectionEntity).getGtdType());
         }
-        Intent intent = new Intent(GtdFragment.this.getActivity(), MdEditorActivity.class);
+    }
+
+    private Class getTargetClass(GtdType gtdType){
+        Class target = null;
+        switch (gtdType){
+            case INBOX:
+                target = GtdInboxActivity.class;
+                break;
+        }
+        return target;
+    }
+
+    private boolean toStartNoteActivity(String gtdEntityId, GtdType gtdType){
+        Class targetClass = getTargetClass(gtdType);
+        if(targetClass == null)
+            return false;
+        Intent intent = new Intent(GtdFragment.this.getActivity(), targetClass);
         if(!TextUtils.isEmpty(gtdEntityId))
             intent.putExtra(MdEditorActivity.EXTRA_KEY_GTD_ID, gtdEntityId);
-        if(!TextUtils.isEmpty(noteEntityId))
-            intent.putExtra(MdEditorActivity.EXTRA_KEY_NOTE_ID, noteEntityId);
-        startActivityForResult(intent, MdEditorActivity.ACTIVITY_START_RESULT);
+        startActivity(intent);
+        return true;
     }
+    private boolean toStartGtdInfoActivity(String gtdEntityId, GtdType gtdType){
+        if(TextUtils.isEmpty(gtdEntityId)){
+            Logcat.i(TAG,"GtdEntityId is empty");
+            return false;
+        }
+
+        Intent intent = new Intent(GtdFragment.this.getActivity(), getTargetClass(gtdType));
+        intent.putExtra(MdEditorActivity.EXTRA_KEY_GTD_ID, gtdEntityId);
+        startActivity(intent);
+        return true;
+    }
+
 
     class SectionItemClickListener implements BaseQuickAdapter.OnItemClickListener {
         @Override

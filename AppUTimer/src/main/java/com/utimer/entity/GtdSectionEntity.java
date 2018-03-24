@@ -29,7 +29,8 @@ public class GtdSectionEntity extends BaseSectionEntity<AGtdEntity> {
     public String toString() {
         String tmp = "GtdSectionEntity{gtdType = " + gtdType.name() + ",isMore = " + isMore;
         if(t != null)
-            tmp += ", gtdEntity =" + t.toString() +"}";
-        return tmp;
+            tmp += ", gtdEntity =" + t.toString() ;
+        tmp += "}";
+        return tmp ;
     }
 }
