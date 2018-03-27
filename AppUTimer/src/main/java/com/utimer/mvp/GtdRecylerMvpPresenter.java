@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import com.google.common.collect.Lists;
 import com.utimer.entity.GtdSectionEntity;
 
-import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 
 import java.util.ArrayList;
@@ -18,10 +17,10 @@ import ahtewlg7.utimer.mvp.IGtdRecyclerViewMvpV;
 import ahtewlg7.utimer.mvp.IRecyclerViewMvpM;
 import ahtewlg7.utimer.mvp.IRecyclerViewMvpP;
 import ahtewlg7.utimer.util.Logcat;
+import ahtewlg7.utimer.util.MySafeSubscriber;
 import ahtewlg7.utimer.view.BaseSectionEntity;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
 
 /**
  * Created by lw on 2018/3/8.
@@ -43,40 +42,8 @@ public class GtdRecylerMvpPresenter implements IRecyclerViewMvpP<BaseSectionEnti
 
     @Override
     public void loadAllData(){
-        final List<GtdType> sectionList = new ArrayList<GtdType>();
         mvpView.mapBean(mvpModel.loadAll()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<BaseSectionEntity>() {
-                    @Override
-                    public void onSubscribe(Subscription s) {
-                        Logcat.i(TAG,"loadAllData onSubscribe");
-                        s.request(Long.MAX_VALUE);
-                        mvpView.onRecyclerViewInitStart();
-                    }
-
-                    @Override
-                    public void onNext(BaseSectionEntity gtdSectionEntity) {
-                        Logcat.i(TAG,"loadAllData onNext");
-                        GtdType valueGtdType = ((GtdSectionEntity)gtdSectionEntity).getGtdType();
-                        if(!sectionList.contains(valueGtdType))
-                            sectionList.add(valueGtdType);
-                        gtdSectionEntityList.add(gtdSectionEntity);
-                    }
-
-                    @Override
-                    public void onError(Throwable t) {
-                        Logcat.i(TAG,"loadAllData onError : " + t.getMessage());
-                        mvpView.onRecyclerViewInitErr();
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        Logcat.i(TAG,"loadAllData onComplete");
-                        mvpView.onRecyclerViewInitEnd();
-                        if(!sectionList.contains(GtdType.INBOX))
-                            gtdSectionEntityList.add(new GtdSectionEntity(true,GtdType.INBOX,false));
-                        mvpView.initRecyclerView(gtdSectionEntityList);
-                    }
-                });
+                .subscribe(new GtdRecylerInitSafeSubscriber());
     }
 
     @Override
@@ -84,14 +51,7 @@ public class GtdRecylerMvpPresenter implements IRecyclerViewMvpP<BaseSectionEnti
         String entityId = (String)obj;
         mvpModel.loadEntity(Flowable.just(entityId))
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<AGtdEntity>() {
-                    @Override
-                    public void accept(AGtdEntity gtdEntity) throws Exception {
-                        GtdSectionEntity gtdSectionEntity = new GtdSectionEntity(gtdEntity);
-                        gtdSectionEntityList.add(gtdSectionEntity);
-                        mvpView.resetRecyclerView(gtdSectionEntityList);
-                    }
-                });
+                .subscribe(new GtdRecylerAddDataSafeSubscriber());
     }
 
     @Override
@@ -105,5 +65,63 @@ public class GtdRecylerMvpPresenter implements IRecyclerViewMvpP<BaseSectionEnti
                 mvpView.onHeadClick(mySectionEntity);
         }/*else
             Toast.makeText(GtdFragment.this.getActivity(), "this is item", Toast.LENGTH_LONG).show();*///todo
+    }
+
+    class GtdRecylerInitSafeSubscriber extends MySafeSubscriber<BaseSectionEntity>{
+        List<GtdType> sectionList = new ArrayList<GtdType>();
+        @Override
+        public void onSubscribe(Subscription s) {
+            super.onSubscribe(s);
+            Logcat.i(TAG,"loadAllData onSubscribe");
+            mvpView.onRecyclerViewInitStart();
+        }
+
+        @Override
+        public void onNext(BaseSectionEntity gtdSectionEntity) {
+            super.onNext(gtdSectionEntity);
+            Logcat.i(TAG,"loadAllData onNext");
+            GtdType valueGtdType = ((GtdSectionEntity)gtdSectionEntity).getGtdType();
+            if(!sectionList.contains(valueGtdType))
+                sectionList.add(valueGtdType);
+            gtdSectionEntityList.add(gtdSectionEntity);
+        }
+
+        @Override
+        public void onError(Throwable t) {
+            Logcat.i(TAG,"loadAllData onError : " + t.getMessage());
+            mvpView.onRecyclerViewInitErr();
+        }
+
+        @Override
+        public void onComplete() {
+            Logcat.i(TAG,"loadAllData onComplete");
+            mvpView.onRecyclerViewInitEnd();
+            if(!sectionList.contains(GtdType.INBOX))
+                gtdSectionEntityList.add(new GtdSectionEntity(true,GtdType.INBOX,false));
+            mvpView.initRecyclerView(gtdSectionEntityList);
+        }
+    }
+
+    class GtdRecylerAddDataSafeSubscriber extends MySafeSubscriber<AGtdEntity>{
+        @Override
+        public void onSubscribe(Subscription s) {
+            super.onSubscribe(s);
+        }
+
+        @Override
+        public void onNext(AGtdEntity gtdEntity) {
+            super.onNext(gtdEntity);
+            GtdSectionEntity gtdSectionEntity = new GtdSectionEntity(gtdEntity);
+            gtdSectionEntityList.add(gtdSectionEntity);
+            mvpView.resetRecyclerView(gtdSectionEntityList);
+        }
+
+        @Override
+        public void onError(Throwable t) {
+        }
+
+        @Override
+        public void onComplete() {
+        }
     }
 }
