@@ -8,7 +8,6 @@ import org.joda.time.DateTime;
 import ahtewlg7.utimer.db.converter.DateTimeTypeConverter;
 import ahtewlg7.utimer.db.converter.GtdTypeConverter;
 import ahtewlg7.utimer.enumtype.GtdType;
-import org.greenrobot.greendao.annotation.Generated;
 
 /**
  * Created by lw on 2018/1/5.
@@ -69,4 +68,17 @@ public class GtdEntityGdBean{
     public void setLastAccessTime(DateTime lastAccessTime) {
         this.lastAccessTime = lastAccessTime;
     }
+
+    // KEEP METHODS - put your custom methods here
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("key = " + key + ", value = " + value + ", gtdType = " + gtdType.name());
+        if(createTime != null)
+            stringBuilder.append(", createTime = " + createTime.toString());
+        if(lastAccessTime != null)
+            stringBuilder.append(", lastAccessTime = " + lastAccessTime.toString());
+        return stringBuilder.toString();
+    }
+    // KEEP METHODS END
 }
