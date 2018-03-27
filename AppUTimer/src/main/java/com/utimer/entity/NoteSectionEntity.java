@@ -21,7 +21,8 @@ public class NoteSectionEntity extends BaseSectionEntity<NoteEntity> {
     public String toString() {
         String tmp = TAG + "{";
         if(t != null)
-            tmp += ", noteEntity =" + t.toString() +"}";
+            tmp += ", noteEntity =" + t.toString() ;
+        tmp += "}";
         return tmp;
     }
 }

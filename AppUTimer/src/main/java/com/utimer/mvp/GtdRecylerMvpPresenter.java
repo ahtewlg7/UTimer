@@ -49,6 +49,7 @@ public class GtdRecylerMvpPresenter implements IRecyclerViewMvpP<BaseSectionEnti
                     @Override
                     public void onSubscribe(Subscription s) {
                         Logcat.i(TAG,"loadAllData onSubscribe");
+                        s.request(Long.MAX_VALUE);
                         mvpView.onRecyclerViewInitStart();
                     }
 
