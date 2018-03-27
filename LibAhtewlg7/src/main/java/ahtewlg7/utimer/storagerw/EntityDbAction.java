@@ -61,10 +61,11 @@ public class EntityDbAction implements IEntityWAction, IEntityRAction{
 
     @Override
     public Flowable<AGtdEntity> loadGtdEntity() {
-        return Flowable.fromIterable(GtdEntityDaoAction.getInstance().loadAll())
+        return GtdEntityDaoAction.getInstance().loadAllRx()
                 .groupBy(new Function<GtdEntityGdBean, GtdType>() {
                     @Override
                     public GtdType apply(GtdEntityGdBean gtdEntityGdBean) throws Exception {
+                        Logcat.i(TAG,"loadGtdEntity groupBy = " + gtdEntityGdBean.toString());
                         return gtdEntityGdBean.getGtdType();
                     }
                 })
@@ -123,6 +124,7 @@ public class EntityDbAction implements IEntityWAction, IEntityRAction{
     
     private AGtdEntity parseGtdBean(@NonNull GtdEntityGdBean gtdEntityGdBean){
         AGtdEntity gtdEntity = null;
+        Logcat.i(TAG,"parseGtdBean gtdEntityGdBean = " + gtdEntityGdBean.toString());
         switch(gtdEntityGdBean.getGtdType()){
             case INBOX:
                 gtdEntity = JSON.parseObject(gtdEntityGdBean.getValue(), GtdInboxEntity.class);

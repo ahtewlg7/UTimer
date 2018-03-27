@@ -8,6 +8,7 @@ import org.greenrobot.greendao.query.QueryBuilder;
 import java.util.List;
 
 import ahtewlg7.utimer.db.autogen.DaoSession;
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
@@ -80,8 +81,8 @@ public abstract class AGreenDaoAction<T>{
         return greenDao.loadAll();
     }
 
-    public Observable<T> loadAllRx(){
-        return Observable.fromIterable(loadAll());
+    public Flowable<T> loadAllRx(){
+        return Flowable.fromIterable(loadAll());
     }
 
     protected List<T> query(@NonNull IGreenDaoQueryFiltVisitor<T> filtVisitor){
