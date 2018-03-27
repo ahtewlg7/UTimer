@@ -8,7 +8,10 @@ import org.greenrobot.greendao.query.QueryBuilder;
 import java.util.List;
 
 import ahtewlg7.utimer.db.autogen.DaoSession;
+import ahtewlg7.utimer.util.MySafeFlowableOnSubscribe;
+import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
+import io.reactivex.FlowableEmitter;
 import io.reactivex.Observable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
@@ -82,7 +85,24 @@ public abstract class AGreenDaoAction<T>{
     }
 
     public Flowable<T> loadAllRx(){
-        return Flowable.fromIterable(loadAll());
+//        return Flowable.fromIterable(loadAll());
+        return Flowable.create(new MySafeFlowableOnSubscribe<T>() {
+            @Override
+            public void subscribe(FlowableEmitter<T> e) throws Exception {
+                super.subscribe(e);
+                try{
+                    List<T> list = loadAll();
+                    for(int i = 0; i < list.size();){
+                        if(ifShouldHoldEmit()) continue;
+                        e.onNext(list.get(i));
+                        i++;
+                    }
+                    e.onComplete();
+                }catch (Exception exc){
+                    e.onError(exc.getCause());
+                }
+            }
+        }, BackpressureStrategy.MISSING);
     }
 
     protected List<T> query(@NonNull IGreenDaoQueryFiltVisitor<T> filtVisitor){
