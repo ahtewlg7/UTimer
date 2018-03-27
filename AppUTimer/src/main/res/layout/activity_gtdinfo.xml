@@ -23,7 +23,7 @@
         android:background="@android:color/holo_green_dark"
         app:layout_heightPercent="70%"
         android:orientation="vertical" >
-        <com.utimer.view.recyclerview.GtdSectionRecylerView
+        <com.utimer.view.NoteBaseSectionRecyclerView
             android:id="@+id/activity_gtdinfo_layout_recylerview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

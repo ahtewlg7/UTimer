@@ -4,15 +4,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.ToastUtils;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.utimer.R;
 import com.utimer.entity.NoteSectionEntity;
 import com.utimer.mvp.GtdInfoMvpPresenter;
 import com.utimer.mvp.NoteRecylerMvpPresenter;
-import com.utimer.view.GtdBaseSectionRecyclerView;
+import com.utimer.view.NoteBaseSectionRecyclerView;
 
 import java.util.List;
 
@@ -44,11 +46,14 @@ public class GtdInboxActivity extends BaseBinderActivity implements IGtdInfoMvpV
     TextView gtdInfoTitle;
 
     @BindView(R.id.activity_gtdinfo_layout_recylerview)
-    GtdBaseSectionRecyclerView sectionRecylerView;
+    NoteBaseSectionRecyclerView sectionRecylerView;
 
     private AGtdEntity gtdEntity;
     private GtdInfoMvpPresenter gtdInfoMvpPresenter;
     private NoteRecylerMvpPresenter noteRecylerMvpPresenter;
+
+    private SectionItemClickListener sectionItemClickListener;
+    private SectionItemChildClickListener sectionItemChildClickListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +64,10 @@ public class GtdInboxActivity extends BaseBinderActivity implements IGtdInfoMvpV
         Logcat.i(TAG,"onCreate");
         ButterKnife.bind(this);
 
-        gtdInfoMvpPresenter      = new GtdInfoMvpPresenter(this);
-        noteRecylerMvpPresenter  = new NoteRecylerMvpPresenter(this);
+        gtdInfoMvpPresenter             = new GtdInfoMvpPresenter(this);
+        noteRecylerMvpPresenter         = new NoteRecylerMvpPresenter(this);
+        sectionItemClickListener        = new SectionItemClickListener();
+        sectionItemChildClickListener   = new SectionItemChildClickListener();
 
         handleIntent(getIntent());
     }
@@ -106,7 +113,8 @@ public class GtdInboxActivity extends BaseBinderActivity implements IGtdInfoMvpV
     //+++++++++++++++++++++++++++++++++++++IRecyclerViewMvpV+++++++++++++++++++++++++++++++++++++++++++
     @Override
     public void initRecyclerView(List<BaseSectionEntity> dataList) {
-        sectionRecylerView.init(GtdInboxActivity.this,dataList);
+        sectionRecylerView.init(GtdInboxActivity.this,dataList,
+                sectionItemClickListener , sectionItemChildClickListener);
     }
 
     @Override
@@ -159,5 +167,19 @@ public class GtdInboxActivity extends BaseBinderActivity implements IGtdInfoMvpV
             return;
         }
         gtdInfoMvpPresenter.laodGtdEntity(gtdId);
+    }
+
+    class SectionItemClickListener implements BaseQuickAdapter.OnItemClickListener {
+        @Override
+        public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+            NoteSectionEntity mySectionEntity = (NoteSectionEntity)adapter.getData().get(position);
+            noteRecylerMvpPresenter.onItemClick(mySectionEntity);
+        }
+    }
+    class SectionItemChildClickListener implements BaseQuickAdapter.OnItemChildClickListener{
+        @Override
+        public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+            Logcat.i(TAG,"onItemChildClick : position = " + position);
+        }
     }
 }
