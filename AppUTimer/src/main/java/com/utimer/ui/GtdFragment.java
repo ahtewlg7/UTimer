@@ -39,6 +39,7 @@ public class GtdFragment extends AFunctionFragement implements IGtdRecyclerViewM
     public static final String TAG = GtdFragment.class.getSimpleName();
 
     public static final String EXTRA_KEY_GTD_ID  = MyRInfo.getStringByID(R.string.extra_gtd_id);
+    public static final String EXTRA_KEY_NOTE_ID = MyRInfo.getStringByID(R.string.extra_note_id);
 
     private String clickedEntityId;
     private GtdRecylerMvpPresenter gtdRecylerMvpPresenter;
@@ -67,10 +68,13 @@ public class GtdFragment extends AFunctionFragement implements IGtdRecyclerViewM
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        String noteId   = intent.getStringExtra(EXTRA_KEY_NOTE_ID);
         String entityId = intent.getStringExtra(EXTRA_KEY_GTD_ID);
-        if(TextUtils.isEmpty(entityId) || !entityId.equalsIgnoreCase(clickedEntityId))
-            return;
-        gtdRecylerMvpPresenter.addData(entityId);
+        Logcat.i(TAG,"onActivityResult noteId = " + noteId + ", entityId = " + entityId);
+        /*if(!TextUtils.isEmpty(noteId))
+            gtdRecylerMvpPresenter.addData(noteId);
+        else */if(!TextUtils.isEmpty(entityId) && !entityId.equalsIgnoreCase(clickedEntityId))
+            gtdRecylerMvpPresenter.addData(entityId);
     }
 
     @Override
@@ -146,9 +150,8 @@ public class GtdFragment extends AFunctionFragement implements IGtdRecyclerViewM
     @Override
     public void onHeadClick(BaseSectionEntity baseSectionEntity) {
         Logcat.i(TAG,"onHeadClick baseSectionEntity = " + baseSectionEntity.toString());
-        if(!baseSectionEntity.isMore()){
-            toStartNoteActivity(null,((GtdSectionEntity)baseSectionEntity).getGtdType());
-        }
+        if(!baseSectionEntity.isMore())
+            toStartNoteActivity();
     }
 
     private Class getTargetClass(GtdType gtdType){
@@ -161,15 +164,9 @@ public class GtdFragment extends AFunctionFragement implements IGtdRecyclerViewM
         return target;
     }
 
-    private boolean toStartNoteActivity(String gtdEntityId, GtdType gtdType){
-        Class targetClass = getTargetClass(gtdType);
-        if(targetClass == null)
-            return false;
-        Intent intent = new Intent(GtdFragment.this.getActivity(), targetClass);
-        if(!TextUtils.isEmpty(gtdEntityId))
-            intent.putExtra(MdEditorActivity.EXTRA_KEY_GTD_ID, gtdEntityId);
+    private void toStartNoteActivity(){
+        Intent intent = new Intent(GtdFragment.this.getActivity(), MdEditorActivity.class);
         startActivity(intent);
-        return true;
     }
     private boolean toStartGtdInfoActivity(String gtdEntityId, GtdType gtdType){
         if(TextUtils.isEmpty(gtdEntityId)){

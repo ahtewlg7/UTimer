@@ -38,6 +38,7 @@ public class GtdInboxActivity extends BaseBinderActivity implements IGtdInfoMvpV
     public static final String TAG = GtdInboxActivity.class.getSimpleName();
 
     public static final String EXTRA_KEY_GTD_ID  = MyRInfo.getStringByID(R.string.extra_gtd_id);
+    public static final String EXTRA_KEY_NOTE_ID = MyRInfo.getStringByID(R.string.extra_note_id);
 
     @BindView(R.id.activity_gtdinfo_layout_title_tv)
     TextView gtdInfoTitle;
@@ -58,7 +59,7 @@ public class GtdInboxActivity extends BaseBinderActivity implements IGtdInfoMvpV
         Logcat.i(TAG,"onCreate");
         ButterKnife.bind(this);
 
-        gtdInfoMvpPresenter     = new GtdInfoMvpPresenter(this);
+        gtdInfoMvpPresenter      = new GtdInfoMvpPresenter(this);
         noteRecylerMvpPresenter  = new NoteRecylerMvpPresenter(this);
 
         handleIntent(getIntent());
@@ -104,13 +105,13 @@ public class GtdInboxActivity extends BaseBinderActivity implements IGtdInfoMvpV
 
     //+++++++++++++++++++++++++++++++++++++IRecyclerViewMvpV+++++++++++++++++++++++++++++++++++++++++++
     @Override
-    public void initRecyclerView(List dataList) {
-
+    public void initRecyclerView(List<BaseSectionEntity> dataList) {
+        sectionRecylerView.init(GtdInboxActivity.this,dataList);
     }
 
     @Override
-    public void resetRecyclerView(List dataList) {
-
+    public void resetRecyclerView(List<BaseSectionEntity> dataList) {
+        sectionRecylerView.resetNewData(dataList);
     }
 
     @Override
