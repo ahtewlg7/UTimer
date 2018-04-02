@@ -3,7 +3,7 @@ package ahtewlg7.utimer.util;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 
-public class MySafeSubscriber implements Subscriber {
+public class MySafeSubscriber<T> implements Subscriber<T> {
     public static final String TAG = MySafeSubscriber.class.getSimpleName();
 
     private Subscription subscription;
@@ -14,7 +14,7 @@ public class MySafeSubscriber implements Subscriber {
     }
 
     @Override
-    public void onNext(Object o) {
+    public void onNext(T t) {
         subscription.request(1);
     }
 
