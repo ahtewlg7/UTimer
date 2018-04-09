@@ -1,9 +1,10 @@
 package ahtewlg7.utimer.entity.gtd;
 
 
+import com.google.common.collect.Lists;
+
 import org.joda.time.DateTime;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import ahtewlg7.utimer.entity.NoteEntity;
@@ -37,12 +38,12 @@ public abstract class AGtdTaskEntity extends AGtdEntity {
 
     public AGtdTaskEntity(){
         super();
-        taskStepList = new ArrayList<TaskStepBean>();
+        subTaskEntity = Lists.newArrayList();
+        noteIdList    = Lists.newArrayList();
+        taskStepList  = Lists.newArrayList();
     }
 
     public boolean addNoteEntity(NoteEntity noteEntity) {
-        if(noteIdList == null)
-            noteIdList = new ArrayList<String>();
         return !noteIdList.contains(noteEntity.getId()) && noteIdList.add(noteEntity.getId());
     }
 
@@ -149,6 +150,15 @@ public abstract class AGtdTaskEntity extends AGtdEntity {
         return taskStepList;
     }
 
+    public void addSubTaskEntity(AGtdEntity gtdEntity){
+        subTaskEntity.add(gtdEntity);
+    }
+    public void removeSubTaskEntity(AGtdEntity gtdEntity){
+        subTaskEntity.remove(gtdEntity);
+    }
+    public List<AGtdEntity> getSubTaskEntityList(){
+        return subTaskEntity;
+    }
 
     @Override
     public String toString() {
