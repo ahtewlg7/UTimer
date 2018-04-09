@@ -4,7 +4,6 @@ import org.joda.time.DateTime;
 
 import ahtewlg7.utimer.common.IdAction;
 import ahtewlg7.utimer.entity.NoteEntity;
-import ahtewlg7.utimer.mvp.IRecyclerViewMvpM;
 import ahtewlg7.utimer.storagerw.EntityDbAction;
 import ahtewlg7.utimer.util.DateTimeAction;
 import ahtewlg7.utimer.util.Logcat;
@@ -14,7 +13,7 @@ import io.reactivex.Flowable;
  * Created by lw on 2017/12/28.
  */
 
-public class NoteEntityFactory implements IRecyclerViewMvpM<NoteEntity> {
+public class NoteEntityFactory{
     public static final String TAG = NoteEntityFactory.class.getSimpleName();
 
     private EntityDbAction dbAction;
@@ -25,13 +24,6 @@ public class NoteEntityFactory implements IRecyclerViewMvpM<NoteEntity> {
         dateTimeAction = new DateTimeAction();
     }
 
-    @Deprecated
-    @Override
-    public Flowable<NoteEntity> loadAll() {
-        return null;
-    }
-
-    @Override
     public Flowable<NoteEntity> loadEntity(Flowable<String> idObservable) {
         return dbAction.getNoteEntity(idObservable);
     }

@@ -9,6 +9,6 @@ import io.reactivex.Flowable;
  */
 
 public interface IRecyclerViewMvpM<T> {
-    public Flowable<T> loadAll();
+    public Flowable<T> loadAllEntity();
     public Flowable<T> loadEntity(@NonNull Flowable<String> idObservable);
 }

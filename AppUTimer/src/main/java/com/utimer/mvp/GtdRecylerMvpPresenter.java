@@ -10,7 +10,6 @@ import org.reactivestreams.Subscription;
 import java.util.ArrayList;
 import java.util.List;
 
-import ahtewlg7.utimer.GTD.GtdEntityFactory;
 import ahtewlg7.utimer.entity.gtd.AGtdEntity;
 import ahtewlg7.utimer.enumtype.GtdType;
 import ahtewlg7.utimer.mvp.IGtdRecyclerViewMvpV;
@@ -36,13 +35,13 @@ public class GtdRecylerMvpPresenter implements IRecyclerViewMvpP<BaseSectionEnti
 
     public GtdRecylerMvpPresenter(@NonNull IGtdRecyclerViewMvpV mvpView){
         this.mvpView = mvpView;
-        mvpModel     = new GtdEntityFactory();
+        mvpModel     = new GtdListModel();
         gtdSectionEntityList = Lists.newArrayList();
     }
 
     @Override
     public void loadAllData(){
-        mvpView.mapBean(mvpModel.loadAll()).observeOn(AndroidSchedulers.mainThread())
+        mvpView.mapBean(mvpModel.loadAllEntity()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new GtdRecylerInitSafeSubscriber());
     }
 

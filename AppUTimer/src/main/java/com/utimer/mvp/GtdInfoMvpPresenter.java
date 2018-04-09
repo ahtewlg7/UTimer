@@ -4,7 +4,6 @@ import android.text.TextUtils;
 
 import org.reactivestreams.Subscription;
 
-import ahtewlg7.utimer.GTD.GtdEntityFactory;
 import ahtewlg7.utimer.entity.gtd.AGtdEntity;
 import ahtewlg7.utimer.mvp.IGtdInfoMvpM;
 import ahtewlg7.utimer.mvp.IGtdInfoMvpP;
@@ -19,12 +18,13 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 public class GtdInfoMvpPresenter implements IGtdInfoMvpP {
     public static final String TAG = GtdInfoMvpPresenter.class.getSimpleName();
 
-    private IGtdInfoMvpM<AGtdEntity> gtdInfoMvpM;
-    private IGtdInfoMvpV gtdInfoMvpV;
+    protected AGtdEntity currGtdEntity;
+    protected IGtdInfoMvpM<AGtdEntity> gtdInfoMvpM;
+    protected IGtdInfoMvpV gtdInfoMvpV;
 
     public GtdInfoMvpPresenter(IGtdInfoMvpV gtdInfoMvpV){
         this.gtdInfoMvpV = gtdInfoMvpV;
-        gtdInfoMvpM      = new GtdEntityFactory();
+        gtdInfoMvpM      = new GtdInfoModel();
     }
 
     @Override
@@ -39,10 +39,12 @@ public class GtdInfoMvpPresenter implements IGtdInfoMvpP {
                 public void onSubscribe(Subscription s) {
                     s.request(Long.MAX_VALUE);
                     gtdInfoMvpV.onInfoStart();
+                    currGtdEntity = null;
                 }
 
                 @Override
                 public void onNext(AGtdEntity gtdEntity) {
+                    currGtdEntity = gtdEntity;
                     gtdInfoMvpV.updateView(gtdEntity);
                 }
 

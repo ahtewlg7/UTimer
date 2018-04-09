@@ -10,7 +10,6 @@ import org.reactivestreams.Subscription;
 
 import java.util.List;
 
-import ahtewlg7.utimer.GTD.NoteEntityFactory;
 import ahtewlg7.utimer.entity.NoteEntity;
 import ahtewlg7.utimer.mvp.INoteRecyclerViewMvpV;
 import ahtewlg7.utimer.mvp.IRecyclerViewMvpM;
@@ -35,7 +34,7 @@ public class NoteRecylerMvpPresenter implements IRecyclerViewMvpP<BaseSectionEnt
 
     public NoteRecylerMvpPresenter(@NonNull INoteRecyclerViewMvpV<NoteEntity> mvpView){
         this.mvpView = mvpView;
-        mvpModel     = new NoteEntityFactory();
+        mvpModel     = new NoteListModel();
         noteSectionEntityList = Lists.newArrayList();
     }
 
