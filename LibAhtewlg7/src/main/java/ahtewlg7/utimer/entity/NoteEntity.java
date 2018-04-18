@@ -19,10 +19,16 @@ public class NoteEntity implements IUtimerEntity {
     public NoteEntity(){
     }
 
+    @Override
+    public boolean isValid(){
+        return true;
+    }
+
     public void setId(String id){
         this.id = id;
     }
 
+    @Override
     public String getId() {
         return id;
     }

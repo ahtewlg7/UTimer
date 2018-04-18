@@ -166,7 +166,7 @@ public abstract class AEditorActivity extends BaseBinderActivity {
 
         noteEntity.setLastModifyDateTime(now);
 
-        gtdTaskEntity.addNoteEntity(noteEntity);
+        gtdTaskEntity.addSubEntity(noteEntity);
         gtdTaskEntity.setLastModifyDateTime(now);
 
         boolean noteSave = noteEntityFactory.saveNoteEntity(noteEntity);

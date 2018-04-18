@@ -9,4 +9,5 @@ import io.reactivex.Flowable;
 public interface IGtdInboxMvpM {
     public Flowable<Optional<GtdProjectEntity>> getGtdProject(String id);
     public boolean toProjectAnInbox(GtdProjectEntity gtdProjectEntity, GtdInboxEntity gtdInboxEntity);
+    public boolean toSaveProject(GtdProjectEntity gtdProjectEntity);
 }

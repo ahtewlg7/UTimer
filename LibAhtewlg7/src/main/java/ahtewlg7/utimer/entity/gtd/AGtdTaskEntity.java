@@ -7,7 +7,7 @@ import org.joda.time.DateTime;
 
 import java.util.List;
 
-import ahtewlg7.utimer.entity.NoteEntity;
+import ahtewlg7.utimer.entity.IUtimerEntity;
 import ahtewlg7.utimer.entity.TaskStepBean;
 
 /**
@@ -30,25 +30,21 @@ public abstract class AGtdTaskEntity extends AGtdEntity {
     private DateTime beginWorkDateTime;
     private DateTime endWorkDateTime;
 
-    private List<String> noteIdList;
-
-    private List<AGtdEntity> subTaskEntity;
+    private List<String> subIdList;
 
     private List<TaskStepBean> taskStepList;
 
     public AGtdTaskEntity(){
         super();
-        subTaskEntity = Lists.newArrayList();
-        noteIdList    = Lists.newArrayList();
+        subIdList     = Lists.newArrayList();
         taskStepList  = Lists.newArrayList();
     }
 
-    public boolean addNoteEntity(NoteEntity noteEntity) {
-        return !noteIdList.contains(noteEntity.getId()) && noteIdList.add(noteEntity.getId());
+    public boolean addSubEntity(IUtimerEntity subEntity) {
+        return !subIdList.contains(subEntity.getId()) && subIdList.add(subEntity.getId());
     }
-
-    public boolean removeNoteEntity(NoteEntity noteEntity){
-        return noteIdList != null && noteIdList.remove(noteEntity.getId());
+    public boolean removeSubEntity(IUtimerEntity subEntity){
+        return subIdList != null && subIdList.remove(subEntity.getId());
     }
 
     public int getPriority() {
@@ -133,11 +129,11 @@ public abstract class AGtdTaskEntity extends AGtdEntity {
     }
 
     public List<String> getNoteEntityList() {
-        return noteIdList;
+        return subIdList;
     }
 
     public void setNoteEntityList(List<String> noteIdList) {
-        this.noteIdList = noteIdList;
+        this.subIdList = noteIdList;
     }
 
     public void addTaskStep(TaskStepBean stepBean){
@@ -148,16 +144,6 @@ public abstract class AGtdTaskEntity extends AGtdEntity {
     }
     public List<TaskStepBean> getTaskStepList(){
         return taskStepList;
-    }
-
-    public void addSubTaskEntity(AGtdEntity gtdEntity){
-        subTaskEntity.add(gtdEntity);
-    }
-    public void removeSubTaskEntity(AGtdEntity gtdEntity){
-        subTaskEntity.remove(gtdEntity);
-    }
-    public List<AGtdEntity> getSubTaskEntityList(){
-        return subTaskEntity;
     }
 
     @Override
@@ -190,8 +176,8 @@ public abstract class AGtdTaskEntity extends AGtdEntity {
             tmp = ", endWorkDateTime = " + endWorkDateTime.toString();
             builder.append(tmp);
         }
-        for(String noteId : noteIdList){
-            String bean =  ",Note{" + noteId + "}";
+        for(String subEntityId : subIdList){
+            String bean =  ",SubEntity{" + subEntityId + "}";
             builder.append(bean);
         }
         for(TaskStepBean stepBean : taskStepList){

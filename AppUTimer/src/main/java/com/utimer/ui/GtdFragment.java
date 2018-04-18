@@ -150,7 +150,7 @@ public class GtdFragment extends AFunctionFragement implements IGtdRecyclerViewM
     @Override
     public void onHeadClick(BaseSectionEntity baseSectionEntity) {
         Logcat.i(TAG,"onHeadClick baseSectionEntity = " + baseSectionEntity.toString());
-        if(!baseSectionEntity.isMore())
+        if(((GtdSectionEntity)baseSectionEntity).getGtdType() == GtdType.INBOX)
             toStartNoteActivity();
     }
 

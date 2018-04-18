@@ -26,10 +26,16 @@ public abstract class AGtdEntity implements IUtimerEntity{
     protected DateTime lastModifyDateTime;
     protected AGtdEntity parentTaskEntity;
 
+    @Override
+    public boolean isValid(){
+        return true;
+    }
+
     public void setId(String id) {
         this.id = id;
     }
 
+    @Override
     public String getId(){
         return id;
     }
