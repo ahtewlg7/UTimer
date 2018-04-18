@@ -25,6 +25,7 @@ import java.util.concurrent.TimeUnit;
 import ahtewlg7.utimer.entity.NoteEntity;
 import ahtewlg7.utimer.entity.gtd.AGtdEntity;
 import ahtewlg7.utimer.entity.gtd.GtdInboxEntity;
+import ahtewlg7.utimer.entity.gtd.GtdProjectEntity;
 import ahtewlg7.utimer.mvp.IGtdInboxMvpV;
 import ahtewlg7.utimer.mvp.IGtdInfoMvpV;
 import ahtewlg7.utimer.mvp.INoteRecyclerViewMvpV;
@@ -197,7 +198,7 @@ public class GtdInboxActivity extends BaseBinderActivity
     }
 
     @Override
-    public void onProjectingSucc() {
+    public void onProjectingSucc(GtdProjectEntity gtdProjectEntity) {
         Logcat.i(TAG,"onProjectingSucc");
     }
 
@@ -213,6 +214,15 @@ public class GtdInboxActivity extends BaseBinderActivity
 
     @Override
     public void onProjectingErr(Throwable t) {
+
+    }
+
+    @Override
+    public void onProjectSaveSucc() {
+
+    }
+    @Override
+    public void onProjectSaveFail() {
 
     }
     //+++++++++++++++++++++++++++++++++++++end+++++++++++++++++++++++++++++++++++++++++++
