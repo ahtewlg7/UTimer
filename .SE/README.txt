@@ -1,4 +1,4 @@
-1. the Architecture of the Utimer
+1. the Architecture of the UTimer
 
                         |
               UI        |                    activity / service
@@ -29,3 +29,10 @@
                         |
            Persistence  |                         DB / File
                         |
+
+
+2.The service of UI is used to :
+    to share data with multi-activity;
+    to keep working when the UI lifeCycle is over;
+
+3.
