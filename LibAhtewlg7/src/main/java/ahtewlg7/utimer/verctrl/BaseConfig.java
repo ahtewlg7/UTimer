@@ -47,6 +47,10 @@ public class BaseConfig {
     public String getDocNoteDir(){
         return MyRInfo.getStringByID(R.string.config_note_doc_dir_name);
     }
+    public String getGtdNoteDir(){
+        return MyRInfo.getStringByID(R.string.config_note_gtd_dir_name);
+    }
+
     public String getInboxNoteDir(){
         return MyRInfo.getStringByID(R.string.config_note_inbox_dir_name);
     }

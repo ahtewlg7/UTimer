@@ -17,7 +17,7 @@ public class EntityStorageAction implements IEntityWAction, IEntityRAction{
     private String workingPath;
 
     public EntityStorageAction(){
-        workingPath = new FileSystemAction().getDocNoteAbsPath();
+        workingPath = new FileSystemAction().getNoteDocAbsPath();
     }
 
     @Override

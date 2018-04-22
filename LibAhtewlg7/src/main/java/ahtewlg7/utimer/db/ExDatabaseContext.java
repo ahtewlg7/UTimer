@@ -35,7 +35,7 @@ public class ExDatabaseContext extends ContextWrapper {
             Logcat.i(TAG,"getDatabasePath : database name is empty");
             return null;
         }
-        String dbFilePath = new FileSystemAction().getWorkingDbAbsPath() + name;
+        String dbFilePath = new FileSystemAction().getDbDataAbsPath() + name;
         return FileUtils.getFileByPath(dbFilePath);
     }
 

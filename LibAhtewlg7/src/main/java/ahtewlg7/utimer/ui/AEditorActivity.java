@@ -160,7 +160,7 @@ public abstract class AEditorActivity extends BaseBinderActivity {
                 noteEntity.setNoteName(gtdTaskEntity.getTitle());
     }
 
-        String fileRPath   = new FileSystemAction().getDocNoteRPath() + gtdTaskEntity.getTitle() + File.separator;
+        String fileRPath   = new FileSystemAction().getNoteDocRPath() + gtdTaskEntity.getTitle() + File.separator;
         gtdTaskEntity.setFileRPath(fileRPath);
         noteEntity.setFileRPath(fileRPath);
 

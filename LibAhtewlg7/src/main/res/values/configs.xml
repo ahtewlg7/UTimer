@@ -15,6 +15,7 @@
     <string name="configs_app_working_dir_cache">cache</string>
 
     <string name="config_note_doc_dir_name">doc</string>
+    <string name="config_note_gtd_dir_name">gtd</string>
     <string name="config_note_inbox_dir_name">Inbox</string>
     <string name="config_note_project_dir_name">Project</string>
     <string name="config_note_trash_dir_name">Trash</string>
