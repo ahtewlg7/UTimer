@@ -1,153 +1,120 @@
 package ahtewlg7.utimer.ui;
 
-import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.text.TextUtils;
-import android.widget.TextView;
+import android.os.Bundle;
 
 import com.blankj.utilcode.util.ToastUtils;
-import com.jakewharton.rxbinding2.widget.RxTextView;
-import com.jakewharton.rxbinding2.widget.TextViewTextChangeEvent;
-import com.trello.rxlifecycle2.android.ActivityEvent;
+import com.trello.rxlifecycle2.components.RxActivity;
 
-import org.joda.time.DateTime;
-import org.reactivestreams.Publisher;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
-import java.io.File;
-
-import ahtewlg7.utimer.GTD.GtdEntityFactory;
-import ahtewlg7.utimer.GTD.NoteEntityFactory;
 import ahtewlg7.utimer.R;
-import ahtewlg7.utimer.common.FileSystemAction;
-import ahtewlg7.utimer.common.NoteContextFsAction;
-import ahtewlg7.utimer.entity.IUtimerEntity;
-import ahtewlg7.utimer.entity.NoteEntity;
-import ahtewlg7.utimer.entity.gtd.AGtdEntity;
-import ahtewlg7.utimer.entity.gtd.AGtdTaskEntity;
-import ahtewlg7.utimer.enumtype.DbErrCode;
-import ahtewlg7.utimer.enumtype.GtdType;
-import ahtewlg7.utimer.exception.DataBaseException;
-import ahtewlg7.utimer.util.DateTimeAction;
+import ahtewlg7.utimer.busevent.NoteEditEvent;
+import ahtewlg7.utimer.common.EventBusFatory;
+import ahtewlg7.utimer.entity.INoteEntity;
+import ahtewlg7.utimer.mvp.INoteEditMvpV;
+import ahtewlg7.utimer.mvp.NoteEditMvpP;
 import ahtewlg7.utimer.util.Logcat;
-import io.reactivex.Flowable;
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Action;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by lw on 2017/12/27.
  */
 
-public abstract class AEditorActivity extends BaseBinderActivity {
-    public static final String TAG = AEditorActivity.class.getSimpleName();
+public abstract class ANoteEditorActivity extends BaseBinderActivity
+    implements INoteEditMvpV{
+    public static final String TAG = ANoteEditorActivity.class.getSimpleName();
 
-    public static final int ACTIVITY_START_RESULT = 2;
+    protected abstract void toInitView();
 
-    protected abstract @NonNull TextView getEditTextView();
-    protected abstract @NonNull String getNoteIdExtrKey();
-    protected abstract @NonNull String getGtdIdExtrKey();
+    protected NoteEditMvpP noteEditMvpP;
 
-    protected String noteEntityId;
-    protected String gtdEntityId;
-    protected String noteContext;
-
-    protected Observable<String> textChangeEventObservalbe;
-
-    protected AGtdTaskEntity gtdTaskEntity;
-    protected NoteEntity noteEntity;
-    protected NoteEntityFactory noteEntityFactory;
+    /*protected NoteEntityFactory noteEntityFactory;
     protected GtdEntityFactory gtdEntityFactory;
-    protected NoteContextFsAction noteContextFsAction;
+    protected NoteContextFsAction noteContextFsAction;*/
 
     @Override
-    protected void onPause() {
-        toSaveEntity();
-        super.onPause();
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        toInitView();
+        noteEditMvpP = new NoteEditMvpP(this);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBusFatory.getInstance().getDefaultEventBus().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBusFatory.getInstance().getDefaultEventBus().unregister(this);
     }
 
     @Override
     public void onBackPressed() {
-        setStartResult();
         super.onBackPressed();
+        noteEditMvpP.toDoneNote();
     }
 
-    protected void initAcitity(){
-        noteEntityFactory   = new NoteEntityFactory();
-        gtdEntityFactory    = new GtdEntityFactory();
-        noteContextFsAction = new NoteContextFsAction();
-        handleIntent(getIntent());
-
-        initTextObservable();
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onNoteEditEvent(NoteEditEvent event) {
+        noteEditMvpP.toLoadNote(event.getEoteEntityId());
     }
 
-    //it must be after the ButterKnife.bind()
-    protected void initTextObservable(){
-        textChangeEventObservalbe = getTextChangeEventObservalbe(getEditTextView());
-
-        textChangeEventObservalbe.subscribe(new Consumer<String>() {
-            @Override
-            public void accept(String str) throws Exception {
-                Logcat.i(TAG,"deferTextObservable str : " + str);
-                noteContext = str;
-            }
-        });
+    @Override
+    public void onContextShow(INoteEntity noteEntity) {
+        getEditView().setText(noteEntity.getMdContext());
     }
 
-    protected Observable<String> getTextChangeEventObservalbe(@NonNull TextView editTextView){
-        return RxTextView.textChangeEvents(editTextView)
-                .map(new Function<TextViewTextChangeEvent, String>() {
-                    @Override
-                    public String apply(TextViewTextChangeEvent textViewTextChangeEvent) throws Exception {
-                        Logcat.i(TAG,"textChangeEvents before:" + textViewTextChangeEvent.before() +
-                                ",start:" + textViewTextChangeEvent.start() + ",text:" + textViewTextChangeEvent.text() +
-                                ",count:" + textViewTextChangeEvent.count());
-                        return textViewTextChangeEvent.text().toString();
-                    }
-                });
+    @Override
+    public RxActivity getUiContext() {
+        return this;
     }
 
-    protected void handleIntent(Intent intent){
-        Flowable.mergeDelayError(onNoteInit(intent), onGtdInit(intent))
-            .compose(this.<IUtimerEntity>bindUntilEvent(ActivityEvent.DESTROY))
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(new Consumer<IUtimerEntity>() {
-                           @Override
-                           public void accept(IUtimerEntity entity) throws Exception {
-                               Logcat.i(TAG,"handleIntent onNext");
-                           }
-                       }, new Consumer<Throwable>() {
-                           @Override
-                           public void accept(Throwable throwable) throws Exception {
-                               Logcat.i(TAG,"handleIntent onError");
-                               if (noteEntity == null || gtdTaskEntity == null) {
-                                   ToastUtils.showShort(R.string.entity_not_found);
-                                   setStartResult();
-                                   finish();
-                               }
-                           }
-                       }
-                    , new Action() {
-                        @Override
-                        public void run() throws Exception {
-                            Logcat.i(TAG,"handleIntent onComplete");
-                            readNoteContext(noteEntity);
-                        }
-                    });
+    @Override
+    public void onLoading() {
+        //to start processing
     }
 
-    protected void setStartResult(){
-        Intent intent = new Intent();
-        intent.putExtra(getGtdIdExtrKey(), gtdEntityId);
-        intent.putExtra(getNoteIdExtrKey(), noteEntityId);
-        setResult(ACTIVITY_START_RESULT, intent);
-        Logcat.i(TAG,"setStartResult ACTIVITY_START_RESULT : gtdEntityId = " + gtdEntityId + ",noteEntityId = " + noteEntityId);
+    @Override
+    public void onLoadNull() {
+        ToastUtils.showShort(R.string.entity_not_found);
+        finish();
     }
 
-    protected void toSaveEntity(){
-        if(TextUtils.isEmpty(noteContext)/* || serviceBinderProxy == null*/) {
+    @Override
+    public void onLoadUnexist() {
+        ToastUtils.showShort(R.string.notebook_not_found);
+        finish();
+    }
+
+    @Override
+    public void onLoadErr(Throwable e) {
+        Logcat.d(TAG,"onLoadErr : " + e.getMessage());
+        ToastUtils.showShort(R.string.note_load_err);
+        finish();
+    }
+
+    @Override
+    public void onLoadComplete() {
+        //to end processing
+    }
+
+    @Override
+    public void onNoteDone(INoteEntity noteEntity) {
+        String noteId = noteEntity != null ? noteEntity.getId() : null;
+        EventBusFatory.getInstance().getDefaultEventBus().post(new NoteEditEvent(noteId));
+    }
+
+    @Override
+    public void toSaveContext(INoteEntity noteEntity) {
+        serviceBinderProxy.toSaveNote(noteEntity);
+    }
+
+    /*protected void toSaveEntity(){
+        if(TextUtils.isEmpty(noteContext)*//* || serviceBinderProxy == null*//*) {
             Logcat.i(TAG,"toSaveEntity : cancel it");
             return;
         }
@@ -180,9 +147,9 @@ public abstract class AEditorActivity extends BaseBinderActivity {
             return;
         }
         writeNoteContext(noteEntity, noteContext);
-    }
+    }*/
 
-    protected Flowable<NoteEntity> onNoteInit(@NonNull Intent intent){
+    /*protected Flowable<NoteEntity> onNoteInit(@NonNull Intent intent){
         return Flowable.just(intent)
                 .flatMap(new Function<Intent, Publisher<NoteEntity>>() {
                     @Override
@@ -212,8 +179,8 @@ public abstract class AEditorActivity extends BaseBinderActivity {
                         Logcat.i(TAG, "onNoteInit doOnNext ：" + noteEntityId);
                     }
                 });
-    }
-    protected Flowable<AGtdEntity> onGtdInit(@NonNull Intent intent) {
+    }*/
+    /*protected Flowable<AGtdEntity> onGtdInit(@NonNull Intent intent) {
         return Flowable.just(intent)
                 .flatMap(new Function<Intent, Publisher<AGtdEntity>>() {
                     @Override
@@ -243,9 +210,9 @@ public abstract class AEditorActivity extends BaseBinderActivity {
                         Logcat.i(TAG, "onGtdInit doOnNext ：" + gtdEntityId);
                     }
                 });
-    }
+    }*/
 
-    protected void writeNoteContext(final NoteEntity noteEntity, final String noteContext){
+   /* protected void writeNoteContext(final NoteEntity noteEntity, final String noteContext){
         Observable.just(1).subscribeOn(Schedulers.io())
                 .subscribe(new Consumer<Object>() {
                     @Override
@@ -254,10 +221,11 @@ public abstract class AEditorActivity extends BaseBinderActivity {
                         Logcat.i(TAG,"saveNoteContext : result = " + result);
                     }
                 });
-    }
+    }*/
 
-    protected void readNoteContext(final NoteEntity noteEntity){
-        Observable.just(1).subscribeOn(Schedulers.io())
+   /*protected void readNoteContext(final NoteEntity noteEntity){
+        noteEditMvpP.toReadNoteContext(noteEntity);*/
+        /*Observable.just(1).subscribeOn(Schedulers.io())
                 .map(new Function<Object, String>() {
                     @Override
                     public String apply(Object o) throws Exception {
@@ -277,5 +245,5 @@ public abstract class AEditorActivity extends BaseBinderActivity {
                         }
                     }
                 });
-    }
+    }*/
 }

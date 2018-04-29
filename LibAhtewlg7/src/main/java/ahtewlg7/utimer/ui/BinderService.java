@@ -5,8 +5,10 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 
-import ahtewlg7.utimer.GTD.state.GtdStateMachine;
+import ahtewlg7.utimer.entity.INoteEntity;
+import ahtewlg7.utimer.mvp.NoteSaveMvpP;
 import ahtewlg7.utimer.util.Logcat;
+import io.reactivex.annotations.NonNull;
 
 
 /**
@@ -16,14 +18,18 @@ import ahtewlg7.utimer.util.Logcat;
 public class BinderService extends Service{
     public static final String TAG = BinderService.class.getSimpleName();
 
-    private GtdStateMachine gtdStateMachine;
+    private NoteSaveMvpP noteSaveMvpP;
 
     @Override
     public void onCreate() {
         super.onCreate();
         Logcat.i(TAG, "onCreate");
 
-        gtdStateMachine = new GtdStateMachine();
+        noteSaveMvpP = new NoteSaveMvpP(null);
+    }
+
+    public void toSaveNote(@NonNull INoteEntity noteEntity){
+        noteSaveMvpP.toSaveNoteContext(noteEntity);
     }
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     @Override
@@ -36,4 +42,5 @@ public class BinderService extends Service{
             return BinderService.this;
         }
     }
+
 }

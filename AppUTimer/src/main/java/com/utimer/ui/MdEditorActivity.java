@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.utimer.R;
 
-import ahtewlg7.utimer.ui.AEditorActivity;
+import ahtewlg7.utimer.ui.ANoteEditorActivity;
 import ahtewlg7.utimer.util.MyRInfo;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -17,7 +17,7 @@ import butterknife.ButterKnife;
  * Created by lw on 2017/12/27.
  */
 
-public class MdEditorActivity extends AEditorActivity {
+public class MdEditorActivity extends ANoteEditorActivity {
     public static final String TAG = MdEditorActivity.class.getSimpleName();
 
     public static final String EXTRA_KEY_GTD_ID  = MyRInfo.getStringByID(R.string.extra_gtd_id);

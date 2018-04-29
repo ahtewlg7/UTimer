@@ -2,7 +2,6 @@ package com.utimer.verctrl;
 
 import android.support.annotation.NonNull;
 
-import ahtewlg7.utimer.ui.BinderService;
 import ahtewlg7.utimer.verctrl.BaseConfig;
 import ahtewlg7.utimer.verctrl.IBaseVersionControlFactory;
 
@@ -17,11 +16,5 @@ public class VersionControlFactory implements IBaseVersionControlFactory {
     @Override
     public BaseConfig getBaseConfig() {
         return new ConfigFactory();
-    }
-
-    @NonNull
-    @Override
-    public Class<? extends BinderService> getBinderServiceClass() {
-        return BinderService.class;
     }
 }
