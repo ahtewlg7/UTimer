@@ -21,11 +21,11 @@ import org.reactivestreams.Publisher;
 import java.util.List;
 
 import ahtewlg7.utimer.entity.gtd.AGtdEntity;
+import ahtewlg7.utimer.entity.view.BaseSectionEntity;
 import ahtewlg7.utimer.enumtype.GtdType;
 import ahtewlg7.utimer.mvp.IGtdRecyclerViewMvpV;
 import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MyRInfo;
-import ahtewlg7.utimer.view.BaseSectionEntity;
 import butterknife.BindView;
 import io.reactivex.Flowable;
 import io.reactivex.flowables.GroupedFlowable;

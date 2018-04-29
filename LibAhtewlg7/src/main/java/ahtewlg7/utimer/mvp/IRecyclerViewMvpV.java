@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 
 import java.util.List;
 
-import ahtewlg7.utimer.view.BaseSectionEntity;
+import ahtewlg7.utimer.entity.view.BaseSectionEntity;
 import io.reactivex.Flowable;
 
 /**

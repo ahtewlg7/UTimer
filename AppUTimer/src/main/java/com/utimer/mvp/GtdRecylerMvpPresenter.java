@@ -11,13 +11,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ahtewlg7.utimer.entity.gtd.AGtdEntity;
+import ahtewlg7.utimer.entity.view.BaseSectionEntity;
 import ahtewlg7.utimer.enumtype.GtdType;
 import ahtewlg7.utimer.mvp.IGtdRecyclerViewMvpV;
 import ahtewlg7.utimer.mvp.IRecyclerViewMvpM;
 import ahtewlg7.utimer.mvp.IRecyclerViewMvpP;
 import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MySafeSubscriber;
-import ahtewlg7.utimer.view.BaseSectionEntity;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
@@ -25,7 +25,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
  * Created by lw on 2018/3/8.
  */
 
-public class GtdRecylerMvpPresenter implements IRecyclerViewMvpP<BaseSectionEntity>{
+public class GtdRecylerMvpPresenter implements IRecyclerViewMvpP<BaseSectionEntity> {
     public static final String TAG = GtdRecylerMvpPresenter.class.getSimpleName();
 
     protected IGtdRecyclerViewMvpV<AGtdEntity> mvpView;

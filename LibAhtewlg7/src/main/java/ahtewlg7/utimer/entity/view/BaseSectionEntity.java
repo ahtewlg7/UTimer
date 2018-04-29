@@ -1,4 +1,4 @@
-package ahtewlg7.utimer.view;
+package ahtewlg7.utimer.entity.view;
 
 import com.chad.library.adapter.base.entity.SectionEntity;
 

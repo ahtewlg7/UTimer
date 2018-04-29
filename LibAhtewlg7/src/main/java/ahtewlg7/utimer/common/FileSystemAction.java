@@ -28,10 +28,12 @@ public class FileSystemAction {
         initAppWorkingFsDir();
     }
 
+    //========================================SDcard==============================================
     public String getSdcardPath(){
         return StorageAction.getInstance().getExStoragePath();
     }
 
+    //========================================UTimer==============================================
     public String getAppWorkingRPath(){
         return baseConfig.getSimpleAppName() + File.separator;
     }
@@ -39,6 +41,7 @@ public class FileSystemAction {
         return getSdcardPath() + getAppWorkingRPath();
     }
 
+    //========================================Data/Doc============================================
     public String getWorkingDataRPath(){
         return getAppWorkingRPath() + baseConfig.getWorkingDataDir() + File.separator;
     }
@@ -207,6 +210,7 @@ public class FileSystemAction {
         StorageAction.getInstance().createExRelDir(getDbDataAbsPath());
         StorageAction.getInstance().createExRelDir(getLogDataAbsPath());
         StorageAction.getInstance().createExRelDir(getBackUpDataAbsPath());
+        StorageAction.getInstance().createExRelDir(getCacheDataAbsPath());
         StorageAction.getInstance().createExRelDir(getFontDataAbsPath());
         StorageAction.getInstance().createExRelDir(getSaveDataAbsPath());
         StorageAction.getInstance().createExRelDir(getTmpDataAbsPath());

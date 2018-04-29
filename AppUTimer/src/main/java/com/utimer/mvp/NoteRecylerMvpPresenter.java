@@ -11,11 +11,11 @@ import org.reactivestreams.Subscription;
 import java.util.List;
 
 import ahtewlg7.utimer.entity.NoteEntity;
+import ahtewlg7.utimer.entity.view.BaseSectionEntity;
 import ahtewlg7.utimer.mvp.INoteRecyclerViewMvpV;
 import ahtewlg7.utimer.mvp.IRecyclerViewMvpM;
 import ahtewlg7.utimer.mvp.IRecyclerViewMvpP;
 import ahtewlg7.utimer.util.Logcat;
-import ahtewlg7.utimer.view.BaseSectionEntity;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
@@ -23,7 +23,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
  * Created by lw on 2018/3/8.
  */
 
-public class NoteRecylerMvpPresenter implements IRecyclerViewMvpP<BaseSectionEntity>{
+public class NoteRecylerMvpPresenter implements IRecyclerViewMvpP<BaseSectionEntity> {
     public static final String TAG = NoteRecylerMvpPresenter.class.getSimpleName();
 
     protected INoteRecyclerViewMvpV<NoteEntity> mvpView;

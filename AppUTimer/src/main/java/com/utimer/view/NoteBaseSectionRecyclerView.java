@@ -12,8 +12,8 @@ import com.utimer.R;
 import java.util.List;
 
 import ahtewlg7.utimer.entity.NoteEntity;
+import ahtewlg7.utimer.entity.view.BaseSectionEntity;
 import ahtewlg7.utimer.view.ABaseSectionRecyclerView;
-import ahtewlg7.utimer.view.BaseSectionEntity;
 
 /**
  * Created by lw on 2018/3/12.

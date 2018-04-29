@@ -11,6 +11,8 @@ import com.chad.library.adapter.base.BaseViewHolder;
 
 import java.util.List;
 
+import ahtewlg7.utimer.entity.view.BaseSectionEntity;
+
 /**
  * Created by lw on 2018/3/12.
  *
