@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">LibAhtewlg7</string>
 
-    <string name="entity_not_found">Not Found This Entity!</string>
+    <string name="entity_not_found">Not Found This Note!</string>
+    <string name="notebook_not_found">Not Found This NoteBook!</string>
+    <string name="note_load_err">Note load err, please try again!</string>
 </resources>

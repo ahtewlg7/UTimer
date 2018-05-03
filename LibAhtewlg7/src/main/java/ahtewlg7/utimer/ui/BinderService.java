@@ -6,7 +6,7 @@ import android.os.Binder;
 import android.os.IBinder;
 
 import ahtewlg7.utimer.entity.INoteEntity;
-import ahtewlg7.utimer.mvp.NoteSaveMvpP;
+import ahtewlg7.utimer.mvp.NoteContextSaveMvpP;
 import ahtewlg7.utimer.util.Logcat;
 import io.reactivex.annotations.NonNull;
 
@@ -18,14 +18,14 @@ import io.reactivex.annotations.NonNull;
 public class BinderService extends Service{
     public static final String TAG = BinderService.class.getSimpleName();
 
-    private NoteSaveMvpP noteSaveMvpP;
+    private NoteContextSaveMvpP noteSaveMvpP;
 
     @Override
     public void onCreate() {
         super.onCreate();
         Logcat.i(TAG, "onCreate");
 
-        noteSaveMvpP = new NoteSaveMvpP(null);
+        noteSaveMvpP = new NoteContextSaveMvpP(null);
     }
 
     public void toSaveNote(@NonNull INoteEntity noteEntity){

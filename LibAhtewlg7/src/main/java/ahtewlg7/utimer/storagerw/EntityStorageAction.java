@@ -2,8 +2,10 @@ package ahtewlg7.utimer.storagerw;
 
 import android.support.annotation.NonNull;
 
+import com.google.common.base.Optional;
+
 import ahtewlg7.utimer.common.FileSystemAction;
-import ahtewlg7.utimer.entity.NoteEntity;
+import ahtewlg7.utimer.entity.INoteEntity;
 import ahtewlg7.utimer.entity.gtd.AGtdEntity;
 import io.reactivex.Flowable;
 
@@ -21,12 +23,12 @@ public class EntityStorageAction implements IEntityWAction, IEntityRAction{
     }
 
     @Override
-    public Flowable<NoteEntity> loadNoteEntity() {
+    public Flowable<Optional<INoteEntity>> loadNoteEntity() {
         return null;
     }
 
     @Override
-    public Flowable<NoteEntity> getNoteEntity(@NonNull Flowable<String> idObservable) {
+    public Flowable<Optional<INoteEntity>> getNoteEntity(@NonNull Flowable<String> idObservable) {
         return null;
     }
 
@@ -41,7 +43,7 @@ public class EntityStorageAction implements IEntityWAction, IEntityRAction{
     }
 
     @Override
-    public boolean saveEntity(NoteEntity entity) {
+    public boolean saveEntity(INoteEntity entity) {
         return false;
     }
 

@@ -2,7 +2,7 @@ package com.utimer.mvp;
 
 import android.support.annotation.NonNull;
 
-import ahtewlg7.utimer.GTD.NoteEntityFactory;
+import ahtewlg7.utimer.common.NoteEntityAction;
 import ahtewlg7.utimer.entity.NoteEntity;
 import ahtewlg7.utimer.mvp.IRecyclerViewMvpM;
 import io.reactivex.Flowable;
@@ -10,10 +10,10 @@ import io.reactivex.Flowable;
 public class NoteListModel implements IRecyclerViewMvpM<NoteEntity> {
     public static final String TAG = NoteListModel.class.getSimpleName();
 
-    private NoteEntityFactory noteEntityFactory;
+    private NoteEntityAction noteEntityAction;
 
     public NoteListModel(){
-        noteEntityFactory = new NoteEntityFactory();
+        noteEntityAction = new NoteEntityAction();
     }
 
     @Deprecated
@@ -24,6 +24,7 @@ public class NoteListModel implements IRecyclerViewMvpM<NoteEntity> {
 
     @Override
     public Flowable<NoteEntity> loadEntity(@NonNull Flowable<String> idObservable) {
-        return noteEntityFactory.loadEntity(idObservable);
+//        return noteEntityAction.loadEntity(idObservable);
+        return null;
     }
 }

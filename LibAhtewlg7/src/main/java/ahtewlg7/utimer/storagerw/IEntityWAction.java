@@ -1,6 +1,6 @@
 package ahtewlg7.utimer.storagerw;
 
-import ahtewlg7.utimer.entity.NoteEntity;
+import ahtewlg7.utimer.entity.INoteEntity;
 import ahtewlg7.utimer.entity.gtd.AGtdEntity;
 
 /**
@@ -8,6 +8,6 @@ import ahtewlg7.utimer.entity.gtd.AGtdEntity;
  */
 
 public interface IEntityWAction {
-    public boolean saveEntity(NoteEntity entity);
+    public boolean saveEntity(INoteEntity entity);
     public boolean saveEntity(AGtdEntity entity);
 }

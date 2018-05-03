@@ -4,7 +4,7 @@ import android.text.TextUtils;
 
 import com.blankj.utilcode.util.FileIOUtils;
 
-import ahtewlg7.utimer.entity.NoteEntity;
+import ahtewlg7.utimer.entity.INoteEntity;
 import ahtewlg7.utimer.util.Logcat;
 
 /**
@@ -20,29 +20,36 @@ public class NoteContextFsAction {
         fileSystemAction = new FileSystemAction();
     }
 
-    public boolean writeNoteContext(NoteEntity noteEntity, String noteContext){
+    public boolean writeNoteContext(INoteEntity noteEntity){
         if(noteEntity == null) {
             Logcat.i(TAG,"writeNoteContext : noteEntity is null");
             return false;
         }
-        if(TextUtils.isEmpty(noteContext)) {
+        if(TextUtils.isEmpty(noteEntity.getRawContext())) {
             Logcat.i(TAG,"writeNoteContext ：noteContext is null");
             return false;
         }
         String noteFileRPath = fileSystemAction.getSdcardPath() + noteEntity.getFileRPath()
                 + noteEntity.getNoteName() + ".txt";
         Logcat.i(TAG,"saveNoteContext noteFileRPath = " + noteFileRPath);
-        return FileIOUtils.writeFileFromString(noteFileRPath, noteContext);
+        return FileIOUtils.writeFileFromString(noteFileRPath, noteEntity.getRawContext());
     }
 
-    public String readNoteContext(NoteEntity noteEntity){
+    public boolean readNoteContext(INoteEntity noteEntity){
         if(noteEntity == null) {
             Logcat.i(TAG,"readNoteContext : noteEntity is null");
-            return "";
+            return false;
         }
         String noteFileRPath = fileSystemAction.getSdcardPath() + noteEntity.getFileRPath()
                 + noteEntity.getNoteName() + ".txt";
         Logcat.i(TAG,"readNoteContext noteFileRPath = " + noteFileRPath);
-        return FileIOUtils.readFile2String(noteFileRPath);
+        String rawNoteContext = FileIOUtils.readFile2String(noteFileRPath);
+        if(TextUtils.isEmpty(rawNoteContext)){
+            Logcat.i(TAG,"readNoteContext " + noteFileRPath + " : null");
+            return false;
+        }
+
+        noteEntity.setRawContext(rawNoteContext);
+        return true;
     }
 }

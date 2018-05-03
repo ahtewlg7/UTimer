@@ -2,7 +2,9 @@ package ahtewlg7.utimer.storagerw;
 
 import android.support.annotation.NonNull;
 
-import ahtewlg7.utimer.entity.NoteEntity;
+import com.google.common.base.Optional;
+
+import ahtewlg7.utimer.entity.INoteEntity;
 import ahtewlg7.utimer.entity.gtd.AGtdEntity;
 import io.reactivex.Flowable;
 
@@ -11,8 +13,8 @@ import io.reactivex.Flowable;
  */
 
 public interface IEntityRAction {
-    public Flowable<NoteEntity> loadNoteEntity();
-    public Flowable<NoteEntity> getNoteEntity(@NonNull Flowable<String> idObservable);
+    public Flowable<Optional<INoteEntity>> loadNoteEntity();
+    public Flowable<Optional<INoteEntity>> getNoteEntity(@NonNull Flowable<String> idObservable);
 
     public Flowable<AGtdEntity> loadGtdEntity();
     public Flowable<AGtdEntity> getGtdEntity(@NonNull Flowable<String> idObservable);

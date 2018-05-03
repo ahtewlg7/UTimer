@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSON;
+import com.google.common.base.Optional;
 
 import org.reactivestreams.Publisher;
 
@@ -11,6 +12,7 @@ import ahtewlg7.utimer.db.dao.GtdEntityDaoAction;
 import ahtewlg7.utimer.db.dao.NoteEntityDaoAction;
 import ahtewlg7.utimer.db.entity.GtdEntityGdBean;
 import ahtewlg7.utimer.db.entity.NoteEntityGdBean;
+import ahtewlg7.utimer.entity.INoteEntity;
 import ahtewlg7.utimer.entity.NoteEntity;
 import ahtewlg7.utimer.entity.gtd.AGtdEntity;
 import ahtewlg7.utimer.entity.gtd.GtdInboxEntity;
@@ -28,38 +30,36 @@ import io.reactivex.schedulers.Schedulers;
  * Created by lw on 2018/1/8.
  */
 
-public class EntityDbAction implements IEntityWAction, IEntityRAction{
+public class EntityDbAction{
     public static final String TAG = EntityDbAction.class.getSimpleName();
 
-    @Override
-    public Flowable<NoteEntity> loadNoteEntity() {
+    public Flowable<Optional<INoteEntity>> loadAllNoteEntity() {
         return Flowable.fromIterable(NoteEntityDaoAction.getInstance().loadAll())
-                .map(new Function<NoteEntityGdBean, NoteEntity>() {
+                .map(new Function<NoteEntityGdBean, Optional<INoteEntity>>() {
                     @Override
-                    public NoteEntity apply(NoteEntityGdBean noteEntityGdBean) throws Exception {
-                        return JSON.parseObject(noteEntityGdBean.getValue(),NoteEntity.class);
+                    public Optional<INoteEntity> apply(NoteEntityGdBean noteEntityGdBean) throws Exception {
+                        INoteEntity noteEntity = JSON.parseObject(noteEntityGdBean.getValue(),NoteEntity.class);
+                        return Optional.fromNullable(noteEntity);
                     }
                 })
                 .subscribeOn(Schedulers.io());
     }
 
-    @Override
-    public Flowable<NoteEntity> getNoteEntity(@NonNull Flowable<String> idObservable) {
-        return idObservable.map(new Function<String, NoteEntity>() {
+    public Flowable<Optional<INoteEntity>> getNoteEntity(@NonNull Flowable<String> idFlowable) {
+        return idFlowable.map(new Function<String, Optional<INoteEntity>>() {
             @Override
-            public NoteEntity apply(String id) throws Exception {
+            public Optional<INoteEntity> apply(String id) throws Exception {
                 if(TextUtils.isEmpty(id))
-                 throw new DataBaseException(DbErrCode.ERR_DB_ID_EMPTY);
+                    throw new DataBaseException(DbErrCode.ERR_DB_ID_EMPTY);
                 NoteEntityGdBean noteEntityGdBean = NoteEntityDaoAction.getInstance().queryById(id);
                 if(noteEntityGdBean == null)
                     throw new DataBaseException(DbErrCode.ERR_DB_BEAN_NULL);
-                return JSON.parseObject(noteEntityGdBean.getValue(),NoteEntity.class);
+                INoteEntity noteEntity = JSON.parseObject(noteEntityGdBean.getValue(),NoteEntity.class);
+                return Optional.fromNullable(noteEntity);
             }
         });
     }
 
-
-    @Override
     public Flowable<AGtdEntity> loadGtdEntity() {
         return GtdEntityDaoAction.getInstance().loadAllRx()
                 .groupBy(new Function<GtdEntityGdBean, GtdType>() {
@@ -83,7 +83,6 @@ public class EntityDbAction implements IEntityWAction, IEntityRAction{
     }
 
 
-    @Override
     public Flowable<AGtdEntity> getGtdEntity(Flowable<String> idObservable) {
         return  idObservable.map(new Function<String, AGtdEntity>() {
             @Override
@@ -96,8 +95,7 @@ public class EntityDbAction implements IEntityWAction, IEntityRAction{
         });
     }
 
-    @Override
-    public boolean saveEntity(NoteEntity entity) {
+    public boolean saveEntity(INoteEntity entity) {
         if(entity == null)
             return false;
         Logcat.i(TAG,"save noteEntity");
@@ -108,7 +106,6 @@ public class EntityDbAction implements IEntityWAction, IEntityRAction{
         return true;
     }
 
-    @Override
     public boolean saveEntity(AGtdEntity entity) {
         if(entity == null)
             return false;
