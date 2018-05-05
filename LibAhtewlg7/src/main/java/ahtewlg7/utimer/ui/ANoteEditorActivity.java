@@ -3,7 +3,6 @@ package ahtewlg7.utimer.ui;
 import android.os.Bundle;
 
 import com.blankj.utilcode.util.ToastUtils;
-import com.trello.rxlifecycle2.components.RxActivity;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -27,21 +26,13 @@ public abstract class ANoteEditorActivity extends BaseBinderActivity
 
     protected NoteEditMvpP noteEditMvpP;
 
-    /*protected NoteEntityFactory noteEntityFactory;
-    protected GtdEntityFactory gtdEntityFactory;
-    protected NoteContextFsAction noteContextFsAction;*/
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         toInitView();
         noteEditMvpP = new NoteEditMvpP(this);
-    }
 
-    @Override
-    public void onStart() {
-        super.onStart();
         EventBusFatory.getInstance().getDefaultEventBus().register(this);
     }
 
@@ -57,20 +48,13 @@ public abstract class ANoteEditorActivity extends BaseBinderActivity
         noteEditMvpP.toDoneNote();
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    //EventBus callback
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void onNoteEditEvent(NoteEditEvent event) {
-        noteEditMvpP.toLoadNote(event.getEoteEntityId());
+        Logcat.i(TAG,"onNoteEditEvent : " + event.toString());
+        noteEditMvpP.toLoadNote(event.getEoteEntityId().or(""));
     }
 
-    @Override
-    public void onContextShow(INoteEntity noteEntity) {
-        getEditView().setText(noteEntity.getMdContext());
-    }
-
-    @Override
-    public RxActivity getUiContext() {
-        return this;
-    }
 
     @Override
     public void onLoading() {
@@ -89,6 +73,12 @@ public abstract class ANoteEditorActivity extends BaseBinderActivity
         finish();
     }
 
+
+    @Override
+    public void onLoadSucc(INoteEntity noteEntity) {
+        Logcat.d(TAG,"onLoadSucc : " + noteEntity.toString());
+    }
+
     @Override
     public void onLoadErr(Throwable e) {
         Logcat.d(TAG,"onLoadErr : " + e.getMessage());
@@ -105,6 +95,12 @@ public abstract class ANoteEditorActivity extends BaseBinderActivity
     public void onNoteDone(INoteEntity noteEntity) {
         String noteId = noteEntity != null ? noteEntity.getId() : null;
         EventBusFatory.getInstance().getDefaultEventBus().post(new NoteEditEvent(noteId));
+    }
+
+    @Override
+    public void toShowContext(INoteEntity noteEntity) {
+        Logcat.i(TAG,"toShowContext ： " + noteEntity.getMdContext());
+//        getEditView().setText(noteEntity.getMdContext());//todo
     }
 
     @Override

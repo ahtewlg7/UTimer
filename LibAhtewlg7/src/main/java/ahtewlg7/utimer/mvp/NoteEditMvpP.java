@@ -13,6 +13,7 @@ import org.joda.time.DateTime;
 import org.reactivestreams.Subscription;
 
 import java.io.File;
+import java.util.concurrent.TimeUnit;
 
 import ahtewlg7.utimer.common.FileSystemAction;
 import ahtewlg7.utimer.common.NoteEntityAction;
@@ -27,7 +28,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 
@@ -35,8 +35,7 @@ public class NoteEditMvpP {
     public static final String TAG = NoteEditMvpP.class.getSimpleName();
 
     private INoteEntity noteEntity;
-
-    private Disposable textChagneDisposable;
+    private Disposable textChangeDisposable;
 
     private INoteEditMvpV noteEditMvpV;
     private INoteEditMvpM noteEditMvpM;
@@ -46,7 +45,7 @@ public class NoteEditMvpP {
         noteEditMvpM      = new NoteEntityAction();
     }
 
-    public void toLoadNote(String noteId){
+    public void toLoadNote(final String noteId){
         noteEditMvpM.toLoadOrCreateNote(noteId)
             .doOnNext(new Consumer<Optional<INoteEntity>>() {
                 @Override
@@ -71,22 +70,24 @@ public class NoteEditMvpP {
                 public void onNext(Optional<INoteEntity> optional) {
                     super.onNext(optional);
                     if(!optional.isPresent()) {
-                        Logcat.i(TAG,"toLoadNote , doOnNext ：noteEntity null");
+                        Logcat.i(TAG,"toLoadNote , onNext ：noteEntity null");
                         noteEditMvpV.onLoadNull();
                         return;
                     }
                     noteEntity = optional.get();
-                    if(!noteEntity.ifFileExist()){
-                        Logcat.i(TAG,"toLoadNote , doOnNext ：noteEntity no exist");
+                    if(!TextUtils.isEmpty(noteId) && !noteEntity.ifFileExist()){
+                        Logcat.i(TAG,"toLoadNote , onNext ：noteEntity no exist");
                         noteEditMvpV.onLoadUnexist();
                     }else{
-                        noteEditMvpV.onContextShow(noteEntity);
+                        Logcat.i(TAG,"toLoadNote , onNext ：noteEntity load suss");
+                        noteEditMvpV.onLoadSucc(noteEntity);
                         initTextChangeListener(noteEditMvpV.getEditView());
                     }
                 }
 
                 @Override
                 public void onError(Throwable t) {
+                    Logcat.i(TAG,"toLoadNote , onError ：" + t.getMessage());
                     noteEditMvpV.onLoadErr(t);
                 }
 
@@ -135,30 +136,21 @@ public class NoteEditMvpP {
             throw new NoteEditException(NoteEditErrCode.ERR_EDIT_VIEW_NULL);
         }
 
-        textChagneDisposable = RxTextView.textChangeEvents(textView)
+        textChangeDisposable = RxTextView.textChangeEvents(textView)
+                .debounce(600, TimeUnit.MILLISECONDS)
                 .compose(noteEditMvpV.getUiContext().<TextViewTextChangeEvent>bindUntilEvent(ActivityEvent.DESTROY))
-                .map(new Function<TextViewTextChangeEvent, INoteEntity>() {
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<TextViewTextChangeEvent>() {
                     @Override
-                    public INoteEntity apply(TextViewTextChangeEvent textViewTextChangeEvent) throws Exception {
-                        Logcat.i(TAG,"textChangeEvents before:" + textViewTextChangeEvent.before() +
-                                ",start:" + textViewTextChangeEvent.start() + ",text:" + textViewTextChangeEvent.text() +
-                                ",count:" + textViewTextChangeEvent.count());
-                        noteEntity.setMdContext(textViewTextChangeEvent.text().toString());
+                    public void accept(TextViewTextChangeEvent textViewTextChangeEvent) {
+                        Logcat.i(TAG, "initTextChangeListener onNext, before = " + textViewTextChangeEvent.before() +
+                                ", start = " + textViewTextChangeEvent.start() + ", text = " + textViewTextChangeEvent.text() +
+                                ", count = " + textViewTextChangeEvent.count());
+                        noteEntity.setRawContext(textViewTextChangeEvent.text().toString());
                         noteEditMvpM.toMdContext(noteEntity);
-                        return noteEntity;
-                    }
-                })
-                .subscribe(new Consumer<INoteEntity>() {
-                    @Override
-                    public void accept(INoteEntity noteEntity) throws Exception {
-                        noteEditMvpV.onContextShow(noteEntity);
+                        noteEditMvpV.toShowContext(noteEntity);
                     }
                 });
-    }
-
-    public void toStopTextChangeListener(){
-        if(textChagneDisposable != null && !textChagneDisposable.isDisposed())
-            textChagneDisposable.dispose();
     }
 
     public interface INoteEditMvpM {
@@ -169,17 +161,17 @@ public class NoteEditMvpP {
     }
 
     public interface INoteEditMvpV {
-        public @NonNull
-        RxActivity getUiContext();
+        public @NonNull RxActivity getUiContext();
         public @NonNull TextView getEditView();
 
         public void onLoading();
         public void onLoadNull();
         public void onLoadUnexist();
+        public void onLoadSucc(INoteEntity noteEntity);
         public void onLoadErr(Throwable e);
         public void onLoadComplete();
 
-        public void onContextShow(INoteEntity noteEntity);
+        public void toShowContext(INoteEntity noteEntity);
         public void toSaveContext(INoteEntity noteEntity);
         public void onNoteDone(INoteEntity noteEntity);
     }
