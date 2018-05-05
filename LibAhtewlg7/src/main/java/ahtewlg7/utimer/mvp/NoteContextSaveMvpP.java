@@ -19,7 +19,7 @@ public class NoteContextSaveMvpP {
         noteSaveMvpM      = new NoteEntityAction();
     }
 
-    public void toSaveNoteContext(INoteEntity iNoteEntity){
+    public void toSaveNoteContext(final INoteEntity iNoteEntity){
         noteSaveMvpM.toSaveContext(iNoteEntity)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -28,28 +28,28 @@ public class NoteContextSaveMvpP {
                 public void onNext(Boolean aBoolean) {
                     super.onNext(aBoolean);
                     if(aBoolean)
-                        noteSaveMvpV.onNoteSaveSucc();
+                        noteSaveMvpV.onNoteSaveSucc(iNoteEntity);
                     else
-                        noteSaveMvpV.onNoteSaveFailed();
+                        noteSaveMvpV.onNoteSaveFailed(iNoteEntity);
                 }
 
                 @Override
                 public void onError(Throwable t) {
-                    noteSaveMvpV.onNoteSaveErr(t);
+                    noteSaveMvpV.onNoteSaveErr(iNoteEntity, t);
                 }
 
                 @Override
                 public void onComplete() {
-                    noteSaveMvpV.onNoteSaveComplete();
+                    noteSaveMvpV.onNoteSaveComplete(iNoteEntity);
                 }
             });
     }
 
     public interface INoteSaveMvpV {
-        public void onNoteSaveFailed();
-        public void onNoteSaveSucc();
-        public void onNoteSaveErr(Throwable e);
-        public void onNoteSaveComplete();
+        public void onNoteSaveFailed(INoteEntity noteEntity);
+        public void onNoteSaveSucc(INoteEntity noteEntity);
+        public void onNoteSaveErr(INoteEntity noteEntity, Throwable e);
+        public void onNoteSaveComplete(INoteEntity noteEntity);
     }
 
     public interface INoteSaveMvpM {
