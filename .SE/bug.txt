@@ -1,0 +1,1 @@
+1.RxTextView.textChangeEvents监听后，调用toShowContext时，会导致textChangeEvents监听后死循环，直到ANR
