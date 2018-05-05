@@ -1,15 +1,13 @@
 package ahtewlg7.utimer.common;
 
-import android.text.TextUtils;
-
 import com.google.common.base.Optional;
 
 import org.joda.time.DateTime;
 
 import ahtewlg7.utimer.entity.INoteEntity;
 import ahtewlg7.utimer.entity.NoteEntity;
-import ahtewlg7.utimer.mvp.NoteEditMvpP;
 import ahtewlg7.utimer.mvp.NoteContextSaveMvpP;
+import ahtewlg7.utimer.mvp.NoteEditMvpP;
 import ahtewlg7.utimer.storagerw.EntityDbAction;
 import ahtewlg7.utimer.util.DateTimeAction;
 import ahtewlg7.utimer.util.Logcat;
@@ -53,13 +51,11 @@ public class NoteEntityAction
 
     @Override
     public Flowable<Optional<INoteEntity>> toLoadOrCreateNote(String noteId) {
-        if(TextUtils.isEmpty(noteId))
-            return Flowable.just(Optional.<INoteEntity>absent());
         return loadEntity(Flowable.just(noteId))
                 .map(new Function<Optional<INoteEntity>, Optional<INoteEntity>>() {
                     @Override
                     public Optional<INoteEntity> apply(Optional<INoteEntity> iNoteEntityOptional) throws Exception {
-                        if(iNoteEntityOptional.isPresent())
+                        if(!iNoteEntityOptional.isPresent())
                             return Optional.of(createNoteEntity());
                         return iNoteEntityOptional;
                     }

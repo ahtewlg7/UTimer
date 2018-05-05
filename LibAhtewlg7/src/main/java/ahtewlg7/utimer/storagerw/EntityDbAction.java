@@ -50,10 +50,10 @@ public class EntityDbAction{
             @Override
             public Optional<INoteEntity> apply(String id) throws Exception {
                 if(TextUtils.isEmpty(id))
-                    throw new DataBaseException(DbErrCode.ERR_DB_ID_EMPTY);
+                    return Optional.absent();
                 NoteEntityGdBean noteEntityGdBean = NoteEntityDaoAction.getInstance().queryById(id);
                 if(noteEntityGdBean == null)
-                    throw new DataBaseException(DbErrCode.ERR_DB_BEAN_NULL);
+                    return Optional.absent();
                 INoteEntity noteEntity = JSON.parseObject(noteEntityGdBean.getValue(),NoteEntity.class);
                 return Optional.fromNullable(noteEntity);
             }
