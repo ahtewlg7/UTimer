@@ -1,0 +1,12 @@
+todo:
+    2.a
+
+********************************************************************************
+1.使用NoteEdit Mvp 重构笔记编辑模块逻辑：
+    a>.重构note file 文本内容load逻辑   DONE
+    b>.重构note file 文本内存save逻辑 : 为了能后台自动存储，最好在service中执行     DONE
+    c>.noteEdit中不应该混入gtd的逻辑，而只负责note本身      DONE
+    d>.EntityDbAction.getNoteEntity : DataBaseException.ERR_DB_ID_EMPTY      DONE
+
+2.重构gtd Recycler MVP逻辑
+    a>.EntityDbAction.getGtdEntity : 使用Optional代替DataBaseException.ERR_DB_ID_EMPTY      todo
