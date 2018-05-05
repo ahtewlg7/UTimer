@@ -15,7 +15,7 @@ public class MyLoggerAdapterFactory {
     public AndroidLogAdapter getBaseAndroidLogAdapter(boolean loggable){
         FormatStrategy formatStrategy = PrettyFormatStrategy.newBuilder()
                 .showThreadInfo(false)  // (Optional) Whether to show thread info or not. Default true
-                .methodCount(0)         // (Optional) How many method line to show. Default 2
+                .methodCount(2)         // (Optional) How many method line to show. Default 2
                 .methodOffset(0)        // (Optional) Hides internal method calls up to offset. Default 5
                 .build();
         MyAndroidLogAdapter myAndroidLogAdapter = new MyAndroidLogAdapter(formatStrategy);
