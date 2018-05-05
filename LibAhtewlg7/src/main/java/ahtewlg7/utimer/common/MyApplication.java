@@ -1,14 +1,15 @@
 package ahtewlg7.utimer.common;
 
 import android.app.Application;
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.blankj.utilcode.util.ServiceUtils;
 import com.blankj.utilcode.util.Utils;
 
 import ahtewlg7.utimer.db.GreenDaoAction;
+import ahtewlg7.utimer.ui.BinderService;
 import ahtewlg7.utimer.util.AppInfoAction;
 import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.ProcessAction;
@@ -53,8 +54,6 @@ public abstract class MyApplication extends Application {
 
 	protected void toStartIraiBinderService(){
 		Logcat.d(TAG,"to start BinderService");
-		Intent bootIntent = new Intent(this, getConfigFactory().getBinderServiceClass());
-		bootIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		startService(bootIntent);
+		ServiceUtils.startService(BinderService.class);
 	}
 }

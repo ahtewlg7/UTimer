@@ -32,7 +32,6 @@ import ahtewlg7.utimer.mvp.IGtdInfoMvpV;
 import ahtewlg7.utimer.mvp.INoteRecyclerViewMvpV;
 import ahtewlg7.utimer.ui.BaseBinderActivity;
 import ahtewlg7.utimer.util.Logcat;
-import ahtewlg7.utimer.util.MyRInfo;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Flowable;
@@ -47,8 +46,8 @@ public class GtdInboxActivity extends BaseBinderActivity
         implements IGtdInfoMvpV,IGtdInboxMvpV, INoteRecyclerViewMvpV<NoteEntity> {
     public static final String TAG = GtdInboxActivity.class.getSimpleName();
 
-    public static final String EXTRA_KEY_GTD_ID  = MyRInfo.getStringByID(R.string.extra_gtd_id);
-    public static final String EXTRA_KEY_NOTE_ID = MyRInfo.getStringByID(R.string.extra_note_id);
+//    public static final String EXTRA_KEY_GTD_ID  = MyRInfo.getStringByID(R.string.extra_gtd_id);
+//    public static final String EXTRA_KEY_NOTE_ID = MyRInfo.getStringByID(R.string.extra_note_id);
 
     @BindView(R.id.activity_gtdinfo_layout_title_tv)
     TextView gtdInfoTitle;
@@ -156,10 +155,10 @@ public class GtdInboxActivity extends BaseBinderActivity
             ToastUtils.showShort("GtdEntityId or noteEntityId are empty");
             return;
         }
-        Intent intent = new Intent(this, MdEditorActivity.class);
+        /*Intent intent = new Intent(this, MdEditorActivity.class);
         intent.putExtra(MdEditorActivity.EXTRA_KEY_GTD_ID, gtdEntity.getId());
         intent.putExtra(MdEditorActivity.EXTRA_KEY_NOTE_ID, noteEntityId);
-        startActivityForResult(intent, MdEditorActivity.ACTIVITY_START_RESULT);
+        startActivityForResult(intent, MdEditorActivity.ACTIVITY_START_RESULT);*/
     }
 
     @Override
@@ -228,7 +227,7 @@ public class GtdInboxActivity extends BaseBinderActivity
     //+++++++++++++++++++++++++++++++++++++end+++++++++++++++++++++++++++++++++++++++++++
 
     protected void handleIntent(@NonNull Intent intent){
-        String gtdId = intent.getStringExtra(EXTRA_KEY_GTD_ID);
+        String gtdId = null/*intent.getStringExtra(EXTRA_KEY_GTD_ID)*/;
         if(TextUtils.isEmpty(gtdId)) {
             Logcat.i(TAG,"handleIntent : gtdId is empty, so finish");
             finish();

@@ -25,7 +25,6 @@ import ahtewlg7.utimer.entity.view.BaseSectionEntity;
 import ahtewlg7.utimer.enumtype.GtdType;
 import ahtewlg7.utimer.mvp.IGtdRecyclerViewMvpV;
 import ahtewlg7.utimer.util.Logcat;
-import ahtewlg7.utimer.util.MyRInfo;
 import butterknife.BindView;
 import io.reactivex.Flowable;
 import io.reactivex.flowables.GroupedFlowable;
@@ -38,8 +37,8 @@ import io.reactivex.functions.Function;
 public class GtdFragment extends AFunctionFragement implements IGtdRecyclerViewMvpV<AGtdEntity> {
     public static final String TAG = GtdFragment.class.getSimpleName();
 
-    public static final String EXTRA_KEY_GTD_ID  = MyRInfo.getStringByID(R.string.extra_gtd_id);
-    public static final String EXTRA_KEY_NOTE_ID = MyRInfo.getStringByID(R.string.extra_note_id);
+//    public static final String EXTRA_KEY_GTD_ID  = MyRInfo.getStringByID(R.string.extra_gtd_id);
+//    public static final String EXTRA_KEY_NOTE_ID = MyRInfo.getStringByID(R.string.extra_note_id);
 
     private String clickedEntityId;
     private GtdRecylerMvpPresenter gtdRecylerMvpPresenter;
@@ -68,8 +67,8 @@ public class GtdFragment extends AFunctionFragement implements IGtdRecyclerViewM
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        String noteId   = intent.getStringExtra(EXTRA_KEY_NOTE_ID);
-        String entityId = intent.getStringExtra(EXTRA_KEY_GTD_ID);
+        String noteId   = null/*intent.getStringExtra(EXTRA_KEY_NOTE_ID)*/;
+        String entityId = null/*intent.getStringExtra(EXTRA_KEY_GTD_ID)*/;
         Logcat.i(TAG,"onActivityResult noteId = " + noteId + ", entityId = " + entityId);
         /*if(!TextUtils.isEmpty(noteId))
             gtdRecylerMvpPresenter.addData(noteId);
@@ -174,9 +173,9 @@ public class GtdFragment extends AFunctionFragement implements IGtdRecyclerViewM
             return false;
         }
 
-        Intent intent = new Intent(GtdFragment.this.getActivity(), getTargetClass(gtdType));
+        /*Intent intent = new Intent(GtdFragment.this.getActivity(), getTargetClass(gtdType));
         intent.putExtra(MdEditorActivity.EXTRA_KEY_GTD_ID, gtdEntityId);
-        startActivity(intent);
+        startActivity(intent);*/
         return true;
     }
 
