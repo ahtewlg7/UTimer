@@ -25,11 +25,11 @@ public class HistoryFragment extends AFunctionFragement {
 
     @Override
     public int getIndicateIconRid() {
-        return R.mipmap.ic_launcher;
+        return R.drawable.page_indicator;
     }
 
     @Override
     public int getLayoutRid() {
-        return R.layout.fragment_note;
+        return R.layout.fragment_recycler;
     }
 }

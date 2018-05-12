@@ -84,24 +84,24 @@ public class GtdFragment extends AFunctionFragement implements IGtdRecyclerViewM
 
     @Override
     public int getIndicateIconRid() {
-        return R.mipmap.ic_launcher;
+        return R.drawable.page_indicator;
     }
 
     @Override
     public int getLayoutRid() {
-        return R.layout.fragment_note;
+        return R.layout.fragment_recycler;
     }
 
 
     @Override
-    public void initRecyclerView(List<BaseSectionEntity> dataList) {
-        sectionRecylerView.init(GtdFragment.this.getActivity(), dataList,
-                sectionItemClickListener , sectionItemChildClickListener);
+    public void initRecyclerView(List<AGtdEntity> dataList) {
+        /*sectionRecylerView.init(GtdFragment.this.getActivity(), dataList,
+                sectionItemClickListener , sectionItemChildClickListener);*/
     }
 
     @Override
-    public void resetRecyclerView(List<BaseSectionEntity> dataList) {
-        sectionRecylerView.resetNewData(dataList);
+    public void resetRecyclerView(List<AGtdEntity> dataList) {
+        /*sectionRecylerView.resetNewData(dataList);*/
     }
 
     @Override
@@ -116,7 +116,6 @@ public class GtdFragment extends AFunctionFragement implements IGtdRecyclerViewM
     public void onRecyclerViewInitEnd() {
     }
 
-    @Override
     public Flowable<BaseSectionEntity> mapBean(@NonNull Flowable<AGtdEntity> sourceBeanFlowable) {
         return sourceBeanFlowable.groupBy(new Function<AGtdEntity, GtdType>() {
                     @Override
