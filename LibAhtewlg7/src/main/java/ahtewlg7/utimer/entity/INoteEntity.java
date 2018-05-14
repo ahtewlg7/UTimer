@@ -6,6 +6,9 @@ import org.joda.time.DateTime;
 public interface INoteEntity extends IUtimerEntity{
     public boolean ifFileExist();
 
+    public boolean isCreated();
+    public void setIsCreated(boolean created);
+
     @Override
     public String getId();
     public void setId(String id);

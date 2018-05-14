@@ -9,6 +9,8 @@ import org.joda.time.DateTime;
 public class NoteEntity implements INoteEntity {
     public static final String TAG = NoteEntity.class.getSimpleName();
 
+    private boolean created = false;
+
     private String id;
     private String title;
     private String detail;
@@ -33,6 +35,16 @@ public class NoteEntity implements INoteEntity {
     @Override
     public boolean ifFileExist() {
         return false;
+    }
+
+    @Override
+    public boolean isCreated() {
+        return created;
+    }
+
+    @Override
+    public void setIsCreated(boolean created) {
+        this.created = created;
     }
 
     @Override

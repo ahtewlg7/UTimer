@@ -11,6 +11,10 @@ public class NoteEditEndEvent{
     public NoteEditEndEvent(String noteId){
         this.noteId = noteId;
     }
+    public NoteEditEndEvent(String noteId, boolean isNew){
+        this.noteId = noteId;
+        this.isNew  = isNew;
+    }
 
     public Optional<String> getEoteEntityId() {
         return Optional.fromNullable(noteId);
@@ -18,9 +22,6 @@ public class NoteEditEndEvent{
 
     public boolean isNew() {
         return isNew;
-    }
-    public void setNew(boolean aNew) {
-        isNew = aNew;
     }
 
     @Override
