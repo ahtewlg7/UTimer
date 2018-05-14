@@ -98,12 +98,12 @@ public class EntityDbAction{
     public boolean saveEntity(INoteEntity entity) {
         if(entity == null)
             return false;
-        Logcat.i(TAG,"save noteEntity");
         NoteEntityGdBean noteEntityGdBean = new NoteEntityGdBean();
         noteEntityGdBean.setKey(entity.getId());
         noteEntityGdBean.setValue(JSON.toJSONString(entity));
-        NoteEntityDaoAction.getInstance().insert(noteEntityGdBean);
-        return true;
+        Logcat.i(TAG,"saveEntity ： noteEntityGdBean = " + noteEntityGdBean.toString());
+        long index = NoteEntityDaoAction.getInstance().insert(noteEntityGdBean);
+        return index >= 0;
     }
 
     public boolean saveEntity(AGtdEntity entity) {
@@ -115,8 +115,8 @@ public class EntityDbAction{
         gtdEntityGdBean.setGtdType(entity.getTaskType());
         gtdEntityGdBean.setLastAccessTime(entity.getLastModifyDateTime());
         gtdEntityGdBean.setValue(JSON.toJSONString(entity));
-        GtdEntityDaoAction.getInstance().insert(gtdEntityGdBean);
-        return true;
+        long index = GtdEntityDaoAction.getInstance().insert(gtdEntityGdBean);
+        return index >= 0;
     }
     
     private AGtdEntity parseGtdBean(@NonNull GtdEntityGdBean gtdEntityGdBean){

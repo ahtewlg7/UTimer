@@ -8,6 +8,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import ahtewlg7.utimer.R;
+import ahtewlg7.utimer.busevent.NoteEditEndEvent;
 import ahtewlg7.utimer.busevent.NoteEditEvent;
 import ahtewlg7.utimer.common.EventBusFatory;
 import ahtewlg7.utimer.entity.INoteEntity;
@@ -94,7 +95,14 @@ public abstract class ANoteEditorActivity extends BaseBinderActivity
     @Override
     public void onNoteDone(INoteEntity noteEntity) {
         String noteId = noteEntity != null ? noteEntity.getId() : null;
-        EventBusFatory.getInstance().getDefaultEventBus().post(new NoteEditEvent(noteId));
+        Logcat.i(TAG,"onNoteDone : noteId = " + noteId);
+        EventBusFatory.getInstance().getDefaultEventBus().postSticky(new NoteEditEndEvent(noteId));
+    }
+
+    @Override
+    public void onNoteSaveFail(INoteEntity noteEntity) {
+        Logcat.i(TAG,"onNoteSaveFail ： " + noteEntity.toString());
+        // TODO: 2018/5/13
     }
 
     @Override

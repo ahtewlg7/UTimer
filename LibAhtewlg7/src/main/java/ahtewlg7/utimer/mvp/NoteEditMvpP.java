@@ -28,7 +28,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 
 public class NoteEditMvpP {
@@ -111,20 +110,19 @@ public class NoteEditMvpP {
         }
         noteEntity.setLastAccessTime(now);
 
+        Logcat.i(TAG,"toDoneNote : " + noteEntity.toString());
         noteEditMvpM.toSaveNote(noteEntity)
             .observeOn(AndroidSchedulers.mainThread())
-            .filter(new Predicate<Boolean>() {
-                @Override
-                public boolean test(Boolean aBoolean) throws Exception {
-                    return aBoolean;
-                }
-            })
             .subscribe(new MySafeSubscriber<Boolean>(){
                 @Override
                 public void onNext(Boolean aBoolean) {
                     super.onNext(aBoolean);
-                    noteEditMvpV.toSaveContext(noteEntity);
-                    noteEditMvpV.onNoteDone(noteEntity);
+                    if(aBoolean){
+                        noteEditMvpV.toSaveContext(noteEntity);
+                        noteEditMvpV.onNoteDone(noteEntity);
+                    }else{
+                        noteEditMvpV.onNoteSaveFail(noteEntity);
+                    }
                 }
             });
 
@@ -174,5 +172,6 @@ public class NoteEditMvpP {
         public void toShowContext(INoteEntity noteEntity);
         public void toSaveContext(INoteEntity noteEntity);
         public void onNoteDone(INoteEntity noteEntity);
+        public void onNoteSaveFail(INoteEntity noteEntity);
     }
 }
