@@ -35,11 +35,18 @@ public abstract class AGreenDaoAction<T>{
         greenDao    = getCustomDao();
     }
 
+    /*
+    * when you want to save some, no need to do it in a new Thread,
+    * which will lead to save failed even without a log.
+    * For example, to do it whit Rxjava.subscribeOn(Schedulers.io())
+    */
+
     public long insert(@NonNull T entity) {
         return greenDao.insertOrReplace(entity);
     }
-    public Observable<Long> insert(@NonNull Observable<T> observable){
-        return observable.map(new Function<T, Long>() {
+
+    public Flowable<Long> insert(@NonNull Flowable<T> flowable){
+        return flowable.map(new Function<T, Long>() {
             @Override
             public Long apply(T t) throws Exception {
                 checkNotNull(t);

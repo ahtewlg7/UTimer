@@ -44,7 +44,7 @@ public class NoteEntityDaoAction extends AGreenDaoAction<NoteEntityGdBean> {
         return noteEntityGdBeanList.get(0);
     }
 
-    class KeyQueryFilter implements IGreenDaoQueryFiltVisitor<NoteEntityGdBean>{
+    class KeyQueryFilter implements IGreenDaoQueryFiltVisitor<NoteEntityGdBean> {
         private String key;
 
         KeyQueryFilter(String key){

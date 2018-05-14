@@ -2,7 +2,6 @@ package ahtewlg7.utimer.db.entity;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Unique;
-import org.greenrobot.greendao.annotation.Generated;
 
 /**
  * Created by lw on 2018/1/6.
@@ -12,13 +11,14 @@ import org.greenrobot.greendao.annotation.Generated;
     nameInDb = "NOTE_ENTITY",
     generateConstructors = false
 )
-public class NoteEntityGdBean{
+public class  NoteEntityGdBean{
     @Unique
     private String key;
     private String value;
 
     public NoteEntityGdBean() {
     }
+
     public String getKey() {
         return this.key;
     }
@@ -31,4 +31,13 @@ public class NoteEntityGdBean{
     public void setValue(String value) {
         this.value = value;
     }
+
+    // KEEP METHODS - put your custom methods here
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("key = " + key + ", value = " + value);
+        return stringBuilder.toString();
+    }
+    // KEEP METHODS END
 }
