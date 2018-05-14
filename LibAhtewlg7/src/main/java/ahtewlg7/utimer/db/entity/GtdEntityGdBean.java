@@ -8,6 +8,7 @@ import org.joda.time.DateTime;
 import ahtewlg7.utimer.db.converter.DateTimeTypeConverter;
 import ahtewlg7.utimer.db.converter.GtdTypeConverter;
 import ahtewlg7.utimer.enumtype.GtdType;
+import org.greenrobot.greendao.annotation.Generated;
 
 /**
  * Created by lw on 2018/1/5.

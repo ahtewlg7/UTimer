@@ -8,6 +8,7 @@ import ahtewlg7.utimer.entity.INoteEntity;
 import ahtewlg7.utimer.entity.NoteEntity;
 import ahtewlg7.utimer.mvp.NoteContextSaveMvpP;
 import ahtewlg7.utimer.mvp.NoteEditMvpP;
+import ahtewlg7.utimer.mvp.NoteRecylerViewMvpP;
 import ahtewlg7.utimer.storagerw.EntityDbAction;
 import ahtewlg7.utimer.util.DateTimeAction;
 import ahtewlg7.utimer.util.Logcat;
@@ -19,7 +20,8 @@ import io.reactivex.functions.Function;
  */
 
 public class NoteEntityAction
-        implements NoteEditMvpP.INoteEditMvpM, NoteContextSaveMvpP.INoteSaveMvpM {
+        implements NoteEditMvpP.INoteEditMvpM, NoteContextSaveMvpP.INoteSaveMvpM
+        , NoteRecylerViewMvpP.INoteRecyclerViewMvpM {
     public static final String TAG = NoteEntityAction.class.getSimpleName();
 
     private EntityDbAction dbAction;
@@ -32,9 +34,6 @@ public class NoteEntityAction
         noteContextFsAction = new NoteContextFsAction();
     }
 
-    public Flowable<Optional<INoteEntity>> loadEntity(Flowable<String> idObservable) {
-        return dbAction.getNoteEntity(idObservable);
-    }
 
     public INoteEntity createNoteEntity(){
         Logcat.i(TAG,"createNoteEntity");
@@ -43,10 +42,21 @@ public class NoteEntityAction
 
         NoteEntity noteEntity = new NoteEntity();
         noteEntity.setId(id);
+        noteEntity.setIsCreated(true);
         noteEntity.setNoteName(dateTimeAction.toFormat(now));
         noteEntity.setCreateTime(now);
         noteEntity.setLastAccessTime(now);
         return noteEntity;
+    }
+
+    @Override
+    public Flowable<Optional<INoteEntity>> loadAllEntity() {
+        return dbAction.loadAllNoteEntity();
+    }
+
+    @Override
+    public Flowable<Optional<INoteEntity>> loadEntity(Flowable<String> idObservable) {
+        return dbAction.getNoteEntity(idObservable);
     }
 
     @Override

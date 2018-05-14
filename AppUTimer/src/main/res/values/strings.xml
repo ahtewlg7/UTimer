@@ -4,4 +4,6 @@
     <string name="welcome_slogan">Time is Money!</string>
     <string name="err_id_empty">Gtd Id is empty!</string>
     <string name="btn_projecting">projecting</string>
+    <string name="btn_new">new</string>
+
 </resources>
