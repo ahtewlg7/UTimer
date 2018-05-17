@@ -12,7 +12,6 @@ import com.trello.rxlifecycle2.components.RxActivity;
 import org.joda.time.DateTime;
 import org.reactivestreams.Subscription;
 
-import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 import ahtewlg7.utimer.common.FileSystemAction;
@@ -20,7 +19,6 @@ import ahtewlg7.utimer.common.NoteEntityAction;
 import ahtewlg7.utimer.entity.INoteEntity;
 import ahtewlg7.utimer.enumtype.errcode.NoteEditErrCode;
 import ahtewlg7.utimer.exception.NoteEditException;
-import ahtewlg7.utimer.util.DateTimeAction;
 import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MySafeSubscriber;
 import io.reactivex.Flowable;
@@ -99,15 +97,16 @@ public class NoteEditMvpP {
 
     public void toDoneNote(){
         DateTime now    = DateTime.now();
-        if(TextUtils.isEmpty(noteEntity.getNoteName())) {
-            String tmpName = new DateTimeAction().toFormat(now) + "_note";
-            noteEntity.setNoteName(tmpName);
+        if(TextUtils.isEmpty(noteEntity.getTitle()))
+            noteEntity.setTitle(noteEntity.getNoteName());
+        if(TextUtils.isEmpty(noteEntity.getDetail())){
+            String tmp = noteEntity.getRawContext();
+            int endIndex = tmp.length() > 20 ? 20 : tmp.length();
+            noteEntity.setDetail(tmp.substring(0, endIndex));
         }
 
-        if(TextUtils.isEmpty(noteEntity.getFileRPath())) {
-            String fileRPath = new FileSystemAction().getNoteDocRPath() + noteEntity.getNoteName() + File.separator;
-            noteEntity.setFileRPath(fileRPath);
-        }
+        if(TextUtils.isEmpty(noteEntity.getFileRPath()))
+            noteEntity.setFileRPath(new FileSystemAction().getNoteDocRPath());
         noteEntity.setLastAccessTime(now);
 
         Logcat.i(TAG,"toDoneNote : " + noteEntity.toString());
