@@ -10,3 +10,20 @@ todo:
 
 2.重构gtd Recycler MVP逻辑
     a>.EntityDbAction.getGtdEntity : 使用Optional代替DataBaseException.ERR_DB_ID_EMPTY      todo
+
+3.使用note RecyclerView Mvp重构笔记列表模块逻辑：
+    a>.使用mvp重构 note recyclerView逻辑      DONE
+    b>.优化ViewPage Fragment tab item height值太大问题      DONE
+    c>.解决note Edit后没有保存到数据库问题 : greendao存储时不需要另开线程      DONE
+    d>.noteFragment使用EventBus接受MdEditorActivity回调的NoteEvent事件      DONE
+    e>.按lastAccessTime降序顺序排列      DONE
+    f>.优化linearRecyclerView item控件布局      DONE
+    g>.完成编辑后返回note列表时，主动填补刷新
+
+4.将note融入GTD事务自动流程 todo
+    a>.按需将相应的note变化成Gtd.Inbox
+    b>.优化gtd 状态机： activity/server
+
+5.优化数据库设计
+    a>.添加数据库存储变化集：newList, dirtyList, removeList
+    b>.添加表唯一ID生成器：KeyGenerator
