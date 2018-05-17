@@ -13,6 +13,7 @@ import com.utimer.R;
 import java.util.List;
 
 import ahtewlg7.utimer.entity.INoteEntity;
+import ahtewlg7.utimer.util.MyRInfo;
 import ahtewlg7.utimer.view.ABaseLinearRecyclerView;
 
 public class NoteLinerRecyclerView extends ABaseLinearRecyclerView<INoteEntity> {
@@ -36,7 +37,7 @@ public class NoteLinerRecyclerView extends ABaseLinearRecyclerView<INoteEntity> 
 
     @Override
     public int getViewItemLayout() {
-        return R.layout.view_gtd_section_item;
+        return R.layout.view_recycler_note_item;
     }
 
     @Override
@@ -72,8 +73,9 @@ public class NoteLinerRecyclerView extends ABaseLinearRecyclerView<INoteEntity> 
 
         @Override
         protected void convert(BaseViewHolder helper, INoteEntity item) {
-            helper.setImageResource(R.id.view_gtd_iv, R.mipmap.ic_launcher);
-            helper.setText(R.id.view_gtd_tv, item.getNoteName());
+            helper.setText(R.id.view_recycler_note_title, MyRInfo.getStringByID(R.string.note_title) + item.getTitle());
+            helper.setText(R.id.view_recycler_note_name, MyRInfo.getStringByID(R.string.note_name) + item.getFileRPath() + item.getNoteName());
+            helper.setText(R.id.view_recycler_note_detail, MyRInfo.getStringByID(R.string.note_detail) + item.getDetail());
         }
     }
 }

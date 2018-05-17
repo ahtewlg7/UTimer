@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="note_title">笔记:</string>
+    <string name="note_name">笔记文件:</string>
+    <string name="note_detail">笔记简介:</string>
+</resources>

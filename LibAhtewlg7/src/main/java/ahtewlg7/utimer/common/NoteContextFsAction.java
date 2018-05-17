@@ -6,6 +6,7 @@ import com.blankj.utilcode.util.FileIOUtils;
 
 import ahtewlg7.utimer.entity.INoteEntity;
 import ahtewlg7.utimer.util.Logcat;
+import ahtewlg7.utimer.verctrl.VcFactoryBuilder;
 
 /**
  * Created by lw on 2018/2/16.
@@ -29,8 +30,9 @@ public class NoteContextFsAction {
             Logcat.i(TAG,"writeNoteContext ：noteContext is null");
             return false;
         }
+        String noteFileSuffix = VcFactoryBuilder.getInstance().getVersionControlFactory().getBaseConfig().getNoteFileSuffix();
         String noteFileRPath = fileSystemAction.getSdcardPath() + noteEntity.getFileRPath()
-                + noteEntity.getNoteName() + ".txt";
+                + noteEntity.getNoteName() + noteFileSuffix;
         Logcat.i(TAG,"saveNoteContext noteFileRPath = " + noteFileRPath);
         return FileIOUtils.writeFileFromString(noteFileRPath, noteEntity.getRawContext());
     }

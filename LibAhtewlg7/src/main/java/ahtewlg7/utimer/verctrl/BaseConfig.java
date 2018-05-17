@@ -10,6 +10,11 @@ import ahtewlg7.utimer.util.MyRInfo;
 public class BaseConfig {
     public static final String TAG = BaseConfig.class.getSimpleName();
 
+    public String getNoteFileSuffix(){
+        return MyRInfo.getStringByID(R.string.config_note_file_suffix);
+    }
+
+
     public String getSimpleAppName(){
         return MyRInfo.getStringByID(R.string.configs_simple_app_name);
     }

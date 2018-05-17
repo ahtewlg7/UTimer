@@ -1,6 +1,7 @@
 <resources>
     <string name="configs_simple_app_name">UTimer</string>
     <string name="config_log_file_name">log.txt</string>
+    <string name="config_note_file_suffix">.txt</string>
     <string name="config_datetime_format">YYYYMMdd_HHmm</string>
 
     <string name="configs_app_working_dir_data">data</string>

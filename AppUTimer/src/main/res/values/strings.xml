@@ -6,4 +6,8 @@
     <string name="btn_projecting">projecting</string>
     <string name="btn_new">new</string>
 
+    <string name="note_title">NoteTitle:</string>
+    <string name="note_name">NoteName:</string>
+    <string name="note_detail">NoteDetail:</string>
+
 </resources>
