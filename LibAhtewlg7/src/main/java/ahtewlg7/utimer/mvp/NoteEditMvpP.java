@@ -10,6 +10,7 @@ import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.trello.rxlifecycle2.components.RxActivity;
 
 import org.joda.time.DateTime;
+import org.reactivestreams.Publisher;
 import org.reactivestreams.Subscription;
 
 import java.util.concurrent.TimeUnit;
@@ -17,6 +18,7 @@ import java.util.concurrent.TimeUnit;
 import ahtewlg7.utimer.common.FileSystemAction;
 import ahtewlg7.utimer.common.NoteEntityAction;
 import ahtewlg7.utimer.entity.INoteEntity;
+import ahtewlg7.utimer.enumtype.LoadType;
 import ahtewlg7.utimer.enumtype.errcode.NoteEditErrCode;
 import ahtewlg7.utimer.exception.NoteEditException;
 import ahtewlg7.utimer.util.Logcat;
@@ -26,6 +28,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 
 public class NoteEditMvpP {
@@ -96,21 +100,38 @@ public class NoteEditMvpP {
     }
 
     public void toDoneNote(){
-        DateTime now    = DateTime.now();
-        if(TextUtils.isEmpty(noteEntity.getTitle()))
-            noteEntity.setTitle(noteEntity.getNoteName());
-        if(TextUtils.isEmpty(noteEntity.getDetail())){
-            String tmp = noteEntity.getRawContext();
-            int endIndex = tmp.length() > 20 ? 20 : tmp.length();
-            noteEntity.setDetail(tmp.substring(0, endIndex));
-        }
+        Flowable.just(noteEntity)
+            .filter(new Predicate<INoteEntity>() {
+                @Override
+                public boolean test(INoteEntity noteEntity) throws Exception {
+                    return noteEntity.isContextChanged() || noteEntity.getLoadType() != LoadType.NEW;
+                }
+            })
+            .doOnNext(new Consumer<INoteEntity>() {
+                @Override
+                public void accept(INoteEntity noteEntity) throws Exception {
+                    DateTime now    = DateTime.now();
+                    if(TextUtils.isEmpty(noteEntity.getTitle()))
+                        noteEntity.setTitle(noteEntity.getNoteName());
+                    if(TextUtils.isEmpty(noteEntity.getDetail())){
+                        String tmp = noteEntity.getRawContext();
+                        int endIndex = tmp.length() > 20 ? 20 : tmp.length();
+                        noteEntity.setDetail(tmp.substring(0, endIndex));
+                    }
 
-        if(TextUtils.isEmpty(noteEntity.getFileRPath()))
-            noteEntity.setFileRPath(new FileSystemAction().getNoteDocRPath());
-        noteEntity.setLastAccessTime(now);
+                    if(TextUtils.isEmpty(noteEntity.getFileRPath()))
+                        noteEntity.setFileRPath(new FileSystemAction().getNoteDocRPath());
+                    noteEntity.setLastAccessTime(now);
 
-        Logcat.i(TAG,"toDoneNote : " + noteEntity.toString());
-        noteEditMvpM.toSaveNote(noteEntity)
+                    Logcat.i(TAG,"toDoneNote, doOnNext: " + noteEntity.toString());
+                }
+            })
+            .flatMap(new Function<INoteEntity, Publisher<Boolean>>() {
+                @Override
+                public Publisher<Boolean> apply(INoteEntity noteEntity) throws Exception {
+                    return noteEditMvpM.toSaveNote(noteEntity);
+                }
+            })
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(new MySafeSubscriber<Boolean>(){
                 @Override
@@ -140,11 +161,7 @@ public class NoteEditMvpP {
                 .subscribe(new Consumer<TextViewTextChangeEvent>() {
                     @Override
                     public void accept(TextViewTextChangeEvent textViewTextChangeEvent) {
-                        Logcat.i(TAG, "initTextChangeListener onNext, before = " + textViewTextChangeEvent.before() +
-                                ", start = " + textViewTextChangeEvent.start() + ", text = " + textViewTextChangeEvent.text() +
-                                ", count = " + textViewTextChangeEvent.count());
-                        noteEntity.setRawContext(textViewTextChangeEvent.text().toString());
-                        noteEditMvpM.toMdContext(noteEntity);
+                        noteEditMvpM.handleTextChange(noteEntity, textViewTextChangeEvent);
                         noteEditMvpV.toShowContext(noteEntity);
                     }
                 });
@@ -153,7 +170,7 @@ public class NoteEditMvpP {
     public interface INoteEditMvpM {
         public Flowable<Optional<INoteEntity>> toLoadOrCreateNote(String noteId);
         public boolean toReadContext(INoteEntity noteEntity);
-        public void toMdContext(INoteEntity noteEntity);
+        public void handleTextChange(INoteEntity noteEntity, TextViewTextChangeEvent textViewTextChangeEvent);
         public Flowable<Boolean> toSaveNote(INoteEntity noteEntity);
     }
 
