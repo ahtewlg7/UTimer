@@ -19,6 +19,7 @@ import ahtewlg7.utimer.entity.gtd.GtdInboxEntity;
 import ahtewlg7.utimer.entity.gtd.GtdProjectEntity;
 import ahtewlg7.utimer.enumtype.DbErrCode;
 import ahtewlg7.utimer.enumtype.GtdType;
+import ahtewlg7.utimer.enumtype.LoadType;
 import ahtewlg7.utimer.exception.DataBaseException;
 import ahtewlg7.utimer.util.Logcat;
 import io.reactivex.Flowable;
@@ -39,6 +40,7 @@ public class EntityDbAction{
                     @Override
                     public Optional<INoteEntity> apply(NoteEntityGdBean noteEntityGdBean) throws Exception {
                         INoteEntity noteEntity = JSON.parseObject(noteEntityGdBean.getValue(),NoteEntity.class);
+                        noteEntity.setLoadType(LoadType.DB);
                         return Optional.fromNullable(noteEntity);
                     }
                 })

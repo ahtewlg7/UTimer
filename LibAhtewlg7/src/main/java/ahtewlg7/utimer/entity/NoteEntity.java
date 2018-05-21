@@ -2,6 +2,8 @@ package ahtewlg7.utimer.entity;
 
 import org.joda.time.DateTime;
 
+import ahtewlg7.utimer.enumtype.LoadType;
+
 /**
  * Created by lw on 2017/9/27.
  */
@@ -9,8 +11,9 @@ import org.joda.time.DateTime;
 public class NoteEntity implements INoteEntity {
     public static final String TAG = NoteEntity.class.getSimpleName();
 
-    private boolean created = false;
+    private boolean contextChanged    = false;
 
+    private LoadType loadType;
     private String id;
     private String title;
     private String detail;
@@ -24,9 +27,6 @@ public class NoteEntity implements INoteEntity {
     private DateTime lastAccessTime;
     private IAccessPosition lastAccessPosition;
 
-    public NoteEntity(){
-    }
-
     @Override
     public boolean isValid(){
         return true;
@@ -38,14 +38,14 @@ public class NoteEntity implements INoteEntity {
     }
 
     @Override
-    public boolean isCreated() {
-        return created;
-    }
+    public boolean isContextChanged() { return contextChanged; }
+    @Override
+    public void setContextChanged(boolean contextChanged) { this.contextChanged = contextChanged; }
 
     @Override
-    public void setIsCreated(boolean created) {
-        this.created = created;
-    }
+    public LoadType getLoadType() { return loadType; }
+    @Override
+    public void setLoadType(LoadType loadType) { this.loadType = loadType; }
 
     @Override
     public String getId() {
@@ -125,6 +125,8 @@ public class NoteEntity implements INoteEntity {
     public void setLastModifyContext(String lastModifyContext) {
         this.lastModifyContext = lastModifyContext;
     }
+
+
 
     @Override
     public DateTime getCreateTime() {

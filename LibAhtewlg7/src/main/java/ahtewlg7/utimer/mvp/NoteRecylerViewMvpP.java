@@ -88,6 +88,7 @@ public class NoteRecylerViewMvpP implements IRecyclerMvpP {
                     @Override
                     public void onSubscribe(Subscription s) {
                         super.onSubscribe(s);
+                        noteEntityList.clear();
                         noteRecylerViewMvpV.onRecyclerViewInitStart();
                     }
 

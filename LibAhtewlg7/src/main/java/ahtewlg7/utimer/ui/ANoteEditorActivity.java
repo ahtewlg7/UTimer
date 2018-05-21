@@ -94,9 +94,9 @@ public abstract class ANoteEditorActivity extends BaseBinderActivity
 
     @Override
     public void onNoteDone(INoteEntity noteEntity) {
-        NoteEditEndEvent noteEditEndEvent = new NoteEditEndEvent(noteEntity.getId(), noteEntity.isCreated());
+        NoteEditEndEvent noteEditEndEvent = new NoteEditEndEvent(noteEntity.getId(), noteEntity.getLoadType());
         Logcat.i(TAG,"onNoteDone : noteEditEndEvent = " + noteEditEndEvent.toString());
-        EventBusFatory.getInstance().getDefaultEventBus().postSticky(noteEditEndEvent);
+        EventBusFatory.getInstance().getDefaultEventBus().post(noteEditEndEvent);
     }
 
     @Override

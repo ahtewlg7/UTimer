@@ -3,11 +3,16 @@ package ahtewlg7.utimer.entity;
 
 import org.joda.time.DateTime;
 
+import ahtewlg7.utimer.enumtype.LoadType;
+
 public interface INoteEntity extends IUtimerEntity{
     public boolean ifFileExist();
 
-    public boolean isCreated();
-    public void setIsCreated(boolean created);
+    public boolean isContextChanged();
+    public void setContextChanged(boolean contextChanged);
+
+    public LoadType getLoadType();
+    public void setLoadType(LoadType loadType);
 
     @Override
     public String getId();

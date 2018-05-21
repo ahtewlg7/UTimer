@@ -76,7 +76,7 @@ public class NoteFragment extends AFunctionFragement
     }
 
     //EventBus callback
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNoteEditEndEvent(NoteEditEndEvent event) {
         Logcat.i(TAG,"onNoteEditEndEvent  : noteEditEndEvent = " + event.toString());
         if(event.getEoteEntityId().isPresent() && !TextUtils.isEmpty(event.getEoteEntityId().get()))

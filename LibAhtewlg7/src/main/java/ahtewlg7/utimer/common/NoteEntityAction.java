@@ -1,11 +1,15 @@
 package ahtewlg7.utimer.common;
 
+import android.text.TextUtils;
+
 import com.google.common.base.Optional;
+import com.jakewharton.rxbinding2.widget.TextViewTextChangeEvent;
 
 import org.joda.time.DateTime;
 
 import ahtewlg7.utimer.entity.INoteEntity;
 import ahtewlg7.utimer.entity.NoteEntity;
+import ahtewlg7.utimer.enumtype.LoadType;
 import ahtewlg7.utimer.mvp.NoteContextSaveMvpP;
 import ahtewlg7.utimer.mvp.NoteEditMvpP;
 import ahtewlg7.utimer.mvp.NoteRecylerViewMvpP;
@@ -42,7 +46,7 @@ public class NoteEntityAction
 
         NoteEntity noteEntity = new NoteEntity();
         noteEntity.setId(id);
-        noteEntity.setIsCreated(true);
+        noteEntity.setLoadType(LoadType.NEW);
         noteEntity.setNoteName(dateTimeAction.toFormat(now));
         noteEntity.setCreateTime(now);
         noteEntity.setLastAccessTime(now);
@@ -78,8 +82,15 @@ public class NoteEntityAction
     }
 
     @Override
-    public void toMdContext(INoteEntity noteEntity) {
-
+    public void handleTextChange(INoteEntity noteEntity, TextViewTextChangeEvent textViewTextChangeEvent) {
+        Logcat.i(TAG, "handleTextChange onNext, before = " + textViewTextChangeEvent.before() +
+                ", start = " + textViewTextChangeEvent.start() + ", text = " + textViewTextChangeEvent.text() +
+                ", count = " + textViewTextChangeEvent.count());
+        String context = textViewTextChangeEvent.text().toString();
+        noteEntity.setRawContext(context);
+        if(!TextUtils.isEmpty(context))//todo : check context if change
+            noteEntity.setContextChanged(true);
+        //todo : mdContext
     }
 
 
