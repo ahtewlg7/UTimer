@@ -12,14 +12,14 @@ import com.utimer.R;
 
 import java.util.List;
 
-import ahtewlg7.utimer.entity.INoteEntity;
+import ahtewlg7.utimer.entity.NoteEntity;
 import ahtewlg7.utimer.util.MyRInfo;
 import ahtewlg7.utimer.view.ABaseLinearRecyclerView;
 
-public class NoteLinerRecyclerView extends ABaseLinearRecyclerView<INoteEntity> {
+public class NoteLinerRecyclerView extends ABaseLinearRecyclerView<NoteEntity> {
     public static final String TAG = NoteLinerRecyclerView.class.getSimpleName();
 
-    private List<INoteEntity> noteEntityList;
+    private List<NoteEntity> noteEntityList;
 
     private NoteLinearItemAdapter recyclerViewAdapter;
 
@@ -41,12 +41,12 @@ public class NoteLinerRecyclerView extends ABaseLinearRecyclerView<INoteEntity> 
     }
 
     @Override
-    public void init(Context context, List<INoteEntity> entityList) {
+    public void init(Context context, List<NoteEntity> entityList) {
         init(context,entityList,null,null,null,null);
     }
 
     @Override
-    public void init(Context context, List<INoteEntity> entityList,
+    public void init(Context context, List<NoteEntity> entityList,
                      BaseQuickAdapter.OnItemClickListener itemClickListener,
                      BaseQuickAdapter.OnItemChildClickListener itemChildClickListener,
                      OnItemSwipeListener itemSwipeListener,
@@ -61,18 +61,18 @@ public class NoteLinerRecyclerView extends ABaseLinearRecyclerView<INoteEntity> 
     }
 
     @Override
-    public void resetData(List<INoteEntity> entityList) {
+    public void resetData(List<NoteEntity> entityList) {
         if(recyclerViewAdapter != null)
             recyclerViewAdapter.setNewData(entityList);
     }
 
-    public class NoteLinearItemAdapter extends BaseItemAdapter<INoteEntity>{
-        public NoteLinearItemAdapter(Context context, List<INoteEntity> dataList){
+    public class NoteLinearItemAdapter extends BaseItemAdapter<NoteEntity>{
+        public NoteLinearItemAdapter(Context context, List<NoteEntity> dataList){
             super(context, dataList);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, INoteEntity item) {
+        protected void convert(BaseViewHolder helper, NoteEntity item) {
             helper.setText(R.id.view_recycler_note_title, MyRInfo.getStringByID(R.string.note_title) + item.getTitle());
             helper.setText(R.id.view_recycler_note_name, MyRInfo.getStringByID(R.string.note_name) + item.getFileRPath() + item.getNoteName());
             helper.setText(R.id.view_recycler_note_detail, MyRInfo.getStringByID(R.string.note_detail) + item.getDetail());

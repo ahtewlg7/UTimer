@@ -28,7 +28,7 @@ import java.util.concurrent.TimeUnit;
 import ahtewlg7.utimer.busevent.NoteEditEndEvent;
 import ahtewlg7.utimer.busevent.NoteEditEvent;
 import ahtewlg7.utimer.common.EventBusFatory;
-import ahtewlg7.utimer.entity.INoteEntity;
+import ahtewlg7.utimer.entity.NoteEntity;
 import ahtewlg7.utimer.mvp.NoteRecylerViewMvpP;
 import ahtewlg7.utimer.util.Logcat;
 import butterknife.BindView;
@@ -135,14 +135,14 @@ public class NoteFragment extends AFunctionFragement
     }
 
     @Override
-    public void initRecyclerView(List<INoteEntity> dataList) {
+    public void initRecyclerView(List<NoteEntity> dataList) {
         noteLinerRecyclerView.init(getActivity(), dataList,
                 noteOnItemClickListener, noteOnItemChildClickListener,
                 noteOnItemSwipeListener, noteOnItemDragListener);
     }
 
     @Override
-    public void resetRecyclerView(List<INoteEntity> dataList) {
+    public void resetRecyclerView(List<NoteEntity> dataList) {
         if(dataList == null){
             Logcat.i(TAG,"resetRecyclerView : dataList null");
             return;

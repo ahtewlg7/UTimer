@@ -33,7 +33,7 @@
 
 2.the Gtd State Machine
 
-              trash <--------- note ---------> rely (gtd / otherOne)
+              trash <--------- note ---------> rely ( gtdEntity / otherOne )
                                 |
                                 | (to gtd)
                                 |
@@ -57,10 +57,10 @@ plan action list ---------> next Action ---------> do it
                                     now             defer
                                                       |
                                                       |
-                                               ------------------
-                                               |                |
-                                               |                |
-                                            calendar        to do list
+                                              ------------------
+                                              |                |
+                                              |                |
+                                           calendar        to do list
 
 3.The service of UI is used to :
       to share data with multi-activity;

@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 
 import ahtewlg7.utimer.common.FileSystemAction;
 import ahtewlg7.utimer.common.NoteEntityAction;
-import ahtewlg7.utimer.entity.INoteEntity;
+import ahtewlg7.utimer.entity.NoteEntity;
 import ahtewlg7.utimer.enumtype.LoadType;
 import ahtewlg7.utimer.enumtype.errcode.NoteEditErrCode;
 import ahtewlg7.utimer.exception.NoteEditException;
@@ -35,7 +35,7 @@ import io.reactivex.schedulers.Schedulers;
 public class NoteEditMvpP {
     public static final String TAG = NoteEditMvpP.class.getSimpleName();
 
-    private INoteEntity noteEntity;
+    private NoteEntity noteEntity;
     private Disposable textChangeDisposable;
 
     private INoteEditMvpV noteEditMvpV;
@@ -48,9 +48,9 @@ public class NoteEditMvpP {
 
     public void toLoadNote(final String noteId){
         noteEditMvpM.toLoadOrCreateNote(noteId)
-            .doOnNext(new Consumer<Optional<INoteEntity>>() {
+            .doOnNext(new Consumer<Optional<NoteEntity>>() {
                 @Override
-                public void accept(Optional<INoteEntity> iNoteEntityOptional) throws Exception {
+                public void accept(Optional<NoteEntity> iNoteEntityOptional) throws Exception {
                     if(iNoteEntityOptional.isPresent() && iNoteEntityOptional.get().ifFileExist()) {
                         boolean result = noteEditMvpM.toReadContext(iNoteEntityOptional.get());
                         Logcat.d(TAG,"toLoadNote doOnNext : to read conetxt ,result = " + result);
@@ -59,16 +59,16 @@ public class NoteEditMvpP {
             })
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .compose(noteEditMvpV.getUiContext().<Optional<INoteEntity>>bindUntilEvent(ActivityEvent.DESTROY))
+            .compose(noteEditMvpV.getUiContext().<Optional<NoteEntity>>bindUntilEvent(ActivityEvent.DESTROY))
             .doOnSubscribe(new Consumer<Subscription>() {
                 @Override
                 public void accept(Subscription subscription) throws Exception {
                     noteEditMvpV.onLoading();
                 }
             })
-            .subscribe(new MySafeSubscriber<Optional<INoteEntity>>(){
+            .subscribe(new MySafeSubscriber<Optional<NoteEntity>>(){
                 @Override
-                public void onNext(Optional<INoteEntity> optional) {
+                public void onNext(Optional<NoteEntity> optional) {
                     super.onNext(optional);
                     if(!optional.isPresent()) {
                         Logcat.i(TAG,"toLoadNote , onNext ：noteEntity null");
@@ -101,15 +101,15 @@ public class NoteEditMvpP {
 
     public void toDoneNote(){
         Flowable.just(noteEntity)
-            .filter(new Predicate<INoteEntity>() {
+            .filter(new Predicate<NoteEntity>() {
                 @Override
-                public boolean test(INoteEntity noteEntity) throws Exception {
+                public boolean test(NoteEntity noteEntity) throws Exception {
                     return noteEntity.isContextChanged() || noteEntity.getLoadType() != LoadType.NEW;
                 }
             })
-            .doOnNext(new Consumer<INoteEntity>() {
+            .doOnNext(new Consumer<NoteEntity>() {
                 @Override
-                public void accept(INoteEntity noteEntity) throws Exception {
+                public void accept(NoteEntity noteEntity) throws Exception {
                     DateTime now    = DateTime.now();
                     if(TextUtils.isEmpty(noteEntity.getTitle()))
                         noteEntity.setTitle(noteEntity.getNoteName());
@@ -126,9 +126,9 @@ public class NoteEditMvpP {
                     Logcat.i(TAG,"toDoneNote, doOnNext: " + noteEntity.toString());
                 }
             })
-            .flatMap(new Function<INoteEntity, Publisher<Boolean>>() {
+            .flatMap(new Function<NoteEntity, Publisher<Boolean>>() {
                 @Override
-                public Publisher<Boolean> apply(INoteEntity noteEntity) throws Exception {
+                public Publisher<Boolean> apply(NoteEntity noteEntity) throws Exception {
                     return noteEditMvpM.toSaveNote(noteEntity);
                 }
             })
@@ -168,10 +168,10 @@ public class NoteEditMvpP {
     }
 
     public interface INoteEditMvpM {
-        public Flowable<Optional<INoteEntity>> toLoadOrCreateNote(String noteId);
-        public boolean toReadContext(INoteEntity noteEntity);
-        public void handleTextChange(INoteEntity noteEntity, TextViewTextChangeEvent textViewTextChangeEvent);
-        public Flowable<Boolean> toSaveNote(INoteEntity noteEntity);
+        public Flowable<Optional<NoteEntity>> toLoadOrCreateNote(String noteId);
+        public boolean toReadContext(NoteEntity noteEntity);
+        public void handleTextChange(NoteEntity noteEntity, TextViewTextChangeEvent textViewTextChangeEvent);
+        public Flowable<Boolean> toSaveNote(NoteEntity noteEntity);
     }
 
     public interface INoteEditMvpV {
@@ -181,13 +181,13 @@ public class NoteEditMvpP {
         public void onLoading();
         public void onLoadNull();
         public void onLoadUnexist();
-        public void onLoadSucc(INoteEntity noteEntity);
+        public void onLoadSucc(NoteEntity noteEntity);
         public void onLoadErr(Throwable e);
         public void onLoadComplete();
 
-        public void toShowContext(INoteEntity noteEntity);
-        public void toSaveContext(INoteEntity noteEntity);
-        public void onNoteDone(INoteEntity noteEntity);
-        public void onNoteSaveFail(INoteEntity noteEntity);
+        public void toShowContext(NoteEntity noteEntity);
+        public void toSaveContext(NoteEntity noteEntity);
+        public void onNoteDone(NoteEntity noteEntity);
+        public void onNoteSaveFail(NoteEntity noteEntity);
     }
 }

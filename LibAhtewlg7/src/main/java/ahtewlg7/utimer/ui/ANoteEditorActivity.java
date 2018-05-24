@@ -11,7 +11,7 @@ import ahtewlg7.utimer.R;
 import ahtewlg7.utimer.busevent.NoteEditEndEvent;
 import ahtewlg7.utimer.busevent.NoteEditEvent;
 import ahtewlg7.utimer.common.EventBusFatory;
-import ahtewlg7.utimer.entity.INoteEntity;
+import ahtewlg7.utimer.entity.NoteEntity;
 import ahtewlg7.utimer.mvp.NoteEditMvpP;
 import ahtewlg7.utimer.util.Logcat;
 
@@ -76,7 +76,7 @@ public abstract class ANoteEditorActivity extends BaseBinderActivity
 
 
     @Override
-    public void onLoadSucc(INoteEntity noteEntity) {
+    public void onLoadSucc(NoteEntity noteEntity) {
         Logcat.d(TAG,"onLoadSucc : " + noteEntity.toString());
     }
 
@@ -93,26 +93,26 @@ public abstract class ANoteEditorActivity extends BaseBinderActivity
     }
 
     @Override
-    public void onNoteDone(INoteEntity noteEntity) {
+    public void onNoteDone(NoteEntity noteEntity) {
         NoteEditEndEvent noteEditEndEvent = new NoteEditEndEvent(noteEntity.getId(), noteEntity.getLoadType());
         Logcat.i(TAG,"onNoteDone : noteEditEndEvent = " + noteEditEndEvent.toString());
         EventBusFatory.getInstance().getDefaultEventBus().post(noteEditEndEvent);
     }
 
     @Override
-    public void onNoteSaveFail(INoteEntity noteEntity) {
+    public void onNoteSaveFail(NoteEntity noteEntity) {
         Logcat.i(TAG,"onNoteSaveFail ： " + noteEntity.toString());
         // TODO: 2018/5/13
     }
 
     @Override
-    public void toShowContext(INoteEntity noteEntity) {
+    public void toShowContext(NoteEntity noteEntity) {
         Logcat.i(TAG,"toShowContext ： " + noteEntity.getMdContext());
 //        getEditView().setText(noteEntity.getMdContext());//todo
     }
 
     @Override
-    public void toSaveContext(INoteEntity noteEntity) {
+    public void toSaveContext(NoteEntity noteEntity) {
         serviceBinderProxy.toSaveNote(noteEntity);
     }
 }

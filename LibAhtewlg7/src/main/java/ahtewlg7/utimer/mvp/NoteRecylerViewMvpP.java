@@ -15,7 +15,7 @@ import java.util.List;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import ahtewlg7.utimer.common.NoteEntityAction;
-import ahtewlg7.utimer.entity.INoteEntity;
+import ahtewlg7.utimer.entity.NoteEntity;
 import ahtewlg7.utimer.util.MySafeSubscriber;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -25,7 +25,7 @@ import io.reactivex.functions.Predicate;
 public class NoteRecylerViewMvpP implements IRecyclerMvpP {
     public static final String TAG = NoteRecylerViewMvpP.class.getSimpleName();
 
-    private List<INoteEntity> noteEntityList;
+    private List<NoteEntity> noteEntityList;
     private INoteRecylerViewMvpV noteRecylerViewMvpV;
     private INoteRecyclerViewMvpM noteRecyclerViewMvpM;
 
@@ -39,13 +39,21 @@ public class NoteRecylerViewMvpP implements IRecyclerMvpP {
         noteRecylerViewMvpV.onNoteNewStart();
     }
 
+    public void toTrash(){
+
+    }
+
+    public void toGtdProject(NoteEntity noteEntity){
+
+    }
+
     public void onNoteNew(String noteId){
         noteRecyclerViewMvpM.loadEntity(Flowable.just(noteId))
-            .compose(noteRecylerViewMvpV.getUiContext().<Optional<INoteEntity>>bindUntilEvent(FragmentEvent.DESTROY))
+            .compose(noteRecylerViewMvpV.getUiContext().<Optional<NoteEntity>>bindUntilEvent(FragmentEvent.DESTROY))
             .subscribeOn(AndroidSchedulers.mainThread())
-            .subscribe(new MySafeSubscriber<Optional<INoteEntity>>(){
+            .subscribe(new MySafeSubscriber<Optional<NoteEntity>>(){
                 @Override
-                public void onNext(Optional<INoteEntity> noteEntity) {
+                public void onNext(Optional<NoteEntity> noteEntity) {
                     super.onNext(noteEntity);
                     if(noteEntity.isPresent())
                         noteEntityList.add(noteEntity.get());
@@ -63,28 +71,28 @@ public class NoteRecylerViewMvpP implements IRecyclerMvpP {
     @Override
     public void loadAllData() {
         noteRecyclerViewMvpM.loadAllEntity()
-                .compose(noteRecylerViewMvpV.getUiContext().<Optional<INoteEntity>>bindUntilEvent(FragmentEvent.DESTROY))
-                .filter(new Predicate<Optional<INoteEntity>>() {
+                .compose(noteRecylerViewMvpV.getUiContext().<Optional<NoteEntity>>bindUntilEvent(FragmentEvent.DESTROY))
+                .filter(new Predicate<Optional<NoteEntity>>() {
                     @Override
-                    public boolean test(Optional<INoteEntity> iNoteEntityOptional) throws Exception {
+                    public boolean test(Optional<NoteEntity> iNoteEntityOptional) throws Exception {
                         return iNoteEntityOptional.isPresent();
                     }
                 })
-                .map(new Function<Optional<INoteEntity>, INoteEntity>() {
+                .map(new Function<Optional<NoteEntity>, NoteEntity>() {
                     @Override
-                    public INoteEntity apply(Optional<INoteEntity> iNoteEntityOptional) throws Exception {
+                    public NoteEntity apply(Optional<NoteEntity> iNoteEntityOptional) throws Exception {
                         return iNoteEntityOptional.get();
                     }
                 })
-                .sorted(Ordering.natural().onResultOf(new com.google.common.base.Function<INoteEntity, Comparable>() {
+                .sorted(Ordering.natural().onResultOf(new com.google.common.base.Function<NoteEntity, Comparable>() {
                     @Override
                     @ParametersAreNonnullByDefault
-                    public Comparable apply(INoteEntity input) {
+                    public Comparable apply(NoteEntity input) {
                         return input.getLastAccessTime();
                     }
                 }).reverse())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new MySafeSubscriber<INoteEntity>(){
+                .subscribe(new MySafeSubscriber<NoteEntity>(){
                     @Override
                     public void onSubscribe(Subscription s) {
                         super.onSubscribe(s);
@@ -93,7 +101,7 @@ public class NoteRecylerViewMvpP implements IRecyclerMvpP {
                     }
 
                     @Override
-                    public void onNext(INoteEntity noteEntity) {
+                    public void onNext(NoteEntity noteEntity) {
                         super.onNext(noteEntity);
                         noteEntityList.add(noteEntity);
                     }
@@ -116,11 +124,11 @@ public class NoteRecylerViewMvpP implements IRecyclerMvpP {
 
     }
 
-    public interface INoteRecyclerViewMvpM extends IBaseRecyclerViewMvpM<INoteEntity>{
+    public interface INoteRecyclerViewMvpM extends IBaseRecyclerViewMvpM<NoteEntity>{
 
     }
 
-    public interface INoteRecylerViewMvpV extends IRecyclerViewMvpV<INoteEntity>{
+    public interface INoteRecylerViewMvpV extends IRecyclerViewMvpV<NoteEntity>{
         public @NonNull RxFragment getUiContext();
 
         public void onNoteNewStart();

@@ -7,7 +7,6 @@ import com.jakewharton.rxbinding2.widget.TextViewTextChangeEvent;
 
 import org.joda.time.DateTime;
 
-import ahtewlg7.utimer.entity.INoteEntity;
 import ahtewlg7.utimer.entity.NoteEntity;
 import ahtewlg7.utimer.enumtype.LoadType;
 import ahtewlg7.utimer.mvp.NoteContextSaveMvpP;
@@ -39,7 +38,7 @@ public class NoteEntityAction
     }
 
 
-    public INoteEntity createNoteEntity(){
+    public NoteEntity createNoteEntity(){
         Logcat.i(TAG,"createNoteEntity");
         String id = new IdAction().getNoteId();
         DateTime now = dateTimeAction.toNow();
@@ -54,21 +53,21 @@ public class NoteEntityAction
     }
 
     @Override
-    public Flowable<Optional<INoteEntity>> loadAllEntity() {
+    public Flowable<Optional<NoteEntity>> loadAllEntity() {
         return dbAction.loadAllNoteEntity();
     }
 
     @Override
-    public Flowable<Optional<INoteEntity>> loadEntity(Flowable<String> idObservable) {
+    public Flowable<Optional<NoteEntity>> loadEntity(Flowable<String> idObservable) {
         return dbAction.getNoteEntity(idObservable);
     }
 
     @Override
-    public Flowable<Optional<INoteEntity>> toLoadOrCreateNote(String noteId) {
+    public Flowable<Optional<NoteEntity>> toLoadOrCreateNote(String noteId) {
         return loadEntity(Flowable.just(noteId))
-                .map(new Function<Optional<INoteEntity>, Optional<INoteEntity>>() {
+                .map(new Function<Optional<NoteEntity>, Optional<NoteEntity>>() {
                     @Override
-                    public Optional<INoteEntity> apply(Optional<INoteEntity> iNoteEntityOptional) throws Exception {
+                    public Optional<NoteEntity> apply(Optional<NoteEntity> iNoteEntityOptional) throws Exception {
                         if(!iNoteEntityOptional.isPresent())
                             return Optional.of(createNoteEntity());
                         return iNoteEntityOptional;
@@ -77,12 +76,12 @@ public class NoteEntityAction
     }
 
     @Override
-    public boolean toReadContext(INoteEntity noteEntity) {
+    public boolean toReadContext(NoteEntity noteEntity) {
         return noteContextFsAction.readNoteContext(noteEntity);
     }
 
     @Override
-    public void handleTextChange(INoteEntity noteEntity, TextViewTextChangeEvent textViewTextChangeEvent) {
+    public void handleTextChange(NoteEntity noteEntity, TextViewTextChangeEvent textViewTextChangeEvent) {
         Logcat.i(TAG, "handleTextChange onNext, before = " + textViewTextChangeEvent.before() +
                 ", start = " + textViewTextChangeEvent.start() + ", text = " + textViewTextChangeEvent.text() +
                 ", count = " + textViewTextChangeEvent.count());
@@ -96,11 +95,11 @@ public class NoteEntityAction
 
 
     @Override
-    public Flowable<Boolean> toSaveNote(INoteEntity noteEntity) {
+    public Flowable<Boolean> toSaveNote(NoteEntity noteEntity) {
         return Flowable.just(noteEntity)
-                .map(new Function<INoteEntity, Boolean>() {
+                .map(new Function<NoteEntity, Boolean>() {
                     @Override
-                    public Boolean apply(INoteEntity noteEntity) throws Exception {
+                    public Boolean apply(NoteEntity noteEntity) throws Exception {
                         boolean result = dbAction.saveEntity(noteEntity);
                         Logcat.i(TAG,"toSaveNote map , result = " + result) ;
                         return result;
@@ -109,11 +108,11 @@ public class NoteEntityAction
     }
 
     @Override
-    public Flowable<Boolean> toSaveContext(INoteEntity noteEntity) {
+    public Flowable<Boolean> toSaveContext(NoteEntity noteEntity) {
         return Flowable.just(noteEntity)
-                .map(new Function<INoteEntity, Boolean>() {
+                .map(new Function<NoteEntity, Boolean>() {
                     @Override
-                    public Boolean apply(INoteEntity noteEntity) throws Exception {
+                    public Boolean apply(NoteEntity noteEntity) throws Exception {
                         boolean result = noteContextFsAction.writeNoteContext(noteEntity);
                         Logcat.i(TAG,"toSaveContext map , result = " + result) ;
                         return result;

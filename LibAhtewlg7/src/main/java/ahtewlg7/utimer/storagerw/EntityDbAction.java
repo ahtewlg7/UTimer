@@ -12,7 +12,6 @@ import ahtewlg7.utimer.db.dao.GtdEntityDaoAction;
 import ahtewlg7.utimer.db.dao.NoteEntityDaoAction;
 import ahtewlg7.utimer.db.entity.GtdEntityGdBean;
 import ahtewlg7.utimer.db.entity.NoteEntityGdBean;
-import ahtewlg7.utimer.entity.INoteEntity;
 import ahtewlg7.utimer.entity.NoteEntity;
 import ahtewlg7.utimer.entity.gtd.AGtdEntity;
 import ahtewlg7.utimer.entity.gtd.GtdInboxEntity;
@@ -34,12 +33,12 @@ import io.reactivex.schedulers.Schedulers;
 public class EntityDbAction{
     public static final String TAG = EntityDbAction.class.getSimpleName();
 
-    public Flowable<Optional<INoteEntity>> loadAllNoteEntity() {
+    public Flowable<Optional<NoteEntity>> loadAllNoteEntity() {
         return Flowable.fromIterable(NoteEntityDaoAction.getInstance().loadAll())
-                .map(new Function<NoteEntityGdBean, Optional<INoteEntity>>() {
+                .map(new Function<NoteEntityGdBean, Optional<NoteEntity>>() {
                     @Override
-                    public Optional<INoteEntity> apply(NoteEntityGdBean noteEntityGdBean) throws Exception {
-                        INoteEntity noteEntity = JSON.parseObject(noteEntityGdBean.getValue(),NoteEntity.class);
+                    public Optional<NoteEntity> apply(NoteEntityGdBean noteEntityGdBean) throws Exception {
+                        NoteEntity noteEntity = JSON.parseObject(noteEntityGdBean.getValue(),NoteEntity.class);
                         noteEntity.setLoadType(LoadType.DB);
                         return Optional.fromNullable(noteEntity);
                     }
@@ -47,16 +46,16 @@ public class EntityDbAction{
                 .subscribeOn(Schedulers.io());
     }
 
-    public Flowable<Optional<INoteEntity>> getNoteEntity(@NonNull Flowable<String> idFlowable) {
-        return idFlowable.map(new Function<String, Optional<INoteEntity>>() {
+    public Flowable<Optional<NoteEntity>> getNoteEntity(@NonNull Flowable<String> idFlowable) {
+        return idFlowable.map(new Function<String, Optional<NoteEntity>>() {
             @Override
-            public Optional<INoteEntity> apply(String id) throws Exception {
+            public Optional<NoteEntity> apply(String id) throws Exception {
                 if(TextUtils.isEmpty(id))
                     return Optional.absent();
                 NoteEntityGdBean noteEntityGdBean = NoteEntityDaoAction.getInstance().queryById(id);
                 if(noteEntityGdBean == null)
                     return Optional.absent();
-                INoteEntity noteEntity = JSON.parseObject(noteEntityGdBean.getValue(),NoteEntity.class);
+                NoteEntity noteEntity = JSON.parseObject(noteEntityGdBean.getValue(),NoteEntity.class);
                 return Optional.fromNullable(noteEntity);
             }
         });
@@ -97,7 +96,7 @@ public class EntityDbAction{
         });
     }
 
-    public boolean saveEntity(INoteEntity entity) {
+    public boolean saveEntity(NoteEntity entity) {
         if(entity == null)
             return false;
         NoteEntityGdBean noteEntityGdBean = new NoteEntityGdBean();

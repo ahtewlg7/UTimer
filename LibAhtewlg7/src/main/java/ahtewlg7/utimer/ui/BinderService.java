@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 
-import ahtewlg7.utimer.entity.INoteEntity;
+import ahtewlg7.utimer.entity.NoteEntity;
 import ahtewlg7.utimer.mvp.NoteContextSaveMvpP;
 import ahtewlg7.utimer.util.Logcat;
 import io.reactivex.annotations.NonNull;
@@ -29,27 +29,27 @@ public class BinderService extends Service
         noteSaveMvpP = new NoteContextSaveMvpP(this);
     }
 
-    public void toSaveNote(@NonNull INoteEntity noteEntity){
+    public void toSaveNote(@NonNull NoteEntity noteEntity){
         noteSaveMvpP.toSaveNoteContext(noteEntity);
     }
     //+++++++++++++++++++++++++++++++++++++++INoteSaveMvpV++++++++++++++++++++++++++++++++++++++++++
     @Override
-    public void onNoteSaveFailed(INoteEntity noteEntity) {
+    public void onNoteSaveFailed(NoteEntity noteEntity) {
         Logcat.i(TAG,"onNoteSaveFailed");
     }
 
     @Override
-    public void onNoteSaveSucc(INoteEntity noteEntity) {
+    public void onNoteSaveSucc(NoteEntity noteEntity) {
         Logcat.i(TAG,"onNoteSaveSucc : " + noteEntity.toString());
     }
 
     @Override
-    public void onNoteSaveErr(INoteEntity noteEntity, Throwable e) {
+    public void onNoteSaveErr(NoteEntity noteEntity, Throwable e) {
         Logcat.i(TAG,"onNoteSaveErr : " + e.getMessage());
     }
 
     @Override
-    public void onNoteSaveComplete(INoteEntity noteEntity) {
+    public void onNoteSaveComplete(NoteEntity noteEntity) {
         Logcat.i(TAG,"onNoteSaveComplete");
     }
 

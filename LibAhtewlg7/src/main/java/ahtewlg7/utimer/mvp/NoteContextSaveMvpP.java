@@ -1,7 +1,7 @@
 package ahtewlg7.utimer.mvp;
 
 import ahtewlg7.utimer.common.NoteEntityAction;
-import ahtewlg7.utimer.entity.INoteEntity;
+import ahtewlg7.utimer.entity.NoteEntity;
 import ahtewlg7.utimer.util.MySafeSubscriber;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -19,8 +19,8 @@ public class NoteContextSaveMvpP {
         noteSaveMvpM      = new NoteEntityAction();
     }
 
-    public void toSaveNoteContext(final INoteEntity iNoteEntity){
-        noteSaveMvpM.toSaveContext(iNoteEntity)
+    public void toSaveNoteContext(final NoteEntity noteEntity){
+        noteSaveMvpM.toSaveContext(noteEntity)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(new MySafeSubscriber<Boolean>(){
@@ -28,32 +28,32 @@ public class NoteContextSaveMvpP {
                 public void onNext(Boolean aBoolean) {
                     super.onNext(aBoolean);
                     if(aBoolean)
-                        noteSaveMvpV.onNoteSaveSucc(iNoteEntity);
+                        noteSaveMvpV.onNoteSaveSucc(noteEntity);
                     else
-                        noteSaveMvpV.onNoteSaveFailed(iNoteEntity);
+                        noteSaveMvpV.onNoteSaveFailed(noteEntity);
                 }
 
                 @Override
                 public void onError(Throwable t) {
-                    noteSaveMvpV.onNoteSaveErr(iNoteEntity, t);
+                    noteSaveMvpV.onNoteSaveErr(noteEntity, t);
                 }
 
                 @Override
                 public void onComplete() {
-                    noteSaveMvpV.onNoteSaveComplete(iNoteEntity);
+                    noteSaveMvpV.onNoteSaveComplete(noteEntity);
                 }
             });
     }
 
     public interface INoteSaveMvpV {
-        public void onNoteSaveFailed(INoteEntity noteEntity);
-        public void onNoteSaveSucc(INoteEntity noteEntity);
-        public void onNoteSaveErr(INoteEntity noteEntity, Throwable e);
-        public void onNoteSaveComplete(INoteEntity noteEntity);
+        public void onNoteSaveFailed(NoteEntity noteEntity);
+        public void onNoteSaveSucc(NoteEntity noteEntity);
+        public void onNoteSaveErr(NoteEntity noteEntity, Throwable e);
+        public void onNoteSaveComplete(NoteEntity noteEntity);
     }
 
     public interface INoteSaveMvpM {
-        public Flowable<Boolean> toSaveContext(INoteEntity noteEntity);
+        public Flowable<Boolean> toSaveContext(NoteEntity noteEntity);
 
     }
 }
