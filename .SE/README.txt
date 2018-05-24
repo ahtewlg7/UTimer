@@ -31,8 +31,37 @@
                         |
 
 
-2.The service of UI is used to :
-    to share data with multi-activity;
-    to keep working when the UI lifeCycle is over;
+2.the Gtd State Machine
 
-3.
+              trash <--------- note ---------> rely (gtd / otherOne)
+                                |
+                                | (to gtd)
+                                |
+                             project ---------> actionNum ( inbox = 1  /  project > 1 )
+                                |
+                                | (to work)
+                                |
+plan action list ---------> next Action ---------> do it
+                                                     |
+                                                     |
+                                                     |
+                                             ------------------
+                                             |                |
+                                             |                |
+                                         by myself         delegate ---------> wait for someOne
+                                             |
+                                             |
+                                     ------------------
+                                     |                |
+                                     |                |
+                                    now             defer
+                                                      |
+                                                      |
+                                               ------------------
+                                               |                |
+                                               |                |
+                                            calendar        to do list
+
+3.The service of UI is used to :
+      to share data with multi-activity;
+      to keep working when the UI lifeCycle is over;
