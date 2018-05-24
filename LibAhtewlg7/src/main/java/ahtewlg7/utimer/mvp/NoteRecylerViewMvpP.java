@@ -56,7 +56,7 @@ public class NoteRecylerViewMvpP implements IRecyclerMvpP {
                 public void onNext(Optional<NoteEntity> noteEntity) {
                     super.onNext(noteEntity);
                     if(noteEntity.isPresent())
-                        noteEntityList.add(noteEntity.get());
+                        noteEntityList.add(0, noteEntity.get());
                 }
 
                 @Override
@@ -74,14 +74,14 @@ public class NoteRecylerViewMvpP implements IRecyclerMvpP {
                 .compose(noteRecylerViewMvpV.getUiContext().<Optional<NoteEntity>>bindUntilEvent(FragmentEvent.DESTROY))
                 .filter(new Predicate<Optional<NoteEntity>>() {
                     @Override
-                    public boolean test(Optional<NoteEntity> iNoteEntityOptional) throws Exception {
-                        return iNoteEntityOptional.isPresent();
+                    public boolean test(Optional<NoteEntity> noteEntityOptional) throws Exception {
+                        return noteEntityOptional.isPresent();
                     }
                 })
                 .map(new Function<Optional<NoteEntity>, NoteEntity>() {
                     @Override
-                    public NoteEntity apply(Optional<NoteEntity> iNoteEntityOptional) throws Exception {
-                        return iNoteEntityOptional.get();
+                    public NoteEntity apply(Optional<NoteEntity> noteEntityOptional) throws Exception {
+                        return noteEntityOptional.get();
                     }
                 })
                 .sorted(Ordering.natural().onResultOf(new com.google.common.base.Function<NoteEntity, Comparable>() {
