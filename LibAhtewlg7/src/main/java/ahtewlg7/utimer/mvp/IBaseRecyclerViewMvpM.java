@@ -12,5 +12,6 @@ import io.reactivex.Flowable;
 
 public interface IBaseRecyclerViewMvpM<T> {
     public Flowable<Optional<T>> loadAllEntity();
-    public Flowable<Optional<T>> loadEntity(@NonNull Flowable<String> idObservable);
+    public Flowable<Optional<T>> loadEntity(@NonNull Flowable<Optional<String>> idObservable);
+    public Flowable<Boolean> deleteEntity(@NonNull Flowable<Optional<T>> flowable);
 }

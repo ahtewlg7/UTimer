@@ -1,6 +1,5 @@
 package com.utimer.ui;
 
-import android.graphics.Canvas;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -24,6 +23,8 @@ import java.util.concurrent.TimeUnit;
 import ahtewlg7.utimer.entity.NoteEntity;
 import ahtewlg7.utimer.mvp.NoteRecyclerViewMvpP;
 import ahtewlg7.utimer.util.Logcat;
+import ahtewlg7.utimer.util.MySimpleItemDragListener;
+import ahtewlg7.utimer.util.MySimpleItemSwipeListener;
 import ahtewlg7.utimer.util.MySimpleObserver;
 import butterknife.BindView;
 
@@ -43,8 +44,8 @@ public class NoteFragment extends AFunctionFragement
     private NoteRecyclerViewMvpP noteRecylerViewMvpP;
     private NoteOnItemClickListener noteOnItemClickListener;
     private NoteOnItemChildClickListener noteOnItemChildClickListener;
-    private NoteOnItemSwipeListener noteOnItemSwipeListener;
-    private NoteOnItemDragListener noteOnItemDragListener;
+    private OnItemSwipeListener noteOnItemSwipeListener;
+    private OnItemDragListener noteOnItemDragListener;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,7 +55,7 @@ public class NoteFragment extends AFunctionFragement
         noteOnItemClickListener         = new NoteOnItemClickListener();
         noteOnItemChildClickListener    = new NoteOnItemChildClickListener();
         noteOnItemSwipeListener         = new NoteOnItemSwipeListener();
-        noteOnItemDragListener          = new NoteOnItemDragListener();
+        noteOnItemDragListener          = new MySimpleItemDragListener();
     }
 
     @Override
@@ -114,6 +115,21 @@ public class NoteFragment extends AFunctionFragement
     }
 
     @Override
+    public void onNoteDeleteSucc() {
+        Logcat.i(TAG,"onNoteDeleteSucc");
+    }
+
+    @Override
+    public void onNoteDeleteFail() {
+        Logcat.i(TAG,"onNoteDeleteFail");
+    }
+
+    @Override
+    public void onNoteDeleteErr() {
+        Logcat.i(TAG,"onNoteDeleteErr");
+    }
+
+    @Override
     public void initRecyclerView(List<NoteEntity> dataList) {
         noteLinerRecyclerView.init(getActivity(), dataList,
                 noteOnItemClickListener, noteOnItemChildClickListener,
@@ -157,41 +173,10 @@ public class NoteFragment extends AFunctionFragement
         }
     }
 
-    private class NoteOnItemSwipeListener implements OnItemSwipeListener {
-        @Override
-        public void onItemSwipeStart(RecyclerView.ViewHolder viewHolder, int pos) {
-
-        }
-
-        @Override
-        public void clearView(RecyclerView.ViewHolder viewHolder, int pos) {
-
-        }
-
+    private class NoteOnItemSwipeListener extends MySimpleItemSwipeListener {
         @Override
         public void onItemSwiped(RecyclerView.ViewHolder viewHolder, int pos) {
-
-        }
-
-        @Override
-        public void onItemSwipeMoving(Canvas canvas, RecyclerView.ViewHolder viewHolder, float dX, float dY, boolean isCurrentlyActive) {
-
-        }
-    }
-    private class NoteOnItemDragListener implements OnItemDragListener{
-        @Override
-        public void onItemDragStart(RecyclerView.ViewHolder viewHolder, int pos) {
-
-        }
-
-        @Override
-        public void onItemDragMoving(RecyclerView.ViewHolder source, int from, RecyclerView.ViewHolder target, int to) {
-
-        }
-
-        @Override
-        public void onItemDragEnd(RecyclerView.ViewHolder viewHolder, int pos) {
-
+            noteRecylerViewMvpP.toDeleteNoteItem(pos);
         }
     }
 }

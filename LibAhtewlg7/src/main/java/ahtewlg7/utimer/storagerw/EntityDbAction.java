@@ -55,12 +55,39 @@ public class EntityDbAction{
                 NoteEntityGdBean noteEntityGdBean = NoteEntityDaoAction.getInstance().queryById(idOptional.get());
                 if(noteEntityGdBean == null)
                     return Optional.absent();
-                NoteEntity noteEntity = JSON.parseObject(noteEntityGdBean.getValue(),NoteEntity.class);
+                NoteEntity noteEntity = mapFromGdBean(noteEntityGdBean);
                 noteEntity.setLoadType(LoadType.DB);
                 return Optional.fromNullable(noteEntity);
             }
         });
     }
+    public Flowable<Boolean> deleteNoteEntity(@NonNull Flowable<Optional<NoteEntity>> noteFlowable){
+        return noteFlowable.map(new Function<Optional<NoteEntity>, Boolean>() {
+            @Override
+            public Boolean apply(Optional<NoteEntity> noteEntityOptional) throws Exception {
+                if(noteEntityOptional.isPresent()){
+                    NoteEntityGdBean noteEntityGdBean = mapToGdBean(noteEntityOptional.get());
+                    Logcat.i(TAG,"deleteNoteEntity ： noteEntityGdBean = " + noteEntityGdBean.toString());
+                    NoteEntityDaoAction.getInstance().delete(noteEntityGdBean);
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+
+    public Flowable<Boolean> saveEntity(Flowable<NoteEntity> noteEntityFlowable) {
+        return noteEntityFlowable.map(new Function<NoteEntity, Boolean>() {
+            @Override
+            public Boolean apply(NoteEntity noteEntity) throws Exception {
+                NoteEntityGdBean noteEntityGdBean = mapToGdBean(noteEntity);
+                Logcat.i(TAG,"saveEntity : " + noteEntityGdBean.toString());
+                long index = NoteEntityDaoAction.getInstance().insert(noteEntityGdBean);
+                return index >= 0;
+            }
+        });
+    }
+    ///////////////////////////////////////////////////////////////////////////////////////////////
 
     public Flowable<AGtdEntity> loadGtdEntity() {
         return GtdEntityDaoAction.getInstance().loadAllRx()
@@ -97,17 +124,6 @@ public class EntityDbAction{
         });
     }
 
-    public boolean saveEntity(NoteEntity entity) {
-        if(entity == null)
-            return false;
-        NoteEntityGdBean noteEntityGdBean = new NoteEntityGdBean();
-        noteEntityGdBean.setKey(entity.getId());
-        noteEntityGdBean.setValue(JSON.toJSONString(entity));
-        Logcat.i(TAG,"saveEntity ： noteEntityGdBean = " + noteEntityGdBean.toString());
-        long index = NoteEntityDaoAction.getInstance().insert(noteEntityGdBean);
-        return index >= 0;
-    }
-
     public boolean saveEntity(AGtdEntity entity) {
         if(entity == null)
             return false;
@@ -133,5 +149,16 @@ public class EntityDbAction{
                 break;
         }
         return gtdEntity;
+    }
+
+    private NoteEntity mapFromGdBean(@NonNull NoteEntityGdBean gdBean){
+        return JSON.parseObject(gdBean.getValue(),NoteEntity.class);
+    }
+
+    private NoteEntityGdBean mapToGdBean(@NonNull NoteEntity entity){
+        NoteEntityGdBean noteEntityGdBean = new NoteEntityGdBean();
+        noteEntityGdBean.setKey(entity.getId());
+        noteEntityGdBean.setValue(JSON.toJSONString(entity));
+        return noteEntityGdBean;
     }
 }

@@ -15,7 +15,7 @@ import ahtewlg7.utimer.db.entity.NoteEntityGdBean;
 /** 
  * DAO for table "NOTE_ENTITY".
 */
-public class NoteEntityGdBeanDao extends AbstractDao<NoteEntityGdBean, Void> {
+public class NoteEntityGdBeanDao extends AbstractDao<NoteEntityGdBean, Long> {
 
     public static final String TABLENAME = "NOTE_ENTITY";
 
@@ -24,8 +24,9 @@ public class NoteEntityGdBeanDao extends AbstractDao<NoteEntityGdBean, Void> {
      * Can be used for QueryBuilder and for referencing column names.
      */
     public static class Properties {
-        public final static Property Key = new Property(0, String.class, "key", false, "KEY");
-        public final static Property Value = new Property(1, String.class, "value", false, "VALUE");
+        public final static Property Id = new Property(0, long.class, "id", true, "_id");
+        public final static Property Key = new Property(1, String.class, "key", false, "KEY");
+        public final static Property Value = new Property(2, String.class, "value", false, "VALUE");
     }
 
 
@@ -41,8 +42,9 @@ public class NoteEntityGdBeanDao extends AbstractDao<NoteEntityGdBean, Void> {
     public static void createTable(Database db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"NOTE_ENTITY\" (" + //
-                "\"KEY\" TEXT UNIQUE ," + // 0: key
-                "\"VALUE\" TEXT);"); // 1: value
+                "\"_id\" INTEGER PRIMARY KEY NOT NULL ," + // 0: id
+                "\"KEY\" TEXT UNIQUE ," + // 1: key
+                "\"VALUE\" TEXT);"); // 2: value
     }
 
     /** Drops the underlying database table. */
@@ -54,36 +56,38 @@ public class NoteEntityGdBeanDao extends AbstractDao<NoteEntityGdBean, Void> {
     @Override
     protected final void bindValues(DatabaseStatement stmt, NoteEntityGdBean entity) {
         stmt.clearBindings();
+        stmt.bindLong(1, entity.getId());
  
         String key = entity.getKey();
         if (key != null) {
-            stmt.bindString(1, key);
+            stmt.bindString(2, key);
         }
  
         String value = entity.getValue();
         if (value != null) {
-            stmt.bindString(2, value);
+            stmt.bindString(3, value);
         }
     }
 
     @Override
     protected final void bindValues(SQLiteStatement stmt, NoteEntityGdBean entity) {
         stmt.clearBindings();
+        stmt.bindLong(1, entity.getId());
  
         String key = entity.getKey();
         if (key != null) {
-            stmt.bindString(1, key);
+            stmt.bindString(2, key);
         }
  
         String value = entity.getValue();
         if (value != null) {
-            stmt.bindString(2, value);
+            stmt.bindString(3, value);
         }
     }
 
     @Override
-    public Void readKey(Cursor cursor, int offset) {
-        return null;
+    public Long readKey(Cursor cursor, int offset) {
+        return cursor.getLong(offset + 0);
     }    
 
     @Override
@@ -95,25 +99,29 @@ public class NoteEntityGdBeanDao extends AbstractDao<NoteEntityGdBean, Void> {
      
     @Override
     public void readEntity(Cursor cursor, NoteEntityGdBean entity, int offset) {
-        entity.setKey(cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0));
-        entity.setValue(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setId(cursor.getLong(offset + 0));
+        entity.setKey(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setValue(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
      }
     
     @Override
-    protected final Void updateKeyAfterInsert(NoteEntityGdBean entity, long rowId) {
-        // Unsupported or missing PK type
-        return null;
+    protected final Long updateKeyAfterInsert(NoteEntityGdBean entity, long rowId) {
+        entity.setId(rowId);
+        return rowId;
     }
     
     @Override
-    public Void getKey(NoteEntityGdBean entity) {
-        return null;
+    public Long getKey(NoteEntityGdBean entity) {
+        if(entity != null) {
+            return entity.getId();
+        } else {
+            return null;
+        }
     }
 
     @Override
     public boolean hasKey(NoteEntityGdBean entity) {
-        // TODO
-        return false;
+        throw new UnsupportedOperationException("Unsupported for entities with a non-null key");
     }
 
     @Override

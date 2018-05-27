@@ -22,12 +22,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Created by lw on 2016/9/6.
  */
-public abstract class AGreenDaoAction<T>{
+public abstract class AGreenDaoAction<T,K>{
     public static final String TAG = AGreenDaoAction.class.getSimpleName();
 
-    protected abstract @NonNull AbstractDao<T,Void> getCustomDao();
+    protected abstract @NonNull AbstractDao<T,K> getCustomDao();
 
-    protected AbstractDao<T,Void> greenDao;
+    protected AbstractDao<T,K> greenDao;
     protected DaoSession daoSession;
 
     protected AGreenDaoAction(){
@@ -66,13 +66,17 @@ public abstract class AGreenDaoAction<T>{
     public void delete(@NonNull T entity) {
         greenDao.delete(entity);
     }
-    public Observable<T> delete(@NonNull Observable<T> observable){
-        return observable.doOnNext(new Consumer<T>() {
+    public Flowable<T> delete(@NonNull Flowable<T> flowable){
+       return flowable.doOnNext(new Consumer<T>() {
             @Override
             public void accept(T t) throws Exception {
-                greenDao.delete(t);
+                delete(t);
             }
         });
+    }
+
+    public void deleteByKey(@NonNull K key) {
+        greenDao.deleteByKey(key);
     }
 
     public void update(@NonNull T entity) {

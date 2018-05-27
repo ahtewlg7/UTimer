@@ -35,7 +35,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
-import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 
 public class NoteEditMvpP {
@@ -75,12 +74,6 @@ public class NoteEditMvpP {
     //=============================================================================================
     public void toDoneNote(){
         Flowable.just(noteEntity)
-            .filter(new Predicate<NoteEntity>() {
-                @Override
-                public boolean test(NoteEntity noteEntity) throws Exception {
-                    return noteEntity.isContextChanged() || noteEntity.getLoadType() != LoadType.NEW;
-                }
-            })
             .doOnNext(new Consumer<NoteEntity>() {
                 @Override
                 public void accept(NoteEntity noteEntity) throws Exception {

@@ -2,13 +2,13 @@ package ahtewlg7.utimer.db.entity;
 
 import org.greenrobot.greendao.annotation.Convert;
 import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Unique;
 import org.joda.time.DateTime;
 
 import ahtewlg7.utimer.db.converter.DateTimeTypeConverter;
 import ahtewlg7.utimer.db.converter.GtdTypeConverter;
 import ahtewlg7.utimer.enumtype.GtdType;
-import org.greenrobot.greendao.annotation.Generated;
 
 /**
  * Created by lw on 2018/1/5.
@@ -19,6 +19,8 @@ import org.greenrobot.greendao.annotation.Generated;
     generateConstructors = false
 )
 public class GtdEntityGdBean{
+    @Id
+    private long id;
     @Unique
     private String key;
     private String value;
@@ -34,6 +36,9 @@ public class GtdEntityGdBean{
 
     public GtdEntityGdBean() {
     }
+
+    public long getId() { return id; }
+    public void setId(long id) { this.id = id; }
 
     public String getKey() {
         return this.key;

@@ -38,7 +38,6 @@ public class NoteEntityAction
         noteContextFsAction = new NoteContextFsAction();
     }
 
-
     public NoteEntity createNoteEntity(){
         Logcat.i(TAG,"createNoteEntity");
         String id = new IdAction().getNoteId();
@@ -61,6 +60,11 @@ public class NoteEntityAction
     @Override
     public Flowable<Optional<NoteEntity>> loadEntity(@NonNull Flowable<Optional<String>> idObservable) {
         return dbAction.getNoteEntity(idObservable);
+    }
+
+    @Override
+    public Flowable<Boolean> deleteEntity(@NonNull Flowable<Optional<NoteEntity>> flowable) {
+        return dbAction.deleteNoteEntity(flowable);
     }
 
     @Override
@@ -97,15 +101,7 @@ public class NoteEntityAction
 
     @Override
     public Flowable<Boolean> toSaveNote(NoteEntity noteEntity) {
-        return Flowable.just(noteEntity)
-                .map(new Function<NoteEntity, Boolean>() {
-                    @Override
-                    public Boolean apply(NoteEntity noteEntity) throws Exception {
-                        boolean result = dbAction.saveEntity(noteEntity);
-                        Logcat.i(TAG,"toSaveNote map , result = " + result) ;
-                        return result;
-                    }
-                });
+        return dbAction.saveEntity(Flowable.just(noteEntity));
     }
 
     @Override

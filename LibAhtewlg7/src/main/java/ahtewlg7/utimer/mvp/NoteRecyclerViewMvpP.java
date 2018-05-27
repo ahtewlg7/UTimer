@@ -131,8 +131,30 @@ public class NoteRecyclerViewMvpP implements IRecyclerMvpP {
     public void toCreateNote(){
         toStartEditNote(Observable.just(Optional.<NoteEntity>absent()));
     }
+
     public void toEditNote(@NonNull NoteEntity noteEntity){
         toStartEditNote(Observable.just(Optional.of(noteEntity)));
+    }
+
+    public void toDeleteNoteItem(int index){
+        noteRecyclerViewMvpM.deleteEntity(Flowable.just(Optional.of(noteEntityList.get(index))))
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribe(new MySafeSubscriber<Boolean>() {
+                    @Override
+                    public void onNext(Boolean aBoolean) {
+                        super.onNext(aBoolean);
+                        if(aBoolean)
+                            noteRecylerViewMvpV.onNoteDeleteSucc();
+                        else
+                            noteRecylerViewMvpV.onNoteDeleteFail();
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+                        super.onError(t);
+                        noteRecylerViewMvpV.onNoteDeleteErr();
+                    }
+                });
     }
 
     private void toStartEditNote(@NonNull Observable<Optional<NoteEntity>> noteObservable){
@@ -198,5 +220,9 @@ public class NoteRecyclerViewMvpP implements IRecyclerMvpP {
     public interface INoteRecyclerViewMvpV extends IRecyclerViewMvpV<NoteEntity>{
         public @NonNull RxFragment getUiContext();
         public void toStartNoteEditActivity();
+
+        public void onNoteDeleteSucc();
+        public void onNoteDeleteFail();
+        public void onNoteDeleteErr();
     }
 }
