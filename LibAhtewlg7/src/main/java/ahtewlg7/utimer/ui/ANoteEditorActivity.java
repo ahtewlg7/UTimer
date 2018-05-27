@@ -4,13 +4,7 @@ import android.os.Bundle;
 
 import com.blankj.utilcode.util.ToastUtils;
 
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
 import ahtewlg7.utimer.R;
-import ahtewlg7.utimer.busevent.NoteEditEndEvent;
-import ahtewlg7.utimer.busevent.NoteEditEvent;
-import ahtewlg7.utimer.common.EventBusFatory;
 import ahtewlg7.utimer.entity.NoteEntity;
 import ahtewlg7.utimer.mvp.NoteEditMvpP;
 import ahtewlg7.utimer.util.Logcat;
@@ -33,14 +27,13 @@ public abstract class ANoteEditorActivity extends BaseBinderActivity
 
         toInitView();
         noteEditMvpP = new NoteEditMvpP(this);
-
-        EventBusFatory.getInstance().getDefaultEventBus().register(this);
+        noteEditMvpP.toRegisterEventBus();
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        EventBusFatory.getInstance().getDefaultEventBus().unregister(this);
+    public void onDestroy() {
+        super.onDestroy();
+        noteEditMvpP.toUnregisterEventBus();
     }
 
     @Override
@@ -48,14 +41,6 @@ public abstract class ANoteEditorActivity extends BaseBinderActivity
         super.onBackPressed();
         noteEditMvpP.toDoneNote();
     }
-
-    //EventBus callback
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    public void onNoteEditEvent(NoteEditEvent event) {
-        Logcat.i(TAG,"onNoteEditEvent : " + event.toString());
-        noteEditMvpP.toLoadNote(event.getEoteEntityId().or(""));
-    }
-
 
     @Override
     public void onLoading() {
@@ -78,6 +63,7 @@ public abstract class ANoteEditorActivity extends BaseBinderActivity
     @Override
     public void onLoadSucc(NoteEntity noteEntity) {
         Logcat.d(TAG,"onLoadSucc : " + noteEntity.toString());
+        getEditView().setText(noteEntity.getRawContext());//todo md Context
     }
 
     @Override
@@ -90,13 +76,6 @@ public abstract class ANoteEditorActivity extends BaseBinderActivity
     @Override
     public void onLoadComplete() {
         //to end processing
-    }
-
-    @Override
-    public void onNoteDone(NoteEntity noteEntity) {
-        NoteEditEndEvent noteEditEndEvent = new NoteEditEndEvent(noteEntity.getId(), noteEntity.getLoadType());
-        Logcat.i(TAG,"onNoteDone : noteEditEndEvent = " + noteEditEndEvent.toString());
-        EventBusFatory.getInstance().getDefaultEventBus().post(noteEditEndEvent);
     }
 
     @Override

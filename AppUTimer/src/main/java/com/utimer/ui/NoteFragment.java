@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 
@@ -19,28 +18,21 @@ import com.trello.rxlifecycle2.components.support.RxFragment;
 import com.utimer.R;
 import com.utimer.view.NoteLinerRecyclerView;
 
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import ahtewlg7.utimer.busevent.NoteEditEndEvent;
-import ahtewlg7.utimer.busevent.NoteEditEvent;
-import ahtewlg7.utimer.common.EventBusFatory;
 import ahtewlg7.utimer.entity.NoteEntity;
-import ahtewlg7.utimer.mvp.NoteRecylerViewMvpP;
+import ahtewlg7.utimer.mvp.NoteRecyclerViewMvpP;
 import ahtewlg7.utimer.util.Logcat;
+import ahtewlg7.utimer.util.MySimpleObserver;
 import butterknife.BindView;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 
 /**
  * Created by lw on 2018/1/24.
  */
 
 public class NoteFragment extends AFunctionFragement
-        implements NoteRecylerViewMvpP.INoteRecylerViewMvpV {
+        implements NoteRecyclerViewMvpP.INoteRecyclerViewMvpV {
     public static final String TAG = NoteFragment.class.getSimpleName();
 
     @BindView(R.id.fragment_note_new)
@@ -48,9 +40,7 @@ public class NoteFragment extends AFunctionFragement
     @BindView(R.id.fragment_note_recyclerview)
     NoteLinerRecyclerView noteLinerRecyclerView;
 
-    private Disposable newBtnDisposable;
-
-    private NoteRecylerViewMvpP noteRecylerViewMvpP;
+    private NoteRecyclerViewMvpP noteRecylerViewMvpP;
     private NoteOnItemClickListener noteOnItemClickListener;
     private NoteOnItemChildClickListener noteOnItemChildClickListener;
     private NoteOnItemSwipeListener noteOnItemSwipeListener;
@@ -60,7 +50,7 @@ public class NoteFragment extends AFunctionFragement
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        noteRecylerViewMvpP             = new NoteRecylerViewMvpP(this);
+        noteRecylerViewMvpP             = new NoteRecyclerViewMvpP(this);
         noteOnItemClickListener         = new NoteOnItemClickListener();
         noteOnItemChildClickListener    = new NoteOnItemChildClickListener();
         noteOnItemSwipeListener         = new NoteOnItemSwipeListener();
@@ -71,26 +61,17 @@ public class NoteFragment extends AFunctionFragement
     public void onDestroy() {
         super.onDestroy();
 
-        Logcat.i(TAG,"to unregister EventBus");
-        EventBusFatory.getInstance().getDefaultEventBus().unregister(this);
-    }
-
-    //EventBus callback
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onNoteEditEndEvent(NoteEditEndEvent event) {
-        Logcat.i(TAG,"onNoteEditEndEvent  : noteEditEndEvent = " + event.toString());
-        if(event.getEoteEntityId().isPresent() && !TextUtils.isEmpty(event.getEoteEntityId().get()))
-            noteRecylerViewMvpP.onNoteNew(event.getEoteEntityId().get());
+        noteRecylerViewMvpP.toUnregisterEventBus();
     }
 
     private void initNewBtn(){
-        newBtnDisposable = RxView.clicks(newBtn)
+        RxView.clicks(newBtn)
             .throttleFirst(3, TimeUnit.SECONDS)
-            .subscribe(new Consumer<Object>() {
+            .subscribe(new MySimpleObserver<Object>(){
                 @Override
-                public void accept(Object o) throws Exception {
+                public void onNext(Object object) {
                     ToastUtils.showShort("to create a new note!");
-                    noteRecylerViewMvpP.toNewNote();
+                    noteRecylerViewMvpP.toCreateNote();
                 }
             });
     }
@@ -115,9 +96,7 @@ public class NoteFragment extends AFunctionFragement
     public void initLayoutView(View inflateView) {
         initNewBtn();
 
-        Logcat.i(TAG,"to register EventBus");
-        EventBusFatory.getInstance().getDefaultEventBus().register(this);
-
+        noteRecylerViewMvpP.toRegisterEventBus();
         noteRecylerViewMvpP.loadAllData();
     }
 
@@ -129,9 +108,9 @@ public class NoteFragment extends AFunctionFragement
     }
 
     @Override
-    public void onNoteNewStart() {
+    public void toStartNoteEditActivity() {
+        Logcat.i(TAG,"toStartNoteEditActivity");
         ActivityUtils.startActivity(MdEditorActivity.class);
-        EventBusFatory.getInstance().getDefaultEventBus().postSticky(new NoteEditEvent());
     }
 
     @Override
@@ -152,22 +131,23 @@ public class NoteFragment extends AFunctionFragement
 
     @Override
     public void onRecyclerViewInitStart() {
+        //todo
     }
 
     @Override
     public void onRecyclerViewInitErr() {
-
+        //todo
     }
 
     @Override
     public void onRecyclerViewInitEnd() {
-
+        //todo
     }
 
     private class NoteOnItemClickListener implements BaseQuickAdapter.OnItemClickListener{
         @Override
         public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-
+            noteRecylerViewMvpP.toEditNote((NoteEntity) adapter.getItem(position));
         }
     }
     private class NoteOnItemChildClickListener implements BaseQuickAdapter.OnItemChildClickListener{
