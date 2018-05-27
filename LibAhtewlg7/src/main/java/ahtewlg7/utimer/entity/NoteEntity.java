@@ -1,5 +1,7 @@
 package ahtewlg7.utimer.entity;
 
+import android.text.TextUtils;
+
 import org.joda.time.DateTime;
 
 import ahtewlg7.utimer.enumtype.LoadType;
@@ -12,6 +14,7 @@ public class NoteEntity implements IUtimerEntity {
     public static final String TAG = NoteEntity.class.getSimpleName();
 
     private boolean contextChanged    = false;
+    private boolean noteFielExist     = false;
 
     private LoadType loadType;
     private String id;
@@ -29,15 +32,18 @@ public class NoteEntity implements IUtimerEntity {
 
     @Override
     public boolean isValid(){
-        return true;
-    }
-
-    public boolean ifFileExist() {
-        return false;
+        return !TextUtils.isEmpty(rawContext);
     }
 
     public boolean isContextChanged() { return contextChanged; }
     public void setContextChanged(boolean contextChanged) { this.contextChanged = contextChanged; }
+
+    public boolean isNoteFielExist() {
+        return noteFielExist;
+    }
+    public void setNoteFielExist(boolean noteFielExist) {
+        this.noteFielExist = noteFielExist;
+    }
 
     public LoadType getLoadType() { return loadType; }
     public void setLoadType(LoadType loadType) { this.loadType = loadType; }

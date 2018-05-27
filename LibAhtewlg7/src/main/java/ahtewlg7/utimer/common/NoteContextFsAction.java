@@ -3,6 +3,7 @@ package ahtewlg7.utimer.common;
 import android.text.TextUtils;
 
 import com.blankj.utilcode.util.FileIOUtils;
+import com.blankj.utilcode.util.FileUtils;
 
 import ahtewlg7.utimer.entity.NoteEntity;
 import ahtewlg7.utimer.util.Logcat;
@@ -21,6 +22,20 @@ public class NoteContextFsAction {
         fileSystemAction = new FileSystemAction();
     }
 
+    public boolean isNoteFileExist(NoteEntity noteEntity){
+        String noteFileRPath = getNoteFileRPath(noteEntity);
+        boolean isFileExists = FileUtils.isFileExists(noteFileRPath);
+        Logcat.i(TAG,"isNoteFileExist noteFileRPath = " + noteFileRPath + ", isFileExists = " + isFileExists);
+        return isFileExists;
+    }
+
+    public String getNoteFileRPath(NoteEntity noteEntity){
+        String noteFileSuffix = VcFactoryBuilder.getInstance().getVersionControlFactory().getBaseConfig().getNoteFileSuffix();
+        String noteFileRPath = fileSystemAction.getSdcardPath() + noteEntity.getFileRPath()
+                + noteEntity.getNoteName() + noteFileSuffix;
+        return noteFileRPath;
+    }
+
     public boolean writeNoteContext(NoteEntity noteEntity){
         if(noteEntity == null) {
             Logcat.i(TAG,"writeNoteContext : noteEntity is null");
@@ -30,9 +45,8 @@ public class NoteContextFsAction {
             Logcat.i(TAG,"writeNoteContext ：noteContext is null");
             return false;
         }
-        String noteFileSuffix = VcFactoryBuilder.getInstance().getVersionControlFactory().getBaseConfig().getNoteFileSuffix();
-        String noteFileRPath = fileSystemAction.getSdcardPath() + noteEntity.getFileRPath()
-                + noteEntity.getNoteName() + noteFileSuffix;
+
+        String noteFileRPath = getNoteFileRPath(noteEntity);
         Logcat.i(TAG,"saveNoteContext noteFileRPath = " + noteFileRPath);
         return FileIOUtils.writeFileFromString(noteFileRPath, noteEntity.getRawContext());
     }
@@ -42,8 +56,14 @@ public class NoteContextFsAction {
             Logcat.i(TAG,"readNoteContext : noteEntity is null");
             return false;
         }
-        String noteFileRPath = fileSystemAction.getSdcardPath() + noteEntity.getFileRPath()
-                + noteEntity.getNoteName() + ".txt";
+        if(!isNoteFileExist(noteEntity)){
+            Logcat.i(TAG,"readNoteContext : noteFile is not exist");
+            noteEntity.setNoteFielExist(false);
+            return false;
+        }
+
+        noteEntity.setNoteFielExist(true);
+        String noteFileRPath = getNoteFileRPath(noteEntity);
         Logcat.i(TAG,"readNoteContext noteFileRPath = " + noteFileRPath);
         String rawNoteContext = FileIOUtils.readFile2String(noteFileRPath);
         if(TextUtils.isEmpty(rawNoteContext)){

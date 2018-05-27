@@ -46,16 +46,17 @@ public class EntityDbAction{
                 .subscribeOn(Schedulers.io());
     }
 
-    public Flowable<Optional<NoteEntity>> getNoteEntity(@NonNull Flowable<String> idFlowable) {
-        return idFlowable.map(new Function<String, Optional<NoteEntity>>() {
+    public Flowable<Optional<NoteEntity>> getNoteEntity(@NonNull Flowable<Optional<String>> idFlowable) {
+        return idFlowable.map(new Function<Optional<String>, Optional<NoteEntity>>() {
             @Override
-            public Optional<NoteEntity> apply(String id) throws Exception {
-                if(TextUtils.isEmpty(id))
+            public Optional<NoteEntity> apply(Optional<String> idOptional) throws Exception {
+                if(!idOptional.isPresent() || TextUtils.isEmpty(idOptional.get()))
                     return Optional.absent();
-                NoteEntityGdBean noteEntityGdBean = NoteEntityDaoAction.getInstance().queryById(id);
+                NoteEntityGdBean noteEntityGdBean = NoteEntityDaoAction.getInstance().queryById(idOptional.get());
                 if(noteEntityGdBean == null)
                     return Optional.absent();
                 NoteEntity noteEntity = JSON.parseObject(noteEntityGdBean.getValue(),NoteEntity.class);
+                noteEntity.setLoadType(LoadType.DB);
                 return Optional.fromNullable(noteEntity);
             }
         });

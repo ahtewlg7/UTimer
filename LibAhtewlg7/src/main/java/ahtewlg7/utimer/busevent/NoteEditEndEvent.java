@@ -18,7 +18,7 @@ public class NoteEditEndEvent{
         this.loadType  = loadType;
     }
 
-    public Optional<String> getEoteEntityId() {
+    public Optional<String> getNoteEntityId() {
         return Optional.fromNullable(noteId);
     }
 

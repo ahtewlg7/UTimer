@@ -1,5 +1,6 @@
 package ahtewlg7.utimer.common;
 
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.google.common.base.Optional;
@@ -11,7 +12,7 @@ import ahtewlg7.utimer.entity.NoteEntity;
 import ahtewlg7.utimer.enumtype.LoadType;
 import ahtewlg7.utimer.mvp.NoteContextSaveMvpP;
 import ahtewlg7.utimer.mvp.NoteEditMvpP;
-import ahtewlg7.utimer.mvp.NoteRecylerViewMvpP;
+import ahtewlg7.utimer.mvp.NoteRecyclerViewMvpP;
 import ahtewlg7.utimer.storagerw.EntityDbAction;
 import ahtewlg7.utimer.util.DateTimeAction;
 import ahtewlg7.utimer.util.Logcat;
@@ -24,7 +25,7 @@ import io.reactivex.functions.Function;
 
 public class NoteEntityAction
         implements NoteEditMvpP.INoteEditMvpM, NoteContextSaveMvpP.INoteSaveMvpM
-        , NoteRecylerViewMvpP.INoteRecyclerViewMvpM {
+        , NoteRecyclerViewMvpP.INoteRecyclerViewMvpM {
     public static final String TAG = NoteEntityAction.class.getSimpleName();
 
     private EntityDbAction dbAction;
@@ -58,13 +59,13 @@ public class NoteEntityAction
     }
 
     @Override
-    public Flowable<Optional<NoteEntity>> loadEntity(Flowable<String> idObservable) {
+    public Flowable<Optional<NoteEntity>> loadEntity(@NonNull Flowable<Optional<String>> idObservable) {
         return dbAction.getNoteEntity(idObservable);
     }
 
     @Override
-    public Flowable<Optional<NoteEntity>> toLoadOrCreateNote(String noteId) {
-        return loadEntity(Flowable.just(noteId))
+    public Flowable<Optional<NoteEntity>> toLoadOrCreateNote(@NonNull Flowable<Optional<String>> noteIdFlowable) {
+        return loadEntity(noteIdFlowable)
                 .map(new Function<Optional<NoteEntity>, Optional<NoteEntity>>() {
                     @Override
                     public Optional<NoteEntity> apply(Optional<NoteEntity> iNoteEntityOptional) throws Exception {

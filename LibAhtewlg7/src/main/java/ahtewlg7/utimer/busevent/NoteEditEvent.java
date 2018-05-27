@@ -20,6 +20,6 @@ public class NoteEditEvent {
 
     @Override
     public String toString() {
-        return TAG + " : noteId = " + noteId;
+        return TAG + "{noteId = " + noteId + "}";
     }
 }
