@@ -9,7 +9,7 @@
                         |
                         |
               MVP       |                         Presenter
-                        |
+            (MVVM)      |
                         |
                         |                           Model
                         |
@@ -26,8 +26,10 @@
            Technology   |                          ***Action
                         |
         ----------------|------------------------------------------------------------
+            (Mapper)    |                 (Domain Entity / Db Bean Mapper)
+        ----------------|------------------------------------------------------------
                         |
-           Persistence  |                         DB / File
+           Persistence  |                       DB / Serialized LOB
                         |
 
 

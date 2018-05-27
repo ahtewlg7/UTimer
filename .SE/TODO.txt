@@ -7,9 +7,11 @@ todo:
     b>.重构note file 文本内存save逻辑 : 为了能后台自动存储，最好在service中执行     DONE
     c>.noteEdit中不应该混入gtd的逻辑，而只负责note本身      DONE
     d>.EntityDbAction.getNoteEntity : DataBaseException.ERR_DB_ID_EMPTY      DONE
+    e>.当rawContext为空或没变化时，不保存相关变量      DONE
 
 2.重构gtd Recycler MVP逻辑
-    a>.EntityDbAction.getGtdEntity : 使用Optional代替DataBaseException.ERR_DB_ID_EMPTY      todo
+    a>.EntityDbAction.getGtdEntity : 使用Optional代替DataBaseException.ERR_DB_ID_EMPTY      DONE
+    b>.简化gtd entity，合并后只剩下note, project, action三个实例（inbox为action = 1的project特例；note。
 
 3.使用note RecyclerView Mvp重构笔记列表模块逻辑：
     a>.使用mvp重构 note recyclerView逻辑      DONE
@@ -18,11 +20,14 @@ todo:
     d>.noteFragment使用EventBus接受MdEditorActivity回调的NoteEvent事件      DONE
     e>.按lastAccessTime降序顺序排列      DONE
     f>.优化linearRecyclerView item控件布局      DONE
-    g>.完成编辑后返回note列表时，主动填补刷新
+    g>.完成编辑后返回note列表时，主动填补刷新      DONE
+    h>.note 放入回收站      todo
+    i>.note entity加入rely id(gtd / otherNote)      todo
+    j>.note 点击，进入编辑界面      DONE
 
-4.将note融入GTD事务自动流程 todo
-    a>.按需将相应的note变化成Gtd.Inbox
-    b>.优化gtd 状态机： activity/server
+4.将note融入GTD事务自动流程      todo
+    a>.按需将相应的note变化成Gtd.project
+    b>.优化gtd 状态机： server
 
 5.优化数据库设计
     a>.添加数据库存储变化集：newList, dirtyList, removeList
