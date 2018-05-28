@@ -106,10 +106,7 @@ public class NoteEditMvpP {
                     super.onNext(aBoolean);
                     if(aBoolean){
                         noteEditMvpV.toSaveContext(noteEntity);
-
-                        NoteEditEndEvent noteEditEndEvent = new NoteEditEndEvent(noteEntity.getId(), noteEntity.getLoadType());
-                        Logcat.i(TAG,"onNoteDone : noteEditEndEvent = " + noteEditEndEvent.toString());
-                        EventBusFatory.getInstance().getDefaultEventBus().post(noteEditEndEvent);
+                        onNoteDone(noteEntity);
                     }else{
                         noteEditMvpV.onNoteSaveFail(noteEntity);
                     }
@@ -173,8 +170,9 @@ public class NoteEditMvpP {
     }
 
     private void onNoteDone(NoteEntity noteEntity) {
-        NoteEditEndEvent noteEditEndEvent = new NoteEditEndEvent(noteEntity.getId(), noteEntity.getLoadType());
-        Logcat.i(TAG,"onNoteDone : noteEditEndEvent = " + noteEditEndEvent.toString());
+        NoteEditEndEvent noteEditEndEvent =
+                new NoteEditEndEvent(noteEntity.getId(), noteEntity.getLoadType());
+        Logcat.i(TAG,"onNoteDone : noteEntity = " + noteEntity.toString() + ",noteEditEndEvent = " + noteEditEndEvent.toString());
         eventBus.post(noteEditEndEvent);
     }
 

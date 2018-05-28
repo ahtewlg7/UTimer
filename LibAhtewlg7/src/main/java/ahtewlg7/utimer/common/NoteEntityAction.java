@@ -17,14 +17,16 @@ import ahtewlg7.utimer.storagerw.EntityDbAction;
 import ahtewlg7.utimer.util.DateTimeAction;
 import ahtewlg7.utimer.util.Logcat;
 import io.reactivex.Flowable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by lw on 2017/12/28.
  */
 
 public class NoteEntityAction
-        implements NoteEditMvpP.INoteEditMvpM, NoteContextSaveMvpP.INoteSaveMvpM
+        implements NoteEditMvpP.INoteEditMvpM, NoteContextSaveMvpP.INoteContextSaveMvpM
         , NoteRecyclerViewMvpP.INoteRecyclerViewMvpM {
     public static final String TAG = NoteEntityAction.class.getSimpleName();
 
@@ -52,6 +54,7 @@ public class NoteEntityAction
         return noteEntity;
     }
 
+    //=====================================IBaseRecyclerViewMvpM========================================
     @Override
     public Flowable<Optional<NoteEntity>> loadAllEntity() {
         return dbAction.loadAllNoteEntity();
@@ -67,6 +70,7 @@ public class NoteEntityAction
         return dbAction.deleteNoteEntity(flowable);
     }
 
+    //=====================================INoteEditMvpM========================================
     @Override
     public Flowable<Optional<NoteEntity>> toLoadOrCreateNote(@NonNull Flowable<Optional<String>> noteIdFlowable) {
         return loadEntity(noteIdFlowable)
@@ -97,13 +101,17 @@ public class NoteEntityAction
         //todo : mdContext
     }
 
-
-
     @Override
     public Flowable<Boolean> toSaveNote(NoteEntity noteEntity) {
-        return dbAction.saveEntity(Flowable.just(noteEntity));
+        return dbAction.saveEntity(Flowable.just(noteEntity).doOnNext(new Consumer<NoteEntity>() {
+            @Override
+            public void accept(NoteEntity noteEntity) throws Exception {
+                noteEntity.setFileAbsPath(noteContextFsAction.getNoteFileAbsPath(noteEntity));
+            }
+        }));
     }
 
+    //==========================================INoteContextSaveMvpM============================================
     @Override
     public Flowable<Boolean> toSaveContext(NoteEntity noteEntity) {
         return Flowable.just(noteEntity)
@@ -111,7 +119,21 @@ public class NoteEntityAction
                     @Override
                     public Boolean apply(NoteEntity noteEntity) throws Exception {
                         boolean result = noteContextFsAction.writeNoteContext(noteEntity);
-                        Logcat.i(TAG,"toSaveContext map , result = " + result) ;
+                        Logcat.i(TAG,"toSaveContext map , result = " + result + ", noteEntity = " + noteEntity.toString()) ;
+                        return result;
+                    }
+                });
+    }
+
+    @Override
+    public Flowable<Boolean> toDeleteContext(String filePath) {
+        return Flowable.just(filePath)
+                .subscribeOn(Schedulers.io())
+                .map(new Function<String, Boolean>() {
+                    @Override
+                    public Boolean apply(String s) throws Exception {
+                        boolean result = noteContextFsAction.deleteNoteContext(s);
+                        Logcat.i(TAG,"toDeleteContext map , result = " + result) ;
                         return result;
                     }
                 });

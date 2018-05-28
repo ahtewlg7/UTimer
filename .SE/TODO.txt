@@ -21,7 +21,7 @@ todo:
     e>.按lastAccessTime降序顺序排列      DONE
     f>.优化linearRecyclerView item控件布局      DONE
     g>.完成编辑后返回note列表时，主动填补刷新      DONE
-    h>.note 放入回收站      todo
+    h>.note 放入回收站，删除相关数据库以及相关的文件      DONE
     i>.note entity加入rely id(gtd / otherNote)      todo
     j>.note 点击，进入编辑界面      DONE
 

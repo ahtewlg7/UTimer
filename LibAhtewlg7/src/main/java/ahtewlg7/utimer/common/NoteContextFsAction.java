@@ -23,17 +23,17 @@ public class NoteContextFsAction {
     }
 
     public boolean isNoteFileExist(NoteEntity noteEntity){
-        String noteFileRPath = getNoteFileRPath(noteEntity);
-        boolean isFileExists = FileUtils.isFileExists(noteFileRPath);
-        Logcat.i(TAG,"isNoteFileExist noteFileRPath = " + noteFileRPath + ", isFileExists = " + isFileExists);
+        String noteFileAbsPath = getNoteFileAbsPath(noteEntity);
+        boolean isFileExists = FileUtils.isFileExists(noteFileAbsPath);
+        Logcat.i(TAG,"isNoteFileExist noteFileAbsPath = " + noteFileAbsPath + ", isFileExists = " + isFileExists);
         return isFileExists;
     }
 
-    public String getNoteFileRPath(NoteEntity noteEntity){
+    public String getNoteFileAbsPath(NoteEntity noteEntity){
         String noteFileSuffix = VcFactoryBuilder.getInstance().getVersionControlFactory().getBaseConfig().getNoteFileSuffix();
-        String noteFileRPath = fileSystemAction.getSdcardPath() + noteEntity.getFileRPath()
+        String noteFileAbsPath = fileSystemAction.getSdcardPath() + noteEntity.getFileRPath()
                 + noteEntity.getNoteName() + noteFileSuffix;
-        return noteFileRPath;
+        return noteFileAbsPath;
     }
 
     public boolean writeNoteContext(NoteEntity noteEntity){
@@ -46,9 +46,9 @@ public class NoteContextFsAction {
             return false;
         }
 
-        String noteFileRPath = getNoteFileRPath(noteEntity);
-        Logcat.i(TAG,"saveNoteContext noteFileRPath = " + noteFileRPath);
-        return FileIOUtils.writeFileFromString(noteFileRPath, noteEntity.getRawContext());
+        String noteFileAbsPath = getNoteFileAbsPath(noteEntity);
+        Logcat.i(TAG,"saveNoteContext noteFileRPath = " + noteFileAbsPath);
+        return FileIOUtils.writeFileFromString(noteFileAbsPath, noteEntity.getRawContext());
     }
 
     public boolean readNoteContext(NoteEntity noteEntity){
@@ -63,7 +63,7 @@ public class NoteContextFsAction {
         }
 
         noteEntity.setNoteFielExist(true);
-        String noteFileRPath = getNoteFileRPath(noteEntity);
+        String noteFileRPath = getNoteFileAbsPath(noteEntity);
         Logcat.i(TAG,"readNoteContext noteFileRPath = " + noteFileRPath);
         String rawNoteContext = FileIOUtils.readFile2String(noteFileRPath);
         if(TextUtils.isEmpty(rawNoteContext)){
@@ -73,5 +73,19 @@ public class NoteContextFsAction {
 
         noteEntity.setRawContext(rawNoteContext);
         return true;
+    }
+
+    public boolean deleteNoteContext(String noteFileRPath){
+        if(TextUtils.isEmpty(noteFileRPath)) {
+            Logcat.i(TAG,"deleteNoteContext : noteEntity is null");
+            return false;
+        }
+        if(!FileUtils.isFileExists(noteFileRPath)){
+            Logcat.i(TAG,"deleteNoteContext : noteFile is not exist");
+            return false;
+        }
+        boolean result = FileUtils.deleteFile(noteFileRPath);
+        Logcat.i(TAG,"deleteNoteContext noteFileRPath = " + noteFileRPath + ", result = " + result);
+        return result;
     }
 }

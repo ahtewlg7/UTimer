@@ -17,6 +17,7 @@ import java.util.List;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import ahtewlg7.utimer.busevent.NoteDeleteEvent;
 import ahtewlg7.utimer.busevent.NoteEditEndEvent;
 import ahtewlg7.utimer.busevent.NoteEditEvent;
 import ahtewlg7.utimer.common.EventBusFatory;
@@ -57,6 +58,8 @@ public class NoteRecyclerViewMvpP implements IRecyclerMvpP {
         if(eventBus != null && eventBus.isRegistered(this))
             eventBus.unregister(this);
     }
+
+
 
     //EventBus callback
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -134,15 +137,17 @@ public class NoteRecyclerViewMvpP implements IRecyclerMvpP {
     }
 
     public void toDeleteNoteItem(int index){
-        noteRecyclerViewMvpM.deleteEntity(Flowable.just(Optional.of(noteEntityList.get(index))))
+        final NoteEntity noteEntity = noteEntityList.get(index);
+        noteRecyclerViewMvpM.deleteEntity(Flowable.just(Optional.of(noteEntity)))
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe(new MySafeSubscriber<Boolean>() {
                     @Override
                     public void onNext(Boolean aBoolean) {
                         super.onNext(aBoolean);
-                        if(aBoolean)
+                        if(aBoolean) {
                             noteRecylerViewMvpV.onNoteDeleteSucc();
-                        else
+                            onNoteDelete(noteEntity);
+                        }else
                             noteRecylerViewMvpV.onNoteDeleteFail();
                     }
 
@@ -152,6 +157,13 @@ public class NoteRecyclerViewMvpP implements IRecyclerMvpP {
                         noteRecylerViewMvpV.onNoteDeleteErr();
                     }
                 });
+    }
+
+    private void onNoteDelete(NoteEntity noteEntity) {
+        NoteDeleteEvent noteDeleteEvent =
+                new NoteDeleteEvent(noteEntity.getId(), noteEntity.getFileAbsPath());
+        Logcat.i(TAG,"onNoteDone : noteEntity = " + noteEntity.toString() + ",noteDeleteEvent = " + noteDeleteEvent.toString());
+        eventBus.post(noteDeleteEvent);
     }
 
     private void toStartEditNote(@NonNull Observable<Optional<NoteEntity>> noteObservable){

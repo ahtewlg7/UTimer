@@ -27,6 +27,15 @@ public class BinderService extends Service
         Logcat.i(TAG, "onCreate");
 
         noteSaveMvpP = new NoteContextSaveMvpP(this);
+        noteSaveMvpP.toRegisterEventBus();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Logcat.i(TAG, "onDestroy");
+
+        noteSaveMvpP.toUnregisterEventBus();
     }
 
     public void toSaveNote(@NonNull NoteEntity noteEntity){
