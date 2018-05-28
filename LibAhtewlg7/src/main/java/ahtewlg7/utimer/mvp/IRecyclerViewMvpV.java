@@ -12,5 +12,4 @@ public interface IRecyclerViewMvpV<T> {
 
     public void onRecyclerViewInitStart();
     public void onRecyclerViewInitErr();
-    public void onRecyclerViewInitEnd();
 }

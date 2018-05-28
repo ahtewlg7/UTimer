@@ -117,11 +117,13 @@ public class NoteFragment extends AFunctionFragement
     @Override
     public void onNoteDeleteSucc() {
         Logcat.i(TAG,"onNoteDeleteSucc");
+        ToastUtils.showShort(R.string.note_delete_succ);
     }
 
     @Override
     public void onNoteDeleteFail() {
         Logcat.i(TAG,"onNoteDeleteFail");
+        ToastUtils.showShort(R.string.note_delete_fail);
     }
 
     @Override
@@ -142,6 +144,7 @@ public class NoteFragment extends AFunctionFragement
             Logcat.i(TAG,"resetRecyclerView : dataList null");
             return;
         }
+
         noteLinerRecyclerView.resetData(dataList);
     }
 
@@ -152,11 +155,6 @@ public class NoteFragment extends AFunctionFragement
 
     @Override
     public void onRecyclerViewInitErr() {
-        //todo
-    }
-
-    @Override
-    public void onRecyclerViewInitEnd() {
         //todo
     }
 
@@ -176,6 +174,7 @@ public class NoteFragment extends AFunctionFragement
     private class NoteOnItemSwipeListener extends MySimpleItemSwipeListener {
         @Override
         public void onItemSwiped(RecyclerView.ViewHolder viewHolder, int pos) {
+            Logcat.i(TAG,"onItemSwiped pos = " + pos);
             noteRecylerViewMvpP.toDeleteNoteItem(pos);
         }
     }

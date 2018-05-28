@@ -119,10 +119,7 @@ public class NoteRecyclerViewMvpP implements IRecyclerMvpP {
                     @Override
                     public void onComplete() {
                         super.onComplete();
-                        if(noteEntityList.isEmpty())
-                            noteRecylerViewMvpV.onRecyclerViewInitEnd();
-                        else
-                            noteRecylerViewMvpV.initRecyclerView(noteEntityList);
+                        noteRecylerViewMvpV.initRecyclerView(noteEntityList);
                     }
                 });
 
@@ -205,10 +202,6 @@ public class NoteRecyclerViewMvpP implements IRecyclerMvpP {
                             noteRecylerViewMvpV.resetRecyclerView(noteEntityList);
                     }
                 });
-    }
-
-
-    public void toTrash(){
     }
 
     public void toGtdProject(NoteEntity noteEntity){

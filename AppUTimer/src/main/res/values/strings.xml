@@ -10,4 +10,7 @@
     <string name="note_name">NoteName:</string>
     <string name="note_detail">NoteDetail:</string>
 
+    <string name="note_delete_succ">delete note success</string>
+    <string name="note_delete_fail">delete note fail</string>
+
 </resources>
