@@ -6,7 +6,7 @@ import java.util.List;
  * Created by lw on 2018/3/8.
  */
 
-public interface IRecyclerViewMvpV<T> {
+public interface IBaseRecyclerViewMvpV<T> {
     public void initRecyclerView(List<T> dataList);
     public void resetRecyclerView(List<T> dataList);
 

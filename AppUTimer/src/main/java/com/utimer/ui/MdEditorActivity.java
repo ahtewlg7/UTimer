@@ -1,9 +1,8 @@
 package com.utimer.ui;
 
 import android.widget.EditText;
-import android.widget.TextView;
 
-import com.trello.rxlifecycle2.components.RxActivity;
+import com.trello.rxlifecycle2.LifecycleProvider;
 import com.utimer.R;
 
 import ahtewlg7.utimer.ui.ANoteEditorActivity;
@@ -27,12 +26,12 @@ public class MdEditorActivity extends ANoteEditorActivity {
     }
 
     @Override
-    public TextView getEditView() {
+    protected EditText getEditView() {
         return editTextView;
     }
 
     @Override
-    public RxActivity getUiContext() {
+    public LifecycleProvider getRxLifeCycleBindView() {
         return this;
     }
 }

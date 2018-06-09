@@ -4,4 +4,9 @@
     <string name="entity_not_found">Not Found This Note!</string>
     <string name="notebook_not_found">Not Found This NoteBook!</string>
     <string name="note_load_err">Note load err, please try again!</string>
+    <string name="md_parse_err">parse err, please try again!</string>
+
+    <string name="editor_enable">enable to edit</string>
+    <string name="editor_disable">disable to edit</string>
+
 </resources>

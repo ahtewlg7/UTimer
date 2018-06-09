@@ -5,8 +5,7 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 
-import ahtewlg7.utimer.entity.NoteEntity;
-import ahtewlg7.utimer.mvp.NoteContextSaveMvpP;
+import ahtewlg7.utimer.mvp.MdContextMvpP;
 import ahtewlg7.utimer.util.Logcat;
 import io.reactivex.annotations.NonNull;
 
@@ -15,51 +14,30 @@ import io.reactivex.annotations.NonNull;
  * Created by lw on 2016/11/15.
  */
 
-public class BinderService extends Service
-        implements NoteContextSaveMvpP.INoteSaveMvpV{
+public class BinderService extends Service{
     public static final String TAG = BinderService.class.getSimpleName();
 
-    private NoteContextSaveMvpP noteSaveMvpP;
+    private MdContextMvpP mdContextMvpP;
 
     @Override
     public void onCreate() {
         super.onCreate();
         Logcat.i(TAG, "onCreate");
 
-        noteSaveMvpP = new NoteContextSaveMvpP(this);
-        noteSaveMvpP.toRegisterEventBus();
+        mdContextMvpP   = new MdContextMvpP();
+        mdContextMvpP.toRegisterEventBus();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         Logcat.i(TAG, "onDestroy");
-
-        noteSaveMvpP.toUnregisterEventBus();
+        mdContextMvpP.toUnregisterEventBus();
     }
 
-    public void toSaveNote(@NonNull NoteEntity noteEntity){
-        noteSaveMvpP.toSaveNoteContext(noteEntity);
-    }
-    //+++++++++++++++++++++++++++++++++++++++INoteSaveMvpV++++++++++++++++++++++++++++++++++++++++++
-    @Override
-    public void onNoteSaveFailed(NoteEntity noteEntity) {
-        Logcat.i(TAG,"onNoteSaveFailed");
-    }
-
-    @Override
-    public void onNoteSaveSucc(NoteEntity noteEntity) {
-        Logcat.i(TAG,"onNoteSaveSucc : " + noteEntity.toString());
-    }
-
-    @Override
-    public void onNoteSaveErr(NoteEntity noteEntity, Throwable e) {
-        Logcat.i(TAG,"onNoteSaveErr : " + e.getMessage());
-    }
-
-    @Override
-    public void onNoteSaveComplete(NoteEntity noteEntity) {
-        Logcat.i(TAG,"onNoteSaveComplete");
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    public @NonNull MdContextMvpP getMdContextMvpP(){
+        return mdContextMvpP;
     }
 
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

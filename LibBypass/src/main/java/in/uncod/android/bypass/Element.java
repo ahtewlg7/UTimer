@@ -110,11 +110,9 @@ public class Element {
 		return (type.value & 0x100) == 0x100;
 	}
 
-	//add by lw , 20160602
 	public Element getChildren(int index){
 		if(index < 0 || index > size())
 			return null;
 		return children[index];
 	}
-	//add end
 }

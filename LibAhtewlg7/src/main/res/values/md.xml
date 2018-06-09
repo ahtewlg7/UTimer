@@ -1,0 +1,46 @@
+<resources>
+    <string name="mypass_element_attr_flags">flags</string>
+    <string name="mypass_element_attr_link">link</string>
+    <string name="mypass_element_attr_alt">alt</string>
+    <string name="mypass_element_attr_title">title</string>
+    <string name="mypass_element_attr_level">level</string>
+
+    <string name="editor_align_left">align left</string>
+    <string name="editor_align_right">align right</string>
+    <string name="editor_align_top">align top</string>
+    <string name="editor_align_bottom">align bottom</string>
+    <string name="editor_align_middle">align middle</string>
+    <string name="editor_align_center_hori">align center hori</string>
+    <string name="editor_align_center">align center</string>
+    <string name="editor_font_color">font color</string>
+    <string name="editor_font_size">font size</string>
+    <string name="editor_background_color">background color</string>
+    <string name="editor_background">background</string>
+    <string name="editor_undo">undo</string>
+    <string name="editor_redo">redo</string>
+    <string name="editor_bold">bold</string>
+    <string name="editor_italic">italic</string>
+    <string name="editor_subscript">subscript</string>
+    <string name="editor_superscript">superscript</string>
+    <string name="editor_strike_through">strike through</string>
+    <string name="editor_under_line">under line</string>
+    <string name="action_horizontal_rule">horizontal rule</string>
+    <string name="editor_text_color">text color</string>
+    <string name="editor_text_background_color">text background color</string>
+    <string name="editor_remove_format">remove format</string>
+    <string name="editor_heading1">head size 1</string>
+    <string name="editor_heading2">head size 2</string>
+    <string name="editor_heading3">head size 3</string>
+    <string name="editor_heading4">head size 4</string>
+    <string name="editor_heading5">head size 5</string>
+    <string name="editor_heading6">head size 6</string>
+    <string name="editor_indent">indent</string>
+    <string name="editor_outdent">outdent</string>
+    <string name="editor_block_quote">block quote</string>
+    <string name="editor_bullet">bullet</string>
+    <string name="editor_insert_file">insert file</string>
+    <string name="editor_insert_link">insert link</string>
+    <string name="editor_insert_ordered_list">insert ordered list</string>
+    <string name="editor_insert_unordered_list">insert unordered list</string>
+    <string name="editor_insert_todo">insert todo list</string>
+</resources>

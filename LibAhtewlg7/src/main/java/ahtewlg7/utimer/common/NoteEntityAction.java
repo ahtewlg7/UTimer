@@ -1,43 +1,40 @@
 package ahtewlg7.utimer.common;
 
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 
+import com.blankj.utilcode.util.FileUtils;
 import com.google.common.base.Optional;
-import com.jakewharton.rxbinding2.widget.TextViewTextChangeEvent;
 
 import org.joda.time.DateTime;
 
 import ahtewlg7.utimer.entity.NoteEntity;
 import ahtewlg7.utimer.enumtype.LoadType;
-import ahtewlg7.utimer.mvp.NoteContextSaveMvpP;
 import ahtewlg7.utimer.mvp.NoteEditMvpP;
 import ahtewlg7.utimer.mvp.NoteRecyclerViewMvpP;
 import ahtewlg7.utimer.storagerw.EntityDbAction;
 import ahtewlg7.utimer.util.DateTimeAction;
 import ahtewlg7.utimer.util.Logcat;
+import ahtewlg7.utimer.verctrl.VcFactoryBuilder;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by lw on 2017/12/28.
  */
 
 public class NoteEntityAction
-        implements NoteEditMvpP.INoteEditMvpM, NoteContextSaveMvpP.INoteContextSaveMvpM
-        , NoteRecyclerViewMvpP.INoteRecyclerViewMvpM {
+        implements NoteEditMvpP.INoteEditMvpM, NoteRecyclerViewMvpP.INoteRecyclerViewMvpM {
     public static final String TAG = NoteEntityAction.class.getSimpleName();
 
     private EntityDbAction dbAction;
     private DateTimeAction dateTimeAction;
-    private NoteContextFsAction noteContextFsAction;
+    private FileSystemAction fileSystemAction;
 
     public NoteEntityAction() {
         dbAction            = new EntityDbAction();
         dateTimeAction      = new DateTimeAction();
-        noteContextFsAction = new NoteContextFsAction();
+        fileSystemAction    = new FileSystemAction();
     }
 
     public NoteEntity createNoteEntity(){
@@ -71,6 +68,19 @@ public class NoteEntityAction
     }
 
     //=====================================INoteEditMvpM========================================
+    public boolean isMdFileExist(NoteEntity noteEntity){
+        String noteFileAbsPath = getMdFileAbsPath(noteEntity);
+        boolean isFileExists = FileUtils.isFileExists(noteFileAbsPath);
+        Logcat.i(TAG,"isNoteFileExist noteFileAbsPath = " + noteFileAbsPath + ", isFileExists = " + isFileExists);
+        return isFileExists;
+    }
+
+    public String getMdFileAbsPath(NoteEntity noteEntity){
+        String noteFileSuffix = VcFactoryBuilder.getInstance().getVersionControlFactory().getBaseConfig().getNoteFileSuffix();
+        return fileSystemAction.getSdcardPath() + noteEntity.getFileRPath()
+                + noteEntity.getNoteName() + noteFileSuffix;
+    }
+
     @Override
     public Flowable<Optional<NoteEntity>> toLoadOrCreateNote(@NonNull Flowable<Optional<String>> noteIdFlowable) {
         return loadEntity(noteIdFlowable)
@@ -85,57 +95,12 @@ public class NoteEntityAction
     }
 
     @Override
-    public boolean toReadContext(NoteEntity noteEntity) {
-        return noteContextFsAction.readNoteContext(noteEntity);
-    }
-
-    @Override
-    public void handleTextChange(NoteEntity noteEntity, TextViewTextChangeEvent textViewTextChangeEvent) {
-        Logcat.i(TAG, "handleTextChange onNext, before = " + textViewTextChangeEvent.before() +
-                ", start = " + textViewTextChangeEvent.start() + ", text = " + textViewTextChangeEvent.text() +
-                ", count = " + textViewTextChangeEvent.count());
-        String context = textViewTextChangeEvent.text().toString();
-        noteEntity.setRawContext(context);
-        if(!TextUtils.isEmpty(context))//todo : check context if change
-            noteEntity.setContextChanged(true);
-        //todo : mdContext
-    }
-
-    @Override
     public Flowable<Boolean> toSaveNote(NoteEntity noteEntity) {
         return dbAction.saveEntity(Flowable.just(noteEntity).doOnNext(new Consumer<NoteEntity>() {
             @Override
             public void accept(NoteEntity noteEntity) throws Exception {
-                noteEntity.setFileAbsPath(noteContextFsAction.getNoteFileAbsPath(noteEntity));
+                noteEntity.setFileAbsPath(getMdFileAbsPath(noteEntity));
             }
         }));
-    }
-
-    //==========================================INoteContextSaveMvpM============================================
-    @Override
-    public Flowable<Boolean> toSaveContext(NoteEntity noteEntity) {
-        return Flowable.just(noteEntity)
-                .map(new Function<NoteEntity, Boolean>() {
-                    @Override
-                    public Boolean apply(NoteEntity noteEntity) throws Exception {
-                        boolean result = noteContextFsAction.writeNoteContext(noteEntity);
-                        Logcat.i(TAG,"toSaveContext map , result = " + result + ", noteEntity = " + noteEntity.toString()) ;
-                        return result;
-                    }
-                });
-    }
-
-    @Override
-    public Flowable<Boolean> toDeleteContext(String filePath) {
-        return Flowable.just(filePath)
-                .subscribeOn(Schedulers.io())
-                .map(new Function<String, Boolean>() {
-                    @Override
-                    public Boolean apply(String s) throws Exception {
-                        boolean result = noteContextFsAction.deleteNoteContext(s);
-                        Logcat.i(TAG,"toDeleteContext map , result = " + result) ;
-                        return result;
-                    }
-                });
     }
 }

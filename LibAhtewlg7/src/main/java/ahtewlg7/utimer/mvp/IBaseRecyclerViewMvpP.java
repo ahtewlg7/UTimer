@@ -1,5 +1,5 @@
 package ahtewlg7.utimer.mvp;
 
-public interface IRecyclerMvpP {
+public interface IBaseRecyclerViewMvpP {
     public void loadAllData();
 }

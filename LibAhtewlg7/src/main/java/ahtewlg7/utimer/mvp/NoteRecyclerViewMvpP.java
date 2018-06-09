@@ -32,7 +32,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 
-public class NoteRecyclerViewMvpP implements IRecyclerMvpP {
+public class NoteRecyclerViewMvpP implements IBaseRecyclerViewMvpP {
     public static final String TAG = NoteRecyclerViewMvpP.class.getSimpleName();
 
     private EventBus eventBus;
@@ -58,8 +58,6 @@ public class NoteRecyclerViewMvpP implements IRecyclerMvpP {
         if(eventBus != null && eventBus.isRegistered(this))
             eventBus.unregister(this);
     }
-
-
 
     //EventBus callback
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -222,7 +220,7 @@ public class NoteRecyclerViewMvpP implements IRecyclerMvpP {
     public interface INoteRecyclerViewMvpM extends IBaseRecyclerViewMvpM<NoteEntity>{
     }
 
-    public interface INoteRecyclerViewMvpV extends IRecyclerViewMvpV<NoteEntity>{
+    public interface INoteRecyclerViewMvpV extends IBaseRecyclerViewMvpV<NoteEntity> {
         public @NonNull RxFragment getUiContext();
         public void toStartNoteEditActivity();
 

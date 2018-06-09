@@ -34,6 +34,7 @@ dependencies {
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    implementation project(':LibBypass')
     testImplementation 'junit:junit:4.12'
     //add these dependencies by me
     implementation 'com.android.support:multidex:1.0.3'
@@ -55,6 +56,6 @@ dependencies {
     api 'com.trello.rxlifecycle2:rxlifecycle-components:2.2.1'
     api 'com.android.support:recyclerview-v7:26.1.0'
     api 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.30'
-
     api 'org.greenrobot:eventbus:3.1.1'
+    implementation project(':LibViewKnifeTextEditor')
 }

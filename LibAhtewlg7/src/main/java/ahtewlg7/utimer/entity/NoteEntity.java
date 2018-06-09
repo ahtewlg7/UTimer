@@ -1,7 +1,5 @@
 package ahtewlg7.utimer.entity;
 
-import android.text.TextUtils;
-
 import org.joda.time.DateTime;
 
 import ahtewlg7.utimer.enumtype.LoadType;
@@ -13,18 +11,18 @@ import ahtewlg7.utimer.enumtype.LoadType;
 public class NoteEntity implements IUtimerEntity {
     public static final String TAG = NoteEntity.class.getSimpleName();
 
-    private boolean contextChanged    = false;
-    private boolean noteFielExist     = false;
+    private boolean contextChanged      = false;
+    private boolean noteFileExist       = false;
 
     private LoadType loadType;
     private String id;
     private String title;
     private String detail;
-    private String noteName;
-    private String fileRPath;
-    private String rawContext;
-    private String mdContext;
     private String lastModifyContext;
+    private String noteName;
+    private String fileRPath; //utimer relative path
+    private String fileAbsPath; //utimer abs path
+    private boolean valid = true;
 
     private DateTime createTime;
     private DateTime lastAccessTime;
@@ -32,17 +30,18 @@ public class NoteEntity implements IUtimerEntity {
 
     @Override
     public boolean isValid(){
-        return !TextUtils.isEmpty(rawContext);
+        return valid;
     }
+    public void setValid(boolean valid){ this.valid = valid; }
 
     public boolean isContextChanged() { return contextChanged; }
     public void setContextChanged(boolean contextChanged) { this.contextChanged = contextChanged; }
 
-    public boolean isNoteFielExist() {
-        return noteFielExist;
+    public boolean isNoteFileExist() {
+        return noteFileExist;
     }
-    public void setNoteFielExist(boolean noteFielExist) {
-        this.noteFielExist = noteFielExist;
+    public void setNoteFileExist(boolean noteFileExist) {
+        this.noteFileExist = noteFileExist;
     }
 
     public LoadType getLoadType() { return loadType; }
@@ -71,6 +70,13 @@ public class NoteEntity implements IUtimerEntity {
         this.detail = detail;
     }
 
+    public String getLastModifyContext() {
+        return lastModifyContext;
+    }
+    public void setLastModifyContext(String lastModifyContext) {
+        this.lastModifyContext = lastModifyContext;
+    }
+
     public String getNoteName() {
         return noteName;
     }
@@ -78,32 +84,18 @@ public class NoteEntity implements IUtimerEntity {
         this.noteName = noteName;
     }
 
+    public String getFileAbsPath() {
+        return fileAbsPath;
+    }
+    public void setFileAbsPath(String fileAbsPath) {
+        this.fileAbsPath = fileAbsPath;
+    }
+
     public String getFileRPath() {
         return fileRPath;
     }
     public void setFileRPath(String fileRPath) {
         this.fileRPath = fileRPath;
-    }
-
-    public String getRawContext() {
-        return rawContext;
-    }
-    public void setRawContext(String rawContext) {
-        this.rawContext = rawContext;
-    }
-
-    public String getMdContext() {
-        return mdContext;
-    }
-    public void setMdContext(String mdContext) {
-        this.mdContext = mdContext;
-    }
-
-    public String getLastModifyContext() {
-        return lastModifyContext;
-    }
-    public void setLastModifyContext(String lastModifyContext) {
-        this.lastModifyContext = lastModifyContext;
     }
 
     @Override
@@ -131,7 +123,7 @@ public class NoteEntity implements IUtimerEntity {
 
     @Override
     public String toString() {
-        String tmp = "id = " + id + ", fileRPath = " + fileRPath;
+        String tmp = "id = " + id + ", fileRPath = " + fileRPath + ", fileAbsPath = " + fileAbsPath;
         if(createTime != null)
             tmp += ", createDateTime = " + createTime.toString();
         if(lastAccessTime != null)
