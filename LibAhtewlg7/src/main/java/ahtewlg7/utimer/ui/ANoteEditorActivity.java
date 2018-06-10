@@ -10,11 +10,11 @@ import com.trello.rxlifecycle2.LifecycleProvider;
 import ahtewlg7.utimer.R;
 import ahtewlg7.utimer.entity.MdElement;
 import ahtewlg7.utimer.entity.NoteEntity;
-import ahtewlg7.utimer.mvp.NoteMdEditMvpP;
 import ahtewlg7.utimer.mvp.MdContextMvpP;
 import ahtewlg7.utimer.mvp.NoteEditMvpP;
-import ahtewlg7.utimer.util.Logcat;
+import ahtewlg7.utimer.mvp.NoteMdEditMvpP;
 import ahtewlg7.utimer.mvp.SimpleMdContextMvpV;
+import ahtewlg7.utimer.util.Logcat;
 import io.reactivex.annotations.NonNull;
 
 /**
@@ -52,7 +52,6 @@ public abstract class ANoteEditorActivity extends BaseBinderActivity
         super.onBackPressed();
         noteEditMvpP.toDoneNote();
     }
-
     //=======================================INoteEditMvpV=============================================
     @Override
     public void onLoadStart() {
@@ -69,8 +68,12 @@ public abstract class ANoteEditorActivity extends BaseBinderActivity
     public void onLoadSucc(@NonNull NoteEntity noteEntity) {
         Logcat.d(TAG,"onLoadSucc : " + noteEntity.toString());
 
-        mdContextEditMvpP   = new NoteMdEditMvpP(noteSimpleMdContextMvpV);
-        mdContextEditMvpP.toParseNoteEnity(noteEntity);
+        noteSimpleMdContextMvpV = new NoteSimpleMdContextMvpV();
+        mdContextEditMvpP       = new NoteMdEditMvpP(noteSimpleMdContextMvpV);
+        if(noteEntity.isNoteFileExist()) {
+            Logcat.d(TAG,"onLoadSucc : note is not exist , no need to parse");
+            mdContextEditMvpP.toParseNoteEnity(noteEntity);
+        }
 
         initTextChangeListener();
     }

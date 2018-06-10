@@ -132,9 +132,12 @@ public class NoteEditMvpP {
                             noteEntity.setNoteFileExist(false);
                             Logcat.i(TAG,"toLoadNote , onNext ：noteEntity no exist");
                             noteEditMvpV.onLoadUnexist();
-                        }else{
+                        }else {
                             Logcat.i(TAG,"toLoadNote , onNext ：noteEntity load suss");
-                            noteEntity.setNoteFileExist(true);
+                            if(noteEntity.getLoadType() == LoadType.NEW)
+                                noteEntity.setNoteFileExist(false);
+                            else
+                                noteEntity.setNoteFileExist(true);
                             noteEditMvpV.onLoadSucc(noteEntity);
                         }
                     }
