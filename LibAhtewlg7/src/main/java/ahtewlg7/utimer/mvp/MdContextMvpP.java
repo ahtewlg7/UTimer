@@ -7,6 +7,8 @@ import com.blankj.utilcode.util.FileUtils;
 import com.google.common.base.Optional;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.reactivestreams.Subscription;
 
 import java.io.File;
@@ -14,6 +16,7 @@ import java.lang.ref.WeakReference;
 
 import ahtewlg7.utimer.busevent.NoteDeleteEvent;
 import ahtewlg7.utimer.common.EventBusFatory;
+import ahtewlg7.utimer.common.MdFileFsAction;
 import ahtewlg7.utimer.entity.MdElement;
 import ahtewlg7.utimer.enumtype.MdContextErrCode;
 import ahtewlg7.utimer.exception.MdContextException;
@@ -32,7 +35,7 @@ public class MdContextMvpP {
     private WeakReference<IMdContextMvpV> mdContextMvpVWeakReference;
 
     public MdContextMvpP(){
-        mdContextMvpM      = null;//todo
+        mdContextMvpM      = new MdFileFsAction();
         eventBus           = EventBusFatory.getInstance().getDefaultEventBus();
     }
 
@@ -49,16 +52,17 @@ public class MdContextMvpP {
     //=======================================EventBus================================================
     public void toRegisterEventBus(){
         Logcat.i(TAG,"toRegisterEventBus");
-        if(eventBus != null && !eventBus.isRegistered(this))
-            eventBus.register(this);
+        if(eventBus != null && !eventBus.isRegistered(MdContextMvpP.this))
+            eventBus.register(MdContextMvpP.this);
     }
     public void toUnregisterEventBus(){
         Logcat.i(TAG,"toUnregisterEventBus");
-        if(eventBus != null && eventBus.isRegistered(this))
-            eventBus.unregister(this);
+        if(eventBus != null && eventBus.isRegistered(MdContextMvpP.this))
+            eventBus.unregister(MdContextMvpP.this);
     }
 
     //EventBus callback
+    @Subscribe(threadMode = ThreadMode.ASYNC)
     public void onNoteDeleteEvent(NoteDeleteEvent event) {
         Logcat.i(TAG,"onNoteDeleteEvent  : noteDeleteEvent = " + event.toString());
         toDelMdFile(Flowable.just(event.getNoteFilePath())
@@ -79,10 +83,11 @@ public class MdContextMvpP {
                     .subscribeOn(Schedulers.io()));
     }
 
-    /*public void toParseContext(@NonNull Flowable<Optional<String>> mdContextFlowable){
+    public void toParseContext(@NonNull Flowable<Optional<String>> mdContextFlowable){
         mdContextMvpM.toParseRawContext(mdContextFlowable)
+            .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(new MySafeSubscriber<Element>(){
+            .subscribe(new MySafeSubscriber<MdElement>(){
                 @Override
                 public void onSubscribe(Subscription s) {
                     super.onSubscribe(s);
@@ -91,7 +96,7 @@ public class MdContextMvpP {
                 }
 
                 @Override
-                public void onNext(Element element) {
+                public void onNext(MdElement element) {
                     super.onNext(element);
                     if(mdContextMvpVWeakReference.get() != null )
                         mdContextMvpVWeakReference.get().onContextParsing(element);
@@ -111,7 +116,7 @@ public class MdContextMvpP {
                         mdContextMvpVWeakReference.get().onContextParseEnd();
                 }
             });
-    }*/
+    }
 
     public void toSaveMdFile(@NonNull File mdFile, @NonNull final Flowable<Optional<String>> contextFlowable){
         mdContextMvpM.setMdSaveFilePath(mdFile);
