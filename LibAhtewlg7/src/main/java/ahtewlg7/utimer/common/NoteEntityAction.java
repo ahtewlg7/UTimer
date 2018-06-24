@@ -1,6 +1,7 @@
 package ahtewlg7.utimer.common;
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.blankj.utilcode.util.FileUtils;
 import com.google.common.base.Optional;
@@ -47,6 +48,7 @@ public class NoteEntityAction
         noteEntity.setLoadType(LoadType.NEW);
         noteEntity.setNoteName(dateTimeAction.toFormat(now));
         noteEntity.setCreateTime(now);
+        noteEntity.setFileRPath(new FileSystemAction().getNoteDocRPath());
         noteEntity.setLastAccessTime(now);
         return noteEntity;
     }
@@ -99,7 +101,17 @@ public class NoteEntityAction
         return dbAction.saveEntity(Flowable.just(noteEntity).doOnNext(new Consumer<NoteEntity>() {
             @Override
             public void accept(NoteEntity noteEntity) throws Exception {
+                DateTime now    = DateTime.now();
+                if(TextUtils.isEmpty(noteEntity.getTitle()))
+                    noteEntity.setTitle(noteEntity.getNoteName());
+                if(TextUtils.isEmpty(noteEntity.getDetail()) && !TextUtils.isEmpty(noteEntity.getLastModifyContext())){
+                    String tmp = noteEntity.getLastModifyContext();
+                    int endIndex = tmp.length() > 20 ? 20 : tmp.length();
+                    noteEntity.setDetail(tmp.substring(0, endIndex));
+                }
+                noteEntity.setLastAccessTime(now);
                 noteEntity.setFileAbsPath(getMdFileAbsPath(noteEntity));
+                Logcat.i(TAG,"toSaveNote, doOnNext: " + noteEntity.toString());
             }
         }));
     }

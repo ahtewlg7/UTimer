@@ -79,8 +79,11 @@ public class MdContextMvpP {
     }
     //=======================================EventBus================================================
     public Flowable<MdElement> toParseMdFile(@NonNull Flowable<File> filePathObserver){
-        return mdContextMvpM.toParseRawContext(mdContextMvpM.toReadRawContext(filePathObserver)
-                    .subscribeOn(Schedulers.io()));
+        return mdContextMvpM.toParseRawContext(mdContextMvpM.toReadRawContext(filePathObserver));
+    }
+
+    public Flowable<MdElement> toParseMd(@NonNull Flowable<Optional<String>> mdContextFlowable){
+        return mdContextMvpM.toParseRawContext(mdContextFlowable);
     }
 
     public void toParseContext(@NonNull Flowable<Optional<String>> mdContextFlowable){
@@ -134,7 +137,7 @@ public class MdContextMvpP {
                 @Override
                 public void onNext(Boolean aBoolean) {
                     super.onNext(aBoolean);
-                    if(mdContextMvpVWeakReference.get() != null )
+                    if(mdContextMvpVWeakReference != null && mdContextMvpVWeakReference.get() != null )
                         mdContextMvpVWeakReference.get().onContextSaving();
                 }
 

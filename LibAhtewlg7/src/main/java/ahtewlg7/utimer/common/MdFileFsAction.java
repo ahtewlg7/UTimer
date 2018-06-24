@@ -21,6 +21,7 @@ import ahtewlg7.utimer.util.Logcat;
 import in.uncod.android.bypass.Element;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 
 public class MdFileFsAction
         implements MdContextMvpP.IMdContextMvpM, MyBypass.MyImageGetter {
@@ -34,13 +35,13 @@ public class MdFileFsAction
     }
 
     @Override
-    public Flowable<Optional<String>> toReadRawContext(@NonNull Flowable<File> contextFileFlowable) {
-        return contextFileFlowable.map(new Function<File, Optional<String>>() {
+    public Flowable<Optional<String>> toReadRawContext(@NonNull Flowable<File> mdFileFlowable) {
+        return mdFileFlowable.map(new Function<File, Optional<String>>() {
             @Override
             public Optional<String> apply(File file) throws Exception {
                 return Optional.fromNullable(FileIOUtils.readFile2String(file));
             }
-        });
+        }).subscribeOn(Schedulers.io());
     }
 
     @Override
@@ -50,7 +51,8 @@ public class MdFileFsAction
             public Publisher<MdElement> apply(Optional<String> stringOptional) throws Exception {
                 if(!stringOptional.isPresent())
                     throw new MdContextException(MdContextErrCode.ERR_CONTEXT_NULL);
-                return myBypass.markdownToSpannableFlowable(stringOptional.get(), MdFileFsAction.this);
+//                return myBypass.markdownToSpannableFlowable(stringOptional.get(), MdFileFsAction.this);
+                return myBypass.markdownToSpannableFlowable(stringOptional.get());//todo
             }
         });
     }
@@ -65,16 +67,18 @@ public class MdFileFsAction
         return mdFlowable.map(new Function<Optional<String>, Boolean>() {
             @Override
             public Boolean apply(Optional<String> mdContextOptional) throws Exception {
-                return mdContextOptional.isPresent() && !TextUtils.isEmpty(mdContextOptional.get())
-                        && mdSaveFile != null && FileUtils.createOrExistsFile(mdSaveFile)
-                        && FileIOUtils.writeFileFromString(mdSaveFile, mdContextOptional.get());
+                boolean isNotEmpty = mdContextOptional.isPresent() && !TextUtils.isEmpty(mdContextOptional.get());
+                boolean isExist =  mdSaveFile != null && FileUtils.createOrExistsFile(mdSaveFile);
+                Logcat.i(TAG,"toSaveContext                                           isNotEmpty = " + isNotEmpty + ", isExist = "+ isExist);
+
+                return isNotEmpty && isExist && FileIOUtils.writeFileFromString(mdSaveFile, mdContextOptional.get());
             }
         });
     }
 
     @Override
-    public Flowable<Boolean> toDeleteContext(@NonNull Flowable<File> fileFlowable) {
-        return fileFlowable.map(new Function<File, Boolean>() {
+    public Flowable<Boolean> toDeleteContext(@NonNull Flowable<File> mdFileFlowable) {
+        return mdFileFlowable.map(new Function<File, Boolean>() {
             @Override
             public Boolean apply(File file) throws Exception {
                 return FileUtils.deleteFile(file);

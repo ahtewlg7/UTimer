@@ -18,7 +18,7 @@ public class MySimpleObserver<T> implements Observer<T> {
 
     @Override
     public void onError(Throwable e) {
-
+        Logcat.i(TAG,"onError : " + e.getMessage());
     }
 
     @Override

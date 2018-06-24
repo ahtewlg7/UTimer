@@ -2,6 +2,7 @@ package ahtewlg7.utimer.view;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 
@@ -43,8 +44,22 @@ public abstract class ABaseSectionRecyclerView extends RecyclerView{
     }
 
     public abstract class BaseSectionAdapter<K extends BaseSectionEntity> extends BaseSectionQuickAdapter<K,BaseViewHolder>{
-        public BaseSectionAdapter(List<K> dataList){
+        public BaseSectionAdapter(Context context, List<K> dataList){
+            this(context, dataList, 0);
+        }
+
+        public BaseSectionAdapter(Context context, List<K> dataList, int columnNum){
             super(getViewItemLayout(), getViewHeadLayout(), dataList);
+            setLayoutManager(new GridLayoutManager(context, columnNum == 0 ? 2 : columnNum));
+        }
+
+        public void toSetOnItemClickListener(BaseQuickAdapter.OnItemClickListener itemClickListener){
+            if(itemClickListener != null)
+                setOnItemClickListener(itemClickListener);
+        }
+        public void toSetOnItemChildClickListener(BaseQuickAdapter.OnItemChildClickListener itemChildClickListener){
+            if(itemChildClickListener != null)
+                setOnItemChildClickListener(itemChildClickListener);
         }
     }
 }

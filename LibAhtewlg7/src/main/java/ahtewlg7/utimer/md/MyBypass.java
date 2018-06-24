@@ -47,6 +47,12 @@ public class MyBypass extends Bypass{
         this.spanClickListener = spanClickListener;
     }
 
+    //todo
+    public Flowable<MdElement> markdownToSpannableFlowable(String markdown) {
+        return Flowable.just(new MdElement(markdown));
+    }
+    //todo
+
     public Flowable<MdElement> markdownToSpannableFlowable(String markdown, final ImageGetter imageGetter) {
         Document document = processMarkdown(markdown);
 
@@ -55,7 +61,7 @@ public class MyBypass extends Bypass{
 
         for (int i = 0; i < size; i++) {
             CharSequence spans = recurseElement(document.getElement(i), i, size, imageGetter);
-            mdElements[i] = new MdElement(document.getElement(i).getText(), document.getElement(i).getType().ordinal());
+            mdElements[i] = new MdElement(document.getElement(i));
             mdElements[i].setMdCharSequence(spans);
         }
         return Flowable.fromArray(mdElements);

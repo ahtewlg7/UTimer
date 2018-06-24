@@ -1,7 +1,5 @@
 package ahtewlg7.utimer.mvp;
 
-import android.text.TextUtils;
-
 import com.google.common.base.Optional;
 import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.trello.rxlifecycle2.components.RxActivity;
@@ -9,14 +7,12 @@ import com.trello.rxlifecycle2.components.RxActivity;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.joda.time.DateTime;
 import org.reactivestreams.Publisher;
 import org.reactivestreams.Subscription;
 
 import ahtewlg7.utimer.busevent.NoteEditEndEvent;
 import ahtewlg7.utimer.busevent.NoteEditEvent;
 import ahtewlg7.utimer.common.EventBusFatory;
-import ahtewlg7.utimer.common.FileSystemAction;
 import ahtewlg7.utimer.common.NoteEntityAction;
 import ahtewlg7.utimer.entity.NoteEntity;
 import ahtewlg7.utimer.enumtype.LoadType;
@@ -26,7 +22,6 @@ import ahtewlg7.utimer.view.IRxLifeCycleBindView;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 
 public class NoteEditMvpP {
@@ -65,26 +60,8 @@ public class NoteEditMvpP {
 
     //=============================================================================================
     public void toDoneNote(){
+        Logcat.i(TAG,"toDoneNote");
         Flowable.just(noteEntity)
-            .doOnNext(new Consumer<NoteEntity>() {
-                @Override
-                public void accept(NoteEntity noteEntity) throws Exception {
-                    DateTime now    = DateTime.now();
-                    if(TextUtils.isEmpty(noteEntity.getTitle()))
-                        noteEntity.setTitle(noteEntity.getNoteName());
-                    if(TextUtils.isEmpty(noteEntity.getDetail())){
-                        String tmp = noteEntity.getLastModifyContext();
-                        int endIndex = tmp.length() > 20 ? 20 : tmp.length();
-                        noteEntity.setDetail(tmp.substring(0, endIndex));
-                    }
-
-                    if(TextUtils.isEmpty(noteEntity.getFileRPath()))
-                        noteEntity.setFileRPath(new FileSystemAction().getNoteDocRPath());
-                    noteEntity.setLastAccessTime(now);
-
-                    Logcat.i(TAG,"toDoneNote, doOnNext: " + noteEntity.toString());
-                }
-            })
             .flatMap(new Function<NoteEntity, Publisher<Boolean>>() {
                 @Override
                 public Publisher<Boolean> apply(NoteEntity noteEntity) throws Exception {
@@ -133,7 +110,7 @@ public class NoteEditMvpP {
                             Logcat.i(TAG,"toLoadNote , onNext ：noteEntity no exist");
                             noteEditMvpV.onLoadUnexist();
                         }else {
-                            Logcat.i(TAG,"toLoadNote , onNext ：noteEntity load suss");
+                            Logcat.i(TAG,"toLoadNote , onNext ：load suss , " + noteEntity.toString());
                             if(noteEntity.getLoadType() == LoadType.NEW)
                                 noteEntity.setNoteFileExist(false);
                             else

@@ -1,11 +1,12 @@
 package com.utimer.ui;
 
-import android.widget.EditText;
+import android.support.annotation.NonNull;
 
 import com.trello.rxlifecycle2.LifecycleProvider;
 import com.utimer.R;
 
 import ahtewlg7.utimer.ui.ANoteEditorActivity;
+import ahtewlg7.utimer.view.md.MdEditText;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -17,7 +18,7 @@ public class MdEditorActivity extends ANoteEditorActivity {
     public static final String TAG = MdEditorActivity.class.getSimpleName();
 
     @BindView(R.id.activity_md_editor_textview)
-    EditText editTextView;
+    MdEditText editTextView;
 
     @Override
     protected void toInitView() {
@@ -26,7 +27,7 @@ public class MdEditorActivity extends ANoteEditorActivity {
     }
 
     @Override
-    protected EditText getEditView() {
+    protected @NonNull MdEditText getEditView() {
         return editTextView;
     }
 

@@ -57,6 +57,7 @@ public class EntityDbAction{
                     return Optional.absent();
                 NoteEntity noteEntity = mapFromGdBean(noteEntityGdBean);
                 noteEntity.setLoadType(LoadType.DB);
+                Logcat.i(TAG,"getNoteEntity : "+ noteEntity.toString());
                 return Optional.fromNullable(noteEntity);
             }
         });

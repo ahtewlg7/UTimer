@@ -20,11 +20,10 @@ public class MySafeSubscriber<T> implements Subscriber<T> {
 
     @Override
     public void onError(Throwable t) {
-
+        Logcat.i(TAG,"onError ： " + t.getMessage());
     }
 
     @Override
     public void onComplete() {
-
     }
 }

@@ -1,11 +1,17 @@
 package ahtewlg7.utimer.ui;
 
+import android.content.ComponentName;
 import android.os.Bundle;
-import android.widget.EditText;
+import android.view.GestureDetector;
 
 import com.blankj.utilcode.util.ToastUtils;
 import com.google.common.base.Optional;
+import com.jakewharton.rxbinding2.widget.RxTextView;
+import com.jakewharton.rxbinding2.widget.TextViewTextChangeEvent;
 import com.trello.rxlifecycle2.LifecycleProvider;
+import com.trello.rxlifecycle2.android.ActivityEvent;
+
+import java.util.concurrent.TimeUnit;
 
 import ahtewlg7.utimer.R;
 import ahtewlg7.utimer.entity.MdElement;
@@ -15,6 +21,8 @@ import ahtewlg7.utimer.mvp.NoteEditMvpP;
 import ahtewlg7.utimer.mvp.NoteMdEditMvpP;
 import ahtewlg7.utimer.mvp.SimpleMdContextMvpV;
 import ahtewlg7.utimer.util.Logcat;
+import ahtewlg7.utimer.util.MySimpleObserver;
+import ahtewlg7.utimer.view.md.MdEditText;
 import io.reactivex.annotations.NonNull;
 
 /**
@@ -25,26 +33,27 @@ public abstract class ANoteEditorActivity extends BaseBinderActivity
     implements NoteEditMvpP.INoteEditMvpV{
     public static final String TAG = ANoteEditorActivity.class.getSimpleName();
 
-    protected abstract EditText getEditView();
+    protected abstract @NonNull MdEditText getEditView();
     protected abstract void toInitView();
 
-    protected NoteSimpleMdContextMvpV noteSimpleMdContextMvpV;
+    protected TextViewTextChangeEvent preTextViewTextChangeEvent;
+
     protected NoteEditMvpP noteEditMvpP;
     protected NoteMdEditMvpP mdContextEditMvpP;
+    protected NoteSimpleMdContextMvpV noteSimpleMdContextMvpV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         toInitView();
-        noteEditMvpP = new NoteEditMvpP(this);
-        noteEditMvpP.toRegisterEventBus();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         noteEditMvpP.toUnregisterEventBus();
+        getEditView().setGestureListener(null);
     }
 
     @Override
@@ -52,6 +61,15 @@ public abstract class ANoteEditorActivity extends BaseBinderActivity
         super.onBackPressed();
         noteEditMvpP.toDoneNote();
     }
+
+    @Override
+    protected void onServiceBinderConnected(ComponentName name) {
+        super.onServiceBinderConnected(name);
+
+        noteEditMvpP = new NoteEditMvpP(this);
+        noteEditMvpP.toRegisterEventBus();
+    }
+
     //=======================================INoteEditMvpV=============================================
     @Override
     public void onLoadStart() {
@@ -67,15 +85,12 @@ public abstract class ANoteEditorActivity extends BaseBinderActivity
     @Override
     public void onLoadSucc(@NonNull NoteEntity noteEntity) {
         Logcat.d(TAG,"onLoadSucc : " + noteEntity.toString());
+        initTextChangeListener();
 
         noteSimpleMdContextMvpV = new NoteSimpleMdContextMvpV();
         mdContextEditMvpP       = new NoteMdEditMvpP(noteSimpleMdContextMvpV);
-        if(noteEntity.isNoteFileExist()) {
-            Logcat.d(TAG,"onLoadSucc : note is not exist , no need to parse");
-            mdContextEditMvpP.toParseNoteEnity(noteEntity);
-        }
 
-        initTextChangeListener();
+        mdContextEditMvpP.toParseNoteEnity(noteEntity);
     }
 
     @Override
@@ -92,7 +107,8 @@ public abstract class ANoteEditorActivity extends BaseBinderActivity
 
     @Override
     public void onNoteSaveSucc(NoteEntity noteEntity) {
-        mdContextEditMvpP.toSaveNoteEntity(noteEntity);
+        Logcat.i(TAG,"onNoteSaveSucc ： " + noteEntity.toString());
+        mdContextEditMvpP.toSaveMdFile(noteEntity);
     }
 
     @Override
@@ -102,27 +118,20 @@ public abstract class ANoteEditorActivity extends BaseBinderActivity
     }
     //=======================================IMdContextEditMvpV================================================
     private void initTextChangeListener() throws RuntimeException{
-        /*RxView.clicks(getEditView()).
-                .throttleFirst(600, TimeUnit.MILLISECONDS)
+        RxTextView.textChangeEvents(getEditView())
+                .throttleLast(600, TimeUnit.MILLISECONDS)
                 .compose(this.<TextViewTextChangeEvent>bindUntilEvent(ActivityEvent.DESTROY))
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new MySimpleObserver<TextViewTextChangeEvent>(){
                     @Override
                     public void onNext(TextViewTextChangeEvent textViewTextChangeEvent) {
-                        noteEditMvpM.handleTextChange(noteEntity, textViewTextChangeEvent);
+                        super.onNext(textViewTextChangeEvent);
                         Logcat.i(TAG, "handleTextChange onNext, before = " + textViewTextChangeEvent.before() +
                                 ", start = " + textViewTextChangeEvent.start() + ", text = " + textViewTextChangeEvent.text() +
                                 ", count = " + textViewTextChangeEvent.count());
-                        String context = textViewTextChangeEvent.text().toString();
-                        noteEntity.setRawContext(context);
-                        if(!TextUtils.isEmpty(context))//todo : check context if change
-                            noteEntity.setContextChanged(true);
-                        //todo : mdContext
+                        preTextViewTextChangeEvent = textViewTextChangeEvent;
                     }
-                });*/
+                });
     }
-
-
 
     class NoteSimpleMdContextMvpV extends SimpleMdContextMvpV implements NoteMdEditMvpP.INoteMdEditMvpV {
         @Override
@@ -137,8 +146,49 @@ public abstract class ANoteEditorActivity extends BaseBinderActivity
         }
 
         @Override
+        public void registeEditViewEvent(@NonNull GestureDetector.OnGestureListener gestureListener) {
+            getEditView().setGestureListener(gestureListener);
+        }
+
+        @Override
+        public void onMdShowMode(MdElement mdElement) {
+            Logcat.i(TAG,"onMdShowMode");
+            if(getEditView().ifEditable())
+                getEditView().enableEdit(false);
+            preTextViewTextChangeEvent = null;
+            ToastUtils.showShort(R.string.editor_disable);
+            /*if(mdElement != null && !TextUtils.isEmpty(mdElement.getText()))
+                getEditView().setText(mdElement.getText());*/ // TODO: 2018/6/23
+            /*if(textChangeDisposable != null && !textChangeDisposable.isDisposed())
+                textChangeDisposable.dispose();*/
+        }
+
+        @Override
+        public void onRawEditMode(MdElement mdElement) {
+            Logcat.i(TAG,"onRawEditMode");
+            if(!getEditView().ifEditable())
+                getEditView().enableEdit(true);
+            preTextViewTextChangeEvent = null;
+            ToastUtils.showShort(R.string.editor_enable);
+            /*if(mdElement != null && !TextUtils.isEmpty(mdElement.getText()))
+                getEditView().setText(mdElement.getText());*/ // TODO: 2018/6/23
+
+//            initTextChangeListener();
+        }
+
+        @Override
+        public int getCurrLine() {
+            return getEditView().getCurrLineIndex();
+        }
+
+        @Override
+        public Optional<TextViewTextChangeEvent> getPreTextChangeEvent() {
+            return Optional.fromNullable(preTextViewTextChangeEvent);
+        }
+
+        @Override
         public void onContextParsing(MdElement element) {
-            getEditView().append(element.getMdCharSequence());
+            getEditView().append(element.getMdCharSequence());//todo
         }
 
         @Override
