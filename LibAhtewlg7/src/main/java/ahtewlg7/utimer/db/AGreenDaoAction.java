@@ -2,6 +2,8 @@ package ahtewlg7.utimer.db;
 
 import android.support.annotation.NonNull;
 
+import com.google.common.base.Optional;
+
 import org.greenrobot.greendao.AbstractDao;
 import org.greenrobot.greendao.query.QueryBuilder;
 
@@ -25,6 +27,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public abstract class AGreenDaoAction<T,K>{
     public static final String TAG = AGreenDaoAction.class.getSimpleName();
 
+    public abstract Optional<T> queryByKey(String key);
     protected abstract @NonNull AbstractDao<T,K> getCustomDao();
 
     protected AbstractDao<T,K> greenDao;

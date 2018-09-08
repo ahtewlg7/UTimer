@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteDatabase;
 import org.greenrobot.greendao.database.Database;
 
 import ahtewlg7.utimer.db.autogen.DaoMaster;
-import ahtewlg7.utimer.db.autogen.GtdEntityGdBeanDao;
 import ahtewlg7.utimer.util.Logcat;
 
 
@@ -35,7 +34,7 @@ class GreenDaoOpenHelper extends DaoMaster.DevOpenHelper {
             Logcat.i(TAG, "no need to update database");
             return;
         }
-        if( oldVersion == DBV_0_0_1){
+        /*if( oldVersion == DBV_0_0_1){
             Logcat.i(TAG,"Doing upgrade from " + DBV_0_0_1+ " to " + DBV_0_0_2
                     + ", add " + GtdEntityGdBeanDao.Properties.GtdType.columnName
                     + ", add " + GtdEntityGdBeanDao.Properties.LastAccessTime.columnName);
@@ -50,6 +49,6 @@ class GreenDaoOpenHelper extends DaoMaster.DevOpenHelper {
             db.execSQL("ALTER TABLE " + GtdEntityGdBeanDao.TABLENAME + " ADD COLUMN "
                     + GtdEntityGdBeanDao.Properties.CreateTime.columnName + " TEXT");
             oldVersion = DBV_0_0_3;
-        }
+        }*/
     }
 }

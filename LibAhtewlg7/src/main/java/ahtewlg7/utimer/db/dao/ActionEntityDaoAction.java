@@ -1,0 +1,100 @@
+package ahtewlg7.utimer.db.dao;
+
+import android.support.annotation.NonNull;
+import android.text.TextUtils;
+
+import com.google.common.base.Optional;
+
+import org.greenrobot.greendao.AbstractDao;
+import org.greenrobot.greendao.query.QueryBuilder;
+import org.joda.time.DateTime;
+
+import java.util.List;
+
+import ahtewlg7.utimer.db.AGreenDaoAction;
+import ahtewlg7.utimer.db.autogen.ActionEntityGdBeanDao;
+import ahtewlg7.utimer.db.entity.ActionEntityGdBean;
+import ahtewlg7.utimer.enumtype.GtdState;
+
+/**
+ * Created by lw on 2016/9/6.
+ */
+public class ActionEntityDaoAction extends AGreenDaoAction<ActionEntityGdBean, Long> {
+    public static final String TAG = ActionEntityDaoAction.class.getSimpleName();
+
+    private static ActionEntityDaoAction gtdEventEntityDaoAction;
+
+    private ActionEntityDaoAction(){
+        super();
+    }
+
+    public static ActionEntityDaoAction getInstance(){
+        if(gtdEventEntityDaoAction == null)
+            gtdEventEntityDaoAction = new ActionEntityDaoAction();
+        return gtdEventEntityDaoAction;
+    }
+
+    @Override
+    protected @NonNull AbstractDao<ActionEntityGdBean,Long> getCustomDao() {
+        return daoSession.getActionEntityGdBeanDao();
+    }
+
+    @Override
+    public Optional<ActionEntityGdBean> queryByKey(String title){
+        if(TextUtils.isEmpty(title))
+            return Optional.absent();
+        List<ActionEntityGdBean> actEntityGdBeanList = query(new KeyQueryFilter(title));
+        if(actEntityGdBeanList == null || actEntityGdBeanList.isEmpty())
+            return Optional.absent();
+        return Optional.of(actEntityGdBeanList.get(0));
+    }
+
+    public List<ActionEntityGdBean> queryByWhen(DateTime dateTime){
+        if(dateTime == null)
+            return null;
+        return query(new WarningTimeQueryFileter(dateTime));
+    }
+    public List<ActionEntityGdBean> queryByState(GtdState actState){
+        if(actState == null)
+            return null;
+        return query(new GtdStateQueryFileter(actState));
+    }
+
+    class KeyQueryFilter implements IGreenDaoQueryFiltVisitor<ActionEntityGdBean>{
+        private String key;
+
+        KeyQueryFilter(String key){
+            this.key = key;
+        }
+
+        @Override
+        public QueryBuilder<ActionEntityGdBean> toFilt(QueryBuilder<ActionEntityGdBean> queryBuilder) {
+            return queryBuilder.where(ActionEntityGdBeanDao.Properties.What.eq(key));
+        }
+    }
+    class WarningTimeQueryFileter implements  IGreenDaoQueryFiltVisitor<ActionEntityGdBean>{
+        private DateTime dateTime;
+
+        WarningTimeQueryFileter(DateTime dateTime){
+            this.dateTime = dateTime;
+        }
+
+        @Override
+        public QueryBuilder<ActionEntityGdBean> toFilt(QueryBuilder<ActionEntityGdBean> queryBuilder) {
+            return queryBuilder.orderDesc(ActionEntityGdBeanDao.Properties.GtdState)
+                    .where(ActionEntityGdBeanDao.Properties.When.eq(dateTime));
+        }
+    }
+    class GtdStateQueryFileter implements  IGreenDaoQueryFiltVisitor<ActionEntityGdBean> {
+        private GtdState actState;
+
+        GtdStateQueryFileter(GtdState actState) {
+            this.actState = actState;
+        }
+
+        @Override
+        public QueryBuilder<ActionEntityGdBean> toFilt(QueryBuilder<ActionEntityGdBean> queryBuilder) {
+            return queryBuilder.where(ActionEntityGdBeanDao.Properties.GtdState.eq(actState));
+        }
+    }
+}

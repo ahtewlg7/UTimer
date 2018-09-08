@@ -3,6 +3,8 @@ package ahtewlg7.utimer.db.dao;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
+import com.google.common.base.Optional;
+
 import org.greenrobot.greendao.AbstractDao;
 import org.greenrobot.greendao.query.QueryBuilder;
 
@@ -35,13 +37,14 @@ public class NoteEntityDaoAction extends AGreenDaoAction<NoteEntityGdBean, Long>
         return daoSession.getNoteEntityGdBeanDao();
     }
 
-    public NoteEntityGdBean queryById(String id){
-        if(TextUtils.isEmpty(id))
-            return null;
-        List<NoteEntityGdBean> noteEntityGdBeanList = query(new KeyQueryFilter(id));
+    @Override
+    public Optional<NoteEntityGdBean> queryByKey(String name){
+        if(TextUtils.isEmpty(name))
+            return Optional.absent();
+        List<NoteEntityGdBean> noteEntityGdBeanList = query(new KeyQueryFilter(name));
         if(noteEntityGdBeanList == null || noteEntityGdBeanList.isEmpty())
-            return null;
-        return noteEntityGdBeanList.get(0);
+            return Optional.absent();
+        return Optional.of(noteEntityGdBeanList.get(0));
     }
 
     class KeyQueryFilter implements IGreenDaoQueryFiltVisitor<NoteEntityGdBean> {
