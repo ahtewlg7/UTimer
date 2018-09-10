@@ -14,7 +14,7 @@ import java.util.List;
 import ahtewlg7.utimer.db.AGreenDaoAction;
 import ahtewlg7.utimer.db.autogen.ActionEntityGdBeanDao;
 import ahtewlg7.utimer.db.entity.ActionEntityGdBean;
-import ahtewlg7.utimer.enumtype.GtdState;
+import ahtewlg7.utimer.enumtype.GtdType;
 
 /**
  * Created by lw on 2016/9/6.
@@ -54,10 +54,10 @@ public class ActionEntityDaoAction extends AGreenDaoAction<ActionEntityGdBean, L
             return null;
         return query(new WarningTimeQueryFileter(dateTime));
     }
-    public List<ActionEntityGdBean> queryByState(GtdState actState){
-        if(actState == null)
+    public List<ActionEntityGdBean> queryByState(GtdType gtdType){
+        if(gtdType == null)
             return null;
-        return query(new GtdStateQueryFileter(actState));
+        return query(new GtdStateQueryFileter(gtdType));
     }
 
     class KeyQueryFilter implements IGreenDaoQueryFiltVisitor<ActionEntityGdBean>{
@@ -81,20 +81,20 @@ public class ActionEntityDaoAction extends AGreenDaoAction<ActionEntityGdBean, L
 
         @Override
         public QueryBuilder<ActionEntityGdBean> toFilt(QueryBuilder<ActionEntityGdBean> queryBuilder) {
-            return queryBuilder.orderDesc(ActionEntityGdBeanDao.Properties.GtdState)
+            return queryBuilder.orderDesc(ActionEntityGdBeanDao.Properties.GtdType)
                     .where(ActionEntityGdBeanDao.Properties.When.eq(dateTime));
         }
     }
     class GtdStateQueryFileter implements  IGreenDaoQueryFiltVisitor<ActionEntityGdBean> {
-        private GtdState actState;
+        private GtdType gtdType;
 
-        GtdStateQueryFileter(GtdState actState) {
-            this.actState = actState;
+        GtdStateQueryFileter(GtdType actState) {
+            this.gtdType = actState;
         }
 
         @Override
         public QueryBuilder<ActionEntityGdBean> toFilt(QueryBuilder<ActionEntityGdBean> queryBuilder) {
-            return queryBuilder.where(ActionEntityGdBeanDao.Properties.GtdState.eq(actState));
+            return queryBuilder.where(ActionEntityGdBeanDao.Properties.GtdType.eq(gtdType));
         }
     }
 }

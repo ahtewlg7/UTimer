@@ -13,9 +13,9 @@ import org.greenrobot.greendao.database.Database;
 import org.greenrobot.greendao.database.DatabaseStatement;
 
 import ahtewlg7.utimer.db.converter.DateTimeTypeConverter;
-import ahtewlg7.utimer.db.converter.GtdStateConverter;
+import ahtewlg7.utimer.db.converter.GtdTypeConverter;
 import ahtewlg7.utimer.db.entity.TaskEntityGdBean;
-import ahtewlg7.utimer.enumtype.GtdState;
+import ahtewlg7.utimer.enumtype.GtdType;
 import org.joda.time.DateTime;
 
 import ahtewlg7.utimer.db.entity.ActionEntityGdBean;
@@ -34,21 +34,22 @@ public class ActionEntityGdBeanDao extends AbstractDao<ActionEntityGdBean, Long>
      */
     public static class Properties {
         public final static Property Id = new Property(0, long.class, "id", true, "_id");
-        public final static Property GtdState = new Property(1, Integer.class, "gtdState", false, "GTD_STATE");
+        public final static Property GtdType = new Property(1, Integer.class, "gtdType", false, "GTD_TYPE");
         public final static Property Title = new Property(2, String.class, "title", false, "TITLE");
         public final static Property Value = new Property(3, String.class, "value", false, "VALUE");
         public final static Property AttachNum = new Property(4, int.class, "attachNum", false, "ATTACH_NUM");
-        public final static Property What = new Property(5, String.class, "what", false, "WHAT");
-        public final static Property When = new Property(6, String.class, "when", false, "WHEN");
-        public final static Property Who = new Property(7, String.class, "who", false, "WHO");
-        public final static Property Where = new Property(8, String.class, "where", false, "WHERE");
-        public final static Property Zygote = new Property(9, String.class, "zygote", false, "ZYGOTE");
-        public final static Property TaskId = new Property(10, long.class, "taskId", false, "TASK_ID");
+        public final static Property DelayNum = new Property(5, int.class, "delayNum", false, "DELAY_NUM");
+        public final static Property What = new Property(6, String.class, "what", false, "WHAT");
+        public final static Property When = new Property(7, String.class, "when", false, "WHEN");
+        public final static Property Who = new Property(8, String.class, "who", false, "WHO");
+        public final static Property Where = new Property(9, String.class, "where", false, "WHERE");
+        public final static Property Zygote = new Property(10, String.class, "zygote", false, "ZYGOTE");
+        public final static Property TaskId = new Property(11, long.class, "taskId", false, "TASK_ID");
     }
 
     private DaoSession daoSession;
 
-    private final GtdStateConverter gtdStateConverter = new GtdStateConverter();
+    private final GtdTypeConverter gtdTypeConverter = new GtdTypeConverter();
     private final DateTimeTypeConverter whenConverter = new DateTimeTypeConverter();
 
     public ActionEntityGdBeanDao(DaoConfig config) {
@@ -65,16 +66,17 @@ public class ActionEntityGdBeanDao extends AbstractDao<ActionEntityGdBean, Long>
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"ACTION_ENTITY\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ," + // 0: id
-                "\"GTD_STATE\" INTEGER," + // 1: gtdState
+                "\"GTD_TYPE\" INTEGER," + // 1: gtdType
                 "\"TITLE\" TEXT," + // 2: title
                 "\"VALUE\" TEXT," + // 3: value
                 "\"ATTACH_NUM\" INTEGER NOT NULL ," + // 4: attachNum
-                "\"WHAT\" TEXT," + // 5: what
-                "\"WHEN\" TEXT," + // 6: when
-                "\"WHO\" TEXT," + // 7: who
-                "\"WHERE\" TEXT," + // 8: where
-                "\"ZYGOTE\" TEXT," + // 9: zygote
-                "\"TASK_ID\" INTEGER NOT NULL );"); // 10: taskId
+                "\"DELAY_NUM\" INTEGER NOT NULL ," + // 5: delayNum
+                "\"WHAT\" TEXT," + // 6: what
+                "\"WHEN\" TEXT," + // 7: when
+                "\"WHO\" TEXT," + // 8: who
+                "\"WHERE\" TEXT," + // 9: where
+                "\"ZYGOTE\" TEXT," + // 10: zygote
+                "\"TASK_ID\" INTEGER NOT NULL );"); // 11: taskId
         // Add Indexes
         db.execSQL("CREATE UNIQUE INDEX " + constraint + "IDX_ACTION_ENTITY_TITLE ON \"ACTION_ENTITY\"" +
                 " (\"TITLE\" ASC);");
@@ -91,9 +93,9 @@ public class ActionEntityGdBeanDao extends AbstractDao<ActionEntityGdBean, Long>
         stmt.clearBindings();
         stmt.bindLong(1, entity.getId());
  
-        GtdState gtdState = entity.getGtdState();
-        if (gtdState != null) {
-            stmt.bindLong(2, gtdStateConverter.convertToDatabaseValue(gtdState));
+        GtdType gtdType = entity.getGtdType();
+        if (gtdType != null) {
+            stmt.bindLong(2, gtdTypeConverter.convertToDatabaseValue(gtdType));
         }
  
         String title = entity.getTitle();
@@ -106,32 +108,33 @@ public class ActionEntityGdBeanDao extends AbstractDao<ActionEntityGdBean, Long>
             stmt.bindString(4, value);
         }
         stmt.bindLong(5, entity.getAttachNum());
+        stmt.bindLong(6, entity.getDelayNum());
  
         String what = entity.getWhat();
         if (what != null) {
-            stmt.bindString(6, what);
+            stmt.bindString(7, what);
         }
  
         DateTime when = entity.getWhen();
         if (when != null) {
-            stmt.bindString(7, whenConverter.convertToDatabaseValue(when));
+            stmt.bindString(8, whenConverter.convertToDatabaseValue(when));
         }
  
         String who = entity.getWho();
         if (who != null) {
-            stmt.bindString(8, who);
+            stmt.bindString(9, who);
         }
  
         String where = entity.getWhere();
         if (where != null) {
-            stmt.bindString(9, where);
+            stmt.bindString(10, where);
         }
  
         String zygote = entity.getZygote();
         if (zygote != null) {
-            stmt.bindString(10, zygote);
+            stmt.bindString(11, zygote);
         }
-        stmt.bindLong(11, entity.getTaskId());
+        stmt.bindLong(12, entity.getTaskId());
     }
 
     @Override
@@ -139,9 +142,9 @@ public class ActionEntityGdBeanDao extends AbstractDao<ActionEntityGdBean, Long>
         stmt.clearBindings();
         stmt.bindLong(1, entity.getId());
  
-        GtdState gtdState = entity.getGtdState();
-        if (gtdState != null) {
-            stmt.bindLong(2, gtdStateConverter.convertToDatabaseValue(gtdState));
+        GtdType gtdType = entity.getGtdType();
+        if (gtdType != null) {
+            stmt.bindLong(2, gtdTypeConverter.convertToDatabaseValue(gtdType));
         }
  
         String title = entity.getTitle();
@@ -154,32 +157,33 @@ public class ActionEntityGdBeanDao extends AbstractDao<ActionEntityGdBean, Long>
             stmt.bindString(4, value);
         }
         stmt.bindLong(5, entity.getAttachNum());
+        stmt.bindLong(6, entity.getDelayNum());
  
         String what = entity.getWhat();
         if (what != null) {
-            stmt.bindString(6, what);
+            stmt.bindString(7, what);
         }
  
         DateTime when = entity.getWhen();
         if (when != null) {
-            stmt.bindString(7, whenConverter.convertToDatabaseValue(when));
+            stmt.bindString(8, whenConverter.convertToDatabaseValue(when));
         }
  
         String who = entity.getWho();
         if (who != null) {
-            stmt.bindString(8, who);
+            stmt.bindString(9, who);
         }
  
         String where = entity.getWhere();
         if (where != null) {
-            stmt.bindString(9, where);
+            stmt.bindString(10, where);
         }
  
         String zygote = entity.getZygote();
         if (zygote != null) {
-            stmt.bindString(10, zygote);
+            stmt.bindString(11, zygote);
         }
-        stmt.bindLong(11, entity.getTaskId());
+        stmt.bindLong(12, entity.getTaskId());
     }
 
     @Override
@@ -197,16 +201,17 @@ public class ActionEntityGdBeanDao extends AbstractDao<ActionEntityGdBean, Long>
     public ActionEntityGdBean readEntity(Cursor cursor, int offset) {
         ActionEntityGdBean entity = new ActionEntityGdBean( //
             cursor.getLong(offset + 0), // id
-            cursor.isNull(offset + 1) ? null : gtdStateConverter.convertToEntityProperty(cursor.getInt(offset + 1)), // gtdState
+            cursor.isNull(offset + 1) ? null : gtdTypeConverter.convertToEntityProperty(cursor.getInt(offset + 1)), // gtdType
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // title
             cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // value
             cursor.getInt(offset + 4), // attachNum
-            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // what
-            cursor.isNull(offset + 6) ? null : whenConverter.convertToEntityProperty(cursor.getString(offset + 6)), // when
-            cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // who
-            cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // where
-            cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9), // zygote
-            cursor.getLong(offset + 10) // taskId
+            cursor.getInt(offset + 5), // delayNum
+            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // what
+            cursor.isNull(offset + 7) ? null : whenConverter.convertToEntityProperty(cursor.getString(offset + 7)), // when
+            cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // who
+            cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9), // where
+            cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10), // zygote
+            cursor.getLong(offset + 11) // taskId
         );
         return entity;
     }
@@ -214,16 +219,17 @@ public class ActionEntityGdBeanDao extends AbstractDao<ActionEntityGdBean, Long>
     @Override
     public void readEntity(Cursor cursor, ActionEntityGdBean entity, int offset) {
         entity.setId(cursor.getLong(offset + 0));
-        entity.setGtdState(cursor.isNull(offset + 1) ? null : gtdStateConverter.convertToEntityProperty(cursor.getInt(offset + 1)));
+        entity.setGtdType(cursor.isNull(offset + 1) ? null : gtdTypeConverter.convertToEntityProperty(cursor.getInt(offset + 1)));
         entity.setTitle(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
         entity.setValue(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
         entity.setAttachNum(cursor.getInt(offset + 4));
-        entity.setWhat(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
-        entity.setWhen(cursor.isNull(offset + 6) ? null : whenConverter.convertToEntityProperty(cursor.getString(offset + 6)));
-        entity.setWho(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
-        entity.setWhere(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
-        entity.setZygote(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));
-        entity.setTaskId(cursor.getLong(offset + 10));
+        entity.setDelayNum(cursor.getInt(offset + 5));
+        entity.setWhat(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
+        entity.setWhen(cursor.isNull(offset + 7) ? null : whenConverter.convertToEntityProperty(cursor.getString(offset + 7)));
+        entity.setWho(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
+        entity.setWhere(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));
+        entity.setZygote(cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10));
+        entity.setTaskId(cursor.getLong(offset + 11));
      }
     
     @Override

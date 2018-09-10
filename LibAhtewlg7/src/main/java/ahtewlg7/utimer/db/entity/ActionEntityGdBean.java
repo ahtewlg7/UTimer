@@ -16,8 +16,8 @@ import ahtewlg7.utimer.db.autogen.ActionEntityGdBeanDao;
 import ahtewlg7.utimer.db.autogen.DaoSession;
 import ahtewlg7.utimer.db.autogen.TaskEntityGdBeanDao;
 import ahtewlg7.utimer.db.converter.DateTimeTypeConverter;
-import ahtewlg7.utimer.db.converter.GtdStateConverter;
-import ahtewlg7.utimer.enumtype.GtdState;
+import ahtewlg7.utimer.db.converter.GtdTypeConverter;
+import ahtewlg7.utimer.enumtype.GtdType;
 
 /**
  * Created by lw on 2018/1/6.
@@ -33,12 +33,13 @@ public class ActionEntityGdBean {
 
     @Id(autoincrement = true)
     private long id;
-    @Convert(converter = GtdStateConverter.class, columnType = Integer.class)
-    private GtdState gtdState;
+    @Convert(converter = GtdTypeConverter.class, columnType = Integer.class)
+    private GtdType gtdType;
     @Index(unique = true)
     private String title;
     private String value;
     private int attachNum;
+    private int delayNum;
     private String what;
     @Convert(converter = DateTimeTypeConverter.class, columnType = String.class)
     private DateTime when;
@@ -57,14 +58,16 @@ public class ActionEntityGdBean {
     @Generated(hash = 227755961)
     private transient ActionEntityGdBeanDao myDao;
 
-    @Generated(hash = 1867619850)
-    public ActionEntityGdBean(long id, GtdState gtdState, String title, String value, int attachNum,
-            String what, DateTime when, String who, String where, String zygote, long taskId) {
+    @Generated(hash = 1120737525)
+    public ActionEntityGdBean(long id, GtdType gtdType, String title, String value, int attachNum,
+            int delayNum, String what, DateTime when, String who, String where, String zygote,
+            long taskId) {
         this.id = id;
-        this.gtdState = gtdState;
+        this.gtdType = gtdType;
         this.title = title;
         this.value = value;
         this.attachNum = attachNum;
+        this.delayNum = delayNum;
         this.what = what;
         this.when = when;
         this.who = who;
@@ -111,13 +114,6 @@ public class ActionEntityGdBean {
         this.id = id;
     }
 
-    public GtdState getGtdState() {
-        return this.gtdState;
-    }
-
-    public void setGtdState(GtdState gtdState) {
-        this.gtdState = gtdState;
-    }
 
     public String getTitle() {
         return this.title;
@@ -265,5 +261,21 @@ public class ActionEntityGdBean {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public GtdType getGtdType() {
+        return this.gtdType;
+    }
+
+    public void setGtdType(GtdType gtdType) {
+        this.gtdType = gtdType;
+    }
+
+    public int getDelayNum() {
+        return this.delayNum;
+    }
+
+    public void setDelayNum(int delayNum) {
+        this.delayNum = delayNum;
     }
 }

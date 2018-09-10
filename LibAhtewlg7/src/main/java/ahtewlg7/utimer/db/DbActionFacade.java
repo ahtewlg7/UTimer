@@ -14,7 +14,7 @@ import ahtewlg7.utimer.db.entity.NoteEntityGdBean;
 import ahtewlg7.utimer.db.entity.TaskEntityGdBean;
 import ahtewlg7.utimer.entity.NoteEntity;
 import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
-import ahtewlg7.utimer.entity.gtd.GtdEventInfoEntity;
+import ahtewlg7.utimer.entity.gtd.GtdTaskEntity;
 import ahtewlg7.utimer.enumtype.LoadType;
 import ahtewlg7.utimer.util.Logcat;
 import io.reactivex.Flowable;
@@ -87,32 +87,32 @@ public class DbActionFacade {
     }
 
     /*******************************************Task**************************************************/
-    public Flowable<Optional<GtdEventInfoEntity>> loadAllTaskEntity() {
+    public Flowable<Optional<GtdTaskEntity>> loadAllTaskEntity() {
         return Flowable.fromIterable(TaskEntityDaoAction.getInstance().loadAll())
-                .map(new Function<TaskEntityGdBean, Optional<GtdEventInfoEntity>>() {
+                .map(new Function<TaskEntityGdBean, Optional<GtdTaskEntity>>() {
                     @Override
-                    public Optional<GtdEventInfoEntity> apply(TaskEntityGdBean taskEntityGdBean) throws Exception {
-                        return Optional.fromNullable(JSON.parseObject(taskEntityGdBean.getValue(), GtdEventInfoEntity.class));
+                    public Optional<GtdTaskEntity> apply(TaskEntityGdBean taskEntityGdBean) throws Exception {
+                        return Optional.fromNullable(JSON.parseObject(taskEntityGdBean.getValue(), GtdTaskEntity.class));
                     }
                 })
                 .subscribeOn(Schedulers.io());
     }
-    public Flowable<Optional<GtdEventInfoEntity>> getTaskEntity(@NonNull Flowable<String> nameFlowable) {
-        return nameFlowable.map(new Function<String, Optional<GtdEventInfoEntity>>() {
+    public Flowable<Optional<GtdTaskEntity>> getTaskEntity(@NonNull Flowable<String> nameFlowable) {
+        return nameFlowable.map(new Function<String, Optional<GtdTaskEntity>>() {
             @Override
-            public Optional<GtdEventInfoEntity> apply(String name) throws Exception {
+            public Optional<GtdTaskEntity> apply(String name) throws Exception {
                 Optional<TaskEntityGdBean> beanOptional = TaskEntityDaoAction.getInstance().queryByKey(name);
                 if(beanOptional.isPresent())
-                    return Optional.fromNullable(JSON.parseObject(beanOptional.get().getValue(), GtdEventInfoEntity.class));
+                    return Optional.fromNullable(JSON.parseObject(beanOptional.get().getValue(), GtdTaskEntity.class));
                 return Optional.absent();
             }
         });
     }
 
-    public Flowable<Boolean> deleteTaskEntity(@NonNull Flowable<Optional<GtdEventInfoEntity>> eventFlowable){
-        return eventFlowable.map(new Function<Optional<GtdEventInfoEntity>, Boolean>() {
+    public Flowable<Boolean> deleteTaskEntity(@NonNull Flowable<Optional<GtdTaskEntity>> eventFlowable){
+        return eventFlowable.map(new Function<Optional<GtdTaskEntity>, Boolean>() {
             @Override
-            public Boolean apply(Optional<GtdEventInfoEntity> gtdEventEntityOptional) throws Exception {
+            public Boolean apply(Optional<GtdTaskEntity> gtdEventEntityOptional) throws Exception {
                 if(gtdEventEntityOptional.isPresent()){
                     TaskEntityGdBean bean = mapTaskToGdBean(gtdEventEntityOptional.get());
                     Logcat.i(TAG,"deleteTaskEntity ：" + bean.toString());
@@ -124,10 +124,10 @@ public class DbActionFacade {
         });
     }
 
-    public Flowable<Boolean> saveTaskEntity(Flowable<GtdEventInfoEntity> eventFlowable) {
-        return eventFlowable.map(new Function<GtdEventInfoEntity, Boolean>() {
+    public Flowable<Boolean> saveTaskEntity(Flowable<GtdTaskEntity> eventFlowable) {
+        return eventFlowable.map(new Function<GtdTaskEntity, Boolean>() {
             @Override
-            public Boolean apply(GtdEventInfoEntity eventEntity) throws Exception {
+            public Boolean apply(GtdTaskEntity eventEntity) throws Exception {
                 TaskEntityGdBean bean = mapTaskToGdBean(eventEntity);
                 Logcat.i(TAG,"saveTaskEntity : " + bean.toString());
                 long index = TaskEntityDaoAction.getInstance().insert(bean);
@@ -146,7 +146,7 @@ public class DbActionFacade {
                 })
                 .subscribeOn(Schedulers.io());
     }
-    public Flowable<Optional<GtdActionEntity>> getActionEntity(@NonNull Flowable<String> nameFlowable) {
+    public Flowable<Optional<GtdActionEntity>> getUndoActionEntity(@NonNull Flowable<String> nameFlowable) {
         return nameFlowable.map(new Function<String, Optional<GtdActionEntity>>() {
             @Override
             public Optional<GtdActionEntity> apply(String name) throws Exception {
@@ -158,7 +158,7 @@ public class DbActionFacade {
         });
     }
 
-    public Flowable<Boolean> deleteActionEntity(@NonNull Flowable<Optional<GtdActionEntity>> eventFlowable){
+    public Flowable<Boolean> deleteUndoctionEntity(@NonNull Flowable<Optional<GtdActionEntity>> eventFlowable){
         return eventFlowable.map(new Function<Optional<GtdActionEntity>, Boolean>() {
             @Override
             public Boolean apply(Optional<GtdActionEntity> entityOptional) throws Exception {
@@ -193,17 +193,17 @@ public class DbActionFacade {
         return noteEntityGdBean;
     }
 
-    private TaskEntityGdBean mapTaskToGdBean(@NonNull GtdEventInfoEntity entity){
+    private TaskEntityGdBean mapTaskToGdBean(@NonNull GtdTaskEntity entity){
         TaskEntityGdBean gtdEventEntityGdBean = new TaskEntityGdBean();
         gtdEventEntityGdBean.setTitle(entity.getTitle());
-        gtdEventEntityGdBean.setValue(JSON.toJSONString(entity));
         gtdEventEntityGdBean.setActive(entity.isActive());
+        gtdEventEntityGdBean.setValue(entity.toJson());
         return gtdEventEntityGdBean;
     }
     private ActionEntityGdBean mapActionToGdBean(@NonNull GtdActionEntity entity){
         ActionEntityGdBean bean = new ActionEntityGdBean();
         bean.setTitle(entity.getTitle());
-        bean.setValue(JSON.toJSONString(entity));
+        bean.setValue(entity.toJson());
         return bean;
     }
 }
