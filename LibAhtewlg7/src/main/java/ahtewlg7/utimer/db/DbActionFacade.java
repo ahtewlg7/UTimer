@@ -8,14 +8,17 @@ import com.google.common.base.Optional;
 
 import ahtewlg7.utimer.db.dao.ActionEntityDaoAction;
 import ahtewlg7.utimer.db.dao.NoteEntityDaoAction;
+import ahtewlg7.utimer.db.dao.ShortHandEntityDaoAction;
 import ahtewlg7.utimer.db.dao.TaskEntityDaoAction;
 import ahtewlg7.utimer.db.entity.ActionEntityGdBean;
 import ahtewlg7.utimer.db.entity.NoteEntityGdBean;
+import ahtewlg7.utimer.db.entity.ShortHandEntityGdBean;
 import ahtewlg7.utimer.db.entity.TaskEntityGdBean;
 import ahtewlg7.utimer.entity.NoteEntity;
 import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
 import ahtewlg7.utimer.entity.gtd.GtdTaskEntity;
-import ahtewlg7.utimer.enumtype.LoadType;
+import ahtewlg7.utimer.entity.gtd.ShortHandEntity;
+import ahtewlg7.utimer.enumtype.UnLoadType;
 import ahtewlg7.utimer.util.Logcat;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Function;
@@ -36,7 +39,7 @@ public class DbActionFacade {
                     @Override
                     public Optional<NoteEntity> apply(NoteEntityGdBean noteEntityGdBean) throws Exception {
                         NoteEntity noteEntity = JSON.parseObject(noteEntityGdBean.getValue(),NoteEntity.class);
-                        noteEntity.setLoadType(LoadType.DB);
+                        noteEntity.setLoadType(UnLoadType.DB);
                         return Optional.fromNullable(noteEntity);
                     }
                 })
@@ -53,7 +56,7 @@ public class DbActionFacade {
                 if(!noteEntityGdBean.isPresent())
                     return Optional.absent();
                 NoteEntity noteEntity = JSON.parseObject(noteEntityGdBean.get().getValue(),NoteEntity.class);
-                noteEntity.setLoadType(LoadType.DB);
+                noteEntity.setLoadType(UnLoadType.DB);
                 Logcat.i(TAG,"getNoteEntity : "+ noteEntity.toString());
                 return Optional.fromNullable(noteEntity);
             }
@@ -184,6 +187,60 @@ public class DbActionFacade {
             }
         });
     }
+    /*******************************************ShortHand**************************************************/
+    public Flowable<Optional<ShortHandEntity>> loadAllShortHandEntity() {
+        return Flowable.fromIterable(ShortHandEntityDaoAction.getInstance().loadAll())
+                .map(new Function<ShortHandEntityGdBean, Optional<ShortHandEntity>>() {
+                    @Override
+                    public Optional<ShortHandEntity> apply(ShortHandEntityGdBean entityGdBean) throws Exception {
+                        return Optional.of(new ShortHandEntity.Builder().setGbBean(entityGdBean).build());
+                    }
+                })
+                .subscribeOn(Schedulers.io());
+    }
+    public Flowable<Optional<ShortHandEntity>> getShortHandEntityByTitle(@NonNull final Flowable<Optional<String>> nameFlowable) {
+        return nameFlowable.map(new Function<Optional<String>, Optional<ShortHandEntity>>() {
+            @Override
+            public Optional<ShortHandEntity> apply(Optional<String> nameOptional) throws Exception {
+                if(!nameOptional.isPresent() || TextUtils.isEmpty(nameOptional.get()))
+                    return Optional.absent();
+                Optional<ShortHandEntityGdBean> beanOptional = ShortHandEntityDaoAction.getInstance().queryByKey(nameOptional.get());
+                if(!beanOptional.isPresent())
+                    return Optional.absent();
+                return Optional.of(new ShortHandEntity.Builder().setGbBean(beanOptional.get()).build());
+            }
+        });
+    }
+
+    public Flowable<Boolean> deleteShortHandEntity(@NonNull Flowable<Optional<ShortHandEntity>> eventFlowable){
+        return eventFlowable.map(new Function<Optional<ShortHandEntity>, Boolean>() {
+            @Override
+            public Boolean apply(Optional<ShortHandEntity> entityOptional) throws Exception {
+                if(entityOptional.isPresent()){
+                    ShortHandEntityGdBean bean = mapShorthandToGdBean(entityOptional.get());
+                    Logcat.i(TAG,"deleteInboxEntity ：" + bean.toString());
+                    ShortHandEntityDaoAction.getInstance().delete(bean);
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+
+    public Flowable<Boolean> saveShortHandEntity(Flowable<Optional<ShortHandEntity>> eventFlowable) {
+        return eventFlowable.map(new Function<Optional<ShortHandEntity>, Boolean>() {
+            @Override
+            public Boolean apply(Optional<ShortHandEntity> entityOptional) throws Exception {
+                if(entityOptional.isPresent()){
+                    ShortHandEntityGdBean bean = mapShorthandToGdBean(entityOptional.get());
+                    Logcat.i(TAG,"saveInboxEntity : " + bean.toString());
+                    long index = ShortHandEntityDaoAction.getInstance().insert(bean);
+                    return index >= 0;
+                }
+                return false;
+            }
+        });
+    }
 
     /***********************************************************************************************/
     private NoteEntityGdBean mapNoteToGdBean(@NonNull NoteEntity entity){
@@ -204,6 +261,15 @@ public class DbActionFacade {
         ActionEntityGdBean bean = new ActionEntityGdBean();
         bean.setTitle(entity.getTitle());
         bean.setValue(entity.toJson());
+        return bean;
+    }
+    private ShortHandEntityGdBean mapShorthandToGdBean(@NonNull ShortHandEntity entity){
+        ShortHandEntityGdBean bean = new ShortHandEntityGdBean();
+        bean.setTitle(entity.getTitle());
+        bean.setIsActived(entity.isActived());
+        bean.setCreateTime(entity.getCreateTime());
+        bean.setLastAccessTime(entity.getLastAccessTime());
+        bean.setLastModifyTime(entity.getLastModifyTime());
         return bean;
     }
 }

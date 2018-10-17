@@ -16,8 +16,8 @@ import ahtewlg7.utimer.db.autogen.ActionEntityGdBeanDao;
 import ahtewlg7.utimer.db.autogen.DaoSession;
 import ahtewlg7.utimer.db.autogen.TaskEntityGdBeanDao;
 import ahtewlg7.utimer.db.converter.DateTimeTypeConverter;
-import ahtewlg7.utimer.db.converter.GtdTypeConverter;
-import ahtewlg7.utimer.enumtype.GtdType;
+import ahtewlg7.utimer.db.converter.GtdActionTypeConverter;
+import ahtewlg7.utimer.enumtype.GtdActionType;
 
 /**
  * Created by lw on 2018/1/6.
@@ -33,8 +33,8 @@ public class ActionEntityGdBean {
 
     @Id(autoincrement = true)
     private long id;
-    @Convert(converter = GtdTypeConverter.class, columnType = Integer.class)
-    private GtdType gtdType;
+    @Convert(converter = GtdActionTypeConverter.class, columnType = Integer.class)
+    private GtdActionType actionType;
     @Index(unique = true)
     private String title;
     private String value;
@@ -58,12 +58,12 @@ public class ActionEntityGdBean {
     @Generated(hash = 227755961)
     private transient ActionEntityGdBeanDao myDao;
 
-    @Generated(hash = 1120737525)
-    public ActionEntityGdBean(long id, GtdType gtdType, String title, String value, int attachNum,
-            int delayNum, String what, DateTime when, String who, String where, String zygote,
-            long taskId) {
+    @Generated(hash = 890964048)
+    public ActionEntityGdBean(long id, GtdActionType actionType, String title,
+            String value, int attachNum, int delayNum, String what, DateTime when,
+            String who, String where, String zygote, long taskId) {
         this.id = id;
-        this.gtdType = gtdType;
+        this.actionType = actionType;
         this.title = title;
         this.value = value;
         this.attachNum = attachNum;
@@ -82,6 +82,8 @@ public class ActionEntityGdBean {
 
     @Generated(hash = 100676365)
     private transient Long task__resolvedKey;
+
+    /** Used for active entity operations. */
 
     // KEEP METHODS - put your custom methods here
     @Override
@@ -179,6 +181,30 @@ public class ActionEntityGdBean {
         this.taskId = taskId;
     }
 
+    public GtdActionType getActionType() {
+        return this.actionType;
+    }
+
+    public void setActionType(GtdActionType actionType) {
+        this.actionType = actionType;
+    }
+
+    public String getValue() {
+        return this.value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    public int getDelayNum() {
+        return this.delayNum;
+    }
+
+    public void setDelayNum(int delayNum) {
+        this.delayNum = delayNum;
+    }
+
     /** To-one relationship, resolved on first access. */
     @Generated(hash = 1415548687)
     public TaskEntityGdBean getTask() {
@@ -253,29 +279,5 @@ public class ActionEntityGdBean {
     public void __setDaoSession(DaoSession daoSession) {
         this.daoSession = daoSession;
         myDao = daoSession != null ? daoSession.getActionEntityGdBeanDao() : null;
-    }
-
-    public String getValue() {
-        return this.value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    public GtdType getGtdType() {
-        return this.gtdType;
-    }
-
-    public void setGtdType(GtdType gtdType) {
-        this.gtdType = gtdType;
-    }
-
-    public int getDelayNum() {
-        return this.delayNum;
-    }
-
-    public void setDelayNum(int delayNum) {
-        this.delayNum = delayNum;
     }
 }

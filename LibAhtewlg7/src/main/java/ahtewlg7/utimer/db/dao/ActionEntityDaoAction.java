@@ -14,7 +14,7 @@ import java.util.List;
 import ahtewlg7.utimer.db.AGreenDaoAction;
 import ahtewlg7.utimer.db.autogen.ActionEntityGdBeanDao;
 import ahtewlg7.utimer.db.entity.ActionEntityGdBean;
-import ahtewlg7.utimer.enumtype.GtdType;
+import ahtewlg7.utimer.enumtype.GtdActionType;
 
 /**
  * Created by lw on 2016/9/6.
@@ -52,12 +52,12 @@ public class ActionEntityDaoAction extends AGreenDaoAction<ActionEntityGdBean, L
     public List<ActionEntityGdBean> queryByWhen(DateTime dateTime){
         if(dateTime == null)
             return null;
-        return query(new WarningTimeQueryFileter(dateTime));
+        return query(new WarningTimeQueryFilter(dateTime));
     }
-    public List<ActionEntityGdBean> queryByState(GtdType gtdType){
-        if(gtdType == null)
+    public List<ActionEntityGdBean> queryByState(GtdActionType gtdActionType){
+        if(gtdActionType == null)
             return null;
-        return query(new GtdStateQueryFileter(gtdType));
+        return query(new GtdStateQueryFilter(gtdActionType));
     }
 
     class KeyQueryFilter implements IGreenDaoQueryFiltVisitor<ActionEntityGdBean>{
@@ -72,29 +72,29 @@ public class ActionEntityDaoAction extends AGreenDaoAction<ActionEntityGdBean, L
             return queryBuilder.where(ActionEntityGdBeanDao.Properties.What.eq(key));
         }
     }
-    class WarningTimeQueryFileter implements  IGreenDaoQueryFiltVisitor<ActionEntityGdBean>{
+    class WarningTimeQueryFilter implements  IGreenDaoQueryFiltVisitor<ActionEntityGdBean>{
         private DateTime dateTime;
 
-        WarningTimeQueryFileter(DateTime dateTime){
+        WarningTimeQueryFilter(DateTime dateTime){
             this.dateTime = dateTime;
         }
 
         @Override
         public QueryBuilder<ActionEntityGdBean> toFilt(QueryBuilder<ActionEntityGdBean> queryBuilder) {
-            return queryBuilder.orderDesc(ActionEntityGdBeanDao.Properties.GtdType)
+            return queryBuilder.orderDesc(ActionEntityGdBeanDao.Properties.ActionType)
                     .where(ActionEntityGdBeanDao.Properties.When.eq(dateTime));
         }
     }
-    class GtdStateQueryFileter implements  IGreenDaoQueryFiltVisitor<ActionEntityGdBean> {
-        private GtdType gtdType;
+    class GtdStateQueryFilter implements  IGreenDaoQueryFiltVisitor<ActionEntityGdBean> {
+        private GtdActionType gtdType;
 
-        GtdStateQueryFileter(GtdType actState) {
+        GtdStateQueryFilter(GtdActionType actState) {
             this.gtdType = actState;
         }
 
         @Override
         public QueryBuilder<ActionEntityGdBean> toFilt(QueryBuilder<ActionEntityGdBean> queryBuilder) {
-            return queryBuilder.where(ActionEntityGdBeanDao.Properties.GtdType.eq(gtdType));
+            return queryBuilder.where(ActionEntityGdBeanDao.Properties.ActionType.eq(gtdType));
         }
     }
 }
