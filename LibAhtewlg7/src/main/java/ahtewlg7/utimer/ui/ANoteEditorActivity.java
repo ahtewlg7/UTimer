@@ -14,10 +14,10 @@ import com.trello.rxlifecycle2.android.ActivityEvent;
 import java.util.concurrent.TimeUnit;
 
 import ahtewlg7.utimer.R;
-import ahtewlg7.utimer.entity.MdElement;
+import ahtewlg7.utimer.entity.md.MdElement;
 import ahtewlg7.utimer.entity.NoteEntity;
-import ahtewlg7.utimer.mvp.MdContextMvpP;
-import ahtewlg7.utimer.mvp.NoteEditMvpP;
+import ahtewlg7.utimer.mvp.MdFileMvpP;
+import ahtewlg7.utimer.mvp.NoteEntityEditMvpP;
 import ahtewlg7.utimer.mvp.NoteMdEditMvpP;
 import ahtewlg7.utimer.mvp.SimpleMdContextMvpV;
 import ahtewlg7.utimer.util.Logcat;
@@ -30,7 +30,7 @@ import io.reactivex.annotations.NonNull;
  */
 
 public abstract class ANoteEditorActivity extends BaseBinderActivity
-    implements NoteEditMvpP.INoteEditMvpV{
+    implements NoteEntityEditMvpP.INoteEditMvpV{
     public static final String TAG = ANoteEditorActivity.class.getSimpleName();
 
     protected abstract @NonNull MdEditText getEditView();
@@ -38,7 +38,7 @@ public abstract class ANoteEditorActivity extends BaseBinderActivity
 
     protected TextViewTextChangeEvent preTextViewTextChangeEvent;
 
-    protected NoteEditMvpP noteEditMvpP;
+    protected NoteEntityEditMvpP noteEditMvpP;
     protected NoteMdEditMvpP mdContextEditMvpP;
     protected NoteSimpleMdContextMvpV noteSimpleMdContextMvpV;
 
@@ -66,7 +66,7 @@ public abstract class ANoteEditorActivity extends BaseBinderActivity
     protected void onServiceBinderConnected(ComponentName name) {
         super.onServiceBinderConnected(name);
 
-        noteEditMvpP = new NoteEditMvpP(this);
+        noteEditMvpP = new NoteEntityEditMvpP(this);
         noteEditMvpP.toRegisterEventBus();
     }
 
@@ -140,9 +140,9 @@ public abstract class ANoteEditorActivity extends BaseBinderActivity
         }
 
         @Override
-        public Optional<MdContextMvpP> getMdContextMvpP() {
+        public Optional<MdFileMvpP> getMdContextMvpP() {
             return serviceBinderProxy != null ?
-                    Optional.of(serviceBinderProxy.getMdContextMvpP()) : Optional.<MdContextMvpP>absent();
+                    Optional.of(serviceBinderProxy.getMdContextMvpP()) : Optional.<MdFileMvpP>absent();
         }
 
         @Override
