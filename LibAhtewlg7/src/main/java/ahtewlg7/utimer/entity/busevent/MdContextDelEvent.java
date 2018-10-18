@@ -1,4 +1,4 @@
-package ahtewlg7.utimer.busevent;
+package ahtewlg7.utimer.entity.busevent;
 
 import com.google.common.base.Optional;
 
