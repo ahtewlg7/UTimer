@@ -21,15 +21,15 @@ import ahtewlg7.utimer.entity.view.BaseSectionEntity;
  * S : The SectionView Entity
  */
 
-public abstract class ABaseSectionRecyclerView extends RecyclerView{
+public abstract class ABaseSectionRecyclerView<K extends BaseSectionEntity> extends RecyclerView{
     public static final String TAG = ABaseSectionRecyclerView.class.getSimpleName();
 
     public abstract int getViewItemLayout();
     public abstract int getViewHeadLayout();
-    public abstract void init(Context context, List<BaseSectionEntity> entityList,
+    public abstract void init(Context context, List<K> entityList,
                               BaseQuickAdapter.OnItemClickListener itemClickListener,
                               BaseQuickAdapter.OnItemChildClickListener itemChildClickListener);
-    public abstract void init(Context context, List<BaseSectionEntity> entityList);
+    public abstract void init(Context context, List<K> entityList);
 
     public ABaseSectionRecyclerView(Context context) {
         super(context);
@@ -43,7 +43,7 @@ public abstract class ABaseSectionRecyclerView extends RecyclerView{
         super(context, attrs, defStyle);
     }
 
-    public abstract class BaseSectionAdapter<K extends BaseSectionEntity> extends BaseSectionQuickAdapter<K,BaseViewHolder>{
+    public abstract class BaseSectionAdapter extends BaseSectionQuickAdapter<K,BaseViewHolder>{
         public BaseSectionAdapter(Context context, List<K> dataList){
             this(context, dataList, 0);
         }

@@ -4,20 +4,19 @@ package ahtewlg7.utimer.enumtype;
  * Created by lw on 2016/9/13.
  */
 public enum GtdType {
-    NEW,
-    ONLINE,
+    NOTE,
     MATERIAL,
+    DAILY,
+    SHORTHAND,
+    TIPS,
+    ONLINE,
     INBOX,
     PROJECT,
-    WEEKPREVIEW,
-    JUSTDOIT,
-    TODO,
-    NEXTACTION,
-    WAITFOR,
-    DATEBOOK,
-    DELEGATE,
+    PLAN,
+    PREVIEW,
+    ACTION,
+    TASk,
     MAYBE,
-    DONE,
     TRASH,
     HISTORY;
 }

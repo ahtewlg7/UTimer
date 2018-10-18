@@ -54,4 +54,8 @@ public class DateTimeAction {
     public DateTime toDateTime(String dateTime, DateTimeFormatter format){
         return DateTime.parse(dateTime, format);
     }
+
+    public boolean isToday(DateTime dateTime){
+        return dateTime != null && dateTime.isAfter(DateTime.now().withTimeAtStartOfDay());
+    }
 }

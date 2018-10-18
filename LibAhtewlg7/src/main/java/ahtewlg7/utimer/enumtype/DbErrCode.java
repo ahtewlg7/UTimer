@@ -6,6 +6,7 @@ package ahtewlg7.utimer.enumtype;
 
 public enum DbErrCode {
     ERR_DB_ID_EMPTY,
+    ERR_DB_KEY_EMPTY,
     ERR_DB_BEAN_NULL,
     ;
 }

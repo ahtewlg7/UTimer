@@ -10,14 +10,24 @@ import ahtewlg7.utimer.util.MyRInfo;
 public class BaseConfig {
     public static final String TAG = BaseConfig.class.getSimpleName();
 
-    public String getNoteFileSuffix(){
-        return MyRInfo.getStringByID(R.string.config_note_file_suffix);
-    }
-
-
     public String getSimpleAppName(){
         return MyRInfo.getStringByID(R.string.configs_simple_app_name);
     }
+
+    public String getDateTimeFormat(){
+        return MyRInfo.getStringByID(R.string.config_datetime_format);
+    }
+
+    public String getNoteFileSuffix(){
+        return MyRInfo.getStringByID(R.string.config_note_file_suffix);
+    }
+    public String getManagerFileSubffix(){
+        return MyRInfo.getStringByID(R.string.config_manager_file_suffix);
+    }
+    public String getShortHandManagerFile(){
+        return MyRInfo.getStringByID(R.string.config_shortHand_manager_file_name) + getManagerFileSubffix();
+    }
+    //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     public String getWorkingDataDir(){
         return MyRInfo.getStringByID(R.string.configs_app_working_dir_data);
     }
@@ -55,7 +65,6 @@ public class BaseConfig {
     public String getGtdNoteDir(){
         return MyRInfo.getStringByID(R.string.config_note_gtd_dir_name);
     }
-
     public String getInboxNoteDir(){
         return MyRInfo.getStringByID(R.string.config_note_inbox_dir_name);
     }
@@ -85,9 +94,5 @@ public class BaseConfig {
     }
     public String getToDoListNoteDir(){
         return MyRInfo.getStringByID(R.string.config_note_todolist_dir_name);
-    }
-
-    public String getDateTimeFormat(){
-        return MyRInfo.getStringByID(R.string.config_datetime_format);
     }
 }

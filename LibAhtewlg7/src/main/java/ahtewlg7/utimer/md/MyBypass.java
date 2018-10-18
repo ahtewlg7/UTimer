@@ -17,7 +17,7 @@ import android.view.View;
 
 import com.blankj.utilcode.util.Utils;
 
-import ahtewlg7.utimer.entity.MdElement;
+import ahtewlg7.utimer.entity.md.MdElement;
 import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.view.md.ClickableImageSpan;
 import in.uncod.android.bypass.Bypass;

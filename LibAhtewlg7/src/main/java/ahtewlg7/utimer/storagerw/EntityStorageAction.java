@@ -6,7 +6,6 @@ import com.google.common.base.Optional;
 
 import ahtewlg7.utimer.common.FileSystemAction;
 import ahtewlg7.utimer.entity.NoteEntity;
-import ahtewlg7.utimer.entity.gtd.AGtdEntity;
 import io.reactivex.Flowable;
 
 /**
@@ -33,22 +32,7 @@ public class EntityStorageAction implements IEntityWAction, IEntityRAction{
     }
 
     @Override
-    public Flowable<AGtdEntity> loadGtdEntity() {
-        return null;
-    }
-
-    @Override
-    public Flowable<AGtdEntity> getGtdEntity(@NonNull Flowable<String> idObservable) {
-        return null;
-    }
-
-    @Override
     public boolean saveEntity(NoteEntity entity) {
-        return false;
-    }
-
-    @Override
-    public boolean saveEntity(AGtdEntity entity) {
         return false;
     }
 }
