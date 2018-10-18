@@ -11,6 +11,10 @@ public class DegreeEntity implements IDegreeLevelBean {
 
     private DegreeLevel curDegreeLevel;
 
+    public DegreeEntity() {
+        curDegreeLevel = DegreeLevel.DE10;
+    }
+
     @Override
     public DegreeLevel getDegreeLevel() {
         return curDegreeLevel;

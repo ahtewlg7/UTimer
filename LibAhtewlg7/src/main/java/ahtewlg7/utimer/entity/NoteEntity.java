@@ -2,7 +2,10 @@ package ahtewlg7.utimer.entity;
 
 import org.joda.time.DateTime;
 
-import ahtewlg7.utimer.enumtype.LoadType;
+import ahtewlg7.utimer.entity.taskContext.IPosition;
+import ahtewlg7.utimer.entity.un.IUtimerEntity;
+import ahtewlg7.utimer.enumtype.GtdType;
+import ahtewlg7.utimer.enumtype.UnLoadType;
 
 /**
  * Created by lw on 2017/9/27.
@@ -14,7 +17,7 @@ public class NoteEntity implements IUtimerEntity {
     private boolean contextChanged      = false;
     private boolean noteFileExist       = false;
 
-    private LoadType loadType;
+    private UnLoadType loadType;
     private String id;
     private String title;
     private String detail;
@@ -26,10 +29,15 @@ public class NoteEntity implements IUtimerEntity {
 
     private DateTime createTime;
     private DateTime lastAccessTime;
-    private IAccessPosition lastAccessPosition;
+    private IPosition lastAccessPosition;
 
     @Override
-    public boolean isValid(){
+    public GtdType getGtdType() {
+        return GtdType.NOTE;
+    }
+
+    @Override
+    public boolean ifValid(){
         return valid;
     }
     public void setValid(boolean valid){ this.valid = valid; }
@@ -44,8 +52,8 @@ public class NoteEntity implements IUtimerEntity {
         this.noteFileExist = noteFileExist;
     }
 
-    public LoadType getLoadType() { return loadType; }
-    public void setLoadType(LoadType loadType) { this.loadType = loadType; }
+    public UnLoadType getLoadType() { return loadType; }
+    public void setLoadType(UnLoadType loadType) { this.loadType = loadType; }
 
     public String getId() {
         return id;
@@ -98,7 +106,6 @@ public class NoteEntity implements IUtimerEntity {
         this.fileRPath = fileRPath;
     }
 
-    @Override
     public DateTime getCreateTime() {
         return createTime;
     }
@@ -106,7 +113,6 @@ public class NoteEntity implements IUtimerEntity {
         this.createTime = createTime;
     }
 
-    @Override
     public DateTime getLastAccessTime() {
         return lastAccessTime;
     }
@@ -114,10 +120,10 @@ public class NoteEntity implements IUtimerEntity {
         this.lastAccessTime = lastAccessTime;
     }
 
-    public IAccessPosition getLastAccessPosition() {
+    public IPosition getLastAccessPosition() {
         return lastAccessPosition;
     }
-    public void setLastAccessPosition(IAccessPosition lastAccessPosition) {
+    public void setLastAccessPosition(IPosition lastAccessPosition) {
         this.lastAccessPosition = lastAccessPosition;
     }
 

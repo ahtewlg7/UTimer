@@ -1,34 +1,30 @@
 package ahtewlg7.utimer.entity.gtd;
 
-import org.joda.time.DateTime;
+import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
-import ahtewlg7.utimer.entity.IUtimerEntity;
-import ahtewlg7.utimer.enumtype.GtdType;
+import ahtewlg7.utimer.entity.ITipsEntity;
+import ahtewlg7.utimer.entity.un.IUtimerEntity;
 
-/**
- * Created by lw on 2017/9/27.
- */
-
-public abstract class AGtdEntity implements IUtimerEntity{
+public abstract class AGtdEntity implements IUtimerEntity, ITipsEntity {
     public static final String TAG = AGtdEntity.class.getSimpleName();
-
-    public abstract GtdType getTaskType();
 
     protected String id;
     protected String title;
     protected String detail;
-    protected String fileRPath;
+    protected W5h2Entity w5h2Entity;
 
-    protected boolean trashed;
-    protected boolean holded;
-
-    protected DateTime createdDateTime;
-    protected DateTime lastModifyDateTime;
-    protected AGtdEntity parentTaskEntity;
+    public abstract @NonNull String toJson();
+    public abstract boolean isDone();
 
     @Override
-    public boolean isValid(){
-        return true;
+    public boolean ifValid() {
+        return !TextUtils.isEmpty(title);
+    }
+
+    @Override
+    public String getId() {
+        return id;
     }
 
     public void setId(String id) {
@@ -36,10 +32,6 @@ public abstract class AGtdEntity implements IUtimerEntity{
     }
 
     @Override
-    public String getId(){
-        return id;
-    }
-
     public String getTitle() {
         return title;
     }
@@ -48,6 +40,7 @@ public abstract class AGtdEntity implements IUtimerEntity{
         this.title = title;
     }
 
+    @Override
     public String getDetail() {
         return detail;
     }
@@ -56,72 +49,28 @@ public abstract class AGtdEntity implements IUtimerEntity{
         this.detail = detail;
     }
 
-    public String getFileRPath() {
-        return fileRPath;
+    public W5h2Entity getW5h2Entity() {
+        return w5h2Entity;
     }
 
-    public void setFileRPath(String fileRPath) {
-        this.fileRPath = fileRPath;
-    }
-
-    public boolean isTrashed() {
-        return trashed;
-    }
-
-    public void setTrashed(boolean trashed) {
-        this.trashed = trashed;
-    }
-
-    public boolean isHolded() {
-        return holded;
-    }
-
-    public void setHolded(boolean holded) {
-        this.holded = holded;
-    }
-
-    public DateTime getCreatedDateTime() {
-        return createdDateTime;
-    }
-
-    public void setCreatedDateTime(DateTime createdDateTime) {
-        this.createdDateTime = createdDateTime;
-    }
-
-    public DateTime getLastModifyDateTime() {
-        return lastModifyDateTime;
-    }
-
-    public void setLastModifyDateTime(DateTime lastModifyDateTime) {
-        this.lastModifyDateTime = lastModifyDateTime;
-    }
-
-    public AGtdEntity getParentTaskEntity() {
-        return parentTaskEntity;
-    }
-
-    public void setParentTaskEntity(AGtdEntity parentTaskEntity) {
-        this.parentTaskEntity = parentTaskEntity;
+    public void setW5h2Entity(W5h2Entity w5h2Entity) {
+        this.w5h2Entity = w5h2Entity;
     }
 
     @Override
     public String toString() {
-        StringBuilder builder =  new StringBuilder();
-        String tmp =  "{id = " + id + ", taskType = " + getTaskType().name() + ", title = " + title + ", detail = " + detail
-                + ", fileRPath = " + fileRPath + ", trashed = " + trashed;
-        builder.append(tmp);
-        if(parentTaskEntity != null) {
-            tmp = "，parentTaskEntity = " + parentTaskEntity.toString();
-            builder.append(tmp);
-        }
-        if(createdDateTime != null) {
-            tmp = "createdDateTime = " + createdDateTime.toString();
-            builder.append(tmp);
-        }
-        if(lastModifyDateTime != null) {
-            tmp = ", lastModifyDateTime = " + lastModifyDateTime.toString();
-            builder.append(tmp);
-        }
+        StringBuilder builder = new StringBuilder();
+        if(!TextUtils.isEmpty(id))
+            builder.append("，id" ).append(id);
+        if(!TextUtils.isEmpty(title))
+            builder.append("，title" ).append(title);
+        if(!TextUtils.isEmpty(detail))
+            builder.append("，detail" ).append(detail);
+        builder.append("，gtdType = " ).append(getGtdType().name());
+        builder.append("，isValid = " ).append(ifValid());
+        builder.append("，isDone = " ).append(isDone());
+        if(w5h2Entity != null && w5h2Entity.toTips().isPresent())
+            builder.append("，w5h2Entity = " ).append(w5h2Entity.toTips().get());
         return builder.toString();
     }
 }
