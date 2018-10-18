@@ -10,22 +10,21 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.reactivestreams.Publisher;
 import org.reactivestreams.Subscription;
 
-import ahtewlg7.utimer.busevent.NoteEditEndEvent;
-import ahtewlg7.utimer.busevent.NoteEditEvent;
-import ahtewlg7.utimer.common.EventBusFatory;
+import ahtewlg7.utimer.entity.busevent.NoteEditEndEvent;
+import ahtewlg7.utimer.entity.busevent.NoteEditEvent;
+import ahtewlg7.utimer.factory.EventBusFatory;
 import ahtewlg7.utimer.common.NoteEntityAction;
 import ahtewlg7.utimer.entity.NoteEntity;
-import ahtewlg7.utimer.enumtype.LoadType;
+import ahtewlg7.utimer.enumtype.UnLoadType;
 import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MySafeSubscriber;
-import ahtewlg7.utimer.view.IRxLifeCycleBindView;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
 
-public class NoteEditMvpP {
-    public static final String TAG = NoteEditMvpP.class.getSimpleName();
+public class NoteEntityEditMvpP {
+    public static final String TAG = NoteEntityEditMvpP.class.getSimpleName();
 
     private EventBus eventBus;
     private NoteEntity noteEntity;
@@ -33,7 +32,7 @@ public class NoteEditMvpP {
     private INoteEditMvpV noteEditMvpV;
     private NoteEntityAction noteEditMvpM;
 
-    public NoteEditMvpP(@NonNull INoteEditMvpV noteEditMvpV){
+    public NoteEntityEditMvpP(@NonNull INoteEditMvpV noteEditMvpV){
         this.noteEditMvpV = noteEditMvpV;
         noteEditMvpM      = new NoteEntityAction();
         eventBus          = EventBusFatory.getInstance().getDefaultEventBus();
@@ -104,14 +103,14 @@ public class NoteEditMvpP {
                             return;
                         }
                         noteEntity = optional.get();
-                        if(noteEntity.getLoadType() != LoadType.NEW
+                        if(noteEntity.getLoadType() != UnLoadType.NEW
                                 && !noteEditMvpM.isMdFileExist(noteEntity)){
                             noteEntity.setNoteFileExist(false);
                             Logcat.i(TAG,"toLoadNote , onNext ：noteEntity no exist");
                             noteEditMvpV.onLoadUnexist();
                         }else {
                             Logcat.i(TAG,"toLoadNote , onNext ：load suss , " + noteEntity.toString());
-                            if(noteEntity.getLoadType() == LoadType.NEW)
+                            if(noteEntity.getLoadType() == UnLoadType.NEW)
                                 noteEntity.setNoteFileExist(false);
                             else
                                 noteEntity.setNoteFileExist(true);

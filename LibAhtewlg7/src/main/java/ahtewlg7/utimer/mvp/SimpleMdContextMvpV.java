@@ -1,8 +1,8 @@
 package ahtewlg7.utimer.mvp;
 
-import ahtewlg7.utimer.entity.MdElement;
+import ahtewlg7.utimer.entity.md.MdElement;
 
-public class SimpleMdContextMvpV implements MdContextMvpP.IMdContextMvpV {
+public class SimpleMdContextMvpV implements MdFileMvpP.IMdContextMvpV {
     public static final String TAG = SimpleMdContextMvpV.class.getSimpleName();
 
     @Override

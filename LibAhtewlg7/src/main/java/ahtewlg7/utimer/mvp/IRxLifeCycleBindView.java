@@ -1,4 +1,4 @@
-package ahtewlg7.utimer.view;
+package ahtewlg7.utimer.mvp;
 
 import com.trello.rxlifecycle2.LifecycleProvider;
 

@@ -17,15 +17,14 @@ import java.io.File;
 import java.util.List;
 
 import ahtewlg7.utimer.common.MdElementAction;
-import ahtewlg7.utimer.entity.MdElement;
+import ahtewlg7.utimer.entity.md.MdElement;
 import ahtewlg7.utimer.entity.NoteEntity;
 import ahtewlg7.utimer.enumtype.EditModeType;
-import ahtewlg7.utimer.enumtype.LoadType;
+import ahtewlg7.utimer.enumtype.UnLoadType;
 import ahtewlg7.utimer.enumtype.MdContextErrCode;
 import ahtewlg7.utimer.exception.MdContextException;
 import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MySafeSubscriber;
-import ahtewlg7.utimer.view.IRxLifeCycleBindView;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
@@ -70,14 +69,14 @@ public class NoteMdEditMvpP {
             binderServiceOptional.get().setMdContextMvpV(null);
     }*/
     public void toParseNoteEnity(@NonNull NoteEntity noteEntity){
-        Optional<MdContextMvpP> mdContextMvpP = mdFileEditMvpV.getMdContextMvpP();
+        Optional<MdFileMvpP> mdContextMvpP = mdFileEditMvpV.getMdContextMvpP();
         if(!mdContextMvpP.isPresent()){
             Logcat.i(TAG,"toParseNoteEnity err : can not to parse md");
             mdFileEditMvpV.onContextParseErr(new MdContextException(ERR_CONTEXT_PARSE));
             return;
         }
 
-        if(noteEntity.isNoteFileExist() && noteEntity.getLoadType() == LoadType.DB) {
+        if(noteEntity.isNoteFileExist() && noteEntity.getLoadType() == UnLoadType.DB) {
             Logcat.i(TAG,"toParseNoteEnity : " + noteEntity.getFileAbsPath());
             mdContextMvpP.get().toParseMdFile(Flowable.just(noteEntity)
                 .map(new Function<NoteEntity, File>() {
@@ -132,7 +131,7 @@ public class NoteMdEditMvpP {
     }
 
     public void toParseEditRawText(@NonNull Flowable<Optional<String>> rawTextFlowable){
-        Optional<MdContextMvpP> mdContextMvpP = mdFileEditMvpV.getMdContextMvpP();
+        Optional<MdFileMvpP> mdContextMvpP = mdFileEditMvpV.getMdContextMvpP();
         if(!mdContextMvpP.isPresent()){
             Logcat.i(TAG,"toParseEditRawText err : can not to parse md");
             mdFileEditMvpV.onContextParseErr(new MdContextException(ERR_CONTEXT_PARSE));
@@ -174,7 +173,7 @@ public class NoteMdEditMvpP {
     }
 
     public void toSaveMdFile(@NonNull NoteEntity noteEntity){
-        Optional<MdContextMvpP> mdContextMvpP = mdFileEditMvpV.getMdContextMvpP();
+        Optional<MdFileMvpP> mdContextMvpP = mdFileEditMvpV.getMdContextMvpP();
         if(mdContextMvpP.isPresent()) {
             Logcat.i(TAG,"toSaveMdFile");
             MdElement mdElement = getEditElement(currEditMode);
@@ -207,10 +206,10 @@ public class NoteMdEditMvpP {
     public interface INoteMdEditMvpM {
         public CharSequence handleElement(@NonNull MdElement element);
     }
-    public interface INoteMdEditMvpV extends MdContextMvpP.IMdContextMvpV , IRxLifeCycleBindView {
+    public interface INoteMdEditMvpV extends MdFileMvpP.IMdContextMvpV , IRxLifeCycleBindView {
         public int getCurrLine();
         public Optional<TextViewTextChangeEvent> getPreTextChangeEvent();
-        public Optional<MdContextMvpP> getMdContextMvpP();
+        public Optional<MdFileMvpP> getMdContextMvpP();
         public void registeEditViewEvent(@NonNull GestureDetector.OnGestureListener gestureListener);
         public void onRawEditMode(MdElement mdElement);
         public void onMdShowMode(MdElement mdElement);

@@ -14,10 +14,10 @@ import org.reactivestreams.Subscription;
 import java.io.File;
 import java.lang.ref.WeakReference;
 
-import ahtewlg7.utimer.busevent.NoteDeleteEvent;
-import ahtewlg7.utimer.common.EventBusFatory;
+import ahtewlg7.utimer.entity.busevent.NoteDeleteEvent;
+import ahtewlg7.utimer.factory.EventBusFatory;
 import ahtewlg7.utimer.common.MdFileFsAction;
-import ahtewlg7.utimer.entity.MdElement;
+import ahtewlg7.utimer.entity.md.MdElement;
 import ahtewlg7.utimer.enumtype.MdContextErrCode;
 import ahtewlg7.utimer.exception.MdContextException;
 import ahtewlg7.utimer.util.Logcat;
@@ -27,14 +27,14 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
-public class MdContextMvpP {
-    public static final String TAG = MdContextMvpP.class.getSimpleName();
+public class MdFileMvpP {
+    public static final String TAG = MdFileMvpP.class.getSimpleName();
 
     private EventBus eventBus;
     private IMdContextMvpM mdContextMvpM;
     private WeakReference<IMdContextMvpV> mdContextMvpVWeakReference;
 
-    public MdContextMvpP(){
+    public MdFileMvpP(){
         mdContextMvpM      = new MdFileFsAction();
         eventBus           = EventBusFatory.getInstance().getDefaultEventBus();
     }
@@ -52,13 +52,13 @@ public class MdContextMvpP {
     //=======================================EventBus================================================
     public void toRegisterEventBus(){
         Logcat.i(TAG,"toRegisterEventBus");
-        if(eventBus != null && !eventBus.isRegistered(MdContextMvpP.this))
-            eventBus.register(MdContextMvpP.this);
+        if(eventBus != null && !eventBus.isRegistered(MdFileMvpP.this))
+            eventBus.register(MdFileMvpP.this);
     }
     public void toUnregisterEventBus(){
         Logcat.i(TAG,"toUnregisterEventBus");
-        if(eventBus != null && eventBus.isRegistered(MdContextMvpP.this))
-            eventBus.unregister(MdContextMvpP.this);
+        if(eventBus != null && eventBus.isRegistered(MdFileMvpP.this))
+            eventBus.unregister(MdFileMvpP.this);
     }
 
     //EventBus callback
