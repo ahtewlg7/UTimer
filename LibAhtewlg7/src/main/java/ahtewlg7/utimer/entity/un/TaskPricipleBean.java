@@ -1,4 +1,4 @@
-package ahtewlg7.utimer.entity;
+package ahtewlg7.utimer.entity.un;
 
 import ahtewlg7.utimer.entity.degree.IPriorityBean;
 import ahtewlg7.utimer.enumtype.PriorityLevel;
@@ -7,8 +7,8 @@ import ahtewlg7.utimer.enumtype.PriorityLevel;
  * Created by lw on 2017/11/7.
  */
 
-public class TaskPurposeBean implements IPriorityBean {
-    public static final String TAG = TaskPurposeBean.class.getSimpleName();
+public class TaskPricipleBean implements IPriorityBean {
+    public static final String TAG = TaskPricipleBean.class.getSimpleName();
 
     private PriorityLevel priority;
     private String title;

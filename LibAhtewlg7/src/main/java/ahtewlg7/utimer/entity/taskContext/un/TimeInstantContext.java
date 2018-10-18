@@ -1,9 +1,8 @@
-package ahtewlg7.utimer.entity.taskContext;
+package ahtewlg7.utimer.entity.taskContext.un;
 
 import org.joda.time.Instant;
 
 import ahtewlg7.utimer.enumtype.TaskContextType;
-import ahtewlg7.utimer.exception.TaskContextException;
 import ahtewlg7.utimer.taskContext.TaskContextAction;
 
 /**
@@ -29,7 +28,7 @@ public class TimeInstantContext extends ATaskContext {
     }
 
     @Override
-    public boolean isOk(TaskContextAction taskContextAction) throws TaskContextException {
+    public boolean isOk(TaskContextAction taskContextAction)/* throws TaskContextException */{
         return taskContextAction.isContextOk(this);
     }
 }

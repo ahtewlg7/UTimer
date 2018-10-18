@@ -1,4 +1,4 @@
-package ahtewlg7.utimer.entity;
+package ahtewlg7.utimer.entity.md;
 
 import com.google.common.collect.Range;
 

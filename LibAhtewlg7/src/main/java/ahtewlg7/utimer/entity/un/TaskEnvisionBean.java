@@ -1,4 +1,4 @@
-package ahtewlg7.utimer.entity;
+package ahtewlg7.utimer.entity.un;
 
 import ahtewlg7.utimer.entity.degree.IPriorityBean;
 import ahtewlg7.utimer.enumtype.PriorityLevel;

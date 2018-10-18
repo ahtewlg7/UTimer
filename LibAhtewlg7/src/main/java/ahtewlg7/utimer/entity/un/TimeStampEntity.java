@@ -1,4 +1,4 @@
-package ahtewlg7.utimer.entity.time;
+package ahtewlg7.utimer.entity.un;
 
 import org.joda.time.Interval;
 

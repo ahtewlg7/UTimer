@@ -1,9 +1,8 @@
-package ahtewlg7.utimer.entity;
+package ahtewlg7.utimer.entity.un;
 
 import ahtewlg7.utimer.entity.degree.DegreeEntity;
 import ahtewlg7.utimer.entity.degree.IPriorityBean;
-import ahtewlg7.utimer.entity.taskContext.ATaskContext;
-import ahtewlg7.utimer.entity.time.TimeStampEntity;
+import ahtewlg7.utimer.entity.taskContext.un.ATaskContext;
 import ahtewlg7.utimer.enumtype.PriorityLevel;
 
 /**
