@@ -16,9 +16,10 @@ import butterknife.Unbinder;
 /**
  * Created by lw on 2016/9/11.
  */
-public abstract class AFunctionFragement extends RxFragment {
-    public static final String TAG = AFunctionFragement.class.getSimpleName();
+public abstract class UnAFunctionFragement extends RxFragment {
+    public static final String TAG = UnAFunctionFragement.class.getSimpleName();
 
+    public abstract void initLayoutView(View inflateView);
     public abstract @NonNull String getIndicateTitle();
     public abstract int getIndicateIconRid();
     public abstract int getLayoutRid();
@@ -30,6 +31,7 @@ public abstract class AFunctionFragement extends RxFragment {
         Logcat.i(TAG, "onCreateView");
         View view = inflater.inflate(getLayoutRid(), container, false);
         unbinder  = ButterKnife.bind(this, view);
+        initLayoutView(view);
         return view;
     }
 

@@ -14,15 +14,15 @@ import butterknife.ButterKnife;
  * Created by lw on 2017/12/27.
  */
 
-public class MdEditorActivity extends ANoteEditorActivity {
-    public static final String TAG = MdEditorActivity.class.getSimpleName();
+public class UnMdEditorActivity extends ANoteEditorActivity {
+    public static final String TAG = UnMdEditorActivity.class.getSimpleName();
 
     @BindView(R.id.activity_md_editor_textview)
     MdEditText editTextView;
 
     @Override
     protected void toInitView() {
-        setContentView(R.layout.activity_md_editor);
+        setContentView(R.layout.un_activity_md_editor);
         ButterKnife.bind(this);
     }
 

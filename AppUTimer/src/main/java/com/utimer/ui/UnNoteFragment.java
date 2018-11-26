@@ -32,9 +32,9 @@ import butterknife.BindView;
  * Created by lw on 2018/1/24.
  */
 
-public class NoteFragment extends AFunctionFragement
+public class UnNoteFragment extends UnAFunctionFragement
         implements NoteRecyclerViewMvpP.INoteRecyclerViewMvpV {
-    public static final String TAG = NoteFragment.class.getSimpleName();
+    public static final String TAG = UnNoteFragment.class.getSimpleName();
 
     @BindView(R.id.fragment_note_new)
     Button newBtn;
@@ -76,7 +76,7 @@ public class NoteFragment extends AFunctionFragement
                 }
             });
     }
-    //=======================================AFunctionFragement================================================
+    //=======================================UnAFunctionFragement================================================
     @Override
     @NonNull
     public String getIndicateTitle() {
@@ -90,7 +90,7 @@ public class NoteFragment extends AFunctionFragement
 
     @Override
     public int getLayoutRid() {
-        return R.layout.fragment_note;
+        return R.layout.un_fragment_note;
     }
 
     @Override
@@ -111,7 +111,7 @@ public class NoteFragment extends AFunctionFragement
     @Override
     public void toStartNoteEditActivity() {
         Logcat.i(TAG,"toStartNoteEditActivity");
-        ActivityUtils.startActivity(MdEditorActivity.class);
+        ActivityUtils.startActivity(UnMdEditorActivity.class);
     }
 
     @Override

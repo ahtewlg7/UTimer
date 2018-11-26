@@ -19,8 +19,8 @@ import butterknife.ButterKnife;
 /**
  * Created by lw on 2016/9/10.
  */
-public class FunctionMainActivity extends RxFragmentActivity {
-    public static final String TAG = FunctionMainActivity.class.getSimpleName();
+public class UnFunctionMainActivity extends RxFragmentActivity {
+    public static final String TAG = UnFunctionMainActivity.class.getSimpleName();
 
     @BindView(R.id.activity_main_viewpager)
     ViewPager activityMainViewpager;
@@ -31,7 +31,7 @@ public class FunctionMainActivity extends RxFragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.un_activity_main);
 
         Logcat.i(TAG, "onCreate");
         ButterKnife.bind(this);
@@ -72,8 +72,8 @@ public class FunctionMainActivity extends RxFragmentActivity {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            Logcat.d(TAG,"getPageTitle = " + ((AFunctionFragement)getItem(position)).getIndicateTitle());
-            return ((AFunctionFragement)getItem(position)).getIndicateTitle();
+            Logcat.d(TAG,"getPageTitle = " + ((UnAFunctionFragement)getItem(position)).getIndicateTitle());
+            return ((UnAFunctionFragement)getItem(position)).getIndicateTitle();
         }
 
         @Override
@@ -84,22 +84,22 @@ public class FunctionMainActivity extends RxFragmentActivity {
 
         @Override
         public int getIconResId(int position) {
-            return ((AFunctionFragement)getItem(position)).getIndicateIconRid();
+            return ((UnAFunctionFragement)getItem(position)).getIndicateIconRid();
         }
     }
 
     class FragmentFactory {
-        AFunctionFragement[] fragments;
+        UnAFunctionFragement[] fragments;
 
         FragmentFactory(){
-            fragments = new AFunctionFragement[getFragmentCount()];
+            fragments = new UnAFunctionFragement[getFragmentCount()];
         }
 
         int getFragmentCount(){
-            return 2;
+            return 3;
         }
 
-        AFunctionFragement getFragment(int position){
+        UnAFunctionFragement getFragment(int position){
             if(position < 0 || position >= getFragmentCount())
                 return null;
             if(fragments[position] != null)
@@ -107,10 +107,13 @@ public class FunctionMainActivity extends RxFragmentActivity {
 
             switch(position){
                 case 0:
-                    fragments[0] = new HistoryFragment();
+                    fragments[0] = new UnHistoryFragment();
                     break;
                 case 1:
-                    fragments[1] = new GtdFragment();
+                    fragments[1] = new UnNoteFragment();
+                    break;
+                case 2:
+                    fragments[2] = new UnGtdFragment();
                     break;
             }
             return fragments[position];
