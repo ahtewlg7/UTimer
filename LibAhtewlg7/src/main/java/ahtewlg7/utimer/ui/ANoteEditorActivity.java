@@ -14,7 +14,7 @@ import com.trello.rxlifecycle2.android.ActivityEvent;
 import java.util.concurrent.TimeUnit;
 
 import ahtewlg7.utimer.R;
-import ahtewlg7.utimer.entity.md.MdElement;
+import ahtewlg7.utimer.entity.md.EditElement;
 import ahtewlg7.utimer.entity.NoteEntity;
 import ahtewlg7.utimer.mvp.MdFileMvpP;
 import ahtewlg7.utimer.mvp.NoteEntityEditMvpP;
@@ -151,27 +151,27 @@ public abstract class ANoteEditorActivity extends BaseBinderActivity
         }
 
         @Override
-        public void onMdShowMode(MdElement mdElement) {
+        public void onMdShowMode(EditElement mdElement) {
             Logcat.i(TAG,"onMdShowMode");
             if(getEditView().ifEditable())
                 getEditView().enableEdit(false);
             preTextViewTextChangeEvent = null;
             ToastUtils.showShort(R.string.editor_disable);
-            /*if(mdElement != null && !TextUtils.isEmpty(mdElement.getText()))
-                getEditView().setText(mdElement.getText());*/ // TODO: 2018/6/23
+            /*if(mdElement != null && !TextUtils.isEmpty(mdElement.getRawText()))
+                getEditView().setText(mdElement.getRawText());*/ // TODO: 2018/6/23
             /*if(textChangeDisposable != null && !textChangeDisposable.isDisposed())
                 textChangeDisposable.dispose();*/
         }
 
         @Override
-        public void onRawEditMode(MdElement mdElement) {
+        public void onRawEditMode(EditElement mdElement) {
             Logcat.i(TAG,"onRawEditMode");
             if(!getEditView().ifEditable())
                 getEditView().enableEdit(true);
             preTextViewTextChangeEvent = null;
             ToastUtils.showShort(R.string.editor_enable);
-            /*if(mdElement != null && !TextUtils.isEmpty(mdElement.getText()))
-                getEditView().setText(mdElement.getText());*/ // TODO: 2018/6/23
+            /*if(mdElement != null && !TextUtils.isEmpty(mdElement.getRawText()))
+                getEditView().setText(mdElement.getRawText());*/ // TODO: 2018/6/23
 
 //            initTextChangeListener();
         }
@@ -187,7 +187,7 @@ public abstract class ANoteEditorActivity extends BaseBinderActivity
         }
 
         @Override
-        public void onContextParsing(MdElement element) {
+        public void onContextParsing(EditElement element) {
             getEditView().append(element.getMdCharSequence());//todo
         }
 

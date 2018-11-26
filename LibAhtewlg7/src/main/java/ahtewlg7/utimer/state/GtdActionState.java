@@ -1,4 +1,4 @@
-package ahtewlg7.utimer.gtd;
+package ahtewlg7.utimer.state;
 
 public class GtdActionState extends BaseGtdState {
     public static final String TAG = GtdActionState.class.getSimpleName();

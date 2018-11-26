@@ -14,12 +14,12 @@ public class BaseConfig {
         return MyRInfo.getStringByID(R.string.configs_simple_app_name);
     }
 
-    public String getDateTimeFormat(){
+    public String getSimpleDateTimeFormat(){
         return MyRInfo.getStringByID(R.string.config_datetime_format);
     }
 
-    public String getNoteFileSuffix(){
-        return MyRInfo.getStringByID(R.string.config_note_file_suffix);
+    public String getMdFileSuffix(){
+        return MyRInfo.getStringByID(R.string.config_md_file_suffix);
     }
     public String getManagerFileSubffix(){
         return MyRInfo.getStringByID(R.string.config_manager_file_suffix);

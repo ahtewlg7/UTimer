@@ -1,5 +1,7 @@
 package ahtewlg7.utimer.mvp;
 
+import android.support.annotation.NonNull;
+
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.trello.rxlifecycle2.android.FragmentEvent;
@@ -10,7 +12,7 @@ import org.reactivestreams.Subscription;
 
 import java.util.List;
 
-import ahtewlg7.utimer.common.GtdShortHandAction;
+import ahtewlg7.utimer.gtd.GtdShortHandListAction;
 import ahtewlg7.utimer.entity.busevent.DelBusEvent;
 import ahtewlg7.utimer.entity.busevent.EditBusEvent;
 import ahtewlg7.utimer.entity.busevent.EditEndBusEvent;
@@ -27,13 +29,13 @@ public class ShorthandListInfoMvpP extends AUtimerListMvpP<ShortHandEntity> {
 
     private List<ShortHandEntity> shorthandList;
     private IShorthandListMvpV shorthandListMvpV;
-    private IShorthandListMvpM shorthandListMvpM;
+    private ShorthandListMvpM shorthandListMvpM;
 
     public ShorthandListInfoMvpP(IShorthandListMvpV shorthandListMvpV) {
         super();
-        this.shorthandListMvpV = shorthandListMvpV;
-        shorthandList = Lists.newArrayList();
-        shorthandListMvpM = new GtdShortHandAction();
+        this.shorthandListMvpV  = shorthandListMvpV;
+        shorthandList           = Lists.newArrayList();
+        shorthandListMvpM       = new ShorthandListMvpM();
     }
 
     //=======================================EventBus================================================
@@ -132,9 +134,11 @@ public class ShorthandListInfoMvpP extends AUtimerListMvpP<ShortHandEntity> {
                         super.onNext(aBoolean);
                         if (aBoolean) {
                             shorthandListMvpV.onDeleteSucc(shortHandEntity);
-                            DelBusEvent delBusEvent = new DelBusEvent(shortHandEntity.getId(), shortHandEntity.getAttachFile().getAbsolutePath());
-                            Logcat.i(TAG, "toDeleteItem : entity = " + shortHandEntity.toString() + ",delBusEvent = " + delBusEvent.toString());
-                            eventBus.post(delBusEvent);
+                            if(shortHandEntity.getAttachFile().getAbsPath().isPresent()){
+                                DelBusEvent delBusEvent = new DelBusEvent(shortHandEntity.getId(), shortHandEntity.getAttachFile().getAbsPath().get());
+                                Logcat.i(TAG, "toDeleteItem : entity = " + shortHandEntity.toString() + ",delBusEvent = " + delBusEvent.toString());
+                                eventBus.post(delBusEvent);
+                            }
                         } else
                             shorthandListMvpV.onDeleteFail(shortHandEntity);
                     }
@@ -170,7 +174,37 @@ public class ShorthandListInfoMvpP extends AUtimerListMvpP<ShortHandEntity> {
     public void toGtdProject(ShortHandEntity entity) {
     }
 
-    public interface IShorthandListMvpM extends IBaseListInfoMvpM<ShortHandEntity> {
+    public class ShorthandListMvpM implements IBaseListInfoMvpM<ShortHandEntity> {
+        private GtdShortHandListAction shortHandAction;
+
+        public ShorthandListMvpM() {
+            shortHandAction = new GtdShortHandListAction();
+        }
+
+        @Override
+        public Flowable<Optional<ShortHandEntity>> loadAllEntity() {
+            return shortHandAction.loadAllEntity();
+        }
+
+        @Override
+        public Flowable<Optional<ShortHandEntity>> loadEntity(@NonNull Flowable<Optional<String>> keyObservable) {
+            return shortHandAction.loadEntity(keyObservable);
+        }
+
+        @Override
+        public ShortHandEntity newEntity() {
+            return shortHandAction.newEntity();
+        }
+
+        @Override
+        public Flowable<Boolean> saveEntity(@NonNull Flowable<Optional<ShortHandEntity>> flowable) {
+            return shortHandAction.saveEntity(flowable);
+        }
+
+        @Override
+        public Flowable<Boolean> deleteEntity(@NonNull Flowable<Optional<ShortHandEntity>> flowable) {
+            return shortHandAction.deleteEntity(flowable);
+        }
     }
 
     public interface IShorthandListMvpV extends IBaseGtdListMvpV<ShortHandEntity> {

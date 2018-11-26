@@ -5,6 +5,6 @@ package ahtewlg7.utimer.enumtype.errcode;
  */
 
 public enum NoteEditErrCode {
-    ERR_EDIT_VIEW_NULL,
-    ;
+    ERR_EDIT_ENTITY_INVALID,
+    ERR_EDIT_VIEW_NULL;
 }

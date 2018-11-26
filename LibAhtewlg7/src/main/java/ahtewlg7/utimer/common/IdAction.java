@@ -13,8 +13,12 @@ import java.util.UUID;
 public class IdAction {
     public static final String TAG = IdAction.class.getSimpleName();
 
-    public String getNoteId(){
+    public String getUUId(){
         return UUID.randomUUID().toString();
+    }
+
+    public String getNoteId(){
+        return getUUId();
     }
 
     public String getGtdId(){

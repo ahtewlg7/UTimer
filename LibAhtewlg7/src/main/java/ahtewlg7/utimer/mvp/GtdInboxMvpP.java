@@ -55,10 +55,10 @@ public class GtdInboxMvpP /*implements IBaseListInfoMvpP<AInboxEntity>*/ {
 
 
     public class InboxListInfoMvpM implements IBaseListInfoMvpM<T extends AInboxEntity>{
-        private GtdShortHandAction gtdInboxAction;
+        private GtdShortHandListAction gtdInboxAction;
 
         public InboxListInfoMvpM(){
-            gtdInboxAction = new GtdShortHandAction();
+            gtdInboxAction = new GtdShortHandListAction();
         }
 
         @Override

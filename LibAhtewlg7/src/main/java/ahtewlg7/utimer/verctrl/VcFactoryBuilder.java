@@ -1,5 +1,7 @@
 package ahtewlg7.utimer.verctrl;
 
+import com.google.common.base.Optional;
+
 /**
  * Created by lw on 2017/2/7.
  */
@@ -24,5 +26,9 @@ public class VcFactoryBuilder {
 
     public IBaseVersionControlFactory getVersionControlFactory(){
         return baseConfigFactory;
+    }
+
+    public Optional<? extends BaseConfig> getVcConfig(){
+        return baseConfigFactory != null ? Optional.fromNullable(baseConfigFactory.getBaseConfig()): Optional.<BaseConfig>absent();
     }
 }

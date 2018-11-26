@@ -17,9 +17,9 @@ import java.lang.ref.WeakReference;
 import ahtewlg7.utimer.entity.busevent.NoteDeleteEvent;
 import ahtewlg7.utimer.factory.EventBusFatory;
 import ahtewlg7.utimer.common.MdFileFsAction;
-import ahtewlg7.utimer.entity.md.MdElement;
+import ahtewlg7.utimer.entity.md.EditElement;
 import ahtewlg7.utimer.enumtype.MdContextErrCode;
-import ahtewlg7.utimer.exception.MdContextException;
+import ahtewlg7.utimer.exception.un.MdContextException;
 import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MySafeSubscriber;
 import io.reactivex.Flowable;
@@ -78,11 +78,11 @@ public class MdFileMvpP {
             }));
     }
     //=======================================EventBus================================================
-    public Flowable<MdElement> toParseMdFile(@NonNull Flowable<File> filePathObserver){
+    public Flowable<EditElement> toParseMdFile(@NonNull Flowable<File> filePathObserver){
         return mdContextMvpM.toParseRawContext(mdContextMvpM.toReadRawContext(filePathObserver));
     }
 
-    public Flowable<MdElement> toParseMd(@NonNull Flowable<Optional<String>> mdContextFlowable){
+    public Flowable<EditElement> toParseMd(@NonNull Flowable<Optional<String>> mdContextFlowable){
         return mdContextMvpM.toParseRawContext(mdContextFlowable);
     }
 
@@ -90,7 +90,7 @@ public class MdFileMvpP {
         mdContextMvpM.toParseRawContext(mdContextFlowable)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(new MySafeSubscriber<MdElement>(){
+            .subscribe(new MySafeSubscriber<EditElement>(){
                 @Override
                 public void onSubscribe(Subscription s) {
                     super.onSubscribe(s);
@@ -99,7 +99,7 @@ public class MdFileMvpP {
                 }
 
                 @Override
-                public void onNext(MdElement element) {
+                public void onNext(EditElement element) {
                     super.onNext(element);
                     if(mdContextMvpVWeakReference.get() != null )
                         mdContextMvpVWeakReference.get().onContextParsing(element);
@@ -194,7 +194,7 @@ public class MdFileMvpP {
 
     public interface IMdContextMvpM {
         public Flowable<Optional<String>> toReadRawContext(@NonNull Flowable<File> contextFileObserver);
-        public Flowable<MdElement> toParseRawContext(@NonNull Flowable<Optional<String>> rawContextFlowable);
+        public Flowable<EditElement> toParseRawContext(@NonNull Flowable<Optional<String>> rawContextFlowable);
 
         public void setMdSaveFilePath(File mdFile);
         public Flowable<Boolean> toSaveContext(@NonNull final Flowable<Optional<String>> mdFlowable);
@@ -203,7 +203,7 @@ public class MdFileMvpP {
     }
     public interface IMdContextMvpV {
         public void onContextParseStart();
-        public void onContextParsing(MdElement element);
+        public void onContextParsing(EditElement element);
         public void onContextParseErr(Throwable t);
         public void onContextParseEnd();
 

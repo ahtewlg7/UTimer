@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -35,6 +37,18 @@ public abstract class ABaseRxFragement extends RxFragment implements ISupportFra
         View view = inflater.inflate(getLayoutRid(), container, false);
         onViewCreated(view);
         return view;
+    }
+
+    public boolean onTouchEvent(MotionEvent event){
+        return false;
+    }
+
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        return false;
+    }
+
+    public boolean onKeyDown(int keyCode, KeyEvent event){
+        return false;
     }
 
     protected FragmentActivity mActivity;

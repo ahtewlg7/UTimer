@@ -20,8 +20,12 @@ public class FileAttrAction {
 
     public FileAttrAction(File file){
         this.file = file;
-        initAttr();
+//        initAttr();//tddo
     }
+    public BasicFileAttributes getAttr(){
+        return attr;
+    }
+
     public String getFileExt(){
         if(file == null || !file.exists())
             return null;

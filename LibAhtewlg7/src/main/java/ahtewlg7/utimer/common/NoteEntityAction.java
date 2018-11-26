@@ -8,14 +8,15 @@ import com.google.common.base.Optional;
 
 import org.joda.time.DateTime;
 
+import ahtewlg7.utimer.R;
+import ahtewlg7.utimer.db.DbActionFacade;
 import ahtewlg7.utimer.entity.NoteEntity;
-import ahtewlg7.utimer.enumtype.LoadType;
-import ahtewlg7.utimer.mvp.NoteEditMvpP;
+import ahtewlg7.utimer.enumtype.UnLoadType;
+import ahtewlg7.utimer.mvp.NoteEntityEditMvpP;
 import ahtewlg7.utimer.mvp.NoteRecyclerViewMvpP;
-import ahtewlg7.utimer.storagerw.EntityDbAction;
 import ahtewlg7.utimer.util.DateTimeAction;
 import ahtewlg7.utimer.util.Logcat;
-import ahtewlg7.utimer.verctrl.VcFactoryBuilder;
+import ahtewlg7.utimer.util.MyRInfo;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
@@ -25,15 +26,15 @@ import io.reactivex.functions.Function;
  */
 
 public class NoteEntityAction
-        implements NoteEditMvpP.INoteEditMvpM, NoteRecyclerViewMvpP.INoteRecyclerViewMvpM {
+        implements NoteEntityEditMvpP.INoteEditMvpM, NoteRecyclerViewMvpP.INoteRecyclerViewMvpM {
     public static final String TAG = NoteEntityAction.class.getSimpleName();
 
-    private EntityDbAction dbAction;
+    private DbActionFacade dbAction;
     private DateTimeAction dateTimeAction;
     private FileSystemAction fileSystemAction;
 
     public NoteEntityAction() {
-        dbAction            = new EntityDbAction();
+        dbAction            = new DbActionFacade();
         dateTimeAction      = new DateTimeAction();
         fileSystemAction    = new FileSystemAction();
     }
@@ -45,7 +46,7 @@ public class NoteEntityAction
 
         NoteEntity noteEntity = new NoteEntity();
         noteEntity.setId(id);
-        noteEntity.setLoadType(LoadType.NEW);
+        noteEntity.setLoadType(UnLoadType.NEW);
         noteEntity.setNoteName(dateTimeAction.toFormat(now));
         noteEntity.setCreateTime(now);
         noteEntity.setFileRPath(new FileSystemAction().getNoteDocRPath());
@@ -78,9 +79,8 @@ public class NoteEntityAction
     }
 
     public String getMdFileAbsPath(NoteEntity noteEntity){
-        String noteFileSuffix = VcFactoryBuilder.getInstance().getVersionControlFactory().getBaseConfig().getNoteFileSuffix();
-        return fileSystemAction.getSdcardPath() + noteEntity.getFileRPath()
-                + noteEntity.getNoteName() + noteFileSuffix;
+        String noteFileSuffix = MyRInfo.getStringByID(R.string.config_md_file_suffix);
+        return fileSystemAction.getSdcardPath() + noteEntity.getFileRPath() + noteEntity.getNoteName() + noteFileSuffix;
     }
 
     @Override
@@ -98,7 +98,7 @@ public class NoteEntityAction
 
     @Override
     public Flowable<Boolean> toSaveNote(NoteEntity noteEntity) {
-        return dbAction.saveEntity(Flowable.just(noteEntity).doOnNext(new Consumer<NoteEntity>() {
+        return dbAction.saveNoteEntity(Flowable.just(noteEntity).doOnNext(new Consumer<NoteEntity>() {
             @Override
             public void accept(NoteEntity noteEntity) throws Exception {
                 DateTime now    = DateTime.now();

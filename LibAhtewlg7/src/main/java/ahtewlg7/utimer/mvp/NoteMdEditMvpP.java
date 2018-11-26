@@ -17,12 +17,12 @@ import java.io.File;
 import java.util.List;
 
 import ahtewlg7.utimer.common.MdElementAction;
-import ahtewlg7.utimer.entity.md.MdElement;
+import ahtewlg7.utimer.entity.md.EditElement;
 import ahtewlg7.utimer.entity.NoteEntity;
-import ahtewlg7.utimer.enumtype.EditModeType;
+import ahtewlg7.utimer.enumtype.EditSrcType;
 import ahtewlg7.utimer.enumtype.UnLoadType;
 import ahtewlg7.utimer.enumtype.MdContextErrCode;
-import ahtewlg7.utimer.exception.MdContextException;
+import ahtewlg7.utimer.exception.un.MdContextException;
 import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MySafeSubscriber;
 import io.reactivex.BackpressureStrategy;
@@ -39,11 +39,11 @@ import static ahtewlg7.utimer.enumtype.MdContextErrCode.ERR_CONTEXT_PARSE;
 public class NoteMdEditMvpP {
     public static final String TAG = NoteMdEditMvpP.class.getSimpleName();
 
-    private List<MdElement> mdElementList;
+    private List<EditElement> mdElementList;
     private INoteMdEditMvpV mdFileEditMvpV;
     private INoteMdEditMvpM mdFileEditMvpM;
 
-    private EditModeType currEditMode;
+    private EditSrcType currEditMode;
     private GestureListener gestureListener;
 
     public NoteMdEditMvpP(@NonNull INoteMdEditMvpV mdFileEditMvpV){
@@ -51,7 +51,7 @@ public class NoteMdEditMvpP {
         mdFileEditMvpM          = new MdElementAction();
         mdElementList           = Lists.newArrayList();
 
-        currEditMode    = EditModeType.EDIT_MODE_MD;
+        currEditMode    = EditSrcType.EDIT_SRC_MD;
         mdFileEditMvpV.onMdShowMode(null);
 
         gestureListener = new GestureListener();
@@ -89,15 +89,15 @@ public class NoteMdEditMvpP {
                         return FileUtils.getFileByPath(noteEntity.getFileAbsPath());
                     }
                 }))
-            .doOnNext(new Consumer<MdElement>() {
+            .doOnNext(new Consumer<EditElement>() {
                 @Override
-                public void accept(MdElement mdElement) throws Exception {
+                public void accept(EditElement mdElement) throws Exception {
                     mdFileEditMvpM.handleElement(mdElement);
                 }
             })
-            .compose(((RxActivity) mdFileEditMvpV.getRxLifeCycleBindView()).<MdElement>bindUntilEvent(ActivityEvent.DESTROY))
+            .compose(((RxActivity) mdFileEditMvpV.getRxLifeCycleBindView()).<EditElement>bindUntilEvent(ActivityEvent.DESTROY))
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(new MySafeSubscriber<MdElement>(){
+            .subscribe(new MySafeSubscriber<EditElement>(){
                 @Override
                 public void onSubscribe(Subscription s) {
                     super.onSubscribe(s);
@@ -105,7 +105,7 @@ public class NoteMdEditMvpP {
                 }
 
                 @Override
-                public void onNext(MdElement mdElement) {
+                public void onNext(EditElement mdElement) {
                     super.onNext(mdElement);
                     mdElementList.add(mdElement);
                     mdFileEditMvpV.onContextParsing(mdElement);
@@ -126,7 +126,7 @@ public class NoteMdEditMvpP {
         } else {
             Logcat.i(TAG,"toParseNoteEnity : no such file ,to create one");
             mdFileEditMvpV.onRawEditMode(null);
-            currEditMode = EditModeType.EDIT_MODE_RAW;
+            currEditMode = EditSrcType.EDIT_SRC_RAW;
         }
     }
 
@@ -139,16 +139,16 @@ public class NoteMdEditMvpP {
         }
 
         mdContextMvpP.get().toParseMd(rawTextFlowable)
-            .doOnNext(new Consumer<MdElement>() {
+            .doOnNext(new Consumer<EditElement>() {
                 @Override
-                public void accept(MdElement mdElement) throws Exception {
+                public void accept(EditElement mdElement) throws Exception {
                     mdFileEditMvpM.handleElement(mdElement);
                 }
             })
-            .compose(((RxActivity) mdFileEditMvpV.getRxLifeCycleBindView()).<MdElement>bindUntilEvent(ActivityEvent.DESTROY))
-            .subscribe(new MySafeSubscriber<MdElement>(){
+            .compose(((RxActivity) mdFileEditMvpV.getRxLifeCycleBindView()).<EditElement>bindUntilEvent(ActivityEvent.DESTROY))
+            .subscribe(new MySafeSubscriber<EditElement>(){
                 @Override
-                public void onNext(MdElement mdElement) {
+                public void onNext(EditElement mdElement) {
                     super.onNext(mdElement);
 
                 }
@@ -176,43 +176,43 @@ public class NoteMdEditMvpP {
         Optional<MdFileMvpP> mdContextMvpP = mdFileEditMvpV.getMdContextMvpP();
         if(mdContextMvpP.isPresent()) {
             Logcat.i(TAG,"toSaveMdFile");
-            MdElement mdElement = getEditElement(currEditMode);
-            if (currEditMode == EditModeType.EDIT_MODE_RAW && mdElement != null) {
+            EditElement mdElement = getEditElement(currEditMode);
+            if (currEditMode == EditSrcType.EDIT_SRC_RAW && mdElement != null) {
                     mdElementList.clear();//todo
                     mdElementList.add(mdElement);
             }
             mdContextMvpP.get().toSaveMdFile(new File(noteEntity.getFileAbsPath()),
-                    Flowable.fromIterable(mdElementList).map(new Function<MdElement, Optional<String>>() {
+                    Flowable.fromIterable(mdElementList).map(new Function<EditElement, Optional<String>>() {
                         @Override
-                        public Optional<String> apply(MdElement element) throws Exception {
-                            return Optional.fromNullable(element.getText());
+                        public Optional<String> apply(EditElement element) throws Exception {
+                            return Optional.fromNullable(element.getRawText());
                         }
                     }));
         }
     }
 
-    private MdElement getEditElement(EditModeType currEditMode){
-        MdElement editElement = null;
-        /*if(currEditMode == EditModeType.EDIT_MODE_MD ) {
-            editElement = new MdElement()
+    private EditElement getEditElement(EditSrcType currEditMode){
+        EditElement editElement = null;
+        /*if(currEditMode == EditSrcType.EDIT_SRC_MD ) {
+            editElement = new EditElement()
         }*/
         ;
         if(mdFileEditMvpV.getPreTextChangeEvent().isPresent())
-            editElement = new MdElement(mdFileEditMvpV.getPreTextChangeEvent().get().text().toString());
+            editElement = new EditElement(mdFileEditMvpV.getPreTextChangeEvent().get().text().toString());
         return editElement;
     }
 
 
     public interface INoteMdEditMvpM {
-        public CharSequence handleElement(@NonNull MdElement element);
+        public CharSequence handleElement(@NonNull EditElement element);
     }
     public interface INoteMdEditMvpV extends MdFileMvpP.IMdContextMvpV , IRxLifeCycleBindView {
         public int getCurrLine();
         public Optional<TextViewTextChangeEvent> getPreTextChangeEvent();
         public Optional<MdFileMvpP> getMdContextMvpP();
         public void registeEditViewEvent(@NonNull GestureDetector.OnGestureListener gestureListener);
-        public void onRawEditMode(MdElement mdElement);
-        public void onMdShowMode(MdElement mdElement);
+        public void onRawEditMode(EditElement mdElement);
+        public void onMdShowMode(EditElement mdElement);
     }
 
     class GestureListener extends GestureDetector.SimpleOnGestureListener {
@@ -220,9 +220,9 @@ public class NoteMdEditMvpP {
         public boolean onDoubleTapEvent(MotionEvent e) {
             if (e.getAction() != MotionEvent.ACTION_UP)
                 return false;
-            MdElement mdElement = getEditElement(currEditMode);
+            EditElement mdElement = getEditElement(currEditMode);
 
-            if (currEditMode == EditModeType.EDIT_MODE_RAW){
+            if (currEditMode == EditSrcType.EDIT_SRC_RAW){
                 if (mdElement != null) {
                     mdElementList.clear();//todo
                     mdElementList.add(mdElement);
@@ -230,7 +230,7 @@ public class NoteMdEditMvpP {
                 mdFileEditMvpV.onMdShowMode(mdElement);
             }else
                 mdFileEditMvpV.onRawEditMode(mdElement);
-            currEditMode = currEditMode == EditModeType.EDIT_MODE_RAW ? EditModeType.EDIT_MODE_MD : EditModeType.EDIT_MODE_RAW;
+            currEditMode = currEditMode == EditSrcType.EDIT_SRC_RAW ? EditSrcType.EDIT_SRC_MD : EditSrcType.EDIT_SRC_RAW;
             return true;
         }
     }

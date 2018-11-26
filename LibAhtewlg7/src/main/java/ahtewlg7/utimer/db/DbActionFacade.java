@@ -17,6 +17,7 @@ import ahtewlg7.utimer.db.entity.TaskEntityGdBean;
 import ahtewlg7.utimer.entity.NoteEntity;
 import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
 import ahtewlg7.utimer.entity.gtd.GtdTaskEntity;
+import ahtewlg7.utimer.entity.gtd.ShortHandBuilder;
 import ahtewlg7.utimer.entity.gtd.ShortHandEntity;
 import ahtewlg7.utimer.enumtype.UnLoadType;
 import ahtewlg7.utimer.util.Logcat;
@@ -193,7 +194,7 @@ public class DbActionFacade {
                 .map(new Function<ShortHandEntityGdBean, Optional<ShortHandEntity>>() {
                     @Override
                     public Optional<ShortHandEntity> apply(ShortHandEntityGdBean entityGdBean) throws Exception {
-                        return Optional.of(new ShortHandEntity.Builder().setGbBean(entityGdBean).build());
+                        return Optional.of(new ShortHandBuilder().setGbBean(entityGdBean).build());
                     }
                 })
                 .subscribeOn(Schedulers.io());
@@ -207,7 +208,7 @@ public class DbActionFacade {
                 Optional<ShortHandEntityGdBean> beanOptional = ShortHandEntityDaoAction.getInstance().queryByKey(nameOptional.get());
                 if(!beanOptional.isPresent())
                     return Optional.absent();
-                return Optional.of(new ShortHandEntity.Builder().setGbBean(beanOptional.get()).build());
+                return Optional.of(new ShortHandBuilder().setGbBean(beanOptional.get()).build());
             }
         });
     }

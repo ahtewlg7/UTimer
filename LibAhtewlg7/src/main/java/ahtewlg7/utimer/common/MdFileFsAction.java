@@ -12,11 +12,11 @@ import org.reactivestreams.Publisher;
 
 import java.io.File;
 
-import ahtewlg7.utimer.entity.MdElement;
+import ahtewlg7.utimer.entity.md.EditElement;
 import ahtewlg7.utimer.enumtype.MdContextErrCode;
-import ahtewlg7.utimer.exception.MdContextException;
+import ahtewlg7.utimer.exception.un.MdContextException;
 import ahtewlg7.utimer.md.MyBypass;
-import ahtewlg7.utimer.mvp.MdContextMvpP;
+import ahtewlg7.utimer.mvp.MdFileMvpP;
 import ahtewlg7.utimer.util.Logcat;
 import in.uncod.android.bypass.Element;
 import io.reactivex.Flowable;
@@ -24,7 +24,7 @@ import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 public class MdFileFsAction
-        implements MdContextMvpP.IMdContextMvpM, MyBypass.MyImageGetter {
+        implements MdFileMvpP.IMdContextMvpM, MyBypass.MyImageGetter {
     public static final String TAG = MdFileFsAction.class.getSimpleName();
 
     private File mdSaveFile;
@@ -45,10 +45,10 @@ public class MdFileFsAction
     }
 
     @Override
-    public Flowable<MdElement> toParseRawContext(@NonNull Flowable<Optional<String>> rawContextFlowable) {
-        return rawContextFlowable.flatMap(new Function<Optional<String>, Publisher<MdElement>>() {
+    public Flowable<EditElement> toParseRawContext(@NonNull Flowable<Optional<String>> rawContextFlowable) {
+        return rawContextFlowable.flatMap(new Function<Optional<String>, Publisher<EditElement>>() {
             @Override
-            public Publisher<MdElement> apply(Optional<String> stringOptional) throws Exception {
+            public Publisher<EditElement> apply(Optional<String> stringOptional) throws Exception {
                 if(!stringOptional.isPresent())
                     throw new MdContextException(MdContextErrCode.ERR_CONTEXT_NULL);
 //                return myBypass.markdownToSpannableFlowable(stringOptional.get(), MdFileFsAction.this);
@@ -69,7 +69,7 @@ public class MdFileFsAction
             public Boolean apply(Optional<String> mdContextOptional) throws Exception {
                 boolean isNotEmpty = mdContextOptional.isPresent() && !TextUtils.isEmpty(mdContextOptional.get());
                 boolean isExist =  mdSaveFile != null && FileUtils.createOrExistsFile(mdSaveFile);
-                Logcat.i(TAG,"toSaveContext                                           isNotEmpty = " + isNotEmpty + ", isExist = "+ isExist);
+                Logcat.i(TAG,"toSaveContext isNotEmpty = " + isNotEmpty + ", isExist = "+ isExist);
 
                 return isNotEmpty && isExist && FileIOUtils.writeFileFromString(mdSaveFile, mdContextOptional.get());
             }

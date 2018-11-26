@@ -1,42 +1,41 @@
 package ahtewlg7.utimer.entity.md;
 
+import android.text.TextUtils;
+
 import com.google.common.collect.Range;
 
 import in.uncod.android.bypass.Element;
 
-public class MdElement{
-    public static final String TAG = MdElement.class.getSimpleName();
+public class EditElement {
+    public static final String TAG = EditElement.class.getSimpleName();
 
-    protected int startLine;
     protected String rawText;
+    protected String modifyRawText;
     protected Element mdElement;
     protected Range<Integer> mdCharRange;
     protected Range<Integer> rawCharRange;
 
     protected CharSequence mdCharSequence;
 
-    public MdElement(String rawText){
+    public EditElement(String rawText){
         this.rawText   = rawText;
         setMdCharSequence(rawText);
     }
 
-    public MdElement(int startLine, String rawText){
-        this.rawText   = rawText;
-        this.startLine = startLine;
-        setMdCharSequence(rawText);
-    }
-
-    public MdElement(Element mdElement) {
-        this.mdElement = mdElement;
-    }
-
-    public MdElement(int startLine, Element mdElement) {
-        this.startLine = startLine;
-        this.mdElement = mdElement;
-    }
-
-    public String getText(){
+    public String getRawText(){
         return rawText;
+    }
+
+    public String getModifyRawText() {
+        return modifyRawText;
+    }
+
+    public void setModifyRawText(String modifyRawText) {
+        this.modifyRawText = modifyRawText;
+    }
+
+    public void setElement(Element mdElement) {
+        this.mdElement = mdElement;
     }
 
     public Element getElement() {
@@ -48,7 +47,7 @@ public class MdElement{
     }
 
     public CharSequence getMdCharSequence(){
-        return mdCharSequence;
+        return TextUtils.isEmpty(mdCharSequence) ? rawText: mdCharSequence;
     }
 
     public Range<Integer> getMdCharRange() {

@@ -1,4 +1,4 @@
-package ahtewlg7.utimer.gtd;
+package ahtewlg7.utimer.state;
 
 import com.google.common.base.Optional;
 

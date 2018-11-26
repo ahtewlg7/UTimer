@@ -1,6 +1,7 @@
 package ahtewlg7.utimer.view;
 
 import android.content.Context;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,7 +27,7 @@ import java.util.List;
 public abstract class ABaseLinearRecyclerView<T> extends RecyclerView{
     public static final String TAG = ABaseLinearRecyclerView.class.getSimpleName();
 
-    public abstract int getViewItemLayout();
+    public abstract @LayoutRes int getViewItemLayout();
     public abstract void init(Context context, List<T> entityList);
     public abstract void init(Context context, List<T> entityList,
                               BaseQuickAdapter.OnItemClickListener itemClickListener,
@@ -34,6 +35,7 @@ public abstract class ABaseLinearRecyclerView<T> extends RecyclerView{
                               OnItemSwipeListener itemSwipeListener,
                               OnItemDragListener itemDragListener);
     public abstract void resetData(List<T> entityList);
+    public abstract void resetData(int index, List<T> entityList);
 
     public ABaseLinearRecyclerView(Context context) {
         super(context);

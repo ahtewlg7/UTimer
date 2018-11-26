@@ -8,6 +8,7 @@ import android.util.Log;
 import com.blankj.utilcode.util.ServiceUtils;
 import com.blankj.utilcode.util.Utils;
 
+import ahtewlg7.utimer.BuildConfig;
 import ahtewlg7.utimer.db.GreenDaoAction;
 import ahtewlg7.utimer.ui.BinderService;
 import ahtewlg7.utimer.util.AppInfoAction;
@@ -15,6 +16,7 @@ import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.ProcessAction;
 import ahtewlg7.utimer.verctrl.IBaseVersionControlFactory;
 import ahtewlg7.utimer.verctrl.VcFactoryBuilder;
+import me.yokeyword.fragmentation.Fragmentation;
 
 
 public abstract class MyApplication extends Application {
@@ -55,5 +57,11 @@ public abstract class MyApplication extends Application {
 	protected void toStartIraiBinderService(){
 		Logcat.d(TAG,"to start BinderService");
 		ServiceUtils.startService(BinderService.class);
+	}
+
+	protected final Fragmentation.FragmentationBuilder getFragmentationBuilder(){
+		return Fragmentation.builder()
+				.stackViewMode(Fragmentation.NONE)
+				.debug(BuildConfig.DEBUG);
 	}
 }

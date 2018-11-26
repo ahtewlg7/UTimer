@@ -8,34 +8,52 @@ import com.google.common.base.Optional;
 
 import org.joda.time.DateTime;
 
-import java.io.File;
+import java.io.Serializable;
 
 import javax.annotation.Nonnull;
 
+import ahtewlg7.utimer.common.FileSystemAction;
 import ahtewlg7.utimer.db.entity.ShortHandEntityGdBean;
 import ahtewlg7.utimer.entity.AUtimerEntity;
 import ahtewlg7.utimer.entity.IMergerEntity;
+import ahtewlg7.utimer.entity.material.AAttachFile;
 import ahtewlg7.utimer.entity.material.AMaterialEntity;
+import ahtewlg7.utimer.entity.material.MdAttachFile;
 import ahtewlg7.utimer.enumtype.GtdType;
-import ahtewlg7.utimer.util.FileAttrAction;
+import ahtewlg7.utimer.util.DateTimeAction;
 import ahtewlg7.utimer.util.Logcat;
 
-public class ShortHandEntity extends AUtimerEntity<ShortHandEntity.Builder>{
+public class ShortHandEntity extends AUtimerEntity<ShortHandBuilder> implements Serializable {
     public static final String TAG = ShortHandEntity.class.getSimpleName();
 
     private boolean isActived;
     private StringBuilder detailBuilder;
 
-    private ShortHandEntity(@Nonnull Builder builder) {
+    protected ShortHandEntity(@Nonnull ShortHandBuilder builder) {
         super(builder);
         if(builder.gdBean != null)
             initByGbBean(builder.gdBean);
+        if(!TextUtils.isEmpty(title) && attachFile == null){
+            String filePath = new FileSystemAction().getInboxGtdAbsPath();
+            attachFile  = new MdAttachFile(filePath, title);
+        }
     }
 
     @Override
     public Optional<String> getDetail() {
-        return detailBuilder == null ? Optional.<String>absent()
-                : Optional.of(detailBuilder.toString());
+        return detailBuilder == null ? Optional.<String>absent() : Optional.of(detailBuilder.toString());
+    }
+
+    @Override
+    public void ensureAttachFileExist() {
+        if(attachFile == null){
+            String fileName = !TextUtils.isEmpty(getTitle()) ? getTitle() : new DateTimeAction().toFormatNow().toString();
+            String filePath = new FileSystemAction().getInboxGtdAbsPath();
+            attachFile = new MdAttachFile(filePath, fileName);
+        }
+        if(!attachFile.ifValid())
+            attachFile.createOrExist();
+
     }
 
     public void appendDetail(String append){
@@ -85,13 +103,14 @@ public class ShortHandEntity extends AUtimerEntity<ShortHandEntity.Builder>{
         return this;
     }
 
-    protected void initByAttachFile(File attachFile){
-        setTitle(attachFile.getName().split(".txt")[0]);
-        if(attachFile != null && attachFile.exists()) {
-            FileAttrAction fileAttrAction = new FileAttrAction(attachFile);
-            createTime     = fileAttrAction.getCreateTime();
-            lastAccessTime = fileAttrAction.getLassAccessTime();
-            lastModifyTime = fileAttrAction.getLassModifyTime();
+    protected void initByAttachFile(AAttachFile attachFile){
+        Optional<String> title = attachFile.getTitle();
+        if(title.isPresent())
+        setTitle(title.get());
+        if(attachFile.ifValid()) {
+            createTime     = attachFile.getCreateTime();
+            lastAccessTime = attachFile.getLassAccessTime();
+            lastModifyTime = attachFile.getLassModifyTime();
         }
     }
 
@@ -112,20 +131,5 @@ public class ShortHandEntity extends AUtimerEntity<ShortHandEntity.Builder>{
         builder.append(super.toString());
         builder.append(",isActived").append(isActived);
         return builder.toString();
-    }
-
-    public static class Builder extends AUtimerEntity.Builder<ShortHandEntity>{
-        protected ShortHandEntityGdBean gdBean;
-
-        public Builder setGbBean(ShortHandEntityGdBean gdBean){
-            this.gdBean = gdBean;
-            return this;
-        }
-
-        @NonNull
-        @Override
-        public ShortHandEntity build() {
-            return new ShortHandEntity(this);
-        }
     }
 }

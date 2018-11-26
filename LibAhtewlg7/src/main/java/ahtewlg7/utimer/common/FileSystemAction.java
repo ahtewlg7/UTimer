@@ -1,6 +1,8 @@
 package ahtewlg7.utimer.common;
 
 
+import android.support.annotation.NonNull;
+
 import java.io.File;
 
 import ahtewlg7.utimer.util.Logcat;
@@ -27,7 +29,16 @@ public class FileSystemAction {
             return;
         initAppWorkingFsDir();
     }
-
+    public String getRPath(@NonNull File file){
+        String rPath   = file.getAbsolutePath();
+        try{
+            if(rPath.contains(getAppWorkingAbsPath()))
+                rPath =  baseConfig.getSimpleAppName() + File.separator + rPath.split(getAppWorkingAbsPath())[1];
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return rPath;
+    }
     //========================================SDcard==============================================
     public String getSdcardPath(){
         return StorageAction.getInstance().getExStoragePath();
@@ -222,7 +233,7 @@ public class FileSystemAction {
         StorageAction.getInstance().createExRelDir(getGtdDocAbsPath());
 
         //======================================/UTimer/Doc/GTD====================================
-        /*StorageAction.getInstance().createExRelDir(getInboxGtdAbsPath());
-        StorageAction.getInstance().createExRelDir(getProjectGtdAbsPath());*/
+        StorageAction.getInstance().createExRelDir(getInboxGtdAbsPath());
+//        StorageAction.getInstance().createExRelDir(getProjectGtdAbsPath());
     }
 }

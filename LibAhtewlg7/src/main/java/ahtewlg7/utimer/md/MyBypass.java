@@ -17,7 +17,7 @@ import android.view.View;
 
 import com.blankj.utilcode.util.Utils;
 
-import ahtewlg7.utimer.entity.md.MdElement;
+import ahtewlg7.utimer.entity.md.EditElement;
 import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.view.md.ClickableImageSpan;
 import in.uncod.android.bypass.Bypass;
@@ -47,21 +47,19 @@ public class MyBypass extends Bypass{
         this.spanClickListener = spanClickListener;
     }
 
-    //todo
-    public Flowable<MdElement> markdownToSpannableFlowable(String markdown) {
-        return Flowable.just(new MdElement(markdown));
+    public Flowable<EditElement> markdownToSpannableFlowable(String rawTxt) {
+        return markdownToSpannableFlowable(rawTxt ,null);
     }
-    //todo
 
-    public Flowable<MdElement> markdownToSpannableFlowable(String markdown, final ImageGetter imageGetter) {
-        Document document = processMarkdown(markdown);
+    public Flowable<EditElement> markdownToSpannableFlowable(String rawTxt, final ImageGetter imageGetter) {
+        Document document = processMarkdown(rawTxt);
 
         int size = document.getElementCount();
-        MdElement[] mdElements = new MdElement[size];
+        EditElement[] mdElements = new EditElement[size];
 
         for (int i = 0; i < size; i++) {
             CharSequence spans = recurseElement(document.getElement(i), i, size, imageGetter);
-            mdElements[i] = new MdElement(document.getElement(i));
+            mdElements[i] = new EditElement(document.getElement(i).getText());
             mdElements[i].setMdCharSequence(spans);
         }
         return Flowable.fromArray(mdElements);

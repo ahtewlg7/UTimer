@@ -4,7 +4,9 @@ import android.text.TextUtils;
 
 import org.joda.time.DateTime;
 
+import ahtewlg7.utimer.entity.gtd.ShortHandBuilder;
 import ahtewlg7.utimer.entity.gtd.ShortHandEntity;
+import ahtewlg7.utimer.util.DateTimeAction;
 
 
 //todo：auto check if long time no update, when next get
@@ -49,6 +51,8 @@ public class ShortHandFactory extends ABaseTableFactory<DateTime, String, ShortH
 
     @Override
     public ShortHandEntity newValue() {
-        return new ShortHandEntity.Builder().build();
+        String now = new DateTimeAction().toFormatNow().toString();
+        ShortHandBuilder builder = (ShortHandBuilder)new ShortHandBuilder().setTitle(now);
+        return builder.build();
     }
 }

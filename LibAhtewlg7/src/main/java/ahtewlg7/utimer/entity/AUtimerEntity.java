@@ -7,23 +7,23 @@ import com.google.common.base.Optional;
 
 import org.joda.time.DateTime;
 
-import java.io.File;
-
 import javax.annotation.Nonnull;
 
 import ahtewlg7.utimer.common.IdAction;
+import ahtewlg7.utimer.entity.material.AAttachFile;
 import ahtewlg7.utimer.enumtype.GtdType;
 
-public abstract class AUtimerEntity<T extends AUtimerEntity.Builder> implements IMergerEntity{
+public abstract class AUtimerEntity<T extends AUtimerBuilder> implements IMergerEntity{
     public static final String TAG = AUtimerEntity.class.getSimpleName();
 
     @NonNull
     public abstract GtdType getGtdType();
     public abstract Optional<String> getDetail();
-    protected abstract void initByAttachFile(File attachFile);
+    public abstract void ensureAttachFileExist();
+    protected abstract void initByAttachFile(AAttachFile attachFile);
 
     protected int accessTimes;
-    protected File attachFile;
+    protected AAttachFile attachFile;
     protected String id;
     protected String uuid;
     protected String title;
@@ -35,13 +35,23 @@ public abstract class AUtimerEntity<T extends AUtimerEntity.Builder> implements 
         //merge first
         if(t.entity != null)
             merge(t.entity);
-        id   = t.id;
+        id      = t.id;
+        title = t.title;
         uuid = TextUtils.isEmpty(t.uuid) ? new IdAction().getUUId() : t.uuid;
         createTime = t.createTime;
         if(t.attachFile != null){
             attachFile = t.attachFile;
             initByAttachFile(attachFile);
         }
+    }
+
+    public boolean ifValid() {
+        return !TextUtils.isEmpty(title);
+    }
+
+    public void destory(){
+        if(attachFile != null && attachFile.ifValid())
+            attachFile.deleteOnExit();
     }
 
     public String getId() {
@@ -56,7 +66,7 @@ public abstract class AUtimerEntity<T extends AUtimerEntity.Builder> implements 
         return createTime;
     }
 
-    public File getAttachFile() {
+    public AAttachFile getAttachFile() {
         return attachFile;
     }
 
@@ -92,10 +102,6 @@ public abstract class AUtimerEntity<T extends AUtimerEntity.Builder> implements 
         this.lastModifyTime = lastModifyTime;
     }
 
-    public boolean ifValid() {
-        return !TextUtils.isEmpty(title) && attachFile != null && attachFile.exists();
-    }
-
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -114,42 +120,7 @@ public abstract class AUtimerEntity<T extends AUtimerEntity.Builder> implements 
         if(lastModifyTime != null)
             builder.append(",lastModifyTime").append(lastModifyTime.toString());
         if(attachFile != null)
-            builder.append(",attachFile").append(attachFile.getName());
+            builder.append(",attachFile").append(attachFile.getTitle());
         return builder.toString();
-    }
-
-    public static abstract class Builder<E extends AUtimerEntity>{
-        protected String id;
-        protected String uuid;
-        protected File attachFile;
-        protected DateTime createTime;
-        protected E entity;
-
-        @NonNull
-        public abstract E build();
-
-        public Builder setId(String id){
-            this.id = id;
-            return this;
-        }
-
-        public Builder setUuid(String uuid) {
-            this.uuid = uuid;
-            return this;
-        }
-        public Builder setCreateTime(DateTime createTime){
-            this.createTime = createTime;
-            return this;
-        }
-
-        public Builder setCopyEntity(E entity){
-            this.entity = entity;
-            return this;
-        }
-
-        public Builder setAttachFile(File attachFile){
-            this.attachFile = attachFile;
-            return this;
-        }
     }
 }
