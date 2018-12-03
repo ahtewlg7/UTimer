@@ -171,9 +171,10 @@ public class ShortHandEditFragment extends AEditFragment implements ShorthandEdi
     }
 
     @Override
-    public void onParseSucc(EditMementoBean MdMementoBean) {
+    public void onParseSucc(EditMementoBean mdMementoBean) {
         ToastUtils.showShort("parse end");
-        editReCyclerView.resetData(MdMementoBean.getIndex(), MdMementoBean.getElementList());
+        preEditMementoBean = mdMementoBean;
+        editReCyclerView.resetData(mdMementoBean.getIndex(), mdMementoBean.getElementList());
     }
 
     @Override
@@ -205,8 +206,6 @@ public class ShortHandEditFragment extends AEditFragment implements ShorthandEdi
     public void onActionCancel() {
 
     }
-
-
 
     @Override
     public LifecycleProvider getRxLifeCycleBindView() {

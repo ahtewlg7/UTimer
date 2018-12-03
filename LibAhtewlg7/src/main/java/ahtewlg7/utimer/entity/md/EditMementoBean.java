@@ -1,5 +1,7 @@
 package ahtewlg7.utimer.entity.md;
 
+import com.google.common.base.Optional;
+
 import java.util.List;
 
 import ahtewlg7.utimer.entity.IValidEntity;
@@ -13,6 +15,8 @@ public class EditMementoBean implements IValidEntity {
 
     private int size;
     private int index;
+    private StringBuilder mdDocumentTxt;
+    private StringBuilder rawDocumentTxt;
     private List<EditElement> elementList;
     private ElementEditType editType;
 
@@ -20,12 +24,21 @@ public class EditMementoBean implements IValidEntity {
         this.index       = index;
         this.editType    = editType;
         this.elementList = elementList;
+        mdDocumentTxt    = new StringBuilder();
+        rawDocumentTxt   = new StringBuilder();
         size = elementList == null ? 0 : elementList.size();
+        initDocTxt();
     }
 
     @Override
     public boolean ifValid() {
         return index >= 0 && editType != null && elementList != null && !elementList.isEmpty();
+    }
+    public Optional<String> getMdDocTxt(){
+        return Optional.of(mdDocumentTxt.toString());
+    }
+    public Optional<String> getRawDocTxt(){
+        return Optional.of(rawDocumentTxt.toString());
     }
 
     public int getIndex() {
@@ -44,6 +57,14 @@ public class EditMementoBean implements IValidEntity {
         return elementList;
     }
 
+    private void initDocTxt(){
+        if(!ifValid())
+            return;
+        for(EditElement element : elementList) {
+            mdDocumentTxt.append(element.getMdCharSequence());
+            rawDocumentTxt.append(element.getRawText());
+        }
+    }
     @Override
     public String toString() {
         return TAG + " index=" + index + " editType=" + editType.name() + " elementList.size=" + elementList.size();

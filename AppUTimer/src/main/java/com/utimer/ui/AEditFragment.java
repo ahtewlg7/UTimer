@@ -10,6 +10,7 @@ import com.jakewharton.rxbinding2.widget.RxTextView;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
+import ahtewlg7.utimer.entity.md.EditMementoBean;
 import ahtewlg7.utimer.util.Logcat;
 import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
@@ -26,8 +27,8 @@ public abstract class AEditFragment extends AToolbarBkFragment{
 
     protected abstract void onEditMode(int index, Observable<String> rawTxtRx);
 
-    protected boolean isParsing;
     protected int preEditPosition = -1;
+    protected EditMementoBean preEditMementoBean;
     protected Disposable editViewDisposable;
     protected HashMap<Integer, EditViewBean> editViewMap;
     protected PublishSubject<EditViewBean> editViewPublishSubject;
@@ -61,7 +62,10 @@ public abstract class AEditFragment extends AToolbarBkFragment{
                 .filter(new Predicate<CharSequence>() {
                     @Override
                     public boolean test(CharSequence charSequence) throws Exception {
-                        return !isParsing;
+                        String preMdTxt = "";
+                        if(preEditMementoBean != null && preEditMementoBean.getMdDocTxt().isPresent())
+                            preMdTxt = preEditMementoBean.getMdDocTxt().get();
+                        return !charSequence.toString().equals(preMdTxt);
                     }
                 })
                 .map(new Function<CharSequence, String>() {
