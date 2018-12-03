@@ -6,12 +6,15 @@ import com.google.common.base.Optional;
 
 import org.reactivestreams.Subscription;
 
+import java.util.List;
+
 import ahtewlg7.utimer.entity.AUtimerEntity;
 import ahtewlg7.utimer.entity.gtd.ShortHandEntity;
 import ahtewlg7.utimer.entity.md.EditElement;
 import ahtewlg7.utimer.gtd.GtdShortHandEditAction;
 import ahtewlg7.utimer.view.md.MdEditText;
 import io.reactivex.Flowable;
+import io.reactivex.Observable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
@@ -67,7 +70,7 @@ public class ShorthandEditMvpP extends AUtimerEditMvpP<ShortHandEntity> {
         }
 
         @Override
-        public Flowable<EditElement> toParseRaw(@NonNull String rawTxt) {
+        public Observable<List<EditElement>> toParseRaw(@NonNull String rawTxt) {
             return shortHandEditAction.toParse(rawTxt);
         }
 

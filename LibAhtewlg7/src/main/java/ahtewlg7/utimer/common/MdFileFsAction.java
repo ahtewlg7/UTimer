@@ -51,8 +51,8 @@ public class MdFileFsAction
             public Publisher<EditElement> apply(Optional<String> stringOptional) throws Exception {
                 if(!stringOptional.isPresent())
                     throw new MdContextException(MdContextErrCode.ERR_CONTEXT_NULL);
-//                return myBypass.markdownToSpannableFlowable(stringOptional.get(), MdFileFsAction.this);
-                return myBypass.markdownToSpannableFlowable(stringOptional.get());//todo
+//                return myBypass.markdownToSpannable(stringOptional.get(), MdFileFsAction.this);
+                return myBypass.markdownTospannableRx(stringOptional.get());//todo
             }
         });
     }

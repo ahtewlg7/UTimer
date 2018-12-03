@@ -17,6 +17,7 @@ import ahtewlg7.utimer.exception.UtimerEditException;
 import ahtewlg7.utimer.md.MyBypass;
 import ahtewlg7.utimer.util.FileIOAction;
 import io.reactivex.Flowable;
+import io.reactivex.Observable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
@@ -83,8 +84,8 @@ public class GtdShortHandEditAction extends AEditAction{
         return result;
     }
 
-    public Flowable<List<EditElement>> toParse(String rawTxt){
-        return Flowable.just(myBypass.markdownToSpannableFlowable(rawTxt));
+    public Observable<List<EditElement>> toParse(String rawTxt){
+        return Observable.just(myBypass.toParseMd(rawTxt));
     }
 
     public boolean ifValid(){
