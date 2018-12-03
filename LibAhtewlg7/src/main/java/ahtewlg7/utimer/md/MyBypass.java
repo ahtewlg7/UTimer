@@ -16,6 +16,9 @@ import android.util.Patterns;
 import android.view.View;
 
 import com.blankj.utilcode.util.Utils;
+import com.google.common.collect.Lists;
+
+import java.util.List;
 
 import ahtewlg7.utimer.entity.md.EditElement;
 import ahtewlg7.utimer.util.Logcat;
@@ -25,7 +28,6 @@ import in.uncod.android.bypass.Document;
 import in.uncod.android.bypass.Element;
 import in.uncod.android.bypass.ReverseSpannableStringBuilder;
 import in.uncod.android.bypass.style.HorizontalLineSpan;
-import io.reactivex.Flowable;
 
 /**
  * Created by lw on 2016/6/2.
@@ -47,22 +49,22 @@ public class MyBypass extends Bypass{
         this.spanClickListener = spanClickListener;
     }
 
-    public Flowable<EditElement> markdownToSpannableFlowable(String rawTxt) {
+    public List<EditElement> markdownToSpannableFlowable(String rawTxt) {
         return markdownToSpannableFlowable(rawTxt ,null);
     }
 
-    public Flowable<EditElement> markdownToSpannableFlowable(String rawTxt, final ImageGetter imageGetter) {
+    public List<EditElement> markdownToSpannableFlowable(String rawTxt, final ImageGetter imageGetter) {
         Document document = processMarkdown(rawTxt);
-
         int size = document.getElementCount();
-        EditElement[] mdElements = new EditElement[size];
+        List<EditElement> mdElements = Lists.newArrayList();
 
         for (int i = 0; i < size; i++) {
             CharSequence spans = recurseElement(document.getElement(i), i, size, imageGetter);
-            mdElements[i] = new EditElement(document.getElement(i).getText());
-            mdElements[i].setMdCharSequence(spans);
+            EditElement element = new EditElement(document.getElement(i).getText());
+            element.setMdCharSequence(spans);
+            mdElements.add(element);
         }
-        return Flowable.fromArray(mdElements);
+        return mdElements;
     }
 
     protected CharSequence recurseElement(Element element, int indexWithinParent, int numberOfSiblings,

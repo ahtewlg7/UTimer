@@ -8,6 +8,7 @@ import com.google.common.io.Files;
 import org.reactivestreams.Publisher;
 
 import java.io.File;
+import java.util.List;
 
 import ahtewlg7.utimer.entity.AUtimerEntity;
 import ahtewlg7.utimer.entity.gtd.ShortHandEntity;
@@ -82,8 +83,8 @@ public class GtdShortHandEditAction extends AEditAction{
         return result;
     }
 
-    public Flowable<EditElement> toParse(String rawTxt){
-        return myBypass.markdownToSpannableFlowable(rawTxt);
+    public Flowable<List<EditElement>> toParse(String rawTxt){
+        return Flowable.just(myBypass.markdownToSpannableFlowable(rawTxt));
     }
 
     public boolean ifValid(){
