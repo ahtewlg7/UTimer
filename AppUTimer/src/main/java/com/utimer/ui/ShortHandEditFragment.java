@@ -10,7 +10,6 @@ import android.view.View;
 
 import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.google.common.base.Optional;
 import com.trello.rxlifecycle2.LifecycleProvider;
 import com.utimer.R;
 
@@ -24,7 +23,6 @@ import ahtewlg7.utimer.mvp.ShorthandEditMvpP;
 import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MyRInfo;
 import ahtewlg7.utimer.view.EditLinerRecyclerView;
-import ahtewlg7.utimer.view.md.MdEditText;
 import butterknife.BindView;
 import io.reactivex.Observable;
 
@@ -127,7 +125,7 @@ public class ShortHandEditFragment extends AEditFragment implements ShorthandEdi
     @Override
     public void onItemChildClick(BaseQuickAdapter adapter, View view,final int position) {
         Logcat.i(TAG,"onItemChildClick position = " + position + ",preEditPosition = " + preEditPosition);
-        if(preEditPosition != position){
+        /*if(preEditPosition != position){
             Optional<EditViewBean> editViewBeanOptional = onEditViewLock(preEditPosition);
             if(editViewBeanOptional.isPresent()){
                 editViewBeanOptional.get().setEditing(false);
@@ -140,7 +138,7 @@ public class ShortHandEditFragment extends AEditFragment implements ShorthandEdi
             onEditViewLock(editViewBean);
             editViewPublishSubject.onNext(editViewBean);
             preEditPosition = position;
-        }
+        }*/
     }
     /**********************************************IShorthandEditMvpV**********************************************/
     @Override
