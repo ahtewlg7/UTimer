@@ -52,7 +52,7 @@ public class MdFileFsAction
                 if(!stringOptional.isPresent())
                     throw new MdContextException(MdContextErrCode.ERR_CONTEXT_NULL);
 //                return myBypass.markdownToSpannable(stringOptional.get(), MdFileFsAction.this);
-                return myBypass.markdownTospannableRx(stringOptional.get());//todo
+                return Flowable.fromIterable(myBypass.toParseMd(stringOptional.get()));//todo
             }
         });
     }

@@ -30,5 +30,5 @@
     <string name="add">add</string>
 
 
-    <string name="entity_invalid">the entity is not valid</string>
+    <string name="entity_invalid">the env is not ready , so pop it</string>
 </resources>

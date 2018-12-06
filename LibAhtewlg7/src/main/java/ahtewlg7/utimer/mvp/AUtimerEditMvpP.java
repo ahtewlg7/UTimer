@@ -4,6 +4,7 @@ package ahtewlg7.utimer.mvp;
 import android.support.annotation.NonNull;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.Lists;
 import com.trello.rxlifecycle2.android.FragmentEvent;
 import com.trello.rxlifecycle2.components.support.RxFragment;
 
@@ -22,11 +23,11 @@ import ahtewlg7.utimer.util.MySafeSubscriber;
 import ahtewlg7.utimer.util.MySimpleObserver;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
 
 /**
  * Created by lw on 2018/10/20.
@@ -34,12 +35,15 @@ import io.reactivex.functions.Function;
 public abstract class AUtimerEditMvpP<T extends AUtimerEntity> {
     public static final String TAG = AUtimerEditMvpP.class.getSimpleName();
 
-    protected abstract IUtimerEditMvpM initEditMvpM(AUtimerEntity utimerEntity);
+    protected abstract IUtimerEditMvpM getEditMvpM(AUtimerEntity utimerEntity);
 
     protected Disposable loadDisposable;
     protected Disposable insertDisplose;
     protected Disposable modifyDispose;
+
     protected AUtimerEntity utimerEntity;
+    protected List<EditElement> editElementList;
+
     protected IUtimerEditMvpV editMvpV;
     protected IUtimerEditMvpM editMvpM;
     protected EditMementoOriginator mdMementoOriginator;
@@ -48,15 +52,19 @@ public abstract class AUtimerEditMvpP<T extends AUtimerEntity> {
     public AUtimerEditMvpP(AUtimerEntity utimerEntity , IUtimerEditMvpV editMvpV) {
         this.utimerEntity   = utimerEntity;
         this.editMvpV       = editMvpV;
-        editMvpM            = initEditMvpM(utimerEntity);
+        editMvpM            = getEditMvpM(utimerEntity);
     }
 
     public void toLoadTxt(){
         if(utimerEntity.getAttachFile() == null || !utimerEntity.getAttachFile().ifValid()){
             Logcat.i(TAG,"toLoadTxt : attachFile is not valid , so cancel");
-            if(mdMementoCaretaker == null)
-                initMemento();
-            editMvpV.onLoadEnd(mdMementoOriginator.getMdElementList());
+            editElementList = Lists.newArrayList();
+            editElementList.add(new EditElement(""));
+            editMvpV.onLoadEnd(editElementList);
+
+            /*if(mdMementoCaretaker == null)
+                initMemento();*/
+//            editMvpV.onLoadEnd(mdMementoOriginator.getMdElementList());
             return;
         }
         if(loadDisposable != null){
@@ -79,8 +87,10 @@ public abstract class AUtimerEditMvpP<T extends AUtimerEntity> {
                     @Override
                     public void onSuccess(List<EditElement> editElements) {
                         Logcat.i(TAG,"toLoadTxt succ");
-                        initMemento(editElements);
-                        editMvpV.onLoadEnd(mdMementoOriginator.getMdElementList());
+//                        initMemento(editElements);
+//                        editMvpV.onLoadEnd(mdMementoOriginator.getMdElementList());
+                        editElementList = editElements;
+                        editMvpV.onLoadEnd(editElements);
                     }
 
                     @Override
@@ -97,24 +107,33 @@ public abstract class AUtimerEditMvpP<T extends AUtimerEntity> {
     public void toModify(int index, String rawTxt){
         toEdit(index, ElementEditType.MODIFY, rawTxt);
     }
-    public void toModify(int index, Observable<String> rawTxtRx){
-        toEdit(index, ElementEditType.MODIFY, rawTxtRx);
+    public void toModify(final int index, Observable<String> rawTxtRx){
+        toEdit(index, ElementEditType.MODIFY, rawTxtRx.filter(new Predicate<String>() {
+            @Override
+            public boolean test(String s) throws Exception {
+                return !s.equals(editElementList.get(index).getMdCharSequence().toString());
+            }
+        }));
     }
 
     protected void toEdit(final int index, final ElementEditType editType, String rawTxt){
-        toEdit(index,editType,Observable.just(rawTxt));
+//        CharSequence parsedTxt = editMvpM.toParseRaw(rawTxt);
     }
 
     protected void toEdit(final int index, final ElementEditType editType,
                           @NonNull Observable<String> rawTxtRx){
-        rawTxtRx.flatMap(new Function<String, ObservableSource<List<EditElement>>>() {
+        rawTxtRx.map(new Function<String, EditElement>() {
                     @Override
-                    public ObservableSource<List<EditElement>> apply(String s) throws Exception {
-                        return editMvpM.toParseRaw(s);
+                    public EditElement apply(String s) throws Exception {
+                        Logcat.i(TAG,"toEdit rawText : " + s);
+                        EditElement element = new EditElement(s);
+                        element.setMdCharSequence(editMvpM.toParseRaw(s));
+                        return element;
                     }
-                }).compose(((RxFragment)editMvpV.getRxLifeCycleBindView()).<List<EditElement>>bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+                })
+                .compose(((RxFragment)editMvpV.getRxLifeCycleBindView()).<EditElement>bindUntilEvent(FragmentEvent.DESTROY_VIEW))
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new MySimpleObserver<List<EditElement>>(){
+                .subscribe(new MySimpleObserver<EditElement>(){
                     @Override
                     public void onSubscribe(Disposable d) {
                         super.onSubscribe(d);
@@ -126,13 +145,15 @@ public abstract class AUtimerEditMvpP<T extends AUtimerEntity> {
                     }
 
                     @Override
-                    public void onNext(List<EditElement> editElementList) {
-                        super.onNext(editElementList);
-                        Optional<EditMementoBean>  mementoOptional = mdMementoOriginator.createMemento(index, editType, editElementList);
+                    public void onNext(EditElement element) {
+                        super.onNext(element);
+                        editElementList.set(index, element);
+                        editMvpV.onParseSucc(index, element);
+                        /*Optional<EditMementoBean>  mementoOptional = mdMementoOriginator.createMemento(index, editType, parseedTxt);
                         if(mementoOptional.isPresent()) {
                             mdMementoCaretaker.saveMemento(mementoOptional.get());
                             editMvpV.onParseSucc(mementoOptional.get());
-                        }
+                        }*/
                     }
 
                     @Override
@@ -156,12 +177,12 @@ public abstract class AUtimerEditMvpP<T extends AUtimerEntity> {
             return;
         }
 
-        List<EditElement> delList = mdMementoOriginator.getMdElementList().subList(fromIndex, toIndex);
+        /*List<EditElement> delList = mdMementoOriginator.getMdElementList().subList(fromIndex, toIndex);
         Optional<EditMementoBean>  mementoOptional = mdMementoOriginator.createMemento(fromIndex, ElementEditType.DELETE, delList);
         if(mementoOptional.isPresent()) {
             mdMementoCaretaker.saveMemento(mementoOptional.get());
             editMvpV.onParseSucc(mementoOptional.get());
-        }
+        }*/
     }
 
     public boolean toRedo(){
@@ -172,7 +193,7 @@ public abstract class AUtimerEditMvpP<T extends AUtimerEntity> {
         return mdMementoCaretaker != null && restoreEdit(mdMementoCaretaker.popNextUndo());
     }
 
-    public void finishEdit(){
+    public void toFinishEdit(){
         if(mdMementoOriginator != null && mdMementoOriginator.getMdElementList().size() > 0) {
             editMvpM.toSave(Flowable.fromIterable(mdMementoOriginator.getMdElementList()))
                     .compose(((RxFragment) editMvpV.getRxLifeCycleBindView()).<Boolean>bindUntilEvent(FragmentEvent.DETACH))
@@ -233,9 +254,18 @@ public abstract class AUtimerEditMvpP<T extends AUtimerEntity> {
         }
         return false;
     }
+
+    protected Optional<EditElement> getEditElement(int index){
+        EditElement editElement = null;
+        try{
+            if(editElementList != null)
+                editElement = editElementList.get(index);
+        }catch (Exception e){}
+        return Optional.fromNullable(editElement);
+    }
     public interface IUtimerEditMvpM{
         public Flowable<EditElement> toLoadTxt();
-        public Observable<List<EditElement>> toParseRaw(@NonNull String rawTxt);
+        public CharSequence toParseRaw(@NonNull String rawTxt);
         public Flowable<Boolean> toSave(@NonNull Flowable<EditElement> elementObservable);
     }
 
@@ -246,7 +276,7 @@ public abstract class AUtimerEditMvpP<T extends AUtimerEntity> {
 
         public void onParseStart();
         public void onParseErr(Throwable e);
-        public void onParseSucc(EditMementoBean MdMementoBean);
+        public void onParseSucc(int index, EditElement editElement);
         public void onParseEnd();
 
         public void onRestoreEnd(EditMementoBean MdMementoBean);

@@ -10,6 +10,7 @@ import android.view.View;
 
 import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.google.common.base.Optional;
 import com.trello.rxlifecycle2.LifecycleProvider;
 import com.utimer.R;
 
@@ -19,12 +20,13 @@ import ahtewlg7.utimer.entity.gtd.ShortHandEntity;
 import ahtewlg7.utimer.entity.md.EditElement;
 import ahtewlg7.utimer.entity.md.EditMementoBean;
 import ahtewlg7.utimer.factory.ShortHandFactory;
+import ahtewlg7.utimer.mvp.AUtimerEditMvpP;
 import ahtewlg7.utimer.mvp.ShorthandEditMvpP;
 import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MyRInfo;
 import ahtewlg7.utimer.view.EditLinerRecyclerView;
+import ahtewlg7.utimer.view.md.MdEditText;
 import butterknife.BindView;
-import io.reactivex.Observable;
 
 public class ShortHandEditFragment extends AEditFragment implements ShorthandEditMvpP.IShorthandEditMvpV,
         BaseQuickAdapter.OnItemChildClickListener {
@@ -58,18 +60,15 @@ public class ShortHandEditFragment extends AEditFragment implements ShorthandEdi
     }
 
     @Override
-    public void onViewCreated(View inflateView) {
-        super.onViewCreated(inflateView);
-
+    protected boolean ifEnvOk() {
         shorthandEntity = getShorthandEntity();
+        return shorthandEntity != null && shorthandEntity.ifValid();
+    }
 
-        if(shorthandEntity == null || !shorthandEntity.ifValid()){
-            Logcat.i(TAG,"shorthandEntity no valid");
-            ToastUtils.showShort(R.string.entity_invalid);
-            pop();
-            return ;
-        }
-        initByArgument();
+    @NonNull
+    @Override
+    protected AUtimerEditMvpP getEditMvpP() {
+        return new ShorthandEditMvpP(shorthandEntity, this);
     }
 
     @Override
@@ -99,11 +98,9 @@ public class ShortHandEditFragment extends AEditFragment implements ShorthandEdi
         toolbar.setTitle(getTitle());
     }
 
-
     @Override
-    protected void onEditMode(int index, Observable<String> rawTxtRx) {
-        Logcat.i(TAG,"onEditMode " + index);
-        editMvpP.toModify(index, rawTxtRx);
+    protected void onEditEnd() {
+        editMvpP.toFinishEdit();
     }
 
     @Override
@@ -125,20 +122,26 @@ public class ShortHandEditFragment extends AEditFragment implements ShorthandEdi
     @Override
     public void onItemChildClick(BaseQuickAdapter adapter, View view,final int position) {
         Logcat.i(TAG,"onItemChildClick position = " + position + ",preEditPosition = " + preEditPosition);
-        /*if(preEditPosition != position){
-            Optional<EditViewBean> editViewBeanOptional = onEditViewLock(preEditPosition);
+        if(preEditPosition != position){
+            Optional<EditViewBean> editViewBeanOptional = getEditViewBean(preEditPosition);
             if(editViewBeanOptional.isPresent()){
                 editViewBeanOptional.get().setEditing(false);
-                onEditViewLock(editViewBeanOptional.get());
+                onEditViewLockChange(editViewBeanOptional.get());
             }
 
-            MdEditText currEditText   = (MdEditText) adapter.getViewByPosition(position, R.id.view_md_edit_tv);
-            EditViewBean editViewBean = new EditViewBean(position, currEditText);
-            editViewBean.setEditing(true);
-            onEditViewLock(editViewBean);
-            editViewPublishSubject.onNext(editViewBean);
+            EditViewBean currEditViewBean = null;
+            if(!getEditViewBean(position).isPresent()){
+                MdEditText currEditText = (MdEditText) adapter.getViewByPosition(position, R.id.view_md_edit_tv);
+                currEditViewBean = new EditViewBean(position, currEditText);
+                editViewMap.put(position, currEditViewBean);
+            }else{
+                currEditViewBean = getEditViewBean(position).get();
+            }
+            currEditViewBean.setEditing(true);
+            onEditViewLockChange(currEditViewBean);
+            editViewPublishSubject.onNext(currEditViewBean);
             preEditPosition = position;
-        }*/
+        }
     }
     /**********************************************IShorthandEditMvpV**********************************************/
     @Override
@@ -158,6 +161,7 @@ public class ShortHandEditFragment extends AEditFragment implements ShorthandEdi
                 this ,null, null);
     }
 
+    /**********************************************IShorthandEditMvpV**********************************************/
     @Override
     public void onParseStart() {
         ToastUtils.showShort("to start parse");
@@ -169,10 +173,9 @@ public class ShortHandEditFragment extends AEditFragment implements ShorthandEdi
     }
 
     @Override
-    public void onParseSucc(EditMementoBean mdMementoBean) {
-        ToastUtils.showShort("parse end");
-        preEditMementoBean = mdMementoBean;
-        editReCyclerView.resetData(mdMementoBean.getIndex(), mdMementoBean.getElementList());
+    public void onParseSucc(int index, EditElement editElement) {
+        ToastUtils.showShort("parse succ");
+        editReCyclerView.resetData(index, editElement);
     }
 
     @Override
@@ -210,10 +213,7 @@ public class ShortHandEditFragment extends AEditFragment implements ShorthandEdi
         return this;
     }
 
-    private void initByArgument() {
-        editMvpP   = new ShorthandEditMvpP(shorthandEntity, this);
-        editMvpP.toLoadTxt();
-    }
+
     private ShortHandEntity getShorthandEntity(){
         return (ShortHandEntity) getArguments().getSerializable(KEY_SHORTHAND);
     }

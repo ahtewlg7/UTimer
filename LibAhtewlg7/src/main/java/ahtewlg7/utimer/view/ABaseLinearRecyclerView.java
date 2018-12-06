@@ -35,6 +35,7 @@ public abstract class ABaseLinearRecyclerView<T> extends RecyclerView{
                               OnItemSwipeListener itemSwipeListener,
                               OnItemDragListener itemDragListener);
     public abstract void resetData(List<T> entityList);
+    public abstract void resetData(int index, T entity);
     public abstract void resetData(int index, List<T> entityList);
 
     public ABaseLinearRecyclerView(Context context) {

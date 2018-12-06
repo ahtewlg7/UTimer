@@ -72,6 +72,12 @@ public class EditLinerRecyclerView extends ABaseLinearRecyclerView<EditElement> 
     }
 
     @Override
+    public void resetData(int index, EditElement entity) {
+        if(recyclerViewAdapter != null)
+            recyclerViewAdapter.setData(index, entity);
+    }
+
+    @Override
     public void resetData(int index, List<EditElement> entityList) {
         if(recyclerViewAdapter != null){
             recyclerViewAdapter.remove(index);

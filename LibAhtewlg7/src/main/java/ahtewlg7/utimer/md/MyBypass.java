@@ -28,7 +28,6 @@ import in.uncod.android.bypass.Document;
 import in.uncod.android.bypass.Element;
 import in.uncod.android.bypass.ReverseSpannableStringBuilder;
 import in.uncod.android.bypass.style.HorizontalLineSpan;
-import io.reactivex.Flowable;
 
 /**
  * Created by lw on 2016/6/2.
@@ -50,9 +49,6 @@ public class MyBypass extends Bypass{
         this.spanClickListener = spanClickListener;
     }
 
-    public Flowable<EditElement> markdownTospannableRx(String rawTxt){
-        return Flowable.fromIterable(toParseMd(rawTxt));
-    }
     public List<EditElement> toParseMd(String rawTxt) {
         return toParseMd(rawTxt ,null);
     }

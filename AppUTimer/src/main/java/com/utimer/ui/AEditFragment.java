@@ -1,22 +1,24 @@
 package com.utimer.ui;
 
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.EditText;
 
+import com.blankj.utilcode.util.ToastUtils;
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
 import com.jakewharton.rxbinding2.widget.RxTextView;
+import com.utimer.R;
 
-import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import ahtewlg7.utimer.entity.md.EditMementoBean;
+import ahtewlg7.utimer.mvp.AUtimerEditMvpP;
 import ahtewlg7.utimer.util.Logcat;
 import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
-import io.reactivex.functions.Predicate;
 import io.reactivex.subjects.PublishSubject;
 
 /**
@@ -25,20 +27,39 @@ import io.reactivex.subjects.PublishSubject;
 public abstract class AEditFragment extends AToolbarBkFragment{
     public static final String TAG = AEditFragment.class.getSimpleName();
 
-    protected abstract void onEditMode(int index, Observable<String> rawTxtRx);
+    protected abstract void onEditEnd();
+    protected abstract @NonNull AUtimerEditMvpP getEditMvpP();
+    protected abstract boolean ifEnvOk();
 
     protected int preEditPosition = -1;
-    protected EditMementoBean preEditMementoBean;
+
+    protected AUtimerEditMvpP editMvpP;
     protected Disposable editViewDisposable;
-    protected HashMap<Integer, EditViewBean> editViewMap;
+    protected Map<Integer,EditViewBean> editViewMap;
     protected PublishSubject<EditViewBean> editViewPublishSubject;
 
     @Override
     public void onViewCreated(View inflateView) {
         super.onViewCreated(inflateView);
+
+        if(!ifEnvOk()){
+            Logcat.i(TAG,"the env is not ready , so pop it");
+            ToastUtils.showShort(R.string.entity_invalid);
+            pop();
+            return;
+        }
         editViewPublishSubject = PublishSubject.create();
         editViewMap            = Maps.newHashMap();
+        editMvpP               = getEditMvpP();
+
+        editMvpP.toLoadTxt();
         createEditViewListen();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        onEditEnd();
     }
 
     @Override
@@ -51,23 +72,13 @@ public abstract class AEditFragment extends AToolbarBkFragment{
         editViewDisposable = editViewPublishSubject.subscribe(new Consumer<EditViewBean>() {
             @Override
             public void accept(EditViewBean editViewBean) throws Exception {
-                editViewMap.put(editViewBean.getIndex(), editViewBean);
-                onEditMode(editViewBean.getIndex(), getTextWatcher(editViewBean.getEditTextView()));
+                editMvpP.toModify(editViewBean.getIndex(), getTextWatcher(editViewBean.getEditTextView()));
             }
         });
     }
 
     protected Observable<String> getTextWatcher(EditText editText){
-        return RxTextView.textChanges(editText).throttleLast(10, TimeUnit.SECONDS)
-                .filter(new Predicate<CharSequence>() {
-                    @Override
-                    public boolean test(CharSequence charSequence) throws Exception {
-                        String preMdTxt = "";
-                        if(preEditMementoBean != null && preEditMementoBean.getMdDocTxt().isPresent())
-                            preMdTxt = preEditMementoBean.getMdDocTxt().get();
-                        return !charSequence.toString().equals(preMdTxt);
-                    }
-                })
+        return RxTextView.textChanges(editText).debounce(10, TimeUnit.SECONDS)
                 .map(new Function<CharSequence, String>() {
                     @Override
                     public String apply(CharSequence charSequence) throws Exception {
@@ -82,15 +93,15 @@ public abstract class AEditFragment extends AToolbarBkFragment{
         editViewMap.clear();
         editViewDisposable = null;
     }
-    protected void onEditViewLock(EditViewBean editViewBean){
+    protected void onEditViewLockChange(EditViewBean editViewBean){
         boolean isEditing = editViewBean.isEditing();
-        Logcat.i(TAG,"onEditViewLock isEditing = " + isEditing);
+        Logcat.i(TAG,"onEditViewLockChange isEditing = " + isEditing);
         editViewBean.getEditTextView().setFocusable(isEditing);
         editViewBean.getEditTextView().setFocusableInTouchMode(isEditing);
     }
-    protected Optional<EditViewBean> onEditViewLock(int position){
+    protected Optional<EditViewBean> getEditViewBean(int position){
         if(position < 0 || position >= editViewMap.size()) {
-            Logcat.i(TAG,"onEditViewLock : position invalid");
+            Logcat.i(TAG,"onEditViewLockChange : position invalid");
             return Optional.absent();
         }
         return Optional.fromNullable(editViewMap.get(position));

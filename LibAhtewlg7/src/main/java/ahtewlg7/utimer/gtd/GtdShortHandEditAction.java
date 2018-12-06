@@ -8,7 +8,6 @@ import com.google.common.io.Files;
 import org.reactivestreams.Publisher;
 
 import java.io.File;
-import java.util.List;
 
 import ahtewlg7.utimer.entity.AUtimerEntity;
 import ahtewlg7.utimer.entity.gtd.ShortHandEntity;
@@ -17,7 +16,6 @@ import ahtewlg7.utimer.exception.UtimerEditException;
 import ahtewlg7.utimer.md.MyBypass;
 import ahtewlg7.utimer.util.FileIOAction;
 import io.reactivex.Flowable;
-import io.reactivex.Observable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
@@ -84,8 +82,8 @@ public class GtdShortHandEditAction extends AEditAction{
         return result;
     }
 
-    public Observable<List<EditElement>> toParse(String rawTxt){
-        return Observable.just(myBypass.toParseMd(rawTxt));
+    public CharSequence toParse(String rawTxt){
+        return myBypass.markdownToSpannable(rawTxt);
     }
 
     public boolean ifValid(){

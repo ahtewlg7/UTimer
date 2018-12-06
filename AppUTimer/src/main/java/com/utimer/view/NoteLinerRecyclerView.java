@@ -71,6 +71,12 @@ public class NoteLinerRecyclerView extends ABaseLinearRecyclerView<NoteEntity> {
 
     }
 
+    @Override
+    public void resetData(int index, NoteEntity entity) {
+        if(recyclerViewAdapter != null)
+            recyclerViewAdapter.setData(index, entity);
+    }
+
     public class NoteLinearItemAdapter extends BaseItemAdapter<NoteEntity>{
         public NoteLinearItemAdapter(Context context, List<NoteEntity> dataList){
             super(context, dataList);
