@@ -45,15 +45,15 @@ public class ShortHandEntity extends AUtimerEntity<ShortHandBuilder> implements 
     }
 
     @Override
-    public void ensureAttachFileExist() {
+    public boolean ensureAttachFileExist() {
         if(attachFile == null){
             String fileName = !TextUtils.isEmpty(getTitle()) ? getTitle() : new DateTimeAction().toFormatNow().toString();
             String filePath = new FileSystemAction().getInboxGtdAbsPath();
             attachFile = new MdAttachFile(filePath, fileName);
         }
-        if(!attachFile.ifValid())
-            attachFile.createOrExist();
-
+        boolean result = attachFile.createOrExist();
+        Logcat.i(TAG,"ensureAttachFileExist result = " + result);
+        return result;
     }
 
     public void appendDetail(String append){

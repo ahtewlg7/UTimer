@@ -76,14 +76,13 @@ public class ShorthandEditMvpP extends AUtimerEditMvpP<ShortHandEntity> {
             return elementObservable.doOnSubscribe(new Consumer<Subscription>() {
                         @Override
                         public void accept(Subscription subscription) throws Exception {
-                            if(utimerEntity != null)
-                                utimerEntity.ensureAttachFileExist();
+
                         }
                     })
                     .map(new Function<EditElement, Boolean>() {
                         @Override
                         public Boolean apply(EditElement editElement) throws Exception {
-                            return shortHandEditAction.toSave(editElement.getRawText());
+                            return shortHandEditAction.toSave(editElement.getRawText().trim());
                         }
                     }).subscribeOn(Schedulers.io());
         }

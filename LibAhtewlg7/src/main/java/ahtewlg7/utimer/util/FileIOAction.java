@@ -25,7 +25,7 @@ public class FileIOAction {
     }
     public FileIOAction(AAttachFile hostFile){
         if(hostFile.ifValid())
-        this.hostFile = hostFile.getFile();
+            this.hostFile = hostFile.getFile();
     }
 
     public FileIOAction(String filePath){

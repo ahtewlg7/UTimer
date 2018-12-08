@@ -43,8 +43,8 @@ public class TipsEntity extends AUtimerEntity<TipsBuilder> {
     }
 
     @Override
-    public void ensureAttachFileExist() {
-
+    public boolean ensureAttachFileExist() {
+        return false;
     }
 
     private AGtdEntity attachGtdEntity;

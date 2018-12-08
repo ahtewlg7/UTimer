@@ -19,7 +19,7 @@ public abstract class AUtimerEntity<T extends AUtimerBuilder> implements IMerger
     @NonNull
     public abstract GtdType getGtdType();
     public abstract Optional<String> getDetail();
-    public abstract void ensureAttachFileExist();
+    public abstract boolean ensureAttachFileExist();
     protected abstract void initByAttachFile(AAttachFile attachFile);
 
     protected int accessTimes;

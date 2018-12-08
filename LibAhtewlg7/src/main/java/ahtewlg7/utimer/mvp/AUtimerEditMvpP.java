@@ -2,6 +2,7 @@ package ahtewlg7.utimer.mvp;
 
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
@@ -36,6 +37,8 @@ public abstract class AUtimerEditMvpP<T extends AUtimerEntity> {
     public static final String TAG = AUtimerEditMvpP.class.getSimpleName();
 
     protected abstract IUtimerEditMvpM getEditMvpM(AUtimerEntity utimerEntity);
+
+    protected boolean isChangeSaved;
 
     protected Disposable loadDisposable;
     protected Disposable insertDisplose;
@@ -147,6 +150,7 @@ public abstract class AUtimerEditMvpP<T extends AUtimerEntity> {
                     @Override
                     public void onNext(EditElement element) {
                         super.onNext(element);
+                        isChangeSaved = false;
                         editElementList.set(index, element);
                         editMvpV.onParseSucc(index, element);
                         /*Optional<EditMementoBean>  mementoOptional = mdMementoOriginator.createMemento(index, editType, parseedTxt);
@@ -194,30 +198,35 @@ public abstract class AUtimerEditMvpP<T extends AUtimerEntity> {
     }
 
     public void toFinishEdit(){
-        if(mdMementoOriginator != null && mdMementoOriginator.getMdElementList().size() > 0) {
-            editMvpM.toSave(Flowable.fromIterable(mdMementoOriginator.getMdElementList()))
-                    .compose(((RxFragment) editMvpV.getRxLifeCycleBindView()).<Boolean>bindUntilEvent(FragmentEvent.DETACH))
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new MySafeSubscriber<Boolean>() {
-                        @Override
-                        public void onSubscribe(Subscription s) {
-                            super.onSubscribe(s);
-                            editMvpV.onSaveStart();
-                        }
-
-                        @Override
-                        public void onError(Throwable t) {
-                            super.onError(t);
-                            editMvpV.onSaveErr(t);
-                        }
-
-                        @Override
-                        public void onComplete() {
-                            super.onComplete();
-                            editMvpV.onSaveEnd();
-                        }
-                    });
+        if(isChangeSaved || editElementList == null || editElementList.size() == 0
+                || (editElementList.size() == 1 && TextUtils.isEmpty(editElementList.get(0).getRawText()))){
+            Logcat.i(TAG,"toFinishEdit cancel");
+            return;
         }
+        Logcat.i(TAG,"toFinishEdit");
+        editMvpM.toSave(Flowable.fromIterable(editElementList))
+                .compose(((RxFragment) editMvpV.getRxLifeCycleBindView()).<Boolean>bindUntilEvent(FragmentEvent.DESTROY))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new MySafeSubscriber<Boolean>() {
+                    @Override
+                    public void onSubscribe(Subscription s) {
+                        super.onSubscribe(s);
+                        editMvpV.onSaveStart();
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+                        super.onError(t);
+                        editMvpV.onSaveErr(t);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        super.onComplete();
+                        editMvpV.onSaveEnd();
+                        isChangeSaved = true;
+                    }
+                });
     }
 
 

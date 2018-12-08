@@ -13,6 +13,7 @@ public abstract class AEditAction {
     public static final String TAG = AEditAction.class.getSimpleName();
 
     public abstract boolean ifReady();
+    public abstract boolean toSave(String rawTxt);
     public abstract Flowable<Optional<EditElement>> toLoad();
 
     protected AUtimerEntity utimerEntity;

@@ -99,11 +99,6 @@ public class ShortHandEditFragment extends AEditFragment implements ShorthandEdi
     }
 
     @Override
-    protected void onEditEnd() {
-        editMvpP.toFinishEdit();
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Logcat.i(TAG,"onOptionsItemSelected " + item.getTitle());
         boolean result = false;
@@ -182,12 +177,12 @@ public class ShortHandEditFragment extends AEditFragment implements ShorthandEdi
     public void onParseEnd() {
 
     }
-
+    /**********************************************IShorthandEditMvpV**********************************************/
     @Override
     public void onRestoreEnd(EditMementoBean MdMementoBean) {
 
     }
-
+    /**********************************************IShorthandEditMvpV**********************************************/
     @Override
     public void onSaveStart() {
 
@@ -200,9 +195,8 @@ public class ShortHandEditFragment extends AEditFragment implements ShorthandEdi
 
     @Override
     public void onSaveEnd() {
-
     }
-
+    /**********************************************IShorthandEditMvpV**********************************************/
     @Override
     public void onActionCancel() {
 

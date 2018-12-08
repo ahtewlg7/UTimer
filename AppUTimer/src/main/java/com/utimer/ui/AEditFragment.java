@@ -27,7 +27,6 @@ import io.reactivex.subjects.PublishSubject;
 public abstract class AEditFragment extends AToolbarBkFragment{
     public static final String TAG = AEditFragment.class.getSimpleName();
 
-    protected abstract void onEditEnd();
     protected abstract @NonNull AUtimerEditMvpP getEditMvpP();
     protected abstract boolean ifEnvOk();
 
@@ -60,6 +59,13 @@ public abstract class AEditFragment extends AToolbarBkFragment{
     public void onStop() {
         super.onStop();
         onEditEnd();
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if(hidden)
+            onEditEnd();
     }
 
     @Override
@@ -105,6 +111,9 @@ public abstract class AEditFragment extends AToolbarBkFragment{
             return Optional.absent();
         }
         return Optional.fromNullable(editViewMap.get(position));
+    }
+    protected void onEditEnd(){
+        editMvpP.toFinishEdit();
     }
 
     class EditViewBean{
