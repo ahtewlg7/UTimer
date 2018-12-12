@@ -4,15 +4,12 @@ import android.support.annotation.NonNull;
 
 import com.google.common.base.Optional;
 
-import org.reactivestreams.Subscription;
-
 import ahtewlg7.utimer.entity.AUtimerEntity;
 import ahtewlg7.utimer.entity.gtd.ShortHandEntity;
 import ahtewlg7.utimer.entity.md.EditElement;
 import ahtewlg7.utimer.gtd.GtdShortHandEditAction;
 import ahtewlg7.utimer.view.md.MdEditText;
 import io.reactivex.Flowable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
@@ -73,16 +70,10 @@ public class ShorthandEditMvpP extends AUtimerEditMvpP<ShortHandEntity> {
 
         @Override
         public Flowable<Boolean> toSave(Flowable<EditElement> elementObservable) {
-            return elementObservable.doOnSubscribe(new Consumer<Subscription>() {
-                        @Override
-                        public void accept(Subscription subscription) throws Exception {
-
-                        }
-                    })
-                    .map(new Function<EditElement, Boolean>() {
+            return elementObservable.map(new Function<EditElement, Boolean>() {
                         @Override
                         public Boolean apply(EditElement editElement) throws Exception {
-                            return shortHandEditAction.toSave(editElement.getRawText().trim());
+                            return shortHandEditAction.toSave(editElement.getRawText().trim(),false);
                         }
                     }).subscribeOn(Schedulers.io());
         }
