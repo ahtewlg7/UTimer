@@ -61,6 +61,12 @@ public class ShorthandRecyclerView extends ABaseSectionRecyclerView<ShorthandSec
         init(context, entityList, null, null);
     }
 
+    @Override
+    public void resetData(List<ShorthandSectionEntity> entityList) {
+        if(itemAdapter != null)
+            itemAdapter.replaceData(entityList);
+    }
+
     public class ShorthandItemAdapter extends BaseSectionAdapter{
 
         public ShorthandItemAdapter(Context context, List<ShorthandSectionEntity> dataList){

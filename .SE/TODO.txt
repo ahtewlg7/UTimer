@@ -1,5 +1,6 @@
 todo:
-    2.a
+    2.b>.简化gtd entity，合并后只剩下note, project, event（inbox为action = 1的project特例)。      todo
+    3.b>.优化gtd 状态机： server      todo
 
 ********************************************************************************
 1.使用NoteEdit Mvp 重构笔记编辑模块逻辑：
@@ -8,15 +9,17 @@ todo:
     c>.noteEdit中不应该混入gtd的逻辑，而只负责note本身      DONE
     d>.EntityDbAction.getNoteEntity : DataBaseException.ERR_DB_ID_EMPTY      DONE
     e>.当rawContext为空或没变化时，不保存相关变量      DONE
+    f>.双击进入编辑模式，双击进入呈现模式      DONE
+    g>.使用备忘录添加ctrl + z回退逻辑      todo
 
 2.重构gtd Recycler MVP逻辑
     a>.EntityDbAction.getGtdEntity : 使用Optional代替DataBaseException.ERR_DB_ID_EMPTY      DONE
-    b>.简化gtd entity，合并后只剩下note, project, action三个实例（inbox为action = 1的project特例；note。
+    b>.简化gtd entity，合并后只剩下note, project, event（inbox为action = 1的project特例)。      todo
 
 3.使用note RecyclerView Mvp重构笔记列表模块逻辑：
     a>.使用mvp重构 note recyclerView逻辑      DONE
     b>.优化ViewPage Fragment tab item height值太大问题      DONE
-    c>.解决note Edit后没有保存到数据库问题 : greendao存储时不需要另开线程      DONE
+    c>.解决note Edit后没有保存到数据库问题 : greenDao存储时不需要另开线程      DONE
     d>.noteFragment使用EventBus接受MdEditorActivity回调的NoteEvent事件      DONE
     e>.按lastAccessTime降序顺序排列      DONE
     f>.优化linearRecyclerView item控件布局      DONE
@@ -25,10 +28,24 @@ todo:
     i>.note entity加入rely id(gtd / otherNote)      todo
     j>.note 点击，进入编辑界面      DONE
 
-4.将note融入GTD事务自动流程      todo
+4.加入GTD事务自动化管理流程      todo
     a>.按需将相应的note变化成Gtd.project
     b>.优化gtd 状态机： server
+    c>.全文分成三种对象：note,project,action。project对象以md文本存储，但是以各种view控件的形式显示并编辑
+    d>.创建action相关逻辑单元      DONE
+    e>.文章中加入5wh2时，自动创建GTD流程，比如加入[@When]      todo
 
-5.优化数据库设计
+5.优化数据库设计      todo
     a>.添加数据库存储变化集：newList, dirtyList, removeList
     b>.添加表唯一ID生成器：KeyGenerator
+    c>.map****ToGdBean生成的对象，ID不匹配，是否能够删除
+
+6.md文本解析和呈现
+    a>.使用element逐行读取，逐段编译，逐段呈现      todo
+    b>.md大文本存储时，应放在service中进行      DONE
+    c>.后台能对剪贴板中的md文档进行解析，并选择相关的窗口显示      todo
+    c>.新建md时，完成textLine与MdElement之间的转换      todo
+
+
+7.全文本搜索引擎：
+    a>.使用lucene实现全文搜索

@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.common.collect.Lists;
 import com.trello.rxlifecycle2.LifecycleProvider;
 import com.utimer.R;
@@ -30,8 +31,10 @@ public class ShortHandListFragment extends AToolbarBkFragment implements ShortHa
     @BindView(R.id.fragment_shorthand_list_recycler_view)
     ShorthandRecyclerView shorthandRecyclerView;
 
-    private List<ShorthandSectionEntity> sectionEntities;
+    private List<ShorthandSectionEntity> sectionEntityList;
+
     private ShortHandListMvpP shortHandListMvpP;
+    private MyClickListener myClickListener;
 
     public static ShortHandListFragment newInstance() {
         Bundle args = new Bundle();
@@ -45,7 +48,10 @@ public class ShortHandListFragment extends AToolbarBkFragment implements ShortHa
     public void onViewCreated(View inflateView) {
         super.onViewCreated(inflateView);
 
-        sectionEntities   = Lists.newArrayList();
+        sectionEntityList = Lists.newArrayList();
+        myClickListener   = new MyClickListener();
+
+        shorthandRecyclerView.init(getContext(), sectionEntityList, myClickListener, null);
         shortHandListMvpP = new ShortHandListMvpP(this);
     }
 
@@ -111,7 +117,7 @@ public class ShortHandListFragment extends AToolbarBkFragment implements ShortHa
 
     @Override
     public void onItemLoad(ShortHandEntity data) {
-        sectionEntities.add(new ShorthandSectionEntity(data));
+        sectionEntityList.add(new ShorthandSectionEntity(data));
     }
 
     @Override
@@ -122,7 +128,7 @@ public class ShortHandListFragment extends AToolbarBkFragment implements ShortHa
     @Override
     public void onItemLoadEnd() {
         Logcat.i(TAG,"onItemLoadEnd");
-        shorthandRecyclerView.init(getContext(), sectionEntities);
+        shorthandRecyclerView.resetData(sectionEntityList);
     }
 
     /**********************************************IShorthandListMvpV**********************************************/
@@ -146,5 +152,14 @@ public class ShortHandListFragment extends AToolbarBkFragment implements ShortHa
     @Override
     public void onDeleteErr(Throwable throwable, ShortHandEntity entity) {
 
+    }
+    /**********************************************IShorthandListMvpV**********************************************/
+
+    class MyClickListener implements BaseQuickAdapter.OnItemClickListener{
+        @Override
+        public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+            if(sectionEntityList.get(position) != null && !sectionEntityList.get(position).isHeader)
+                start(ShortHandEditFragment.newInstance(sectionEntityList.get(position).t));
+        }
     }
 }

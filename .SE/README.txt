@@ -67,3 +67,9 @@ plan action list ---------> next Action ---------> do it
 3.The service of UI is used to :
       to share data with multi-activity;
       to keep working when the UI lifeCycle is over;
+
+4. 需求 :
+      用户故事来驱动迭代开发，而不是技术架构觉得迭代内容
+      做减法：不什么用户都抓,不什么功能都实现
+
+5.

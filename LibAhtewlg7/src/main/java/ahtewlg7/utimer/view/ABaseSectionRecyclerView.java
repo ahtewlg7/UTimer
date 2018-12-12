@@ -30,6 +30,8 @@ public abstract class ABaseSectionRecyclerView<K extends BaseSectionEntity> exte
                               BaseQuickAdapter.OnItemClickListener itemClickListener,
                               BaseQuickAdapter.OnItemChildClickListener itemChildClickListener);
     public abstract void init(Context context, List<K> entityList);
+    public abstract void resetData(List<K> entityList);
+
 
     public ABaseSectionRecyclerView(Context context) {
         super(context);
