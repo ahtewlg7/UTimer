@@ -95,7 +95,7 @@ public class ShortHandListFragment extends AToolbarBkFragment implements ShortHa
         switch (item.getItemId()) {
             case R.id.tool_menu_add:
                 Log.i(TAG, "to create shorthand");
-                showHideFragment(ShortHandEditFragment.newInstance(null));
+                ((MainFragment)getParentFragment()).start(ShortHandEditFragment.newInstance(null));
                 break;
             default:
                 result = super.onOptionsItemSelected(item);

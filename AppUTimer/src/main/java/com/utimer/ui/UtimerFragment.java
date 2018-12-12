@@ -77,7 +77,7 @@ public class UtimerFragment extends AToolbarBkFragment {
         switch (item.getItemId()) {
             case R.id.tool_menu_add:
                 Logcat.i(TAG, "to show shorthand");//just fot test
-                start(ShortHandListFragment.newInstance());
+                ((MainFragment)getParentFragment()).start(ShortHandListFragment.newInstance());
                 break;
             default:
                 result = super.onOptionsItemSelected(item);
