@@ -47,7 +47,7 @@ public class ShortHandEditFragment extends AEditFragment implements ShorthandEdi
         if(entity != null)
             args.putSerializable(KEY_SHORTHAND, entity);
         else
-            args.putSerializable(KEY_SHORTHAND, ShortHandFactory.getInstance().newValue());
+            args.putSerializable(KEY_SHORTHAND, ShortHandFactory.getInstance().createBean());
         ShortHandEditFragment fragment = new ShortHandEditFragment();
         fragment.setArguments(args);
         return fragment;

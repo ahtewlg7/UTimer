@@ -2,8 +2,10 @@ package com.utimer.ui;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.utimer.R;
 
@@ -16,6 +18,10 @@ public class UtimerFragment extends AToolbarBkFragment {
 
     @BindView(R.id.activity_utimer_toolbar)
     Toolbar toolbar;
+    @BindView(R.id.fragment_utimer_grd_main_recyclerview)
+    RecyclerView recyclerView;
+
+    private RecyclerView.Adapter sampleAdapter;
 
     public static UtimerFragment newInstance() {
         Bundle args = new Bundle();
@@ -26,13 +32,26 @@ public class UtimerFragment extends AToolbarBkFragment {
     }
 
     @Override
+    public void onViewCreated(View inflateView) {
+        super.onViewCreated(inflateView);
+//        recyclerView
+
+        /*itemAdapter = new RecyclerView.Adapter(context, entityList);
+        itemAdapter.setOnItemClickListener(itemClickListener);
+        itemAdapter.setOnItemChildClickListener(itemChildClickListener);
+        itemAdapter.bindToRecyclerView(this);
+        setLayoutManager(new LinearLayoutManager(context));
+        setAdapter(itemAdapter);*/
+    }
+
+    @Override
     protected int getMenuRid() {
         return R.menu.tool_menu;
     }
 
     @Override
     public int getLayoutRid() {
-        return R.layout.un_fragment_recycler;
+        return R.layout.fragment_utimer_gtd_main;
     }
 
     @Override
@@ -54,6 +73,16 @@ public class UtimerFragment extends AToolbarBkFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Logcat.i(TAG,"onOptionsItemSelected " + item.getTitle());
-        return super.onOptionsItemSelected(item);
+        boolean result = false;
+        switch (item.getItemId()) {
+            case R.id.tool_menu_add:
+                Logcat.i(TAG, "to show shorthand");//just fot test
+                start(ShortHandListFragment.newInstance());
+                break;
+            default:
+                result = super.onOptionsItemSelected(item);
+                break;
+        }
+        return result;
     }
 }

@@ -4,9 +4,12 @@ import android.text.TextUtils;
 
 import org.joda.time.DateTime;
 
+import ahtewlg7.utimer.db.entity.ShortHandEntityGdBean;
 import ahtewlg7.utimer.entity.gtd.ShortHandBuilder;
 import ahtewlg7.utimer.entity.gtd.ShortHandEntity;
+import ahtewlg7.utimer.entity.material.AAttachFile;
 import ahtewlg7.utimer.util.DateTimeAction;
+import ahtewlg7.utimer.util.Logcat;
 
 
 //todo：auto check if long time no update, when next get
@@ -27,11 +30,12 @@ public class ShortHandFactory extends ABaseTableFactory<DateTime, String, ShortH
     }
 
     public void addValue(ShortHandEntity entity){
+        Logcat.i(TAG,"add " + entity.toString());
         addValue(entity.getCreateTime(), entity.getTitle(), entity);
     }
 
     public void newAndAddVaule(){
-        addValue(newValue());
+        addValue(createBean());
     }
 
     @Override
@@ -50,9 +54,22 @@ public class ShortHandFactory extends ABaseTableFactory<DateTime, String, ShortH
     }
 
     @Override
-    public ShortHandEntity newValue() {
+    public ShortHandEntity createBean() {
+        Logcat.i(TAG,"create ShortHandEntity ");
         String now = new DateTimeAction().toFormatNow().toString();
         ShortHandBuilder builder = (ShortHandBuilder)new ShortHandBuilder().setTitle(now);
+        return builder.build();
+    }
+
+    @Override
+    public ShortHandEntity createBean(AAttachFile attachFile) {
+        Logcat.i(TAG,"create ShortHandEntity : " + attachFile.toString());
+        ShortHandBuilder builder = (ShortHandBuilder)new ShortHandBuilder().setAttachFile(attachFile);
+        return builder.build();
+    }
+    public ShortHandEntity createBean(ShortHandEntityGdBean dbBean) {
+        Logcat.i(TAG,"create ShortHandEntity : " + dbBean.toString());
+        ShortHandBuilder builder = (ShortHandBuilder)new ShortHandBuilder().setGbBean(dbBean);
         return builder.build();
     }
 }

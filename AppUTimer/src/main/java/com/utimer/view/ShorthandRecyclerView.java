@@ -2,6 +2,7 @@ package com.utimer.view;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
@@ -50,11 +51,14 @@ public class ShorthandRecyclerView extends ABaseSectionRecyclerView<ShorthandSec
         itemAdapter = new ShorthandItemAdapter(context, entityList);
         itemAdapter.setOnItemClickListener(itemClickListener);
         itemAdapter.setOnItemChildClickListener(itemChildClickListener);
+        itemAdapter.bindToRecyclerView(this);
+        setLayoutManager(new LinearLayoutManager(context));
+        setAdapter(itemAdapter);
     }
 
     @Override
     public void init(Context context, List<ShorthandSectionEntity> entityList) {
-        itemAdapter = new ShorthandItemAdapter(context, entityList);
+        init(context, entityList, null, null);
     }
 
     public class ShorthandItemAdapter extends BaseSectionAdapter{
@@ -65,7 +69,6 @@ public class ShorthandRecyclerView extends ABaseSectionRecyclerView<ShorthandSec
 
         @Override
         protected void convertHead(BaseViewHolder helper, final ShorthandSectionEntity item) {
-            ;
             if(!item.isMore())
                 helper.setText(R.id.view_gtd_header, item.header)
                         .getView(R.id.view_gtd_more).setVisibility(View.INVISIBLE);
@@ -77,13 +80,14 @@ public class ShorthandRecyclerView extends ABaseSectionRecyclerView<ShorthandSec
 
         @Override
         protected void convert(BaseViewHolder helper, ShorthandSectionEntity item) {
+//            Logcat.i(TAG,"convert : " + item.toString());
             StringBuilder builder = new StringBuilder();
-            if(item.getTitle().isPresent() && TextUtils.isEmpty(item.getTitle().get()))
+            if(item.getTitle().isPresent() && !TextUtils.isEmpty(item.getTitle().get()))
                     builder.append(MyRInfo.getStringByID(R.string.title)).append(item.getTitle().get());
-            if(item.getRPath().isPresent() && TextUtils.isEmpty(item.getRPath().get()))
-                    builder.append(MyRInfo.getStringByID(R.string.file)).append(item.getRPath().get());
-            helper.setText(R.id.view_gtd_iv, builder.toString())
-                    .setImageResource(R.id.view_gtd_iv, R.mipmap.ic_launcher);
+            if(item.getRPath().isPresent() && !TextUtils.isEmpty(item.getRPath().get()))
+                    builder.append("\n").append(MyRInfo.getStringByID(R.string.file)).append(item.getRPath().get());
+            helper.setText(R.id.view_gtd_tv, builder.toString())
+                .setImageResource(R.id.view_gtd_iv, R.mipmap.ic_launcher);
         }
     }
 }

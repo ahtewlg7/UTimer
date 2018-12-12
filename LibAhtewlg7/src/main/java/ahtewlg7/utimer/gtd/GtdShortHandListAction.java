@@ -14,6 +14,7 @@ import java.io.FileNotFoundException;
 import ahtewlg7.utimer.common.FileSystemAction;
 import ahtewlg7.utimer.db.DbActionFacade;
 import ahtewlg7.utimer.entity.gtd.ShortHandEntity;
+import ahtewlg7.utimer.entity.material.MdAttachFile;
 import ahtewlg7.utimer.factory.ShortHandFactory;
 import ahtewlg7.utimer.util.DateTimeAction;
 import io.reactivex.Flowable;
@@ -39,36 +40,14 @@ public class GtdShortHandListAction {
         return fileSystemAction.getInboxGtdAbsPath();
     }
 
-    public Flowable<Optional<ShortHandEntity>> loadAllEntity() {
-        return getShortHandFiles().flatMap(new Function<File, Publisher<Optional<ShortHandEntity>>>() {
-                    @Override
-                    public Publisher<Optional<ShortHandEntity>> apply(final File file) throws Exception {
-                        return loadEntity(Flowable.just(Optional.of(file.getName())));
-                    }
-                })
-                .doOnSubscribe(new Consumer<Subscription>() {
-                    @Override
-                    public void accept(Subscription subscription) throws Exception {
-                        ShortHandFactory.getInstance().clearAll();
-                    }
-                })
-                .doOnNext(new Consumer<Optional<ShortHandEntity>>() {
-                    @Override
-                    public void accept(Optional<ShortHandEntity> optional) throws Exception {
-                        if(optional.isPresent())
-                            ShortHandFactory.getInstance().addValue(optional.get());
-                        else
-                            ShortHandFactory.getInstance().newAndAddVaule();
-                    }
-                });
-    }
-
-    public Flowable<Optional<ShortHandEntity>> loadEntity(@NonNull Flowable<Optional<String>> titleFlowable){
-        return dbActionFacade.getShortHandEntityByTitle(titleFlowable);
+    public Flowable<ShortHandEntity> loadAllEntity() {
+//        return Flowable.merge(filterInvalidEntity(getFsShortHand(getShortHandFiles())),
+//                              filterInvalidEntity(getDbShortHand(getShortHandFiles())))
+        return filterInvalidEntity(getFsShortHand(getShortHandFiles()));
     }
 
     public ShortHandEntity newEntity() {
-        return ShortHandFactory.getInstance().newValue();
+        return ShortHandFactory.getInstance().createBean();
     }
 
     public Flowable<Boolean> saveEntity(Flowable<Optional<ShortHandEntity>> flowable) {
@@ -79,13 +58,27 @@ public class GtdShortHandListAction {
         return dbActionFacade.deleteShortHandEntity(flowable);
     }
 
-    public Flowable<Optional<ShortHandEntity>> getTodayShortHandList(){
-        return loadAllEntity().filter(new Predicate<Optional<ShortHandEntity>>() {
+    public Flowable<ShortHandEntity> getTodayShortHandList(){
+        return loadAllEntity().filter(new Predicate<ShortHandEntity>() {
             @Override
-            public boolean test(Optional<ShortHandEntity> optional) throws Exception {
-                return optional.isPresent() && new DateTimeAction().isToday(optional.get().getCreateTime());
+            public boolean test(ShortHandEntity entity) throws Exception {
+                return new DateTimeAction().isToday(entity.getCreateTime());
             }
         });
+    }
+    private Flowable<ShortHandEntity> filterInvalidEntity(@NonNull Flowable<Optional<ShortHandEntity>> shortHandRx){
+        return shortHandRx.filter(new Predicate<Optional<ShortHandEntity>>() {
+                    @Override
+                    public boolean test(Optional<ShortHandEntity> entityOptional) throws Exception {
+                        return entityOptional.isPresent();
+                    }
+                })
+                .map(new Function<Optional<ShortHandEntity>, ShortHandEntity>() {
+                    @Override
+                    public ShortHandEntity apply(Optional<ShortHandEntity> entityOptional) throws Exception {
+                        return entityOptional.get();
+                    }
+                });
     }
 
     private Flowable<File> getShortHandFiles(){
@@ -98,5 +91,24 @@ public class GtdShortHandListAction {
                 return Flowable.fromArray(shortHandDir.listFiles());
             }
         });
+    }
+    private Flowable<Optional<ShortHandEntity>> getFsShortHand(Flowable<File> shortHandRx){
+        return shortHandRx.map(new Function<File, Optional<ShortHandEntity>>() {
+            @Override
+            public Optional<ShortHandEntity> apply(File file) throws Exception {
+                MdAttachFile attachFile = new MdAttachFile(file);
+                if(!attachFile.ifValid())
+                    return Optional.absent();
+                return Optional.fromNullable(ShortHandFactory.getInstance().createBean(attachFile));
+            }
+        });
+    }
+    private Flowable<Optional<ShortHandEntity>> getDbShortHand(Flowable<File> shortHandRx){
+        return dbActionFacade.getShortHandEntityByTitle(shortHandRx.map(new Function<File, String>() {
+                    @Override
+                    public String apply(File file) throws Exception {
+                        return file.getName();
+                    }
+                }));
     }
 }

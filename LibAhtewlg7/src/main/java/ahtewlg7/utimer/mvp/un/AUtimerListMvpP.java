@@ -1,4 +1,4 @@
-package ahtewlg7.utimer.mvp;
+package ahtewlg7.utimer.mvp.un;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -12,7 +12,7 @@ import ahtewlg7.utimer.util.Logcat;
 /**
  * Created by lw on 2018/10/14.
  */
-public abstract class AUtimerListMvpP<T extends AUtimerEntity> implements IBaseListInfoMvpP<T> {
+public abstract class AUtimerListMvpP<T extends AUtimerEntity> implements IAllUtimerShowMvpP<T> {
     public static final String TAG = AUtimerListMvpP.class.getSimpleName();
 
     protected EventBus eventBus;

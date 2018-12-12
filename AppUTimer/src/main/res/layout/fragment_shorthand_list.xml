@@ -18,8 +18,8 @@
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
     </android.support.design.widget.AppBarLayout>
 
-    <com.utimer.view.NoteLinerRecyclerView
-        android:id="@+id/fragment_shorthand_list_recyclerview"
+    <com.utimer.view.ShorthandRecyclerView
+        android:id="@+id/fragment_shorthand_list_recycler_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:clipChildren="false"
@@ -27,8 +27,11 @@
         android:divider="@android:color/transparent"
         android:dividerHeight="10dp"
         android:scrollbars="none"
+        android:background="@android:color/holo_blue_dark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 </android.support.constraint.ConstraintLayout>

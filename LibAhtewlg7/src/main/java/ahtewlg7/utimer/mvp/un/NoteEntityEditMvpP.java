@@ -1,4 +1,4 @@
-package ahtewlg7.utimer.mvp;
+package ahtewlg7.utimer.mvp.un;
 
 import com.google.common.base.Optional;
 import com.trello.rxlifecycle2.android.ActivityEvent;
@@ -16,6 +16,7 @@ import ahtewlg7.utimer.factory.EventBusFatory;
 import ahtewlg7.utimer.common.NoteEntityAction;
 import ahtewlg7.utimer.entity.NoteEntity;
 import ahtewlg7.utimer.enumtype.UnLoadType;
+import ahtewlg7.utimer.mvp.IRxLifeCycleBindView;
 import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MySafeSubscriber;
 import io.reactivex.Flowable;

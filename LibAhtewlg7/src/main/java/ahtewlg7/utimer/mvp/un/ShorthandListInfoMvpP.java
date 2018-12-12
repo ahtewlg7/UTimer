@@ -1,4 +1,4 @@
-package ahtewlg7.utimer.mvp;
+package ahtewlg7.utimer.mvp.un;
 
 import android.support.annotation.NonNull;
 
@@ -12,17 +12,18 @@ import org.reactivestreams.Subscription;
 
 import java.util.List;
 
-import ahtewlg7.utimer.gtd.GtdShortHandListAction;
 import ahtewlg7.utimer.entity.busevent.DelBusEvent;
 import ahtewlg7.utimer.entity.busevent.EditBusEvent;
 import ahtewlg7.utimer.entity.busevent.EditEndBusEvent;
 import ahtewlg7.utimer.entity.gtd.ShortHandEntity;
 import ahtewlg7.utimer.factory.ShortHandFactory;
+import ahtewlg7.utimer.gtd.GtdShortHandListAction;
 import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MySafeSubscriber;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Predicate;
+import io.reactivex.schedulers.Schedulers;
 
 public class ShorthandListInfoMvpP extends AUtimerListMvpP<ShortHandEntity> {
     public static final String TAG = ShorthandListInfoMvpP.class.getSimpleName();
@@ -71,9 +72,9 @@ public class ShorthandListInfoMvpP extends AUtimerListMvpP<ShortHandEntity> {
 
     //=============================================================================================
     @Override
-    public void toLoadAllData() {
+    public void toLoadAllItem() {
         shorthandListMvpM.loadAllEntity()
-                .compose(shorthandListMvpV.getFragment().<Optional<ShortHandEntity>>bindUntilEvent(FragmentEvent.DESTROY))
+                .compose(shorthandListMvpV.getFragment().<ShortHandEntity>bindUntilEvent(FragmentEvent.DESTROY))
                 /*.filter(new Predicate<Optional<ShortHandEntity>>() {
                     @Override
                     public boolean test(Optional<ShortHandEntity> optional) throws Exception {
@@ -94,7 +95,7 @@ public class ShorthandListInfoMvpP extends AUtimerListMvpP<ShortHandEntity> {
                     }
                 }).reverse())*/
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new MySafeSubscriber<Optional<ShortHandEntity>>() {
+                .subscribe(new MySafeSubscriber<ShortHandEntity>() {
                     @Override
                     public void onSubscribe(Subscription s) {
                         super.onSubscribe(s);
@@ -103,10 +104,10 @@ public class ShorthandListInfoMvpP extends AUtimerListMvpP<ShortHandEntity> {
                     }
 
                     @Override
-                    public void onNext(Optional<ShortHandEntity> entityOptional) {
-                        super.onNext(entityOptional);
-                        if (entityOptional.isPresent())
-                            shorthandList.add(entityOptional.get());
+                    public void onNext(ShortHandEntity entity) {
+                        super.onNext(entity);
+                        Logcat.i(TAG,"toLoadAllItem onNext : " + entity.toString());
+                        shorthandList.add(entity);
                     }
 
                     @Override
@@ -168,13 +169,13 @@ public class ShorthandListInfoMvpP extends AUtimerListMvpP<ShortHandEntity> {
 
     public void toCreateItem() {
         Logcat.i(TAG, "toCreate ");
-        eventBus.postSticky(new EditBusEvent(ShortHandFactory.getInstance().newValue()));
+        eventBus.postSticky(new EditBusEvent(ShortHandFactory.getInstance().createBean()));
     }
 
     public void toGtdProject(ShortHandEntity entity) {
     }
 
-    public class ShorthandListMvpM implements IBaseListInfoMvpM<ShortHandEntity> {
+    public class ShorthandListMvpM implements IAllInfoMvpM<ShortHandEntity> {
         private GtdShortHandListAction shortHandAction;
 
         public ShorthandListMvpM() {
@@ -182,13 +183,14 @@ public class ShorthandListInfoMvpP extends AUtimerListMvpP<ShortHandEntity> {
         }
 
         @Override
-        public Flowable<Optional<ShortHandEntity>> loadAllEntity() {
-            return shortHandAction.loadAllEntity();
+        public Flowable<ShortHandEntity> loadAllEntity() {
+            return shortHandAction.loadAllEntity().subscribeOn(Schedulers.io());
         }
 
         @Override
-        public Flowable<Optional<ShortHandEntity>> loadEntity(@NonNull Flowable<Optional<String>> keyObservable) {
-            return shortHandAction.loadEntity(keyObservable);
+        public Flowable<Optional<ShortHandEntity>> loadEntity(@NonNull Flowable<String> keyObservable) {
+//            return shortHandAction.loadEntity(keyObservable);
+            return Flowable.just(Optional.<ShortHandEntity>absent());//just for test
         }
 
         @Override

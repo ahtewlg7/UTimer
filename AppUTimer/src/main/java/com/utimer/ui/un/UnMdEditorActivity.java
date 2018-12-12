@@ -1,11 +1,11 @@
-package com.utimer.ui;
+package com.utimer.ui.un;
 
 import android.support.annotation.NonNull;
 
 import com.trello.rxlifecycle2.LifecycleProvider;
 import com.utimer.R;
 
-import ahtewlg7.utimer.ui.ANoteEditorActivity;
+import ahtewlg7.utimer.ui.un.ANoteEditorActivity;
 import ahtewlg7.utimer.view.md.MdEditText;
 import butterknife.BindView;
 import butterknife.ButterKnife;

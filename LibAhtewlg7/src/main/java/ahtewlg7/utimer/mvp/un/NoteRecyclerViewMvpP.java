@@ -1,4 +1,4 @@
-package ahtewlg7.utimer.mvp;
+package ahtewlg7.utimer.mvp.un;
 
 import android.support.annotation.NonNull;
 
@@ -217,7 +217,7 @@ public class NoteRecyclerViewMvpP implements IBaseRecyclerViewMvpP {
     public void toGtdProject(NoteEntity noteEntity){
     }
 
-    public interface INoteRecyclerViewMvpM extends IBaseRecyclerViewMvpM<NoteEntity>{
+    public interface INoteRecyclerViewMvpM extends IBaseRecyclerViewMvpM<NoteEntity> {
     }
 
     public interface INoteRecyclerViewMvpV extends IBaseRecyclerViewMvpV<NoteEntity> {

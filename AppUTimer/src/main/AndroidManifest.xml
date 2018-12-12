@@ -17,9 +17,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.UnFunctionMainActivity"
+            android:name=".ui.un.UnFunctionMainActivity"
             android:theme="@style/StyledIndicators" />
-        <activity android:name=".ui.UnMdEditorActivity" />
+        <activity android:name=".ui.un.UnMdEditorActivity" />
 
         <service android:name="ahtewlg7.utimer.ui.BinderService" />
 

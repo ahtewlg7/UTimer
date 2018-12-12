@@ -128,7 +128,7 @@ public class ShortHandEntity extends AUtimerEntity<ShortHandBuilder> implements 
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder(TAG);
-        builder.append(super.toString());
+        builder.append(",").append(super.toString());
         builder.append(",isActived").append(isActived);
         return builder.toString();
     }

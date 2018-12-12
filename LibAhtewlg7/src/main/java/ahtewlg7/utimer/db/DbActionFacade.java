@@ -20,6 +20,7 @@ import ahtewlg7.utimer.entity.gtd.GtdTaskEntity;
 import ahtewlg7.utimer.entity.gtd.ShortHandBuilder;
 import ahtewlg7.utimer.entity.gtd.ShortHandEntity;
 import ahtewlg7.utimer.enumtype.UnLoadType;
+import ahtewlg7.utimer.factory.ShortHandFactory;
 import ahtewlg7.utimer.util.Logcat;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Function;
@@ -199,18 +200,24 @@ public class DbActionFacade {
                 })
                 .subscribeOn(Schedulers.io());
     }
-    public Flowable<Optional<ShortHandEntity>> getShortHandEntityByTitle(@NonNull final Flowable<Optional<String>> nameFlowable) {
-        return nameFlowable.map(new Function<Optional<String>, Optional<ShortHandEntity>>() {
+    public Flowable<Optional<ShortHandEntity>> getShortHandEntityByTitle(@NonNull final Flowable<String> nameFlowable) {
+        return nameFlowable.map(new Function<String, Optional<ShortHandEntity>>() {
             @Override
-            public Optional<ShortHandEntity> apply(Optional<String> nameOptional) throws Exception {
-                if(!nameOptional.isPresent() || TextUtils.isEmpty(nameOptional.get()))
+            public Optional<ShortHandEntity> apply(String name) throws Exception {
+                if(TextUtils.isEmpty(name))
                     return Optional.absent();
-                Optional<ShortHandEntityGdBean> beanOptional = ShortHandEntityDaoAction.getInstance().queryByKey(nameOptional.get());
-                if(!beanOptional.isPresent())
+
+                Optional<ShortHandEntityGdBean> beanOptional = null;
+                try{
+                    beanOptional = ShortHandEntityDaoAction.getInstance().queryByKey(name);
+                }catch (Exception e){
+                    Logcat.i(TAG,"getShortHandEntityByTitle err : " + e.getMessage());
+                }
+                if(beanOptional == null || !beanOptional.isPresent())
                     return Optional.absent();
-                return Optional.of(new ShortHandBuilder().setGbBean(beanOptional.get()).build());
+                return Optional.of(ShortHandFactory.getInstance().createBean(beanOptional.get()));
             }
-        });
+        }).subscribeOn(Schedulers.io());
     }
 
     public Flowable<Boolean> deleteShortHandEntity(@NonNull Flowable<Optional<ShortHandEntity>> eventFlowable){

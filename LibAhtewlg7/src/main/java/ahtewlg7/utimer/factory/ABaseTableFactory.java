@@ -3,6 +3,7 @@ package ahtewlg7.utimer.factory;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 
+import ahtewlg7.utimer.entity.material.AAttachFile;
 import io.reactivex.Flowable;
 
 
@@ -14,7 +15,8 @@ public abstract class ABaseTableFactory<K, M, V> {
     public abstract boolean ifPriKeyValid(K k);
     public abstract boolean ifSecKeyValid(M m);
     public abstract boolean ifValueValid(V v);
-    public abstract V newValue();
+    public abstract V createBean();
+    public abstract V createBean(AAttachFile attachFile);
 
     protected ABaseTableFactory(){
         baseTable = HashBasedTable.create();

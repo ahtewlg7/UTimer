@@ -1,4 +1,4 @@
-package ahtewlg7.utimer.mvp;
+package ahtewlg7.utimer.mvp.un;
 
 import android.text.TextUtils;
 import android.view.GestureDetector;
@@ -23,6 +23,7 @@ import ahtewlg7.utimer.enumtype.EditSrcType;
 import ahtewlg7.utimer.enumtype.UnLoadType;
 import ahtewlg7.utimer.enumtype.MdContextErrCode;
 import ahtewlg7.utimer.exception.un.MdContextException;
+import ahtewlg7.utimer.mvp.IRxLifeCycleBindView;
 import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MySafeSubscriber;
 import io.reactivex.BackpressureStrategy;

@@ -25,4 +25,11 @@ public class BaseSectionEntity<T extends AUtimerEntity> extends SectionEntity<T>
     public boolean isMore() {
         return isMore;
     }
+
+    @Override
+    public String toString() {
+        if(t != null)
+            return t.toString();
+        return super.toString();
+    }
 }
