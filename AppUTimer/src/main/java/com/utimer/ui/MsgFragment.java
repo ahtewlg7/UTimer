@@ -3,7 +3,6 @@ package com.utimer.ui;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 
 import com.utimer.R;
@@ -58,8 +57,6 @@ public class MsgFragment extends AToolbarBkFragment {
         boolean result = false;
         switch (item.getItemId()) {
             case R.id.tool_menu_add:
-                Log.i(TAG, "to create shorthand");
-//                ((MainFragment)getParentFragment()).start(ShortHandEditFragment.newInstance(null));
                 break;
             default:
                 result = super.onOptionsItemSelected(item);
