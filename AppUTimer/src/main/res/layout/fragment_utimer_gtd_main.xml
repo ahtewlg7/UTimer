@@ -31,5 +31,16 @@
             android:divider="@android:color/transparent"
             android:dividerHeight="10dp"
             android:scrollbars="none"/>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="80dp">
+            <Button
+                android:id="@+id/fragment_utimer_grd_main_shorthand"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/title_shorthand"/>
+        </TableRow>>
     </LinearLayout>
 </RelativeLayout>

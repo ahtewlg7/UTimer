@@ -163,6 +163,7 @@
 【B】 《我的营销心得》 by 史玉柱 +++++ 18/10 100% 80% 80%
 【B】 《妖孽外传》 by 单身狸子 ++++ 18/9-10 100% 70% 70%
 【B】 《在绝望中寻找希望》 by 俞敏洪 +++ 18/11 100% 60% 60%
+【B】 《情商》 by 丹尼尔.戈尔曼 ++++ 18/12 100% 80% 70%  情绪心理学
 
 
    How many roads must a man walk down before you call him as a man？Follow your heart Wherever it takes you .
