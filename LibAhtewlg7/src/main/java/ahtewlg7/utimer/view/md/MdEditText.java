@@ -4,7 +4,6 @@ import android.content.Context;
 import android.text.Layout;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 
 import com.blankj.utilcode.util.Utils;
@@ -132,15 +131,6 @@ public class MdEditText extends android.support.v7.widget.AppCompatEditText {
     public void replace(@NonNull Range<Integer> srcRange, @NonNull String replaceContent, @NonNull Range<Integer> replaceRange){
         getEditableText().replace(srcRange.lowerEndpoint(), srcRange.upperEndpoint(),
                 replaceContent, replaceRange.lowerEndpoint(),replaceRange.upperEndpoint());
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER)
-            goToNewLine();
-        Logcat.i(TAG,"onKeyDown =" + event.toString());
-
-        return super.onKeyDown(keyCode,event);
     }
 
     @Override
