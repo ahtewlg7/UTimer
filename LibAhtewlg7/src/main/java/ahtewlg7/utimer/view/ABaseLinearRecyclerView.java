@@ -50,6 +50,11 @@ public abstract class ABaseLinearRecyclerView<T> extends RecyclerView{
         super(context, attrs, defStyle);
     }
 
+    @Override
+    public BaseItemAdapter getAdapter() {
+        return (BaseItemAdapter)super.getAdapter();
+    }
+
     public abstract class BaseItemAdapter<K> extends BaseItemDraggableAdapter<K,BaseViewHolder> {
         protected ItemDragAndSwipeCallback mItemDragAndSwipeCallback;
         protected ItemTouchHelper mItemTouchHelper;

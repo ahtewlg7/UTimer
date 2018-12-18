@@ -18,6 +18,7 @@ import ahtewlg7.utimer.entity.md.EditElement;
 import ahtewlg7.utimer.entity.md.EditMementoBean;
 import ahtewlg7.utimer.entity.md.EditMementoCaretaker;
 import ahtewlg7.utimer.entity.md.EditMementoOriginator;
+import ahtewlg7.utimer.enumtype.EditMode;
 import ahtewlg7.utimer.enumtype.ElementEditType;
 import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MySafeSubscriber;
@@ -36,8 +37,12 @@ import io.reactivex.functions.Predicate;
 public abstract class AUtimerEditMvpP<T extends AUtimerEntity> {
     public static final String TAG = AUtimerEditMvpP.class.getSimpleName();
 
+    public static final int INIT_POSITION = -1;
+
     protected abstract IUtimerEditMvpM getEditMvpM(AUtimerEntity utimerEntity);
 
+
+    protected int preEditPosition = INIT_POSITION;
     protected boolean isChangeSaved;
 
     protected Disposable loadDisposable;
@@ -56,6 +61,16 @@ public abstract class AUtimerEditMvpP<T extends AUtimerEntity> {
         this.utimerEntity   = utimerEntity;
         this.editMvpV       = editMvpV;
         editMvpM            = getEditMvpM(utimerEntity);
+    }
+
+    public void onEditViewClick(int position){
+        Logcat.i(TAG,"onEditViewClick position = " + position + ",preEditPosition = " + preEditPosition);
+
+        if(preEditPosition != position && editMvpV != null)
+            editMvpV.onEditMode(preEditPosition, EditMode.OFF, getEditElement(preEditPosition));
+        if(editMvpV != null)
+            editMvpV.onEditMode(position, EditMode.ON, getEditElement(position));
+        preEditPosition = position;
     }
 
     public void toLoadTxt(){
@@ -114,7 +129,8 @@ public abstract class AUtimerEditMvpP<T extends AUtimerEntity> {
         toEdit(index, ElementEditType.MODIFY, rawTxtRx.filter(new Predicate<String>() {
             @Override
             public boolean test(String s) throws Exception {
-                return !s.equals(editElementList.get(index).getMdCharSequence().toString());
+                return !s.equals(editElementList.get(index).getMdCharSequence().toString())
+                        && !s.equals(editElementList.get(index).getRawText());
             }
         }));
     }
@@ -263,8 +279,7 @@ public abstract class AUtimerEditMvpP<T extends AUtimerEntity> {
         }
         return false;
     }
-
-    protected Optional<EditElement> getEditElement(int index){
+    public Optional<EditElement> getEditElement(int index){
         EditElement editElement = null;
         try{
             if(editElementList != null)
@@ -272,6 +287,7 @@ public abstract class AUtimerEditMvpP<T extends AUtimerEntity> {
         }catch (Exception e){}
         return Optional.fromNullable(editElement);
     }
+
     public interface IUtimerEditMvpM{
         public Flowable<EditElement> toLoadTxt();
         public CharSequence toParseRaw(@NonNull String rawTxt);
@@ -279,6 +295,8 @@ public abstract class AUtimerEditMvpP<T extends AUtimerEntity> {
     }
 
     public interface IUtimerEditMvpV extends IRxLifeCycleBindView{
+        public void onEditMode(int position, @NonNull EditMode editMode, @NonNull Optional<EditElement> editElementOptional);
+
         public void onLoadStart();
         public void onLoadErr(Throwable e);
         public void onLoadEnd(List<EditElement> mdElementList);

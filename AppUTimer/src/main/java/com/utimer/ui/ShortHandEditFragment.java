@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 
 import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -19,6 +20,7 @@ import java.util.List;
 import ahtewlg7.utimer.entity.gtd.ShortHandEntity;
 import ahtewlg7.utimer.entity.md.EditElement;
 import ahtewlg7.utimer.entity.md.EditMementoBean;
+import ahtewlg7.utimer.enumtype.EditMode;
 import ahtewlg7.utimer.factory.ShortHandFactory;
 import ahtewlg7.utimer.mvp.AUtimerEditMvpP;
 import ahtewlg7.utimer.mvp.ShorthandEditMvpP;
@@ -68,7 +70,9 @@ public class ShortHandEditFragment extends AEditFragment implements ShorthandEdi
     @NonNull
     @Override
     protected AUtimerEditMvpP getEditMvpP() {
-        return new ShorthandEditMvpP(shorthandEntity, this);
+        if(editMvpP == null)
+            editMvpP = new ShorthandEditMvpP(shorthandEntity, this);
+        return editMvpP;
     }
 
     @Override
@@ -115,29 +119,39 @@ public class ShortHandEditFragment extends AEditFragment implements ShorthandEdi
 
     /**********************************************BaseQuickAdapter**********************************************/
     @Override
-    public void onItemChildClick(BaseQuickAdapter adapter, View view,final int position) {
-        Logcat.i(TAG,"onItemChildClick position = " + position + ",preEditPosition = " + preEditPosition);
-        if(preEditPosition != position){
-            Optional<EditViewBean> editViewBeanOptional = getEditViewBean(preEditPosition);
-            if(editViewBeanOptional.isPresent()){
-                editViewBeanOptional.get().setEditing(false);
-                onEditViewLockChange(editViewBeanOptional.get());
-            }
-
-            EditViewBean currEditViewBean = null;
-            if(!getEditViewBean(position).isPresent()){
-                MdEditText currEditText = (MdEditText) adapter.getViewByPosition(position, R.id.view_md_edit_tv);
-                currEditViewBean = new EditViewBean(position, currEditText);
-                editViewMap.put(position, currEditViewBean);
-            }else{
-                currEditViewBean = getEditViewBean(position).get();
-            }
-            currEditViewBean.setEditing(true);
-            onEditViewLockChange(currEditViewBean);
-            editViewPublishSubject.onNext(currEditViewBean);
-            preEditPosition = position;
+    public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+        editMvpP.onEditViewClick(position);
+    }
+    /**********************************************IShorthandEditMvpV**********************************************/
+    @Override
+    public void onEditMode(int position, @NonNull EditMode editMode, @NonNull Optional<EditElement> editElementOptional) {
+        Optional<EditText> optional = getEditTextItem(position);
+        Logcat.i(TAG,"onEditMode isPresent = " + optional.isPresent() + ", editMode = " + editMode.name());
+        if(editMode == EditMode.OFF && optional.isPresent()){
+            optional.get().setFocusable(false);
+            optional.get().setFocusableInTouchMode(false);
+            if(editElementOptional.isPresent())
+                optional.get().setText(editElementOptional.get().getMdCharSequence().toString());
+        }else if(editMode == EditMode.ON && optional.isPresent()){
+            optional.get().setFocusable(true);
+            optional.get().setFocusableInTouchMode(true);
+            editPositionSubject.onNext(position);
+            if(editElementOptional.isPresent())
+                optional.get().setText(editElementOptional.get().getRawText());
         }
     }
+
+    @Override
+    protected Optional<EditText> getEditTextItem(int index) {
+        MdEditText currEditText = null;
+        try{
+            currEditText = (MdEditText) editReCyclerView.getAdapter().getViewByPosition(index, R.id.view_md_edit_tv);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return Optional.fromNullable((EditText)currEditText);
+    }
+
     /**********************************************IShorthandEditMvpV**********************************************/
     @Override
     public void onLoadStart() {
@@ -171,11 +185,11 @@ public class ShortHandEditFragment extends AEditFragment implements ShorthandEdi
     public void onParseSucc(int index, EditElement editElement) {
         ToastUtils.showShort("parse succ");
         editReCyclerView.resetData(index, editElement);
+//        preEditPosition = INIT_POSITION;
     }
 
     @Override
     public void onParseEnd() {
-
     }
     /**********************************************IShorthandEditMvpV**********************************************/
     @Override
