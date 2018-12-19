@@ -75,8 +75,7 @@ public abstract class AUtimerEditMvpP<T extends AUtimerEntity> {
     public void toLoadTxt(){
         if(utimerEntity.getAttachFile() == null || !utimerEntity.getAttachFile().ifValid()){
             Logcat.i(TAG,"toLoadTxt : attachFile is not valid , so cancel");
-            editElementList = Lists.newArrayList();
-            editElementList.add(new EditElement(""));
+            initElementList();
             editMvpV.onLoadEnd(editElementList);
 
             /*if(mdMementoCaretaker == null)
@@ -106,8 +105,11 @@ public abstract class AUtimerEditMvpP<T extends AUtimerEntity> {
                         Logcat.i(TAG,"toLoadTxt succ");
 //                        initMemento(editElements);
 //                        editMvpV.onLoadEnd(mdMementoOriginator.getMdElementList());
-                        editElementList = editElements;
-                        editMvpV.onLoadEnd(editElements);
+                        if(editElements.size() > 0)
+                            editElementList = editElements;
+                        else
+                            initElementList();
+                        editMvpV.onLoadEnd(editElementList);
                     }
 
                     @Override
@@ -275,6 +277,11 @@ public abstract class AUtimerEditMvpP<T extends AUtimerEntity> {
                 editElement = editElementList.get(index);
         }catch (Exception e){}
         return Optional.fromNullable(editElement);
+    }
+    protected void initElementList(){
+        if(editElementList == null)
+            editElementList = Lists.newArrayList();
+        editElementList.add(new EditElement(""));
     }
 
     public interface IUtimerEditMvpM{
