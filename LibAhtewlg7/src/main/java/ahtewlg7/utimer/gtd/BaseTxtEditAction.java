@@ -55,7 +55,7 @@ public class BaseTxtEditAction extends AEditAction {
                                 .map(new Function<String, Optional<EditElement>>() {
                                     @Override
                                     public Optional<EditElement> apply(String s) throws Exception {
-                                        EditElement element = new EditElement(s);
+                                        EditElement element = new EditElement(s + System.lineSeparator());
                                         element.setMdCharSequence(toParse(s));
                                         return Optional.of(element);
                                     }
