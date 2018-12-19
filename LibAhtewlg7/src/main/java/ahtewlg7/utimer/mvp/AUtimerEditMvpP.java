@@ -2,7 +2,6 @@ package ahtewlg7.utimer.mvp;
 
 
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
@@ -205,8 +204,7 @@ public abstract class AUtimerEditMvpP<T extends AUtimerEntity> {
     }
 
     public void toFinishEdit(){
-        if(isChangeSaved || editElementList == null || editElementList.size() == 0
-                || (editElementList.size() == 1 && TextUtils.isEmpty(editElementList.get(0).getRawText()))){
+        if(isChangeSaved || editElementList == null || editElementList.size() == 0){
             Logcat.i(TAG,"toFinishEdit cancel");
             return;
         }
