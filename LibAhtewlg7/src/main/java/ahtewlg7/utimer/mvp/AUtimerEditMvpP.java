@@ -66,10 +66,10 @@ public abstract class AUtimerEditMvpP<T extends AUtimerEntity> {
     public void onEditViewClick(int position){
         Logcat.i(TAG,"onEditViewClick position = " + position + ",preEditPosition = " + preEditPosition);
 
-        if(preEditPosition != position && editMvpV != null)
+        if(preEditPosition != position && editMvpV != null) {
             editMvpV.onEditMode(preEditPosition, EditMode.OFF, getEditElement(preEditPosition));
-        if(editMvpV != null)
             editMvpV.onEditMode(position, EditMode.ON, getEditElement(position));
+        }
         preEditPosition = position;
     }
 
@@ -119,12 +119,6 @@ public abstract class AUtimerEditMvpP<T extends AUtimerEntity> {
                 });
     }
 
-    public void toInsert(int index, String rawTxt){
-        toEdit(index, ElementEditType.INSERT, rawTxt);
-    }
-    public void toModify(int index, String rawTxt){
-        toEdit(index, ElementEditType.MODIFY, rawTxt);
-    }
     public void toModify(final int index, Observable<String> rawTxtRx){
         toEdit(index, ElementEditType.MODIFY, rawTxtRx.filter(new Predicate<String>() {
             @Override
@@ -133,10 +127,6 @@ public abstract class AUtimerEditMvpP<T extends AUtimerEntity> {
                         && !s.equals(editElementList.get(index).getRawText());
             }
         }));
-    }
-
-    protected void toEdit(final int index, final ElementEditType editType, String rawTxt){
-//        CharSequence parsedTxt = editMvpM.toParseRaw(rawTxt);
     }
 
     protected void toEdit(final int index, final ElementEditType editType,
@@ -169,6 +159,7 @@ public abstract class AUtimerEditMvpP<T extends AUtimerEntity> {
                         isChangeSaved = false;
                         editElementList.set(index, element);
                         editMvpV.onParseSucc(index, element);
+                        preEditPosition = INIT_POSITION;
                         /*Optional<EditMementoBean>  mementoOptional = mdMementoOriginator.createMemento(index, editType, parseedTxt);
                         if(mementoOptional.isPresent()) {
                             mdMementoCaretaker.saveMemento(mementoOptional.get());
@@ -311,7 +302,5 @@ public abstract class AUtimerEditMvpP<T extends AUtimerEntity> {
         public void onSaveStart();
         public void onSaveErr(Throwable e);
         public void onSaveEnd();
-
-        public void onActionCancel();
     }
 }

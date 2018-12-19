@@ -185,7 +185,6 @@ public class ShortHandEditFragment extends AEditFragment implements ShorthandEdi
     public void onParseSucc(int index, EditElement editElement) {
         ToastUtils.showShort("parse succ");
         editReCyclerView.resetData(index, editElement);
-//        preEditPosition = INIT_POSITION;
     }
 
     @Override
@@ -211,11 +210,6 @@ public class ShortHandEditFragment extends AEditFragment implements ShorthandEdi
     public void onSaveEnd() {
     }
     /**********************************************IShorthandEditMvpV**********************************************/
-    @Override
-    public void onActionCancel() {
-
-    }
-
     @Override
     public LifecycleProvider getRxLifeCycleBindView() {
         return this;
