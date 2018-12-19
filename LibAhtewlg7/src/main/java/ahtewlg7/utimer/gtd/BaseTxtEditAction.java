@@ -1,7 +1,5 @@
 package ahtewlg7.utimer.gtd;
 
-import android.text.TextUtils;
-
 import com.google.common.base.Charsets;
 import com.google.common.base.Optional;
 import com.google.common.io.CharSink;
@@ -72,8 +70,8 @@ public class BaseTxtEditAction extends AEditAction {
     }
 
     public boolean toSave(String rawTxt, boolean append){
-        if(TextUtils.isEmpty(rawTxt) || !ifReady()) {
-            Logcat.i(TAG,"toSave (" + rawTxt + ") cancel");
+        if(rawTxt == null || !ifReady()) {
+            Logcat.i(TAG,"toSave cancel");
             return false;
         }
         boolean result = false;
