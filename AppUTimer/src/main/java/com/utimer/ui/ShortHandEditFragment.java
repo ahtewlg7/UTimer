@@ -20,7 +20,6 @@ import java.util.List;
 import ahtewlg7.utimer.entity.gtd.ShortHandEntity;
 import ahtewlg7.utimer.entity.md.EditElement;
 import ahtewlg7.utimer.entity.md.EditMementoBean;
-import ahtewlg7.utimer.enumtype.EditMode;
 import ahtewlg7.utimer.factory.ShortHandFactory;
 import ahtewlg7.utimer.mvp.AUtimerEditMvpP;
 import ahtewlg7.utimer.mvp.ShorthandEditMvpP;
@@ -123,24 +122,6 @@ public class ShortHandEditFragment extends AEditFragment implements ShorthandEdi
         editMvpP.onEditViewClick(position);
     }
     /**********************************************IShorthandEditMvpV**********************************************/
-    @Override
-    public void onEditMode(int position, @NonNull EditMode editMode, @NonNull Optional<EditElement> editElementOptional) {
-        Optional<EditText> optional = getEditTextItem(position);
-        Logcat.i(TAG,"onEditMode isPresent = " + optional.isPresent() + ", editMode = " + editMode.name());
-        if(editMode == EditMode.OFF && optional.isPresent()){
-            optional.get().setFocusable(false);
-            optional.get().setFocusableInTouchMode(false);
-            if(editElementOptional.isPresent())
-                optional.get().setText(editElementOptional.get().getMdCharSequence().toString());
-        }else if(editMode == EditMode.ON && optional.isPresent()){
-            optional.get().setFocusable(true);
-            optional.get().setFocusableInTouchMode(true);
-            editPositionSubject.onNext(position);
-            if(editElementOptional.isPresent())
-                optional.get().setText(editElementOptional.get().getRawText());
-        }
-    }
-
     @Override
     protected Optional<EditText> getEditTextItem(int index) {
         MdEditText currEditText = null;
