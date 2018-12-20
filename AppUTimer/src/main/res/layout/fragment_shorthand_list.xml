@@ -8,30 +8,31 @@
         android:id="@+id/fragment_shorthand_list_appbarlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <android.support.v7.widget.Toolbar
             android:id="@+id/fragment_shorthand_list_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="match_parent"
             android:background="?attr/colorPrimary"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:layout_scrollFlags="scroll"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
     </android.support.design.widget.AppBarLayout>
 
     <com.utimer.view.ShorthandRecyclerView
         android:id="@+id/fragment_shorthand_list_recycler_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:background="@android:color/holo_blue_dark"
         android:clipChildren="false"
         android:clipToPadding="false"
         android:divider="@android:color/transparent"
         android:dividerHeight="10dp"
         android:scrollbars="none"
-        android:background="@android:color/holo_blue_dark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fragment_shorthand_list_appbarlayout"
         app:layout_constraintVertical_bias="0.0" />
 </android.support.constraint.ConstraintLayout>
