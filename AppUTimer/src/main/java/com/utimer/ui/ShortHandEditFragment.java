@@ -137,11 +137,14 @@ public class ShortHandEditFragment extends AEditFragment implements ShorthandEdi
     protected void onEditEnd() {
         super.onEditEnd();
 
-        int resultCode = RESULT_OK;
-        if(getEditMvpP().ifEditElementEmpty())
-            resultCode = RESULT_CANCELED;
+        int resultCode = RESULT_CANCELED;
+        if(!getEditMvpP().ifEditElementEmpty()){
+            resultCode = RESULT_OK;
+            Optional<EditElement> elementOptional = editMvpP.getEditElement(0);
+            if(elementOptional.isPresent())
+                ((ShortHandEntity)getArguments().getSerializable(KEY_SHORTHAND)).appendDetail(elementOptional.get().getMdCharSequence().toString());
+        }
         setFragmentResult(resultCode, getArguments());
-
     }
 
     /**********************************************IShorthandEditMvpV**********************************************/
