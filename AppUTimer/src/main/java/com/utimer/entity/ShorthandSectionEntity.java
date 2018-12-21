@@ -21,6 +21,16 @@ public class ShorthandSectionEntity extends BaseSectionEntity<ShortHandEntity> {
             return Optional.of(t.getTitle());
         return Optional.absent();
     }
+    public Optional<String> getDetail(){
+        if(t != null && t.getDetail() != null)
+            return t.getDetail();
+        return Optional.absent();
+    }
+    public Optional<String>  getLastAccessTime(){
+        if(t != null && t.getLastAccessTime() != null)
+            return Optional.of(t.getLastAccessTime().toString());
+        return Optional.absent();
+    }
     public Optional<String> getRPath(){
         if(t != null && t.getAttachFile() != null)
             return t.getAttachFile().getRPath();

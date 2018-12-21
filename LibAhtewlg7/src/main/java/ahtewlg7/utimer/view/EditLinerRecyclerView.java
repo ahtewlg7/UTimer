@@ -19,8 +19,6 @@ import ahtewlg7.utimer.entity.md.EditElement;
 public class EditLinerRecyclerView extends ABaseLinearRecyclerView<EditElement> {
     public static final String TAG = EditLinerRecyclerView.class.getSimpleName();
 
-    private List<EditElement> EditElementList;
-
     private ElementLinearItemAdapter recyclerViewAdapter;
 
     public EditLinerRecyclerView(Context context) {
@@ -54,7 +52,6 @@ public class EditLinerRecyclerView extends ABaseLinearRecyclerView<EditElement> 
                      BaseQuickAdapter.OnItemChildClickListener itemChildClickListener,
                      OnItemSwipeListener itemSwipeListener,
                      OnItemDragListener itemDragListener) {
-        EditElementList = entityList;
         recyclerViewAdapter = new ElementLinearItemAdapter(context,entityList);
         recyclerViewAdapter.toSetOnItemClickListener(itemClickListener);
         recyclerViewAdapter.toSetOnItemChildClickListener(itemChildClickListener);

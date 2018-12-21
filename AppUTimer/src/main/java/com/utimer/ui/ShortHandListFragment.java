@@ -151,7 +151,6 @@ public class ShortHandListFragment extends AToolbarBkFragment implements ShortHa
 
     /**********************************************IShorthandListMvpV**********************************************/
 
-
     @Override
     public void resetView(List<ShortHandEntity> dataList) {
 

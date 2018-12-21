@@ -65,6 +65,15 @@ public abstract class AUtimerEditMvpP<T extends AUtimerEntity> {
         return editElementList == null || editElementList.isEmpty();
     }
 
+    public Optional<EditElement> getEditElement(int index){
+        EditElement editElement = null;
+        try{
+            if(editElementList != null)
+                editElement = editElementList.get(index);
+        }catch (Exception e){}
+        return Optional.fromNullable(editElement);
+    }
+
     public void onEditViewClick(int position){
         Logcat.i(TAG,"onEditViewClick position = " + position + ",preEditPosition = " + preEditPosition);
 
@@ -274,14 +283,6 @@ public abstract class AUtimerEditMvpP<T extends AUtimerEntity> {
         return false;
     }
 
-    protected Optional<EditElement> getEditElement(int index){
-        EditElement editElement = null;
-        try{
-            if(editElementList != null)
-                editElement = editElementList.get(index);
-        }catch (Exception e){}
-        return Optional.fromNullable(editElement);
-    }
     protected void initElementList(){
         if(editElementList == null)
             editElementList = Lists.newArrayList();

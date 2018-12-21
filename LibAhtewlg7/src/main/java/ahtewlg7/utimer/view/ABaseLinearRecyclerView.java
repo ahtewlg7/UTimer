@@ -3,7 +3,6 @@ package ahtewlg7.utimer.view;
 import android.content.Context;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.AttributeSet;
@@ -61,7 +60,6 @@ public abstract class ABaseLinearRecyclerView<T> extends RecyclerView{
 
         public BaseItemAdapter(Context context, List<K> dataList){
             super(getViewItemLayout(), dataList);
-            setLayoutManager(new LinearLayoutManager(context));
         }
 
         public void toSetOnItemClickListener(BaseQuickAdapter.OnItemClickListener itemClickListener){
