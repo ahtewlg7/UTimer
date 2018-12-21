@@ -33,7 +33,7 @@ public class ShortHandEditFragment extends AEditFragment implements ShorthandEdi
         BaseQuickAdapter.OnItemChildClickListener {
     public static final String TAG = ShortHandEditFragment.class.getSimpleName();
 
-    private static final String KEY_SHORTHAND = "shorthand";
+    public static final String KEY_SHORTHAND = "shorthand";
 
     @BindView(R.id.fragment_shorthand_toolbar)
     Toolbar toolbar;
@@ -131,6 +131,17 @@ public class ShortHandEditFragment extends AEditFragment implements ShorthandEdi
             e.printStackTrace();
         }
         return Optional.fromNullable((EditText)currEditText);
+    }
+
+    @Override
+    protected void onEditEnd() {
+        super.onEditEnd();
+
+        int resultCode = RESULT_OK;
+        if(getEditMvpP().ifEditElementEmpty())
+            resultCode = RESULT_CANCELED;
+        setFragmentResult(resultCode, getArguments());
+
     }
 
     /**********************************************IShorthandEditMvpV**********************************************/

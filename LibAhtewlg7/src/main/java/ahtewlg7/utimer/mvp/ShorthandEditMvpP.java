@@ -40,7 +40,6 @@ public class ShorthandEditMvpP extends AUtimerEditMvpP<ShortHandEntity> {
         return new ShorthandEditMvpM((ShortHandEntity) utimerEntity);
     }
 
-
     class ShorthandEditMvpM implements IUtimerEditMvpM{
         private ShortHandEntity shortHandEntity;
         private GtdShortHandEditAction shortHandEditAction;
@@ -82,7 +81,7 @@ public class ShorthandEditMvpP extends AUtimerEditMvpP<ShortHandEntity> {
                     .map(new Function<EditElement, Boolean>() {
                         @Override
                         public Boolean apply(EditElement editElement) throws Exception {
-                            return shortHandEditAction.toSave(editElement.getRawText().trim(),true);
+                            return shortHandEditAction.toSave(editElement.getRawText(),true);
                         }
                     }).subscribeOn(Schedulers.io());
         }

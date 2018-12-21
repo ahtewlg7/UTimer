@@ -26,6 +26,8 @@ import butterknife.BindView;
 public class ShortHandListFragment extends AToolbarBkFragment implements ShortHandListMvpP.IShorthandListMvpV {
     public static final String TAG = ShortHandListFragment.class.getSimpleName();
 
+    public static final int REQ_EDIT_FRAGMENT         = 100;
+
     @BindView(R.id.fragment_shorthand_list_toolbar)
     Toolbar toolbar;
     @BindView(R.id.fragment_shorthand_list_recycler_view)
@@ -59,6 +61,16 @@ public class ShortHandListFragment extends AToolbarBkFragment implements ShortHa
     public void onLazyInitView(@Nullable Bundle savedInstanceState) {
         super.onLazyInitView(savedInstanceState);
         shortHandListMvpP.toLoadAllItem();
+    }
+
+    @Override
+    public void onFragmentResult(int requestCode, int resultCode, Bundle data) {
+        super.onFragmentResult(requestCode, resultCode, data);
+        if (requestCode == REQ_EDIT_FRAGMENT && resultCode == RESULT_OK && data != null) {
+            ShortHandEntity shorthandEntity = (ShortHandEntity)data.getSerializable(ShortHandEditFragment.KEY_SHORTHAND);
+            if(shorthandEntity != null)
+                onItemCreate(shorthandEntity);
+        }
     }
     /**********************************************AToolbarBkFragment**********************************************/
 
@@ -95,7 +107,7 @@ public class ShortHandListFragment extends AToolbarBkFragment implements ShortHa
         switch (item.getItemId()) {
             case R.id.tool_menu_add:
                 Log.i(TAG, "to create shorthand");
-                start(ShortHandEditFragment.newInstance(null));
+                startForResult(ShortHandEditFragment.newInstance(null), REQ_EDIT_FRAGMENT);
                 break;
             default:
                 result = super.onOptionsItemSelected(item);
@@ -128,6 +140,12 @@ public class ShortHandListFragment extends AToolbarBkFragment implements ShortHa
     @Override
     public void onItemLoadEnd() {
         Logcat.i(TAG,"onItemLoadEnd");
+        shorthandRecyclerView.resetData(sectionEntityList);
+    }
+
+    @Override
+    public void onItemCreate(ShortHandEntity data) {
+        sectionEntityList.add(new ShorthandSectionEntity(data));
         shorthandRecyclerView.resetData(sectionEntityList);
     }
 

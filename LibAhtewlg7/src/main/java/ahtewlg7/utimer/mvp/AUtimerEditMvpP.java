@@ -40,7 +40,6 @@ public abstract class AUtimerEditMvpP<T extends AUtimerEntity> {
 
     protected abstract IUtimerEditMvpM getEditMvpM(AUtimerEntity utimerEntity);
 
-
     protected int preEditPosition = INIT_POSITION;
     protected boolean isChangeSaved;
 
@@ -60,6 +59,10 @@ public abstract class AUtimerEditMvpP<T extends AUtimerEntity> {
         this.utimerEntity   = utimerEntity;
         this.editMvpV       = editMvpV;
         editMvpM            = getEditMvpM(utimerEntity);
+    }
+
+    public boolean ifEditElementEmpty(){
+        return editElementList == null || editElementList.isEmpty();
     }
 
     public void onEditViewClick(int position){
@@ -270,7 +273,8 @@ public abstract class AUtimerEditMvpP<T extends AUtimerEntity> {
         }
         return false;
     }
-    public Optional<EditElement> getEditElement(int index){
+
+    protected Optional<EditElement> getEditElement(int index){
         EditElement editElement = null;
         try{
             if(editElementList != null)

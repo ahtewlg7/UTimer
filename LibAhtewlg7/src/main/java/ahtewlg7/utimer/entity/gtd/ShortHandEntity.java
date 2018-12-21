@@ -106,7 +106,7 @@ public class ShortHandEntity extends AUtimerEntity<ShortHandBuilder> implements 
     protected void initByAttachFile(AAttachFile attachFile){
         Optional<String> title = attachFile.getTitle();
         if(title.isPresent())
-        setTitle(title.get());
+            setTitle(title.get());
         if(attachFile.ifValid()) {
             createTime     = attachFile.getCreateTime();
             lastAccessTime = attachFile.getLassAccessTime();
