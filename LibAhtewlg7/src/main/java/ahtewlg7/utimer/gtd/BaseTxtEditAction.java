@@ -1,5 +1,7 @@
 package ahtewlg7.utimer.gtd;
 
+import android.text.TextUtils;
+
 import com.google.common.base.Charsets;
 import com.google.common.base.Optional;
 import com.google.common.io.CharSink;
@@ -55,7 +57,9 @@ public class BaseTxtEditAction extends AEditAction {
                                 .map(new Function<String, Optional<EditElement>>() {
                                     @Override
                                     public Optional<EditElement> apply(String s) throws Exception {
-                                        EditElement element = new EditElement(s + System.lineSeparator());
+                                        if(TextUtils.isEmpty(s.trim()))
+                                            return Optional.absent();
+                                        EditElement element = new EditElement(s.trim() + System.lineSeparator());
                                         element.setMdCharSequence(toParse(s));
                                         return Optional.of(element);
                                     }
