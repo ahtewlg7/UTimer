@@ -88,17 +88,20 @@ public class ShorthandRecyclerView extends ABaseSectionRecyclerView<ShorthandSec
         @Override
         protected void convert(BaseViewHolder helper, ShorthandSectionEntity item) {
 //            Logcat.i(TAG,"convert : " + item.toString());
-            StringBuilder builder = new StringBuilder();
-            if(item.getRPath().isPresent() && !TextUtils.isEmpty(item.getRPath().get()))
-                builder.append(item.getRPath().get());
-            /*if(item.getTitle().isPresent() && !TextUtils.isEmpty(item.getTitle().get()))
-                    builder.append(item.getTitle().get());*/
-            if(item.getDetail().isPresent() && !TextUtils.isEmpty(item.getDetail().get()))
-                    builder.append("\n").append(item.getDetail().get());
+            StringBuilder titleBuilder = new StringBuilder();
+            StringBuilder detailBuilder = new StringBuilder();
+
+            if(item.getTitle().isPresent() && !TextUtils.isEmpty(item.getTitle().get()))
+                titleBuilder.append(item.getTitle().get());
+            /*if(item.getRPath().isPresent() && !TextUtils.isEmpty(item.getRPath().get()))
+                builder.append(item.getRPath().get());*/
             if(item.getLastAccessTime().isPresent() && !TextUtils.isEmpty(item.getLastAccessTime().get()))
-                builder.append("\n").append(item.getLastAccessTime().get());
-            helper.setText(R.id.view_gtd_tv, builder.toString())
-                .setImageDrawable(R.id.view_gtd_iv, TextDrawable.builder().buildRect("A", Color.parseColor("#ff0099cc")));
+                titleBuilder.append("\n").append(item.getLastAccessTime().get());
+            if(item.getDetail().isPresent() && !TextUtils.isEmpty(item.getDetail().get()))
+                detailBuilder.append(item.getDetail().get());
+            helper.setText(R.id.view_gtd_title, titleBuilder.toString())
+                .setText(R.id.view_gtd_detail, detailBuilder.toString())
+                .setImageDrawable(R.id.view_gtd_image, TextDrawable.builder().buildRect("S", Color.parseColor("#ff0099cc")));
         }
     }
 }

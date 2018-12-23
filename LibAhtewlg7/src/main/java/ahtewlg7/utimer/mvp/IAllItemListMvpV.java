@@ -15,6 +15,7 @@ public interface IAllItemListMvpV<T> extends IRxLifeCycleBindView{
     public void onItemLoadEnd();
 
     public void onItemCreate(T data);
+    public void onItemEdit(T data);
 
     public void onDeleteSucc(T t);
     public void onDeleteFail(T t);
