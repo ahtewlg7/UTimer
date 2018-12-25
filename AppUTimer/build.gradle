@@ -46,4 +46,6 @@ dependencies {
     implementation 'com.github.Almeros:android-gesture-detectors:v1.0'
 
     implementation 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
+
+    implementation 'com.github.navasmdc:MaterialDesign:1.5@aar'
 }

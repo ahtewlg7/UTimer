@@ -48,10 +48,14 @@ public class ShorthandRecyclerView extends ABaseSectionRecyclerView<ShorthandSec
     @Override
     public void init(Context context, List<ShorthandSectionEntity> entityList,
                      BaseQuickAdapter.OnItemClickListener itemClickListener,
-                     BaseQuickAdapter.OnItemChildClickListener itemChildClickListener) {
+                     BaseQuickAdapter.OnItemChildClickListener itemChildClickListener,
+                     BaseQuickAdapter.OnItemLongClickListener itemLongClickListener,
+                     BaseQuickAdapter.OnItemChildLongClickListener itemChildLongClickListener) {
         itemAdapter = new ShorthandItemAdapter(context, entityList);
         itemAdapter.setOnItemClickListener(itemClickListener);
         itemAdapter.setOnItemChildClickListener(itemChildClickListener);
+        itemAdapter.setOnItemLongClickListener(itemLongClickListener);
+        itemAdapter.setOnItemChildLongClickListener(itemChildLongClickListener);
         itemAdapter.bindToRecyclerView(this);
         setLayoutManager(new LinearLayoutManager(context));
         setAdapter(itemAdapter);
@@ -59,7 +63,7 @@ public class ShorthandRecyclerView extends ABaseSectionRecyclerView<ShorthandSec
 
     @Override
     public void init(Context context, List<ShorthandSectionEntity> entityList) {
-        init(context, entityList, null, null);
+        init(context, entityList, null, null, null,null);
     }
 
     @Override
@@ -68,9 +72,8 @@ public class ShorthandRecyclerView extends ABaseSectionRecyclerView<ShorthandSec
             itemAdapter.replaceData(entityList);
     }
 
-    public class ShorthandItemAdapter extends BaseSectionAdapter{
-
-        public ShorthandItemAdapter(Context context, List<ShorthandSectionEntity> dataList){
+    class ShorthandItemAdapter extends BaseSectionAdapter{
+        ShorthandItemAdapter(Context context, List<ShorthandSectionEntity> dataList){
             super(context, dataList);
         }
 

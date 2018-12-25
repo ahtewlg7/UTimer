@@ -28,6 +28,9 @@
 
     <string name="create">new</string>
     <string name="add">add</string>
+    <string name="del">Delete</string>
+
+    <string name="prompt_del">Sure to delete it?</string>
 
 
     <string name="entity_invalid">the env is not ready , so pop it</string>

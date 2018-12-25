@@ -28,7 +28,9 @@ public abstract class ABaseSectionRecyclerView<K extends BaseSectionEntity> exte
     public abstract int getViewHeadLayout();
     public abstract void init(Context context, List<K> entityList,
                               BaseQuickAdapter.OnItemClickListener itemClickListener,
-                              BaseQuickAdapter.OnItemChildClickListener itemChildClickListener);
+                              BaseQuickAdapter.OnItemChildClickListener itemChildClickListener,
+                              BaseQuickAdapter.OnItemLongClickListener itemLongClickListener,
+                              BaseQuickAdapter.OnItemChildLongClickListener itemChildLongClickListener);
     public abstract void init(Context context, List<K> entityList);
     public abstract void resetData(List<K> entityList);
 
