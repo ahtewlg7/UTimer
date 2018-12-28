@@ -1,9 +1,15 @@
 package ahtewlg7.utimer.mvp;
 
+import android.support.annotation.NonNull;
+
+import com.blankj.utilcode.util.FileUtils;
+import com.google.common.collect.Lists;
 import com.trello.rxlifecycle2.android.FragmentEvent;
 import com.trello.rxlifecycle2.components.support.RxFragment;
 
 import org.reactivestreams.Subscription;
+
+import java.util.List;
 
 import ahtewlg7.utimer.entity.gtd.ShortHandEntity;
 import ahtewlg7.utimer.factory.ShortHandFactory;
@@ -13,6 +19,7 @@ import ahtewlg7.utimer.util.MySafeSubscriber;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by lw on 2018/12/9.
@@ -20,12 +27,15 @@ import io.reactivex.functions.Consumer;
 public class ShortHandListMvpP implements IAllItemListMvpP<ShortHandEntity>{
     public static final String TAG = ShortHandListMvpP.class.getSimpleName();
 
+    private List<ShortHandEntity> shortHandList;
+
     private IShorthandListMvpV shorthandListMvpV;
     private ShorthandListMvpM shorthandListMvpM;
 
     public ShortHandListMvpP(IShorthandListMvpV shorthandListMvpV) {
         this.shorthandListMvpV  = shorthandListMvpV;
         shorthandListMvpM       = new ShorthandListMvpM();
+        shortHandList           = Lists.newArrayList();
     }
 
     @Override
@@ -38,6 +48,7 @@ public class ShortHandListMvpP implements IAllItemListMvpP<ShortHandEntity>{
                     @Override
                     public void onSubscribe(Subscription s) {
                         super.onSubscribe(s);
+                        shortHandList.clear();
                         if(shorthandListMvpV != null)
                             shorthandListMvpV.onItemLoadStart();
                     }
@@ -46,6 +57,7 @@ public class ShortHandListMvpP implements IAllItemListMvpP<ShortHandEntity>{
                     public void onNext(ShortHandEntity entity) {
                         super.onNext(entity);
                         Logcat.i(TAG,"toLoadAllItem onNext : " + entity.toString());
+                        shortHandList.add(entity);
                         if(shorthandListMvpV != null)
                             shorthandListMvpV.onItemLoad(entity);
                     }
@@ -61,19 +73,64 @@ public class ShortHandListMvpP implements IAllItemListMvpP<ShortHandEntity>{
                     public void onComplete() {
                         super.onComplete();
                         if(shorthandListMvpV != null)
-                            shorthandListMvpV.onItemLoadEnd();
+                            shorthandListMvpV.onItemLoadEnd(shortHandList);
                     }
                 });
     }
 
     @Override
-    public void toDeleteItem(ShortHandEntity entity) {
+    public void toDeleteItem(@NonNull Flowable<ShortHandEntity>  entityRx) {
+        entityRx.subscribeOn(Schedulers.io())
+                .doOnNext(new Consumer<ShortHandEntity>() {
+                    @Override
+                    public void accept(ShortHandEntity entity) throws Exception {
+                        boolean result = shorthandListMvpM.toDelEntity(entity);
+                        Logcat.i(TAG,"toDeleteItem " + entity.getTitle() + " : " + result);
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new MySafeSubscriber<ShortHandEntity>() {
+                    @Override
+                    public void onNext(ShortHandEntity entity) {
+                        super.onNext(entity);
 
+                        boolean ifExited = entity.getAttachFile().ifValid();
+                        if (shorthandListMvpV != null && !ifExited) {
+                            int index  = shortHandList.indexOf(entity);
+                            shortHandList.remove(entity);
+                            shorthandListMvpV.onDeleteSucc(index, entity);
+                        }else if (shorthandListMvpV != null)
+                            shorthandListMvpV.onDeleteFail(entity);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        if (shorthandListMvpV != null)
+                            shorthandListMvpV.onDeleteErr(e);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        super.onComplete();
+                        if (shorthandListMvpV != null)
+                            shorthandListMvpV.onDeleteEnd();
+                    }
+                });
     }
 
     @Override
-    public void toCreateItem() {
+    public void onItemCreated(ShortHandEntity entity) {
+        shortHandList.add(entity);
+        if(shorthandListMvpV != null)
+            shorthandListMvpV.resetView(shortHandList);
+    }
 
+    @Override
+    public void onItemEdited(int index, ShortHandEntity entity) {
+        shortHandList.set(index, entity);
+        if(shorthandListMvpV != null)
+            shorthandListMvpV.resetView(index, entity);
     }
 
     class ShorthandListMvpM implements IAllItemListMvpM<ShortHandEntity>{
@@ -98,6 +155,23 @@ public class ShortHandListMvpP implements IAllItemListMvpP<ShortHandEntity>{
                             ShortHandFactory.getInstance().addValue(entity);
                         }
                     });
+        }
+
+        @Override
+        public boolean toDelEntity(ShortHandEntity entity) {
+            /*if(entity != null){
+                DelBusEvent delBusEvent = new DelBusEvent(entity.getId(),entity.getAttachFile().getAbsPath().get());
+                EventBusFatory.getInstance().getDefaultEventBus().postSticky(delBusEvent);
+            }*/
+
+            boolean result = false;
+            try{
+                if(entity != null && entity.getAttachFile().ifValid())
+                    result = FileUtils.deleteFile(entity.getAttachFile().getFile());
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            return result;
         }
     }
 

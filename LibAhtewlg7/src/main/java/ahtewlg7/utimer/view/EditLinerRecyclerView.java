@@ -43,20 +43,22 @@ public class EditLinerRecyclerView extends ABaseLinearRecyclerView<EditElement> 
 
     @Override
     public void init(Context context, List<EditElement> entityList) {
-        init(context,entityList,null,null,null,null);
+        init(context,entityList,null,null,null,null,null,null);
     }
 
     @Override
     public void init(Context context, List<EditElement> entityList,
                      BaseQuickAdapter.OnItemClickListener itemClickListener,
                      BaseQuickAdapter.OnItemChildClickListener itemChildClickListener,
+                     BaseQuickAdapter.OnItemLongClickListener itemLongClickListener,
+                     BaseQuickAdapter.OnItemChildLongClickListener itemChildLongClickListener,
                      OnItemSwipeListener itemSwipeListener,
                      OnItemDragListener itemDragListener) {
         recyclerViewAdapter = new ElementLinearItemAdapter(context,entityList);
         recyclerViewAdapter.toSetOnItemClickListener(itemClickListener);
         recyclerViewAdapter.toSetOnItemChildClickListener(itemChildClickListener);
         recyclerViewAdapter.toSetOnItemSwipeListener(itemSwipeListener);
-        recyclerViewAdapter.toSetOnItemDragListener(this, itemDragListener);
+        recyclerViewAdapter.toSetOnItemDragListener(itemDragListener);
         recyclerViewAdapter.bindToRecyclerView(this);
         setLayoutManager(new LinearLayoutManager(context));
         setAdapter(recyclerViewAdapter);
@@ -80,6 +82,12 @@ public class EditLinerRecyclerView extends ABaseLinearRecyclerView<EditElement> 
             recyclerViewAdapter.remove(index);
             recyclerViewAdapter.addData(index, entityList);
         }
+    }
+
+    @Override
+    public void removeData(int index) {
+        if(recyclerViewAdapter != null)
+            recyclerViewAdapter.remove(index);
     }
 
     public class ElementLinearItemAdapter extends BaseItemAdapter<EditElement>{

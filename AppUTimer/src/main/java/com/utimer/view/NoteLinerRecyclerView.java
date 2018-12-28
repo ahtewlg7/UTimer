@@ -42,13 +42,15 @@ public class NoteLinerRecyclerView extends ABaseLinearRecyclerView<NoteEntity> {
 
     @Override
     public void init(Context context, List<NoteEntity> entityList) {
-        init(context,entityList,null,null,null,null);
+        init(context,entityList,null,null,null,null,null,null);
     }
 
     @Override
     public void init(Context context, List<NoteEntity> entityList,
                      BaseQuickAdapter.OnItemClickListener itemClickListener,
                      BaseQuickAdapter.OnItemChildClickListener itemChildClickListener,
+                     BaseQuickAdapter.OnItemLongClickListener itemLongClickListener,
+                     BaseQuickAdapter.OnItemChildLongClickListener itemChildLongClickListener,
                      OnItemSwipeListener itemSwipeListener,
                      OnItemDragListener itemDragListener) {
         noteEntityList = entityList;
@@ -56,7 +58,7 @@ public class NoteLinerRecyclerView extends ABaseLinearRecyclerView<NoteEntity> {
         recyclerViewAdapter.toSetOnItemClickListener(itemClickListener);
         recyclerViewAdapter.toSetOnItemChildClickListener(itemChildClickListener);
         recyclerViewAdapter.toSetOnItemSwipeListener(itemSwipeListener);
-        recyclerViewAdapter.toSetOnItemDragListener(this,itemDragListener);
+        recyclerViewAdapter.toSetOnItemDragListener(itemDragListener);
         setAdapter(recyclerViewAdapter);
     }
 
@@ -75,6 +77,12 @@ public class NoteLinerRecyclerView extends ABaseLinearRecyclerView<NoteEntity> {
     public void resetData(int index, NoteEntity entity) {
         if(recyclerViewAdapter != null)
             recyclerViewAdapter.setData(index, entity);
+    }
+
+    @Override
+    public void removeData(int index) {
+        if(recyclerViewAdapter != null)
+            recyclerViewAdapter.remove(index);
     }
 
     public class NoteLinearItemAdapter extends BaseItemAdapter<NoteEntity>{

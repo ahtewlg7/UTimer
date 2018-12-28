@@ -31,6 +31,9 @@
     <string name="del">Delete</string>
 
     <string name="prompt_del">Sure to delete it?</string>
+    <string name="prompt_del_succ">to del succ</string>
+    <string name="prompt_del_fail">to del fail</string>
+    <string name="prompt_del_err">del err</string>
 
 
     <string name="entity_invalid">the env is not ready , so pop it</string>

@@ -162,7 +162,7 @@ public class ShortHandEditFragment extends AEditFragment implements ShorthandEdi
     public void onLoadEnd(List<EditElement> mdElementList) {
         ToastUtils.showShort("onLoadEnd size = " + mdElementList.size());
         editReCyclerView.init(getContext(), mdElementList, null,
-                this ,null, null);
+                this ,null, null,null,null);
     }
 
     /**********************************************IShorthandEditMvpV**********************************************/

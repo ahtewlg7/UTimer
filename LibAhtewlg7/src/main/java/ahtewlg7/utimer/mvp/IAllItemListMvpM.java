@@ -8,4 +8,5 @@ import io.reactivex.Flowable;
 
 public interface IAllItemListMvpM<T> {
     public Flowable<T> loadAllEntity();
+    public boolean toDelEntity(T t);
 }

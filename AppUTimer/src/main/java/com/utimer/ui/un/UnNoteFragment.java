@@ -134,7 +134,7 @@ public class UnNoteFragment extends UnAFunctionFragement
     @Override
     public void initRecyclerView(List<NoteEntity> dataList) {
         noteLinerRecyclerView.init(getActivity(), dataList,
-                noteOnItemClickListener, noteOnItemChildClickListener,
+                noteOnItemClickListener, noteOnItemChildClickListener,null,null,
                 noteOnItemSwipeListener, noteOnItemDragListener);
     }
 

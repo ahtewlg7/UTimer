@@ -8,16 +8,18 @@ import java.util.List;
 
 public interface IAllItemListMvpV<T> extends IRxLifeCycleBindView{
     public void resetView(List<T> dataList);
+    public void resetView(int index , T t);
 
     public void onItemLoadStart();
     public void onItemLoad(T data);
     public void onItemLoadErr(Throwable t);
-    public void onItemLoadEnd();
+    public void onItemLoadEnd(List<T> alldata);
 
     public void onItemCreate(T data);
     public void onItemEdit(T data);
 
-    public void onDeleteSucc(T t);
+    public void onDeleteSucc(int index, T t);
     public void onDeleteFail(T t);
-    public void onDeleteErr(Throwable throwable, T t);
+    public void onDeleteErr(Throwable throwable);
+    public void onDeleteEnd();
 }
