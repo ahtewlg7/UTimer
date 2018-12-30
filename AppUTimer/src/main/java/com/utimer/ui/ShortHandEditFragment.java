@@ -193,16 +193,17 @@ public class ShortHandEditFragment extends AEditFragment implements ShorthandEdi
     /**********************************************IShorthandEditMvpV**********************************************/
     @Override
     public void onSaveStart() {
-
+        Logcat.i(TAG, "onSaveStart");
     }
 
     @Override
     public void onSaveErr(Throwable e) {
-
+        Logcat.i(TAG, "onSaveErr");
     }
 
     @Override
     public void onSaveEnd() {
+        Logcat.i(TAG, "onSaveEnd");
     }
     /**********************************************IShorthandEditMvpV**********************************************/
     @Override

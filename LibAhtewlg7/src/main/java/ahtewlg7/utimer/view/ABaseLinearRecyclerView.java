@@ -2,6 +2,7 @@ package ahtewlg7.utimer.view;
 
 import android.content.Context;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -26,19 +27,10 @@ import java.util.List;
 public abstract class ABaseLinearRecyclerView<T> extends RecyclerView{
     public static final String TAG = ABaseLinearRecyclerView.class.getSimpleName();
 
+    protected BaseItemAdapter<T> recyclerViewAdapter;
+
     public abstract @LayoutRes int getViewItemLayout();
-    public abstract void init(Context context, List<T> entityList);
-    public abstract void init(Context context, List<T> entityList,
-                              BaseQuickAdapter.OnItemClickListener itemClickListener,
-                              BaseQuickAdapter.OnItemChildClickListener itemChildClickListener,
-                              BaseQuickAdapter.OnItemLongClickListener itemLongClickListener,
-                              BaseQuickAdapter.OnItemChildLongClickListener itemChildLongClickListener,
-                              OnItemSwipeListener itemSwipeListener,
-                              OnItemDragListener itemDragListener);
-    public abstract void resetData(List<T> entityList);
-    public abstract void resetData(int index, T entity);
-    public abstract void resetData(int index, List<T> entityList);
-    public abstract void removeData(int index);
+    public abstract @NonNull BaseItemAdapter<T> createAdapter(Context context, List<T> entityList);
 
     public ABaseLinearRecyclerView(Context context) {
         super(context);
@@ -55,6 +47,50 @@ public abstract class ABaseLinearRecyclerView<T> extends RecyclerView{
     @Override
     public BaseItemAdapter getAdapter() {
         return (BaseItemAdapter)super.getAdapter();
+    }
+
+    public void init(Context context, List<T> entityList) {
+        init(context,entityList,null,null,null,null,null,null);
+    }
+
+    public void init(Context context, List<T> entityList,
+                     BaseQuickAdapter.OnItemClickListener itemClickListener,
+                     BaseQuickAdapter.OnItemChildClickListener itemChildClickListener,
+                     BaseQuickAdapter.OnItemLongClickListener itemLongClickListener,
+                     BaseQuickAdapter.OnItemChildLongClickListener itemChildLongClickListener,
+                     OnItemSwipeListener itemSwipeListener,
+                     OnItemDragListener itemDragListener) {
+        recyclerViewAdapter = createAdapter(context, entityList);
+        recyclerViewAdapter.toSetOnItemClickListener(itemClickListener);
+        recyclerViewAdapter.toSetOnItemChildClickListener(itemChildClickListener);
+        recyclerViewAdapter.toSetOnItemLongClickListener(itemLongClickListener);
+        recyclerViewAdapter.toSetOnItemChildLongClickListener(itemChildLongClickListener);
+        recyclerViewAdapter.toSetOnItemSwipeListener(itemSwipeListener);
+        recyclerViewAdapter.toSetOnItemDragListener(itemDragListener);
+        recyclerViewAdapter.bindToRecyclerView(this);
+        setAdapter(recyclerViewAdapter);
+    }
+
+    public void resetData(List<T> entityList) {
+        if(recyclerViewAdapter != null)
+            recyclerViewAdapter.setNewData(entityList);
+    }
+
+    public void resetData(int index, T entity) {
+        if(recyclerViewAdapter != null)
+            recyclerViewAdapter.setData(index, entity);
+    }
+
+    public void resetData(int index, List<T> entityList) {
+        if(recyclerViewAdapter != null){
+            recyclerViewAdapter.remove(index);
+            recyclerViewAdapter.addData(index, entityList);
+        }
+    }
+
+    public void removeData(int index) {
+        if(recyclerViewAdapter != null)
+            recyclerViewAdapter.remove(index);
     }
 
     public abstract class BaseItemAdapter<K> extends BaseItemDraggableAdapter<K,BaseViewHolder> {
@@ -77,7 +113,7 @@ public abstract class ABaseLinearRecyclerView<T> extends RecyclerView{
             if(itemLongClickListener != null)
                 setOnItemLongClickListener(itemLongClickListener);
         }
-        public void toSetItemChildLongClickListener(BaseQuickAdapter.OnItemChildLongClickListener itemChildLongClickListener){
+        public void toSetOnItemChildLongClickListener(BaseQuickAdapter.OnItemChildLongClickListener itemChildLongClickListener){
             if(itemChildLongClickListener != null)
                 setOnItemChildLongClickListener(itemChildLongClickListener);
         }

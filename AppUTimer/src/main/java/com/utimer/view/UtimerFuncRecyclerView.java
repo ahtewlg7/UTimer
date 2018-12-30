@@ -23,8 +23,6 @@ import ahtewlg7.utimer.view.ABaseLinearRecyclerView;
 public class UtimerFuncRecyclerView extends ABaseLinearRecyclerView<UtimerFuncRecyclerView.FuncViewEntity> {
     public static final String TAG = UtimerFuncRecyclerView.class.getSimpleName();
 
-    private UtimerFuncItemAdapter itemAdapter;
-
     public UtimerFuncRecyclerView(Context context) {
         super(context);
     }
@@ -42,52 +40,17 @@ public class UtimerFuncRecyclerView extends ABaseLinearRecyclerView<UtimerFuncRe
         return R.layout.view_utimer_item;
     }
 
+    @NonNull
     @Override
-    public void init(Context context, List<FuncViewEntity> entityList,
-                     BaseQuickAdapter.OnItemClickListener itemClickListener,
-                     BaseQuickAdapter.OnItemChildClickListener itemChildClickListener,
-                     BaseQuickAdapter.OnItemLongClickListener itemLongClickListener,
-                     BaseQuickAdapter.OnItemChildLongClickListener itemChildLongClickListener,
-                     OnItemSwipeListener itemSwipeListener,
-                     OnItemDragListener itemDragListener) {
-        itemAdapter = new UtimerFuncItemAdapter(context, entityList);
-        itemAdapter.toSetOnItemClickListener(itemClickListener);
-        itemAdapter.toSetOnItemChildClickListener(itemChildClickListener);
-        itemAdapter.toSetOnItemLongClickListener(itemLongClickListener);
-        itemAdapter.toSetItemChildLongClickListener(itemChildLongClickListener);
-        itemAdapter.toSetOnItemSwipeListener(itemSwipeListener);
-        itemAdapter.toSetOnItemDragListener(itemDragListener);
+    public BaseItemAdapter<FuncViewEntity> createAdapter(Context context, List<FuncViewEntity> entityList) {
+        return new UtimerFuncItemAdapter(context, entityList);
+    }
+
+    @Override
+    public void init(Context context, List<FuncViewEntity> entityList, BaseQuickAdapter.OnItemClickListener itemClickListener, BaseQuickAdapter.OnItemChildClickListener itemChildClickListener, BaseQuickAdapter.OnItemLongClickListener itemLongClickListener, BaseQuickAdapter.OnItemChildLongClickListener itemChildLongClickListener, OnItemSwipeListener itemSwipeListener, OnItemDragListener itemDragListener) {
+        super.init(context, entityList, itemClickListener, itemChildClickListener, itemLongClickListener, itemChildLongClickListener, itemSwipeListener, itemDragListener);
         addItemDecoration(new SpacesItemDecoration(50));
-        itemAdapter.bindToRecyclerView(this);
         setLayoutManager(new GridLayoutManager(context, 2));
-        setAdapter(itemAdapter);
-    }
-
-    @Override
-    public void init(Context context, List<FuncViewEntity> entityList) {
-        init(context, entityList, null, null, null, null, null, null);
-    }
-
-    @Override
-    public void resetData(List<FuncViewEntity> entityList) {
-        if (itemAdapter != null)
-            itemAdapter.replaceData(entityList);
-    }
-
-    @Override
-    public void resetData(int index, FuncViewEntity entity) {
-        if (itemAdapter != null)
-            itemAdapter.setData(index, entity);
-    }
-
-    @Override
-    public void resetData(int index, List<FuncViewEntity> entityList) {
-    }
-
-    @Override
-    public void removeData(int index) {
-        if (itemAdapter != null)
-            itemAdapter.remove(index);
     }
 
     class UtimerFuncItemAdapter extends BaseItemAdapter<FuncViewEntity> {

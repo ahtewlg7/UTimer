@@ -14,6 +14,7 @@ import com.utimer.view.UtimerFuncRecyclerView;
 
 import java.util.List;
 
+import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MyRInfo;
 import butterknife.BindView;
 
@@ -73,7 +74,12 @@ public class UtimerFragment extends AButterKnifeFragment {
     class MyClickListener implements BaseQuickAdapter.OnItemClickListener{
         @Override
         public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-            ((MainFragment)getParentFragment()).start(ShortHandListFragment.newInstance());
+            switch (position){
+                case 0:
+                    Logcat.i(TAG,"onItemClick : start ShortHand list");
+                    ((MainFragment)getParentFragment()).start(ShortHandListFragment.newInstance());
+                    break;
+            }
         }
     }
 }

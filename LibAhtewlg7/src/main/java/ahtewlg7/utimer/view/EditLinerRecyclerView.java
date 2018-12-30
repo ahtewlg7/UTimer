@@ -2,6 +2,7 @@ package ahtewlg7.utimer.view;
 
 import android.content.Context;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.AttributeSet;
@@ -18,8 +19,6 @@ import ahtewlg7.utimer.entity.md.EditElement;
 
 public class EditLinerRecyclerView extends ABaseLinearRecyclerView<EditElement> {
     public static final String TAG = EditLinerRecyclerView.class.getSimpleName();
-
-    private ElementLinearItemAdapter recyclerViewAdapter;
 
     public EditLinerRecyclerView(Context context) {
         super(context);
@@ -42,52 +41,15 @@ public class EditLinerRecyclerView extends ABaseLinearRecyclerView<EditElement> 
     }
 
     @Override
-    public void init(Context context, List<EditElement> entityList) {
-        init(context,entityList,null,null,null,null,null,null);
-    }
-
-    @Override
-    public void init(Context context, List<EditElement> entityList,
-                     BaseQuickAdapter.OnItemClickListener itemClickListener,
-                     BaseQuickAdapter.OnItemChildClickListener itemChildClickListener,
-                     BaseQuickAdapter.OnItemLongClickListener itemLongClickListener,
-                     BaseQuickAdapter.OnItemChildLongClickListener itemChildLongClickListener,
-                     OnItemSwipeListener itemSwipeListener,
-                     OnItemDragListener itemDragListener) {
-        recyclerViewAdapter = new ElementLinearItemAdapter(context,entityList);
-        recyclerViewAdapter.toSetOnItemClickListener(itemClickListener);
-        recyclerViewAdapter.toSetOnItemChildClickListener(itemChildClickListener);
-        recyclerViewAdapter.toSetOnItemSwipeListener(itemSwipeListener);
-        recyclerViewAdapter.toSetOnItemDragListener(itemDragListener);
-        recyclerViewAdapter.bindToRecyclerView(this);
+    public void init(Context context, List<EditElement> entityList, BaseQuickAdapter.OnItemClickListener itemClickListener, BaseQuickAdapter.OnItemChildClickListener itemChildClickListener, BaseQuickAdapter.OnItemLongClickListener itemLongClickListener, BaseQuickAdapter.OnItemChildLongClickListener itemChildLongClickListener, OnItemSwipeListener itemSwipeListener, OnItemDragListener itemDragListener) {
+        super.init(context, entityList, itemClickListener, itemChildClickListener, itemLongClickListener, itemChildLongClickListener, itemSwipeListener, itemDragListener);
         setLayoutManager(new LinearLayoutManager(context));
-        setAdapter(recyclerViewAdapter);
     }
 
+    @NonNull
     @Override
-    public void resetData(List<EditElement> entityList) {
-        if(recyclerViewAdapter != null)
-            recyclerViewAdapter.setNewData(entityList);
-    }
-
-    @Override
-    public void resetData(int index, EditElement entity) {
-        if(recyclerViewAdapter != null)
-            recyclerViewAdapter.setData(index, entity);
-    }
-
-    @Override
-    public void resetData(int index, List<EditElement> entityList) {
-        if(recyclerViewAdapter != null){
-            recyclerViewAdapter.remove(index);
-            recyclerViewAdapter.addData(index, entityList);
-        }
-    }
-
-    @Override
-    public void removeData(int index) {
-        if(recyclerViewAdapter != null)
-            recyclerViewAdapter.remove(index);
+    public BaseItemAdapter<EditElement> createAdapter(Context context, List<EditElement> entityList) {
+        return new ElementLinearItemAdapter(context, entityList);
     }
 
     public class ElementLinearItemAdapter extends BaseItemAdapter<EditElement>{
