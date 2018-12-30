@@ -1,37 +1,32 @@
 package com.utimer.ui;
 
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 
-import com.jakewharton.rxbinding2.view.RxView;
+import com.amulyakhare.textdrawable.TextDrawable;
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.google.common.collect.Lists;
 import com.utimer.R;
+import com.utimer.view.UtimerFuncRecyclerView;
 
-import java.util.concurrent.TimeUnit;
+import java.util.List;
 
-import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MyRInfo;
 import butterknife.BindView;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 
-public class UtimerFragment extends AToolbarBkFragment {
+public class UtimerFragment extends AButterKnifeFragment {
     public static final String TAG = UtimerFragment.class.getSimpleName();
 
-    @BindView(R.id.activity_utimer_toolbar)
+    @BindView(R.id.fragment_utimer_main_func_toolbar)
     Toolbar toolbar;
-    @BindView(R.id.fragment_utimer_grd_main_recyclerview)
-    RecyclerView recyclerView;
-    @BindView(R.id.fragment_utimer_grd_main_shorthand)
-    Button shorthandBn;
+    @BindView(R.id.fragment_utimer_main_func_recyclerview)
+    UtimerFuncRecyclerView utimerFuncRecyclerView;
 
-    private Disposable shorthandDisposable;
-
-    private RecyclerView.Adapter sampleAdapter;
+    private MyClickListener myClickListener;
+    private List<UtimerFuncRecyclerView.FuncViewEntity> funcViewEntityList;
 
     public static UtimerFragment newInstance() {
         Bundle args = new Bundle();
@@ -44,32 +39,16 @@ public class UtimerFragment extends AToolbarBkFragment {
     @Override
     public void onViewCreated(View inflateView) {
         super.onViewCreated(inflateView);
-        recyclerView.setVisibility(View.GONE);
 
-        /*itemAdapter = new RecyclerView.Adapter(context, entityList);
-        itemAdapter.setOnItemClickListener(itemClickListener);
-        itemAdapter.setOnItemChildClickListener(itemChildClickListener);
-        itemAdapter.bindToRecyclerView(this);
-        setLayoutManager(new LinearLayoutManager(context));
-        setAdapter(itemAdapter);*/
+        initFuncList();
 
-        shorthandDisposable = RxView.clicks(shorthandBn).throttleFirst(3,TimeUnit.SECONDS)
-                .subscribe(new Consumer<Object>() {
-                    @Override
-                    public void accept(Object o) throws Exception {
-                        ((MainFragment)getParentFragment()).start(ShortHandListFragment.newInstance());
-                    }
-                });
-    }
-
-    @Override
-    protected int getMenuRid() {
-        return R.menu.tool_menu;
+        myClickListener    = new MyClickListener();
+        utimerFuncRecyclerView.init(getContext(), funcViewEntityList, myClickListener, null,null,null,null,null);
     }
 
     @Override
     public int getLayoutRid() {
-        return R.layout.fragment_utimer_gtd_main;
+        return R.layout.fragment_utimer_main_func;
     }
 
     @Override
@@ -77,28 +56,24 @@ public class UtimerFragment extends AToolbarBkFragment {
         return MyRInfo.getStringByID(R.string.title_gtd);
     }
 
-    @NonNull
-    @Override
-    protected Toolbar getToolbar() {
-        return toolbar;
-    }
+    private void initFuncList(){
+        funcViewEntityList = Lists.newArrayList();
 
-    @Override
-    protected void initToolbar() {
-        toolbar.setTitle(getTitle());
-    }
+        Drawable shortHandDrawable = TextDrawable.builder().buildRect("S",Color.parseColor("#177bbd"));
+        String shortHandTitle      = getResources().getString(R.string.title_shorthand);
+        UtimerFuncRecyclerView.FuncViewEntity shorthandViewEntity = new UtimerFuncRecyclerView.FuncViewEntity(shortHandDrawable, shortHandTitle);
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        Logcat.i(TAG,"onOptionsItemSelected " + item.getTitle());
-        boolean result = false;
-        switch (item.getItemId()) {
-            case R.id.tool_menu_add:
-                break;
-            default:
-                result = super.onOptionsItemSelected(item);
-                break;
+        Drawable projectDrawable = TextDrawable.builder().buildRect("S",Color.parseColor("#177bbd"));
+        String projectTitle      = getResources().getString(R.string.title_gtd);
+        UtimerFuncRecyclerView.FuncViewEntity projectViewEntity = new UtimerFuncRecyclerView.FuncViewEntity(projectDrawable, projectTitle);
+
+        funcViewEntityList.add(shorthandViewEntity);
+        funcViewEntityList.add(projectViewEntity);
+;    }
+    class MyClickListener implements BaseQuickAdapter.OnItemClickListener{
+        @Override
+        public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+            ((MainFragment)getParentFragment()).start(ShortHandListFragment.newInstance());
         }
-        return result;
     }
 }

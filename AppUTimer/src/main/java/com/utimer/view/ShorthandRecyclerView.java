@@ -108,7 +108,7 @@ public class ShorthandRecyclerView extends ABaseLinearRecyclerView<ShortHandEnti
                 detailBuilder.append(item.getDetail().get());
             helper.setText(R.id.view_shorthand_list_item_title, titleBuilder.toString())
                 .setText(R.id.view_shorthand_list_item_detail, detailBuilder.toString())
-                .setImageDrawable(R.id.view_shorthand_list_item_image, TextDrawable.builder().buildRect("S", Color.parseColor("#ff0099cc")));
+                .setImageDrawable(R.id.view_shorthand_list_item_image, TextDrawable.builder().buildRect("S", Color.parseColor("#177bbd")));
         }
     }
 }
