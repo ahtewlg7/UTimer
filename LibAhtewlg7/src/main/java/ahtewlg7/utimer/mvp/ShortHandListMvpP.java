@@ -97,7 +97,7 @@ public class ShortHandListMvpP implements IAllItemListMvpP<ShortHandEntity>{
                         boolean ifExited = entity.getAttachFile().ifValid();
                         if (shorthandListMvpV != null && !ifExited) {
                             int index  = shortHandList.indexOf(entity);
-                            shortHandList.remove(entity);
+//                            shortHandList.remove(entity);
                             shorthandListMvpV.onDeleteSucc(index, entity);
                         }else if (shorthandListMvpV != null)
                             shorthandListMvpV.onDeleteFail(entity);

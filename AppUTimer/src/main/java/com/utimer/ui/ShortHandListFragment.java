@@ -136,6 +136,7 @@ public class ShortHandListFragment extends AToolbarBkFragment implements ShortHa
 
     @Override
     public void onItemLoad(ShortHandEntity data) {
+//        Logcat.i(TAG, "onItemLoad " + data.toString());
     }
 
     @Override
