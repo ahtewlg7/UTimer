@@ -42,8 +42,8 @@ public class UtimerFuncRecyclerView extends ABaseLinearRecyclerView<UtimerFuncRe
 
     @NonNull
     @Override
-    public BaseItemAdapter<FuncViewEntity> createAdapter(Context context, List<FuncViewEntity> entityList) {
-        return new UtimerFuncItemAdapter(context, entityList);
+    public BaseItemAdapter<FuncViewEntity> createAdapter(List<FuncViewEntity> entityList) {
+        return new UtimerFuncItemAdapter(entityList);
     }
 
     @Override
@@ -54,8 +54,8 @@ public class UtimerFuncRecyclerView extends ABaseLinearRecyclerView<UtimerFuncRe
     }
 
     class UtimerFuncItemAdapter extends BaseItemAdapter<FuncViewEntity> {
-        UtimerFuncItemAdapter(Context context, List<FuncViewEntity> dataList) {
-            super(context, dataList);
+        UtimerFuncItemAdapter(List<FuncViewEntity> dataList) {
+            super(dataList);
         }
 
         @Override

@@ -48,13 +48,13 @@ public class EditLinerRecyclerView extends ABaseLinearRecyclerView<EditElement> 
 
     @NonNull
     @Override
-    public BaseItemAdapter<EditElement> createAdapter(Context context, List<EditElement> entityList) {
-        return new ElementLinearItemAdapter(context, entityList);
+    public BaseItemAdapter<EditElement> createAdapter(List<EditElement> entityList) {
+        return new ElementLinearItemAdapter(entityList);
     }
 
     public class ElementLinearItemAdapter extends BaseItemAdapter<EditElement>{
-        public ElementLinearItemAdapter(Context context, List<EditElement> dataList){
-            super(context, dataList);
+        public ElementLinearItemAdapter(List<EditElement> dataList){
+            super(dataList);
         }
 
         @Override

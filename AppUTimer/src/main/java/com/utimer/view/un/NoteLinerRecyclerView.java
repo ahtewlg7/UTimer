@@ -1,4 +1,4 @@
-package com.utimer.view;
+package com.utimer.view.un;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -40,13 +40,13 @@ public class NoteLinerRecyclerView extends ABaseLinearRecyclerView<NoteEntity> {
 
     @NonNull
     @Override
-    public BaseItemAdapter<NoteEntity> createAdapter(Context context, List<NoteEntity> entityList) {
-        return new NoteLinearItemAdapter(context,entityList);
+    public BaseItemAdapter<NoteEntity> createAdapter(List<NoteEntity> entityList) {
+        return new NoteLinearItemAdapter(entityList);
     }
 
     public class NoteLinearItemAdapter extends BaseItemAdapter<NoteEntity>{
-        public NoteLinearItemAdapter(Context context, List<NoteEntity> dataList){
-            super(context, dataList);
+        public NoteLinearItemAdapter(List<NoteEntity> dataList){
+            super(dataList);
         }
 
         @Override

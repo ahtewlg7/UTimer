@@ -30,7 +30,7 @@ public abstract class ABaseLinearRecyclerView<T> extends RecyclerView{
     protected BaseItemAdapter<T> recyclerViewAdapter;
 
     public abstract @LayoutRes int getViewItemLayout();
-    public abstract @NonNull BaseItemAdapter<T> createAdapter(Context context, List<T> entityList);
+    public abstract @NonNull BaseItemAdapter<T> createAdapter(List<T> entityList);
 
     public ABaseLinearRecyclerView(Context context) {
         super(context);
@@ -60,7 +60,7 @@ public abstract class ABaseLinearRecyclerView<T> extends RecyclerView{
                      BaseQuickAdapter.OnItemChildLongClickListener itemChildLongClickListener,
                      OnItemSwipeListener itemSwipeListener,
                      OnItemDragListener itemDragListener) {
-        recyclerViewAdapter = createAdapter(context, entityList);
+        recyclerViewAdapter = createAdapter(entityList);
         recyclerViewAdapter.toSetOnItemClickListener(itemClickListener);
         recyclerViewAdapter.toSetOnItemChildClickListener(itemChildClickListener);
         recyclerViewAdapter.toSetOnItemLongClickListener(itemLongClickListener);
@@ -97,7 +97,7 @@ public abstract class ABaseLinearRecyclerView<T> extends RecyclerView{
         protected ItemDragAndSwipeCallback mItemDragAndSwipeCallback;
         protected ItemTouchHelper mItemTouchHelper;
 
-        public BaseItemAdapter(Context context, List<K> dataList){
+        public BaseItemAdapter(List<K> dataList){
             super(getViewItemLayout(), dataList);
         }
 

@@ -22,7 +22,6 @@ public abstract class AUtimerBuilder<E extends AUtimerEntity> {
     @NonNull
     public abstract E build();
 
-
     public AUtimerBuilder setId(String id){
         this.id = id;
         return this;

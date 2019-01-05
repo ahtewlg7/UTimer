@@ -6,7 +6,6 @@ import com.blankj.utilcode.util.FileUtils;
 import com.google.common.base.Optional;
 
 import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscription;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -18,7 +17,6 @@ import ahtewlg7.utimer.entity.material.MdAttachFile;
 import ahtewlg7.utimer.factory.ShortHandFactory;
 import ahtewlg7.utimer.util.DateTimeAction;
 import io.reactivex.Flowable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 
@@ -99,6 +97,7 @@ public class GtdShortHandListAction {
                 MdAttachFile attachFile = new MdAttachFile(file);
                 if(!attachFile.ifValid())
                     return Optional.absent();
+
                 return Optional.fromNullable(ShortHandFactory.getInstance().createBean(attachFile));
             }
         });

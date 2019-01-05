@@ -5,14 +5,14 @@ import com.google.common.base.Optional;
 import ahtewlg7.utimer.entity.gtd.ShortHandEntity;
 import ahtewlg7.utimer.entity.view.BaseSectionEntity;
 
-public class ShorthandSectionEntity extends BaseSectionEntity<ShortHandEntity> {
-    public static final String TAG = ShorthandSectionEntity.class.getSimpleName();
+public class ProjectInfoSectionViewEntity extends BaseSectionEntity<ShortHandEntity> {
+    public static final String TAG = ProjectInfoSectionViewEntity.class.getSimpleName();
 
-    public ShorthandSectionEntity(boolean isHeader, String headerName, boolean isMore) {
+    public ProjectInfoSectionViewEntity(boolean isHeader, String headerName, boolean isMore) {
         super(isHeader, headerName, isMore);
     }
 
-    public ShorthandSectionEntity(ShortHandEntity gtdEntity) {
+    public ProjectInfoSectionViewEntity(ShortHandEntity gtdEntity) {
         super(gtdEntity);
     }
 

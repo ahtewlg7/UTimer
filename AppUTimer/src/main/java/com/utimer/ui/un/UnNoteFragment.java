@@ -15,7 +15,7 @@ import com.chad.library.adapter.base.listener.OnItemSwipeListener;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.trello.rxlifecycle2.components.support.RxFragment;
 import com.utimer.R;
-import com.utimer.view.NoteLinerRecyclerView;
+import com.utimer.view.un.NoteLinerRecyclerView;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;

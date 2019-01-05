@@ -64,8 +64,8 @@ public class UtimerFragment extends AButterKnifeFragment {
         String shortHandTitle      = getResources().getString(R.string.title_shorthand);
         UtimerFuncRecyclerView.FuncViewEntity shorthandViewEntity = new UtimerFuncRecyclerView.FuncViewEntity(shortHandDrawable, shortHandTitle);
 
-        Drawable projectDrawable = TextDrawable.builder().buildRect("S",Color.parseColor("#177bbd"));
-        String projectTitle      = getResources().getString(R.string.title_gtd);
+        Drawable projectDrawable = TextDrawable.builder().buildRect("P",Color.parseColor("#177bbd"));
+        String projectTitle      = getResources().getString(R.string.title_project);
         UtimerFuncRecyclerView.FuncViewEntity projectViewEntity = new UtimerFuncRecyclerView.FuncViewEntity(projectDrawable, projectTitle);
 
         funcViewEntityList.add(shorthandViewEntity);
@@ -78,6 +78,10 @@ public class UtimerFragment extends AButterKnifeFragment {
                 case 0:
                     Logcat.i(TAG,"onItemClick : start ShortHand list");
                     ((MainFragment)getParentFragment()).start(ShortHandListFragment.newInstance());
+                    break;
+                case 1:
+                    Logcat.i(TAG,"onItemClick : start Project list");
+                    ((MainFragment)getParentFragment()).start(ProjectListFragment.newInstance());
                     break;
             }
         }
