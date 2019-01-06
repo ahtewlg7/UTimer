@@ -2,17 +2,17 @@ package com.utimer.entity;
 
 import com.google.common.base.Optional;
 
-import ahtewlg7.utimer.entity.gtd.ShortHandEntity;
+import ahtewlg7.utimer.entity.gtd.GtdProjectEntity;
 import ahtewlg7.utimer.entity.view.BaseSectionEntity;
 
-public class ProjectInfoSectionViewEntity extends BaseSectionEntity<ShortHandEntity> {
+public class ProjectInfoSectionViewEntity extends BaseSectionEntity<GtdProjectEntity> {
     public static final String TAG = ProjectInfoSectionViewEntity.class.getSimpleName();
 
     public ProjectInfoSectionViewEntity(boolean isHeader, String headerName, boolean isMore) {
         super(isHeader, headerName, isMore);
     }
 
-    public ProjectInfoSectionViewEntity(ShortHandEntity gtdEntity) {
+    public ProjectInfoSectionViewEntity(GtdProjectEntity gtdEntity) {
         super(gtdEntity);
     }
 
@@ -22,18 +22,18 @@ public class ProjectInfoSectionViewEntity extends BaseSectionEntity<ShortHandEnt
         return Optional.absent();
     }
     public Optional<String> getDetail(){
-        if(t != null && t.getDetail() != null)
-            return t.getDetail();
+//        if(t != null && t.getDetail() != null)
+//            return t.getDetail();
         return Optional.absent();
     }
     public Optional<String>  getLastAccessTime(){
-        if(t != null && t.getLastAccessTime() != null)
-            return Optional.of(t.getLastAccessTime().toString());
+//        if(t != null && t.getLastAccessTime() != null)
+//            return Optional.of(t.getLastAccessTime().toString());
         return Optional.absent();
     }
     public Optional<String> getRPath(){
-        if(t != null && t.getAttachFile() != null)
-            return t.getAttachFile().getRPath();
+//        if(t != null && t.getAttachFile() != null)
+//            return t.getAttachFile().getRPath();
         return Optional.absent();
     }
 }

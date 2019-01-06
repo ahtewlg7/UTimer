@@ -15,9 +15,10 @@ import java.util.List;
 import ahtewlg7.utimer.entity.busevent.DelBusEvent;
 import ahtewlg7.utimer.entity.busevent.EditBusEvent;
 import ahtewlg7.utimer.entity.busevent.EditEndBusEvent;
+import ahtewlg7.utimer.entity.gtd.ShortHandBuilder;
 import ahtewlg7.utimer.entity.gtd.ShortHandEntity;
-import ahtewlg7.utimer.factory.ShortHandFactory;
 import ahtewlg7.utimer.gtd.GtdShortHandListAction;
+import ahtewlg7.utimer.util.DateTimeAction;
 import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MySafeSubscriber;
 import io.reactivex.Flowable;
@@ -169,7 +170,9 @@ public class ShorthandListInfoMvpP extends AUtimerListMvpP<ShortHandEntity> {
 
     public void toCreateItem() {
         Logcat.i(TAG, "toCreate ");
-        eventBus.postSticky(new EditBusEvent(ShortHandFactory.getInstance().createBean()));
+        String now = new DateTimeAction().toFormatNow().toString();
+        ShortHandEntity e = (ShortHandEntity)new ShortHandBuilder().setTitle(now).build();
+        eventBus.postSticky(new EditBusEvent(e));
     }
 
     public void toGtdProject(ShortHandEntity entity) {

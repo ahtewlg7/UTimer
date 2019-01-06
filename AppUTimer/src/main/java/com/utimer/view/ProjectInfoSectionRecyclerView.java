@@ -4,9 +4,11 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.util.AttributeSet;
 
 import com.amulyakhare.textdrawable.TextDrawable;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.utimer.R;
 import com.utimer.entity.ProjectInfoSectionViewEntity;
@@ -44,6 +46,12 @@ public class ProjectInfoSectionRecyclerView extends ABaseSectionRecyclerView<Pro
     @Override
     public BaseSectionAdapter createAdapter(List<ProjectInfoSectionViewEntity> entityList) {
         return new ProjectInfoAdapter(entityList);
+    }
+
+    @Override
+    public void init(Context context, int columnNum, List<ProjectInfoSectionViewEntity> entityList, BaseQuickAdapter.OnItemClickListener itemClickListener, BaseQuickAdapter.OnItemChildClickListener itemChildClickListener, BaseQuickAdapter.OnItemLongClickListener itemLongClickListener, BaseQuickAdapter.OnItemChildLongClickListener itemChildLongClickListener) {
+        super.init(context, columnNum, entityList, itemClickListener, itemChildClickListener, itemLongClickListener, itemChildLongClickListener);
+        setLayoutManager(new LinearLayoutManager(context));
     }
 
     class ProjectInfoAdapter extends BaseSectionAdapter{

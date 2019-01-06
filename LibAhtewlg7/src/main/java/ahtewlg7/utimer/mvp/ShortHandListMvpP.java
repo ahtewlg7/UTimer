@@ -12,7 +12,6 @@ import org.reactivestreams.Subscription;
 import java.util.List;
 
 import ahtewlg7.utimer.entity.gtd.ShortHandEntity;
-import ahtewlg7.utimer.factory.ShortHandFactory;
 import ahtewlg7.utimer.gtd.GtdShortHandListAction;
 import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MySafeSubscriber;
@@ -142,19 +141,7 @@ public class ShortHandListMvpP implements IAllItemListMvpP<ShortHandEntity>{
 
         @Override
         public Flowable<ShortHandEntity> loadAllEntity() {
-            return shortHandAction.loadAllEntity()
-                    .doOnSubscribe(new Consumer<Subscription>() {
-                        @Override
-                        public void accept(Subscription subscription) throws Exception {
-                            ShortHandFactory.getInstance().clearAll();
-                        }
-                    })
-                    .doOnNext(new Consumer<ShortHandEntity>() {
-                        @Override
-                        public void accept(ShortHandEntity entity) throws Exception {
-                            ShortHandFactory.getInstance().addValue(entity);
-                        }
-                    });
+            return shortHandAction.loadAllEntity();
         }
 
         @Override

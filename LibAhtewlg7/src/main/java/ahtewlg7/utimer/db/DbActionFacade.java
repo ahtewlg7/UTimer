@@ -20,7 +20,6 @@ import ahtewlg7.utimer.entity.gtd.GtdTaskEntity;
 import ahtewlg7.utimer.entity.gtd.ShortHandBuilder;
 import ahtewlg7.utimer.entity.gtd.ShortHandEntity;
 import ahtewlg7.utimer.enumtype.UnLoadType;
-import ahtewlg7.utimer.factory.ShortHandFactory;
 import ahtewlg7.utimer.util.Logcat;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Function;
@@ -215,7 +214,8 @@ public class DbActionFacade {
                 }
                 if(beanOptional == null || !beanOptional.isPresent())
                     return Optional.absent();
-                return Optional.of(ShortHandFactory.getInstance().createBean(beanOptional.get()));
+                ShortHandEntity e = (ShortHandEntity)new ShortHandBuilder().setGbBean(beanOptional.get()).build();
+                return Optional.of(e);
             }
         }).subscribeOn(Schedulers.io());
     }

@@ -3,12 +3,10 @@ package ahtewlg7.utimer.state;
 import com.google.common.base.Optional;
 
 import ahtewlg7.utimer.entity.AUtimerEntity;
-import ahtewlg7.utimer.entity.un.IUtimerEntity;
 import ahtewlg7.utimer.entity.gtd.GtdProjectEntity;
 import ahtewlg7.utimer.entity.gtd.ShortHandEntity;
-import ahtewlg7.utimer.entity.gtd.TipsEntity;
 import ahtewlg7.utimer.entity.material.AMaterialEntity;
-import ahtewlg7.utimer.enumtype.GtdType;
+import ahtewlg7.utimer.entity.un.IUtimerEntity;
 import ahtewlg7.utimer.util.Logcat;
 import io.reactivex.Observable;
 import io.reactivex.functions.Function;
@@ -41,10 +39,10 @@ public class GtdInboxState extends BaseGtdState {
                     return Optional.absent();
                 }
 
-                if(entity.getGtdType() == GtdType.TIPS)
+                /*if(entity.getGtdType() == GtdType.TIPS)
                     return Optional.of(new GtdProjectEntity((TipsEntity)entity));
                 else if(entity.getGtdType() == GtdType.SHORTHAND)
-                    return Optional.of(new GtdProjectEntity((ShortHandEntity)entity));
+                    return Optional.of(new GtdProjectEntity((ShortHandEntity)entity));*/
                 return Optional.absent();
             }
         });

@@ -17,12 +17,13 @@ import com.utimer.R;
 
 import java.util.List;
 
+import ahtewlg7.utimer.entity.gtd.ShortHandBuilder;
 import ahtewlg7.utimer.entity.gtd.ShortHandEntity;
 import ahtewlg7.utimer.entity.md.EditElement;
 import ahtewlg7.utimer.entity.md.EditMementoBean;
-import ahtewlg7.utimer.factory.ShortHandFactory;
 import ahtewlg7.utimer.mvp.AUtimerEditMvpP;
 import ahtewlg7.utimer.mvp.ShorthandEditMvpP;
+import ahtewlg7.utimer.util.DateTimeAction;
 import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MyRInfo;
 import ahtewlg7.utimer.view.EditLinerRecyclerView;
@@ -47,8 +48,11 @@ public class ShortHandEditFragment extends AEditFragment implements ShorthandEdi
         Bundle args = new Bundle();
         if(entity != null)
             args.putSerializable(KEY_SHORTHAND, entity);
-        else
-            args.putSerializable(KEY_SHORTHAND, ShortHandFactory.getInstance().createBean());
+        else {
+            String now = new DateTimeAction().toFormatNow().toString();
+            ShortHandEntity e = (ShortHandEntity)new ShortHandBuilder().setTitle(now).build();
+            args.putSerializable(KEY_SHORTHAND, e);
+        }
         ShortHandEditFragment fragment = new ShortHandEditFragment();
         fragment.setArguments(args);
         return fragment;

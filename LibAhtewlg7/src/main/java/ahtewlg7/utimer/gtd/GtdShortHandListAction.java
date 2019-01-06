@@ -12,9 +12,9 @@ import java.io.FileNotFoundException;
 
 import ahtewlg7.utimer.common.FileSystemAction;
 import ahtewlg7.utimer.db.DbActionFacade;
+import ahtewlg7.utimer.entity.gtd.ShortHandBuilder;
 import ahtewlg7.utimer.entity.gtd.ShortHandEntity;
 import ahtewlg7.utimer.entity.material.MdAttachFile;
-import ahtewlg7.utimer.factory.ShortHandFactory;
 import ahtewlg7.utimer.util.DateTimeAction;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Function;
@@ -45,7 +45,7 @@ public class GtdShortHandListAction {
     }
 
     public ShortHandEntity newEntity() {
-        return ShortHandFactory.getInstance().createBean();
+        return null;
     }
 
     public Flowable<Boolean> saveEntity(Flowable<Optional<ShortHandEntity>> flowable) {
@@ -97,8 +97,8 @@ public class GtdShortHandListAction {
                 MdAttachFile attachFile = new MdAttachFile(file);
                 if(!attachFile.ifValid())
                     return Optional.absent();
-
-                return Optional.fromNullable(ShortHandFactory.getInstance().createBean(attachFile));
+                ShortHandEntity e = (ShortHandEntity)new ShortHandBuilder().setAttachFile(attachFile).build();
+                return Optional.fromNullable(e);
             }
         });
     }
