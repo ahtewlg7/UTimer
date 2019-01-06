@@ -12,7 +12,6 @@ import javax.annotation.Nonnull;
 import ahtewlg7.utimer.common.IdAction;
 import ahtewlg7.utimer.entity.material.AAttachFile;
 import ahtewlg7.utimer.enumtype.GtdType;
-import ahtewlg7.utimer.util.DateTimeAction;
 
 public abstract class AUtimerEntity<T extends AUtimerBuilder> implements IMergerEntity{
     public static final String TAG = AUtimerEntity.class.getSimpleName();
@@ -36,11 +35,7 @@ public abstract class AUtimerEntity<T extends AUtimerBuilder> implements IMerger
         //merge first
         if(t.entity != null)
             merge(t.entity);
-        id  = t.id;
-        if(TextUtils.isEmpty(t.title))
-            title  = new DateTimeAction().toFormatNow().toString();
-        else
-            title  = t.title;
+        id         = t.id;
         uuid       = TextUtils.isEmpty(t.uuid) ? new IdAction().getUUId() : t.uuid;
         createTime = t.createTime;
         if(t.attachFile != null){

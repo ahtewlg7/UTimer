@@ -492,6 +492,7 @@ public class W5h2Entity implements ITipsEntity {
         public final String TAG = W5h2HowMuch.class.getSimpleName();
 
         private int planPercent;
+        private boolean isDone;
         private IHowMuchContext planCostNum;
         private IHowMuchContext doneCostNum;
         private DegreeEntity importLevel;
@@ -517,6 +518,14 @@ public class W5h2Entity implements ITipsEntity {
 
         public void setPlanPercent(int planPercent) {
             this.planPercent = planPercent;
+        }
+
+        public boolean isDone() {
+            return isDone;
+        }
+
+        public void setDone(boolean done) {
+            isDone = done;
         }
 
         public IHowMuchContext getPlanCostNum() {
