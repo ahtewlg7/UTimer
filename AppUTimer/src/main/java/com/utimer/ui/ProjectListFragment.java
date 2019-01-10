@@ -7,9 +7,11 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.gc.materialdesign.widgets.Dialog;
 import com.trello.rxlifecycle2.LifecycleProvider;
 import com.utimer.R;
 import com.utimer.view.ProjectRecyclerView;
@@ -112,7 +114,7 @@ public class ProjectListFragment extends AToolbarBkFragment implements ShortHand
         switch (item.getItemId()) {
             case R.id.tool_menu_add:
                 Log.i(TAG, "to create project");
-//                startForResult(ShortHandEditFragment.newInstance(null), REQ_NEW_FRAGMENT);
+                toCreateNewDialog();
                 break;
             default:
                 result = super.onOptionsItemSelected(item);
@@ -213,14 +215,22 @@ public class ProjectListFragment extends AToolbarBkFragment implements ShortHand
             return false;
         }
     }
-    private void toCreateNewDialog(final ShortHandEntity entity){
-        /*Dialog dialog = new Dialog(getContext(), MyRInfo.getStringByID(R.string.create), MyRInfo.getStringByID(R.string.prompt_del));
-        dialog.setOnAcceptButtonClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                shortHandListMvpP.toDeleteItem(Flowable.just(entity));
-            }
-        });
-        dialog.show();*/
+    private void toCreateNewDialog(){
+        new MaterialDialog.Builder(getContext()).title(R.string.create)
+            .customView(R.layout.view_new_project_name,false)
+            .negativeText(R.string.no)
+            .positiveText(R.string.yes)
+            .onNegative(new MaterialDialog.SingleButtonCallback() {
+                @Override
+                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                    dialog.dismiss();
+                }
+            })
+            .onPositive(new MaterialDialog.SingleButtonCallback() {
+                @Override
+                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                    startForResult(ProjectFragment.newInstance(), REQ_NEW_FRAGMENT);
+                }
+            }).show();
     }
 }

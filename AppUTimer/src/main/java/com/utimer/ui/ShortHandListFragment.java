@@ -8,9 +8,10 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.gc.materialdesign.widgets.Dialog;
 import com.trello.rxlifecycle2.LifecycleProvider;
 import com.utimer.R;
 import com.utimer.view.ShorthandRecyclerView;
@@ -215,13 +216,21 @@ public class ShortHandListFragment extends AToolbarBkFragment implements ShortHa
         }
     }
     private void toCreateDelDialog(final ShortHandEntity entity){
-        /*Dialog dialog = new Dialog(getContext(), MyRInfo.getStringByID(R.string.del), MyRInfo.getStringByID(R.string.prompt_del));
-        dialog.setOnAcceptButtonClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                shortHandListMvpP.toDeleteItem(Flowable.just(entity));
-            }
-        });
-        dialog.show();*/
+        new MaterialDialog.Builder(getContext()).title(R.string.del)
+            .content(R.string.prompt_del)
+            .negativeText(R.string.no)
+            .positiveText(R.string.yes)
+            .onNegative(new MaterialDialog.SingleButtonCallback() {
+                @Override
+                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                    dialog.dismiss();
+                }
+            })
+            .onPositive(new MaterialDialog.SingleButtonCallback() {
+                @Override
+                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                    shortHandListMvpP.toDeleteItem(Flowable.just(entity));
+                }
+            }).show();
     }
 }

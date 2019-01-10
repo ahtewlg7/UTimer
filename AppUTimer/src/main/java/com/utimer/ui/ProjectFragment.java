@@ -37,7 +37,7 @@ public class ProjectFragment extends AToolbarBkFragment {
 
     @Override
     protected String getTitle() {
-        return MyRInfo.getStringByID(R.string.title_note);
+        return MyRInfo.getStringByID(R.string.title_project);
     }
 
     @NonNull
