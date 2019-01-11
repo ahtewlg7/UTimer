@@ -30,6 +30,7 @@ public class ShortHandEntity extends AUtimerEntity<ShortHandBuilder> implements 
     private StringBuilder detailBuilder;
 
     protected ShortHandEntity(@Nonnull ShortHandBuilder builder) {
+
         super(builder);
         if(builder.gdBean != null)
             initByGbBean(builder.gdBean);

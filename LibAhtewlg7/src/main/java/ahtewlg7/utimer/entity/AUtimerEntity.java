@@ -36,6 +36,7 @@ public abstract class AUtimerEntity<T extends AUtimerBuilder> implements IMerger
         if(t.entity != null)
             merge(t.entity);
         id         = t.id;
+        title      = t.title;
         uuid       = TextUtils.isEmpty(t.uuid) ? new IdAction().getUUId() : t.uuid;
         createTime = t.createTime;
         if(t.attachFile != null){
