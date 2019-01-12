@@ -234,6 +234,6 @@ public class FileSystemAction {
 
         //======================================/UTimer/Doc/GTD====================================
         StorageAction.getInstance().createExRelDir(getInboxGtdAbsPath());
-//        StorageAction.getInstance().createExRelDir(getProjectGtdAbsPath());
+        StorageAction.getInstance().createExRelDir(getProjectGtdAbsPath());
     }
 }
