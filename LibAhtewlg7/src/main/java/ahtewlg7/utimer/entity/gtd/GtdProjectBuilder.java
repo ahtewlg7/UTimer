@@ -2,7 +2,6 @@ package ahtewlg7.utimer.entity.gtd;
 
 import android.support.annotation.NonNull;
 
-import ahtewlg7.utimer.db.entity.ShortHandEntityGdBean;
 import ahtewlg7.utimer.entity.AGtdUtimerBuilder;
 
 /**
@@ -11,9 +10,9 @@ import ahtewlg7.utimer.entity.AGtdUtimerBuilder;
 public class GtdProjectBuilder extends AGtdUtimerBuilder<GtdProjectEntity> {
     public static final String TAG = GtdProjectBuilder.class.getSimpleName();
 
-    protected ShortHandEntityGdBean gdBean;
+    /*protected ShortHandEntityGdBean gdBean;
 
-    /*public GtdProjectBuilder setGbBean(ShortHandEntityGdBean gdBean){
+    public GtdProjectBuilder setGbBean(ShortHandEntityGdBean gdBean){
         this.gdBean = gdBean;
         return this;
     }*/

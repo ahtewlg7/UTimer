@@ -7,7 +7,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -23,7 +22,6 @@ import ahtewlg7.utimer.mvp.ShortHandListMvpP;
 import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MyRInfo;
 import butterknife.BindView;
-import io.reactivex.Flowable;
 
 public class ProjectListFragment extends AToolbarBkFragment implements ShortHandListMvpP.IShorthandListMvpV {
     public static final String TAG = ProjectListFragment.class.getSimpleName();
@@ -217,7 +215,7 @@ public class ProjectListFragment extends AToolbarBkFragment implements ShortHand
     }
     private void toCreateNewDialog(){
         new MaterialDialog.Builder(getContext()).title(R.string.create)
-            .customView(R.layout.view_new_project_name,false)
+            .customView(R.layout.view_dialog_new_project_name,false)
             .negativeText(R.string.no)
             .positiveText(R.string.yes)
             .onNegative(new MaterialDialog.SingleButtonCallback() {
@@ -229,6 +227,7 @@ public class ProjectListFragment extends AToolbarBkFragment implements ShortHand
             .onPositive(new MaterialDialog.SingleButtonCallback() {
                 @Override
                 public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+
                     startForResult(ProjectFragment.newInstance(), REQ_NEW_FRAGMENT);
                 }
             }).show();

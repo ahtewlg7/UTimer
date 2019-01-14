@@ -16,11 +16,9 @@ import ahtewlg7.utimer.common.FileSystemAction;
 import ahtewlg7.utimer.db.entity.ShortHandEntityGdBean;
 import ahtewlg7.utimer.entity.AUtimerEntity;
 import ahtewlg7.utimer.entity.IMergerEntity;
-import ahtewlg7.utimer.entity.material.AAttachFile;
 import ahtewlg7.utimer.entity.material.AMaterialEntity;
 import ahtewlg7.utimer.entity.material.MdAttachFile;
 import ahtewlg7.utimer.enumtype.GtdType;
-import ahtewlg7.utimer.util.DateTimeAction;
 import ahtewlg7.utimer.util.Logcat;
 
 public class ShortHandEntity extends AUtimerEntity<ShortHandBuilder> implements Serializable {
@@ -30,7 +28,6 @@ public class ShortHandEntity extends AUtimerEntity<ShortHandBuilder> implements 
     private StringBuilder detailBuilder;
 
     protected ShortHandEntity(@Nonnull ShortHandBuilder builder) {
-
         super(builder);
         if(builder.gdBean != null)
             initByGbBean(builder.gdBean);
@@ -43,18 +40,6 @@ public class ShortHandEntity extends AUtimerEntity<ShortHandBuilder> implements 
     @Override
     public Optional<String> getDetail() {
         return detailBuilder == null ? Optional.<String>absent() : Optional.of(detailBuilder.toString());
-    }
-
-    @Override
-    public boolean ensureAttachFileExist() {
-        if(attachFile == null){
-            String fileName = !TextUtils.isEmpty(getTitle()) ? getTitle() : new DateTimeAction().toFormatNow().toString();
-            String filePath = new FileSystemAction().getInboxGtdAbsPath();
-            attachFile = new MdAttachFile(filePath, fileName);
-        }
-        boolean result = attachFile.createOrExist();
-        Logcat.i(TAG,"ensureAttachFileExist result = " + result);
-        return result;
     }
 
     public void appendDetail(String append){
@@ -94,6 +79,11 @@ public class ShortHandEntity extends AUtimerEntity<ShortHandBuilder> implements 
     }
 
     @Override
+    public Optional<String> toTips() {
+        return getDetail();
+    }
+
+    @Override
     @NonNull
     public GtdType getGtdType() {
         return GtdType.SHORTHAND;
@@ -102,17 +92,6 @@ public class ShortHandEntity extends AUtimerEntity<ShortHandBuilder> implements 
     @Override
     public IMergerEntity merge(IMergerEntity entity) {
         return this;
-    }
-
-    protected void initByAttachFile(AAttachFile attachFile){
-        Optional<String> title = attachFile.getTitle();
-        if(title.isPresent())
-            setTitle(title.get());
-        if(attachFile.ifValid()) {
-            createTime     = attachFile.getCreateTime();
-            lastAccessTime = attachFile.getLassAccessTime();
-            lastModifyTime = attachFile.getLassModifyTime();
-        }
     }
 
     private void  initByGbBean(ShortHandEntityGdBean inboxEntityGdBean){

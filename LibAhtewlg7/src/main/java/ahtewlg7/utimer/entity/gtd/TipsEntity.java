@@ -33,6 +33,11 @@ public class TipsEntity extends AUtimerEntity<TipsBuilder> {
     }
 
     @Override
+    public Optional<String> toTips() {
+        return null;
+    }
+
+    @Override
     public Optional<String> getDetail() {
         return null;
     }
