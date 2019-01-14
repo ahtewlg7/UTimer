@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +18,8 @@ import com.utimer.view.ProjectRecyclerView;
 
 import java.util.List;
 
+import ahtewlg7.utimer.entity.gtd.GtdProjectBuilder;
+import ahtewlg7.utimer.entity.gtd.GtdProjectEntity;
 import ahtewlg7.utimer.entity.gtd.ShortHandEntity;
 import ahtewlg7.utimer.mvp.ShortHandListMvpP;
 import ahtewlg7.utimer.util.Logcat;
@@ -215,7 +218,13 @@ public class ProjectListFragment extends AToolbarBkFragment implements ShortHand
     }
     private void toCreateNewDialog(){
         new MaterialDialog.Builder(getContext()).title(R.string.create)
-            .customView(R.layout.view_dialog_new_project_name,false)
+            .inputType(InputType.TYPE_CLASS_TEXT)
+            .input(MyRInfo.getStringByID(R.string.prompt_new_project_name), "", false, new MaterialDialog.InputCallback() {
+                @Override
+                public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
+                    //do nothing
+                }
+            })
             .negativeText(R.string.no)
             .positiveText(R.string.yes)
             .onNegative(new MaterialDialog.SingleButtonCallback() {
@@ -227,8 +236,10 @@ public class ProjectListFragment extends AToolbarBkFragment implements ShortHand
             .onPositive(new MaterialDialog.SingleButtonCallback() {
                 @Override
                 public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-
-                    startForResult(ProjectFragment.newInstance(), REQ_NEW_FRAGMENT);
+                    String name = dialog.getInputEditText().getText().toString();
+                    Logcat.i(TAG,"to create project : " + name);
+                    GtdProjectEntity entity = (GtdProjectEntity)new GtdProjectBuilder().setTitle(name).build();
+                    startForResult(ProjectFragment.newInstance(entity), REQ_NEW_FRAGMENT);
                 }
             }).show();
     }
