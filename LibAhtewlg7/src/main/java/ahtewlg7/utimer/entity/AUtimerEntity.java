@@ -12,7 +12,7 @@ import javax.annotation.Nonnull;
 import ahtewlg7.utimer.common.FileSystemAction;
 import ahtewlg7.utimer.common.IdAction;
 import ahtewlg7.utimer.entity.material.AAttachFile;
-import ahtewlg7.utimer.entity.material.MdAttachFile;
+import ahtewlg7.utimer.entity.material.DirAttachFile;
 import ahtewlg7.utimer.enumtype.GtdType;
 import ahtewlg7.utimer.util.DateTimeAction;
 import ahtewlg7.utimer.util.Logcat;
@@ -119,8 +119,8 @@ public abstract class AUtimerEntity<T extends AUtimerBuilder>
     public boolean ensureAttachFileExist() {
         if(attachFile == null){
             String fileName = !TextUtils.isEmpty(getTitle()) ? getTitle() : new DateTimeAction().toFormatNow().toString();
-            String filePath = new FileSystemAction().getInboxGtdAbsPath();
-            attachFile = new MdAttachFile(filePath, fileName);
+            String filePath = new FileSystemAction().getProjectGtdAbsPath();
+            attachFile = new DirAttachFile(filePath, fileName);
         }
         boolean result = attachFile.createOrExist();
         Logcat.i(TAG,"ensureAttachFileExist result = " + result);

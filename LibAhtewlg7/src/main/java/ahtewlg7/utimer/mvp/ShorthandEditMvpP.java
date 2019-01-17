@@ -10,7 +10,6 @@ import ahtewlg7.utimer.entity.AUtimerEntity;
 import ahtewlg7.utimer.entity.gtd.ShortHandEntity;
 import ahtewlg7.utimer.entity.md.EditElement;
 import ahtewlg7.utimer.gtd.GtdShortHandEditAction;
-import ahtewlg7.utimer.view.md.MdEditText;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
@@ -29,10 +28,6 @@ public class ShorthandEditMvpP extends AUtimerEditMvpP<ShortHandEntity> {
     public ShorthandEditMvpP(ShortHandEntity shortHandEntity , IShorthandEditMvpV shorthandEditMvpV) {
         super(shortHandEntity,shorthandEditMvpV);
         editPublishSubject = PublishSubject.create();
-    }
-
-    public void toWatchText(MdEditText editText, EditElement editElement){
-
     }
 
     @Override

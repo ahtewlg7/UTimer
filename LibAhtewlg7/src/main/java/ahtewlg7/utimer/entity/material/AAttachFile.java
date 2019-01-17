@@ -36,11 +36,13 @@ public abstract class AAttachFile {
 
     protected AAttachFile(String filePath, String fileName){
         if(!TextUtils.isEmpty(filePath) && !TextUtils.isEmpty(fileName))
-            file = new File(filePath, fileName + getFileSuffix());
+            file = new File(filePath, fileName + getFileSuffix().trim());
         fileAttrAction = new FileAttrAction(file);
     }
 
     public boolean createOrExist(){
+        if(getStorageType() == StorageType.DIR)
+            return FileUtils.createOrExistsDir(file);
         return FileUtils.createOrExistsFile(file);
     }
 
