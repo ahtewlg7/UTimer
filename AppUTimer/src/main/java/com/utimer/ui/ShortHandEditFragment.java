@@ -30,7 +30,7 @@ import ahtewlg7.utimer.view.EditLinerRecyclerView;
 import ahtewlg7.utimer.view.md.MdEditText;
 import butterknife.BindView;
 
-public class ShortHandEditFragment extends AEditFragment implements ShorthandEditMvpP.IShorthandEditMvpV,
+public class ShortHandEditFragment extends ATxtEditFragment implements ShorthandEditMvpP.IShorthandEditMvpV,
         BaseQuickAdapter.OnItemChildClickListener {
     public static final String TAG = ShortHandEditFragment.class.getSimpleName();
 
