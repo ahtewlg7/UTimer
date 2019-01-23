@@ -1,4 +1,4 @@
-package ahtewlg7.utimer.common;
+package ahtewlg7.utimer.gtd;
 
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
@@ -9,6 +9,8 @@ import com.google.common.base.Optional;
 import org.joda.time.DateTime;
 
 import ahtewlg7.utimer.R;
+import ahtewlg7.utimer.common.FileSystemAction;
+import ahtewlg7.utimer.common.IdAction;
 import ahtewlg7.utimer.db.DbActionFacade;
 import ahtewlg7.utimer.entity.NoteEntity;
 import ahtewlg7.utimer.enumtype.UnLoadType;

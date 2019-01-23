@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 
 import com.amulyakhare.textdrawable.TextDrawable;
@@ -63,17 +64,17 @@ public class ProjectRecyclerView extends ABaseLinearRecyclerView<GtdProjectEntit
             StringBuilder titleBuilder = new StringBuilder();
             StringBuilder detailBuilder = new StringBuilder();
 
-            /*if(!TextUtils.isEmpty(item.getTitle()))
+            if(!TextUtils.isEmpty(item.getTitle()))
                 titleBuilder.append(item.getTitle());
-            *//*if(item.getRPath().isPresent() && !TextUtils.isEmpty(item.getRPath().get()))
-                builder.append(item.getRPath().get());*//*
+            /*if(item.getRPath().isPresent() && !TextUtils.isEmpty(item.getRPath().get()))
+                titleBuilder.append(item.getRPath().get());
             if(item.getLastAccessTime() != null)
-                titleBuilder.append("\n").append(item.getLastAccessTime().toDateTime());
+                titleBuilder.append("\n").append(item.getLastAccessTime().toDateTime());*/
             if(item.getDetail().isPresent() && !TextUtils.isEmpty(item.getDetail().get()))
-                detailBuilder.append(item.getDetail().get());*/
+                detailBuilder.append(item.getDetail().get());
             helper.setText(R.id.view_shorthand_list_item_title, titleBuilder.toString())
                 .setText(R.id.view_shorthand_list_item_detail, detailBuilder.toString())
-                .setImageDrawable(R.id.view_shorthand_list_item_image, TextDrawable.builder().buildRect("S", Color.parseColor("#177bbd")));
+                .setImageDrawable(R.id.view_shorthand_list_item_image, TextDrawable.builder().buildRect("P", Color.parseColor("#177bbd")));
         }
     }
 }

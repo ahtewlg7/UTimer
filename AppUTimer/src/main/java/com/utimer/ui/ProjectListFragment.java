@@ -20,13 +20,12 @@ import java.util.List;
 
 import ahtewlg7.utimer.entity.gtd.GtdProjectBuilder;
 import ahtewlg7.utimer.entity.gtd.GtdProjectEntity;
-import ahtewlg7.utimer.entity.gtd.ShortHandEntity;
-import ahtewlg7.utimer.mvp.ShortHandListMvpP;
+import ahtewlg7.utimer.mvp.ProjectListMvpP;
 import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MyRInfo;
 import butterknife.BindView;
 
-public class ProjectListFragment extends AToolbarBkFragment implements ShortHandListMvpP.IShorthandListMvpV {
+public class ProjectListFragment extends AToolbarBkFragment implements ProjectListMvpP.IProjectListMvpV {
     public static final String TAG = ProjectListFragment.class.getSimpleName();
 
     public static final int INIT_POSITION = -1;
@@ -37,10 +36,10 @@ public class ProjectListFragment extends AToolbarBkFragment implements ShortHand
     @BindView(R.id.fragment_project_list_toolbar)
     Toolbar toolbar;
     @BindView(R.id.fragment_project_list_recycler_view)
-    ProjectRecyclerView shorthandRecyclerView;
+    ProjectRecyclerView recyclerView;
 
     private int editPosition = -1;
-    private ShortHandListMvpP shortHandListMvpP;
+    private ProjectListMvpP projectListMvpP;
     private MyClickListener myClickListener;
 
     public static ProjectListFragment newInstance() {
@@ -57,14 +56,14 @@ public class ProjectListFragment extends AToolbarBkFragment implements ShortHand
 
         myClickListener = new MyClickListener();
 
-        /*shorthandRecyclerView.init(getContext(), null, myClickListener, null,myClickListener,null,null,null);
-        shortHandListMvpP = new ShortHandListMvpP(this);*/
+        recyclerView.init(getContext(), null, myClickListener, null,myClickListener,null,null,null);
+        projectListMvpP = new ProjectListMvpP(this);
     }
 
     @Override
     public void onLazyInitView(@Nullable Bundle savedInstanceState) {
         super.onLazyInitView(savedInstanceState);
-//        shortHandListMvpP.toLoadAllItem();
+        projectListMvpP.toLoadAllItem();
     }
 
     @Override
@@ -137,7 +136,7 @@ public class ProjectListFragment extends AToolbarBkFragment implements ShortHand
     }
 
     @Override
-    public void onItemLoad(ShortHandEntity data) {
+    public void onItemLoad(GtdProjectEntity data) {
 //        Logcat.i(TAG, "onItemLoad " + data.toString());
     }
 
@@ -147,45 +146,45 @@ public class ProjectListFragment extends AToolbarBkFragment implements ShortHand
     }
 
     @Override
-    public void onItemLoadEnd(List<ShortHandEntity> alldata) {
+    public void onItemLoadEnd(List<GtdProjectEntity> alldata) {
         Logcat.i(TAG, "onItemLoadEnd");
-        /*if(alldata != null)
-            shorthandRecyclerView.resetData(alldata);*/
+        if(alldata != null)
+            recyclerView.resetData(alldata);
     }
 
     /**********************************************IShorthandListMvpV**********************************************/
     @Override
-    public void onItemCreate(ShortHandEntity data) {
-//        shortHandListMvpP.onItemCreated(data);
+    public void onItemCreate(GtdProjectEntity data) {
+//        projectListMvpP.onItemCreated(data);
     }
 
     @Override
-    public void onItemEdit(ShortHandEntity data) {
+    public void onItemEdit(GtdProjectEntity data) {
         /*if (editPosition != INIT_POSITION)
-            shortHandListMvpP.onItemEdited(editPosition, data);
+            projectListMvpP.onItemEdited(editPosition, data);
         editPosition = INIT_POSITION;*/
     }
 
     /**********************************************IShorthandListMvpV**********************************************/
     @Override
-    public void resetView(List<ShortHandEntity> dataList) {
+    public void resetView(List<GtdProjectEntity> dataList) {
 //        shorthandRecyclerView.resetData(dataList);
     }
 
     @Override
-    public void resetView(int index, ShortHandEntity entity) {
+    public void resetView(int index, GtdProjectEntity entity) {
 //        shorthandRecyclerView.resetData(index, entity);
     }
 
     /**********************************************IShorthandListMvpV**********************************************/
     @Override
-    public void onDeleteSucc(int index , ShortHandEntity entity) {
+    public void onDeleteSucc(int index , GtdProjectEntity entity) {
 //        ToastUtils.showShort(R.string.prompt_del_succ);
 //        shorthandRecyclerView.removeData(index);
     }
 
     @Override
-    public void onDeleteFail(ShortHandEntity entity) {
+    public void onDeleteFail(GtdProjectEntity entity) {
 //        ToastUtils.showShort(R.string.prompt_del_fail);
     }
 

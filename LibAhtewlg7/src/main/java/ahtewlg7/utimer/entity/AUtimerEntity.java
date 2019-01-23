@@ -26,6 +26,8 @@ public abstract class AUtimerEntity<T extends AUtimerBuilder>
     public abstract Optional<String> getDetail();
 
     protected int accessTimes;
+    protected boolean isGtdActived;
+
     protected AAttachFile attachFile;
     protected String id;
     protected String uuid;
@@ -71,6 +73,14 @@ public abstract class AUtimerEntity<T extends AUtimerBuilder>
 
     public AAttachFile getAttachFile() {
         return attachFile;
+    }
+
+    public boolean isGtdActived() {
+        return isGtdActived;
+    }
+
+    public void setGtdActived(boolean gtdActived) {
+        isGtdActived = gtdActived;
     }
 
     public int getAccessTimes() {

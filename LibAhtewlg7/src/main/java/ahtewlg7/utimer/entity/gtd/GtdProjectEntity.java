@@ -14,6 +14,8 @@ import ahtewlg7.utimer.enumtype.GtdType;
 public class GtdProjectEntity extends AGtdUtimerEntity<GtdProjectBuilder> implements Serializable {
     public static final String TAG = GtdProjectEntity.class.getSimpleName();
 
+    private StringBuilder detailBuilder;
+
     protected GtdProjectEntity(@Nonnull GtdProjectBuilder builder) {
         super(builder);
     }
@@ -29,11 +31,12 @@ public class GtdProjectEntity extends AGtdUtimerEntity<GtdProjectBuilder> implem
 
     @Override
     public Optional<String> getDetail() {
-        return null;
+        return detailBuilder == null ? Optional.<String>absent() : Optional.of(detailBuilder.toString());
     }
 
+    //todo
     @Override
     public IMergerEntity merge(IMergerEntity entity) {
-        return null;
+        return entity;
     }
 }

@@ -33,7 +33,7 @@ public class ShortHandEntity extends AUtimerEntity<ShortHandBuilder> implements 
             initByGbBean(builder.gdBean);
         if(!TextUtils.isEmpty(title) && attachFile == null){
             String filePath = new FileSystemAction().getInboxGtdAbsPath();
-            attachFile  = new MdAttachFile(filePath, title);
+            attachFile      = new MdAttachFile(filePath, title);
         }
     }
 
