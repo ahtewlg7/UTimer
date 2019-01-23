@@ -14,8 +14,6 @@ import android.view.View;
 public abstract class AToolbarBkFragment extends AButterKnifeFragment{
     public static final String TAG = AToolbarBkFragment.class.getSimpleName();
 
-    @MenuRes
-    protected abstract int getMenuRid();
     @NonNull
     protected abstract Toolbar getToolbar();
     protected abstract void initToolbar();
@@ -35,9 +33,14 @@ public abstract class AToolbarBkFragment extends AButterKnifeFragment{
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if (getChildFragmentManager().getBackStackEntryCount() == 0) {
+        if (getChildFragmentManager().getBackStackEntryCount() == 0 && getMenuRid() != 0) {
             getToolbar().getMenu().clear();
-            getToolbar().inflateMenu(getMenuRid());
+                getToolbar().inflateMenu(getMenuRid());
         }
+    }
+
+    @MenuRes
+    protected int getMenuRid(){
+        return 0;
     }
 }

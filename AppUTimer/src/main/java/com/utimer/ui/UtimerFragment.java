@@ -3,6 +3,7 @@ package com.utimer.ui;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
@@ -18,7 +19,7 @@ import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MyRInfo;
 import butterknife.BindView;
 
-public class UtimerFragment extends AButterKnifeFragment {
+public class UtimerFragment extends AToolbarBkFragment {
     public static final String TAG = UtimerFragment.class.getSimpleName();
 
     @BindView(R.id.fragment_utimer_main_func_toolbar)
@@ -55,6 +56,22 @@ public class UtimerFragment extends AButterKnifeFragment {
     @Override
     protected String getTitle() {
         return MyRInfo.getStringByID(R.string.title_gtd);
+    }
+
+    @Override
+    protected int getMenuRid() {
+        return 0;
+    }
+
+    @NonNull
+    @Override
+    protected Toolbar getToolbar() {
+        return toolbar;
+    }
+
+    @Override
+    protected void initToolbar() {
+        toolbar.setTitle(getTitle());
     }
 
     private void initFuncList(){

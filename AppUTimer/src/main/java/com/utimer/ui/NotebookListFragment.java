@@ -11,16 +11,16 @@ import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MyRInfo;
 import butterknife.BindView;
 
-public class NotebookFragment extends AToolbarBkFragment {
-    public static final String TAG = NotebookFragment.class.getSimpleName();
+public class NotebookListFragment extends AToolbarBkFragment {
+    public static final String TAG = NotebookListFragment.class.getSimpleName();
 
     @BindView(R.id.activity_utimer_toolbar)
     Toolbar toolbar;
 
-    public static NotebookFragment newInstance() {
+    public static NotebookListFragment newInstance() {
         Bundle args = new Bundle();
 
-        NotebookFragment fragment = new NotebookFragment();
+        NotebookListFragment fragment = new NotebookListFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -37,7 +37,7 @@ public class NotebookFragment extends AToolbarBkFragment {
 
     @Override
     protected String getTitle() {
-        return MyRInfo.getStringByID(R.string.title_note);
+        return MyRInfo.getStringByID(R.string.title_note_list);
     }
 
     @NonNull
