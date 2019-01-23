@@ -20,7 +20,7 @@ import com.utimer.view.un.NoteLinerRecyclerView;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import ahtewlg7.utimer.entity.NoteEntity;
+import ahtewlg7.utimer.entity.gtd.un.NoteEntity;
 import ahtewlg7.utimer.mvp.un.NoteRecyclerViewMvpP;
 import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MySimpleItemDragListener;

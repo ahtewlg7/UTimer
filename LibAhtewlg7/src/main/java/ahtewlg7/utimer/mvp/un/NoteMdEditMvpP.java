@@ -18,7 +18,7 @@ import java.util.List;
 
 import ahtewlg7.utimer.common.MdElementAction;
 import ahtewlg7.utimer.entity.md.EditElement;
-import ahtewlg7.utimer.entity.NoteEntity;
+import ahtewlg7.utimer.entity.gtd.un.NoteEntity;
 import ahtewlg7.utimer.enumtype.EditSrcType;
 import ahtewlg7.utimer.enumtype.UnLoadType;
 import ahtewlg7.utimer.enumtype.MdContextErrCode;

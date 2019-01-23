@@ -9,13 +9,19 @@ import android.view.MenuItem;
 import com.utimer.R;
 
 import ahtewlg7.utimer.entity.gtd.GtdProjectEntity;
+import ahtewlg7.utimer.entity.gtd.NoteBuilder;
+import ahtewlg7.utimer.entity.gtd.NoteEntity;
 import ahtewlg7.utimer.mvp.AUtimerEditMvpP;
+import ahtewlg7.utimer.util.DateTimeAction;
 import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MyRInfo;
 import butterknife.BindView;
 
 public class ProjectFragment extends AEditFragment {
     public static final String TAG = ProjectFragment.class.getSimpleName();
+
+    public static final int REQ_NEW_NOTE_FRAGMENT   = 100;
+    public static final int REQ_EDIT_NOTE_FRAGMENT  = 101;
 
     public static final String KEY_GTD_PROJECT = "project";
 
@@ -66,7 +72,9 @@ public class ProjectFragment extends AEditFragment {
         switch (item.getItemId()) {
             case R.id.project_menu_add_note:
                 Log.i(TAG, "to create new note");
-
+                String now = new DateTimeAction().toFormatNow().toString();
+                NoteEntity entity = (NoteEntity)new NoteBuilder().setProjectEntity(gtdProjectEntity).setTitle(now).build();
+                startForResult(NoteEditFragment.newInstance(entity), REQ_NEW_NOTE_FRAGMENT);
                 break;
             default:
                 result = super.onOptionsItemSelected(item);

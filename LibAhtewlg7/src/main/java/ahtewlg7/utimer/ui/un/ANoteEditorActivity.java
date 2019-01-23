@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 
 import ahtewlg7.utimer.R;
 import ahtewlg7.utimer.entity.md.EditElement;
-import ahtewlg7.utimer.entity.NoteEntity;
+import ahtewlg7.utimer.entity.gtd.un.NoteEntity;
 import ahtewlg7.utimer.mvp.un.MdFileMvpP;
 import ahtewlg7.utimer.mvp.un.NoteEntityEditMvpP;
 import ahtewlg7.utimer.mvp.un.NoteMdEditMvpP;

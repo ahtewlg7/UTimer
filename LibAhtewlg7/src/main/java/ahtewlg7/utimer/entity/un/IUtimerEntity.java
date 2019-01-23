@@ -9,7 +9,7 @@ import ahtewlg7.utimer.enumtype.GtdType;
  * Created by lw on 2018/1/9.
  */
 
-public interface IUtimerEntity extends IValidEntity {
+public interface IUtimerEntity extends IValidEntity{
     public String getId();
     public String getTitle();
     public String getDetail();

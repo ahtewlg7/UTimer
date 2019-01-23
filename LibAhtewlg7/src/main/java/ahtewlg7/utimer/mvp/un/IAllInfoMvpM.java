@@ -13,7 +13,6 @@ import io.reactivex.Flowable;
 public interface IAllInfoMvpM<T> {
     public Flowable<T> loadAllEntity();
     public Flowable<Optional<T>> loadEntity(@NonNull Flowable<String> keyObservable);
-    public T newEntity();
     public Flowable<Boolean> saveEntity(@NonNull Flowable<Optional<T>> flowable);
     public Flowable<Boolean> deleteEntity(@NonNull Flowable<Optional<T>> flowable);
 

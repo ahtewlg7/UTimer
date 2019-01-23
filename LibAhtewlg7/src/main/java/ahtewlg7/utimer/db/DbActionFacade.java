@@ -14,7 +14,7 @@ import ahtewlg7.utimer.db.entity.ActionEntityGdBean;
 import ahtewlg7.utimer.db.entity.NoteEntityGdBean;
 import ahtewlg7.utimer.db.entity.ShortHandEntityGdBean;
 import ahtewlg7.utimer.db.entity.TaskEntityGdBean;
-import ahtewlg7.utimer.entity.NoteEntity;
+import ahtewlg7.utimer.entity.gtd.un.NoteEntity;
 import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
 import ahtewlg7.utimer.entity.gtd.GtdTaskEntity;
 import ahtewlg7.utimer.entity.gtd.ShortHandBuilder;

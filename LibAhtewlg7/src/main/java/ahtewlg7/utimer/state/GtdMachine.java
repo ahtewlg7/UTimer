@@ -1,35 +1,25 @@
 package ahtewlg7.utimer.state;
 
+
 import com.google.common.base.Optional;
 
-import java.util.Hashtable;
-
-import ahtewlg7.utimer.entity.un.IUtimerEntity;
-import ahtewlg7.utimer.enumtype.GtdType;
+import ahtewlg7.utimer.entity.AUtimerEntity;
+import ahtewlg7.utimer.state.un.BaseGtdState;
+import io.reactivex.Flowable;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Function;
 
 public class GtdMachine {
     public static final String TAG = GtdMachine.class.getSimpleName();
 
     private static GtdMachine instance;
 
-    private Hashtable<GtdType, BaseGtdState> stateTable;
     private BaseGtdState inboxState;
     private BaseGtdState actionState;
     private BaseGtdState projectState;
     private BaseGtdState dailyState;
 
     private GtdMachine(){
-        stateTable   = new Hashtable<GtdType, BaseGtdState>();
-
-        inboxState   = new GtdInboxState(this);
-        actionState  = new GtdActionState(this);
-        projectState = new GtdProjectState(this);
-        dailyState   = new DailyGtdState(this);
-
-        stateTable.put(GtdType.INBOX, inboxState);
-        stateTable.put(GtdType.PROJECT, projectState);
-        stateTable.put(GtdType.ACTION, actionState);
-        stateTable.put(GtdType.DAILY, dailyState);
     }
 
     public static GtdMachine getInstance(){
@@ -38,16 +28,40 @@ public class GtdMachine {
         return instance;
     }
 
-    public Optional<BaseGtdState> getCurrState(IUtimerEntity utimerEntity){
+    public Flowable<Optional<ABaseGtdState>> getCurrState(@NonNull Flowable<AUtimerEntity> entityFlowable){
+        return entityFlowable.map(new Function<AUtimerEntity, Optional<ABaseGtdState>>() {
+            @Override
+            public Optional<ABaseGtdState> apply(AUtimerEntity aUtimerEntity) throws Exception {
+                return getCurrState(aUtimerEntity);
+            }
+        });
+    }
+
+
+    /*public Flowable<Optional<AUtimerEntity>> toDailyCheck(@NonNull Flowable<AUtimerEntity> entityFlowable){
+        return entityFlowable.map(new Function<AUtimerEntity, Optional<AUtimerEntity>>() {
+            @Override
+            public Optional<AUtimerEntity> apply(AUtimerEntity utimerEntity) throws Exception {
+                Optional<ABaseGtdState> currState = getCurrState(utimerEntity);
+                if(!currState.isPresent())
+                    return Optional.of(utimerEntity);
+                return currState.get().toDailyCheck(utimerEntity);
+            }
+        });
+    }*/
+
+
+
+    protected Optional<ABaseGtdState> getCurrState(AUtimerEntity utimerEntity){
         if(utimerEntity == null)
             return Optional.absent();
 
-        BaseGtdState currGtdSate = null;
+        ABaseGtdState currGtdSate = null;
         switch (utimerEntity.getGtdType()){
-            case INBOX:
-                currGtdSate = getInboxState();
+            case SHORTHAND:
+                currGtdSate = new ShortHandGtdState(utimerEntity);
                 break;
-            case ACTION:
+            /*case ACTION:
                 currGtdSate = getActionState();
                 break;
             case PROJECT:
@@ -55,24 +69,9 @@ public class GtdMachine {
                 break;
             case DAILY:
                 currGtdSate = getDailyState();
-                break;
+                break;*/
         }
         return Optional.fromNullable(currGtdSate);
     }
 
-    public BaseGtdState getInboxState() {
-        return stateTable.get(GtdType.INBOX);
-    }
-
-    public BaseGtdState getActionState() {
-        return stateTable.get(GtdType.ACTION);
-    }
-
-    public BaseGtdState getProjectState() {
-        return stateTable.get(GtdType.PROJECT);
-    }
-
-    public BaseGtdState getDailyState() {
-        return stateTable.get(GtdType.DAILY);
-    }
 }

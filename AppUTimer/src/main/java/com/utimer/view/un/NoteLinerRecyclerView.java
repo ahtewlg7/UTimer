@@ -10,7 +10,7 @@ import com.utimer.R;
 
 import java.util.List;
 
-import ahtewlg7.utimer.entity.NoteEntity;
+import ahtewlg7.utimer.entity.gtd.un.NoteEntity;
 import ahtewlg7.utimer.util.MyRInfo;
 import ahtewlg7.utimer.view.ABaseLinearRecyclerView;
 

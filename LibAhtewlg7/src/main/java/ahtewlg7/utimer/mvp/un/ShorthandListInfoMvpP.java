@@ -197,11 +197,6 @@ public class ShorthandListInfoMvpP extends AUtimerListMvpP<ShortHandEntity> {
         }
 
         @Override
-        public ShortHandEntity newEntity() {
-            return shortHandAction.newEntity();
-        }
-
-        @Override
         public Flowable<Boolean> saveEntity(@NonNull Flowable<Optional<ShortHandEntity>> flowable) {
             return shortHandAction.saveEntity(flowable);
         }

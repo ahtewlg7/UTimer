@@ -1,6 +1,8 @@
-package ahtewlg7.utimer.entity;
+package ahtewlg7.utimer.entity.gtd.un;
 
 import org.joda.time.DateTime;
+
+import java.io.Serializable;
 
 import ahtewlg7.utimer.entity.taskContext.IPosition;
 import ahtewlg7.utimer.entity.un.IUtimerEntity;
@@ -11,7 +13,7 @@ import ahtewlg7.utimer.enumtype.UnLoadType;
  * Created by lw on 2017/9/27.
  */
 
-public class NoteEntity implements IUtimerEntity {
+public class NoteEntity implements IUtimerEntity, Serializable {
     public static final String TAG = NoteEntity.class.getSimpleName();
 
     private boolean contextChanged      = false;
