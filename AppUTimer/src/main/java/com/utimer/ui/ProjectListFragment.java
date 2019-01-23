@@ -11,6 +11,7 @@ import android.view.View;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.trello.rxlifecycle2.LifecycleProvider;
 import com.utimer.R;
@@ -69,14 +70,14 @@ public class ProjectListFragment extends AToolbarBkFragment implements ProjectLi
     @Override
     public void onFragmentResult(int requestCode, int resultCode, Bundle data) {
         super.onFragmentResult(requestCode, resultCode, data);
-        /*if (resultCode == RESULT_OK && data != null) {
-            ShortHandEntity shorthandEntity = (ShortHandEntity) data.getSerializable(ShortHandEditFragment.KEY_SHORTHAND);
-            if (shorthandEntity != null && requestCode == REQ_NEW_FRAGMENT)
-                onItemCreate(shorthandEntity);
-            else if (shorthandEntity != null && requestCode == REQ_EDIT_FRAGMENT) {
-                onItemEdit(shorthandEntity);
+        if (resultCode == RESULT_OK && data != null) {
+            GtdProjectEntity entity = (GtdProjectEntity) data.getSerializable(ShortHandEditFragment.KEY_SHORTHAND);
+            if (entity != null && requestCode == REQ_NEW_FRAGMENT)
+                onItemCreate(entity);
+            else if (entity != null && requestCode == REQ_EDIT_FRAGMENT) {
+                onItemEdit(entity);
             }
-        }*/
+        }
     }
 
     /**********************************************AToolbarBkFragment**********************************************/
@@ -123,13 +124,13 @@ public class ProjectListFragment extends AToolbarBkFragment implements ProjectLi
         return result;
     }
 
-    /**********************************************IShorthandListMvpV**********************************************/
+    /**********************************************IProjectListMvpV**********************************************/
     @Override
     public LifecycleProvider getRxLifeCycleBindView() {
         return this;
     }
 
-    /**********************************************IShorthandListMvpV**********************************************/
+    /**********************************************IProjectListMvpV**********************************************/
     @Override
     public void onItemLoadStart() {
         Logcat.i(TAG, "onItemLoadStart");
@@ -152,64 +153,64 @@ public class ProjectListFragment extends AToolbarBkFragment implements ProjectLi
             recyclerView.resetData(alldata);
     }
 
-    /**********************************************IShorthandListMvpV**********************************************/
+    /**********************************************IProjectListMvpV**********************************************/
     @Override
     public void onItemCreate(GtdProjectEntity data) {
-//        projectListMvpP.onItemCreated(data);
+        projectListMvpP.onItemCreated(data);
     }
 
     @Override
     public void onItemEdit(GtdProjectEntity data) {
-        /*if (editPosition != INIT_POSITION)
+        if (editPosition != INIT_POSITION)
             projectListMvpP.onItemEdited(editPosition, data);
-        editPosition = INIT_POSITION;*/
+        editPosition = INIT_POSITION;
     }
 
-    /**********************************************IShorthandListMvpV**********************************************/
+    /**********************************************IProjectListMvpV**********************************************/
     @Override
     public void resetView(List<GtdProjectEntity> dataList) {
-//        shorthandRecyclerView.resetData(dataList);
+        recyclerView.resetData(dataList);
     }
 
     @Override
     public void resetView(int index, GtdProjectEntity entity) {
-//        shorthandRecyclerView.resetData(index, entity);
+        recyclerView.resetData(index, entity);
     }
 
-    /**********************************************IShorthandListMvpV**********************************************/
+    /**********************************************IProjectListMvpV**********************************************/
     @Override
     public void onDeleteSucc(int index , GtdProjectEntity entity) {
-//        ToastUtils.showShort(R.string.prompt_del_succ);
-//        shorthandRecyclerView.removeData(index);
+        ToastUtils.showShort(R.string.prompt_del_succ);
+        recyclerView.removeData(index);
     }
 
     @Override
     public void onDeleteFail(GtdProjectEntity entity) {
-//        ToastUtils.showShort(R.string.prompt_del_fail);
+        ToastUtils.showShort(R.string.prompt_del_fail);
     }
 
     @Override
     public void onDeleteErr(Throwable throwable) {
-//        Logcat.i(TAG,"onDeleteErr : " + throwable.getMessage());
-//        ToastUtils.showShort(R.string.prompt_del_err);
+        Logcat.i(TAG,"onDeleteErr : " + throwable.getMessage());
+        ToastUtils.showShort(R.string.prompt_del_err);
     }
 
     @Override
     public void onDeleteEnd() {
     }
 
-    /**********************************************IShorthandListMvpV**********************************************/
+    /**********************************************IProjectListMvpV**********************************************/
 
     class MyClickListener implements BaseQuickAdapter.OnItemClickListener, BaseQuickAdapter.OnItemLongClickListener {
         @Override
         public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-//            editPosition = position;
-//            startForResult(ShortHandEditFragment.newInstance((ShortHandEntity) adapter.getData().get(position)), REQ_EDIT_FRAGMENT);
+            editPosition = position;
+            startForResult(ProjectFragment.newInstance((GtdProjectEntity) adapter.getData().get(position)), REQ_EDIT_FRAGMENT);
         }
 
         @Override
         public boolean onItemLongClick(BaseQuickAdapter adapter, View view, int position) {
-//            ShortHandEntity viewEntity = (ShortHandEntity)adapter.getItem(position);
+//            ShortHandEntity viewEntity = (GtdProjectEntity)adapter.getItem(position);
 //            if(viewEntity != null)
 //                toCreateDelDialog(viewEntity);
             return false;

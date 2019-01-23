@@ -3,6 +3,7 @@ package com.utimer.ui;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.utimer.R;
@@ -39,7 +40,7 @@ public class ProjectFragment extends AEditFragment {
 
     @Override
     protected int getMenuRid() {
-        return R.menu.tool_menu;
+        return R.menu.project_menu;
     }
 
     @Override
@@ -61,6 +62,16 @@ public class ProjectFragment extends AEditFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Logcat.i(TAG,"onOptionsItemSelected " + item.getTitle());
+        boolean result = false;
+        switch (item.getItemId()) {
+            case R.id.project_menu_add_note:
+                Log.i(TAG, "to create new note");
+
+                break;
+            default:
+                result = super.onOptionsItemSelected(item);
+                break;
+        }
         return super.onOptionsItemSelected(item);
     }
 
