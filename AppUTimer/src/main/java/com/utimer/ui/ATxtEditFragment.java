@@ -9,6 +9,7 @@ import com.jakewharton.rxbinding2.widget.RxTextView;
 
 import java.util.concurrent.TimeUnit;
 
+import ahtewlg7.utimer.entity.AUtimerEntity;
 import ahtewlg7.utimer.entity.md.EditElement;
 import ahtewlg7.utimer.enumtype.EditMode;
 import ahtewlg7.utimer.util.Logcat;
@@ -24,6 +25,7 @@ import io.reactivex.subjects.PublishSubject;
 public abstract class ATxtEditFragment extends AEditFragment {
     public static final String TAG = ATxtEditFragment.class.getSimpleName();
 
+    protected abstract AUtimerEntity getUtimerEntity();
     protected abstract Optional<EditText> getEditTextItem(int index);
 
     protected Disposable editViewDisposable;
@@ -43,6 +45,11 @@ public abstract class ATxtEditFragment extends AEditFragment {
     public void onDestroyView() {
         super.onDestroyView();
         toStopEditWatch();
+    }
+
+    @Override
+    protected boolean ifEnvOk() {
+        return getUtimerEntity() != null && getUtimerEntity().ifValid();
     }
 
     /**********************************************IShorthandEditMvpV**********************************************/

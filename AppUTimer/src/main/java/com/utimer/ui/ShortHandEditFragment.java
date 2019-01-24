@@ -41,7 +41,6 @@ public class ShortHandEditFragment extends ATxtEditFragment implements Shorthand
     @BindView(R.id.fragment_shorthand_edit_rv)
     EditLinerRecyclerView editReCyclerView;
 
-    private ShortHandEntity shorthandEntity;
     private ShorthandEditMvpP editMvpP;
 
     public static ShortHandEditFragment newInstance(ShortHandEntity entity) {
@@ -64,17 +63,11 @@ public class ShortHandEditFragment extends ATxtEditFragment implements Shorthand
         setHasOptionsMenu(false);
     }
 
-    @Override
-    protected boolean ifEnvOk() {
-        shorthandEntity = getShorthandEntity();
-        return shorthandEntity != null && shorthandEntity.ifValid();
-    }
-
     @NonNull
     @Override
     protected AUtimerEditMvpP getEditMvpP() {
         if(editMvpP == null)
-            editMvpP = new ShorthandEditMvpP(shorthandEntity, this);
+            editMvpP = new ShorthandEditMvpP(getUtimerEntity(), this);
         return editMvpP;
     }
 
@@ -215,8 +208,8 @@ public class ShortHandEditFragment extends ATxtEditFragment implements Shorthand
         return this;
     }
 
-
-    private ShortHandEntity getShorthandEntity(){
+    @Override
+    protected ShortHandEntity getUtimerEntity(){
         return (ShortHandEntity) getArguments().getSerializable(KEY_SHORTHAND);
     }
 }

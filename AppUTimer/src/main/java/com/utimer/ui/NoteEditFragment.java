@@ -3,16 +3,19 @@ package com.utimer.ui;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
+import android.widget.EditText;
 
+import com.google.common.base.Optional;
 import com.utimer.R;
 
 import ahtewlg7.utimer.entity.gtd.NoteBuilder;
 import ahtewlg7.utimer.entity.gtd.NoteEntity;
+import ahtewlg7.utimer.mvp.AUtimerEditMvpP;
 import ahtewlg7.utimer.util.DateTimeAction;
 import ahtewlg7.utimer.util.MyRInfo;
 import butterknife.BindView;
 
-public class NoteEditFragment extends AToolbarBkFragment {
+public class NoteEditFragment extends ATxtEditFragment {
     public static final String TAG = NoteEditFragment.class.getSimpleName();
 
     public static final String KEY_NOTE = "note";
@@ -54,5 +57,21 @@ public class NoteEditFragment extends AToolbarBkFragment {
     @Override
     protected void initToolbar() {
         toolbar.setTitle(getTitle());
+    }
+
+    @Override
+    protected Optional<EditText> getEditTextItem(int index) {
+        return null;
+    }
+
+    @NonNull
+    @Override
+    protected AUtimerEditMvpP getEditMvpP() {
+        return null;
+    }
+
+    @Override
+    protected NoteEntity getUtimerEntity(){
+        return (NoteEntity) getArguments().getSerializable(KEY_NOTE);
     }
 }
