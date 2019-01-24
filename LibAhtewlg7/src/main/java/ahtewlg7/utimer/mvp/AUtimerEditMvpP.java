@@ -38,7 +38,7 @@ public abstract class AUtimerEditMvpP<T extends AUtimerEntity> {
 
     public static final int INIT_POSITION = -1;
 
-    protected abstract IUtimerEditMvpM getEditMvpM(AUtimerEntity utimerEntity);
+    protected abstract IUtimerEditMvpM getEditMvpM(T t);
 
     protected int preEditPosition = INIT_POSITION;
     protected boolean isChangeSaved;
@@ -47,7 +47,7 @@ public abstract class AUtimerEditMvpP<T extends AUtimerEntity> {
     protected Disposable insertDisplose;
     protected Disposable modifyDispose;
 
-    protected AUtimerEntity utimerEntity;
+    protected T t;
     protected List<EditElement> editElementList;
 
     protected IUtimerEditMvpV editMvpV;
@@ -55,10 +55,10 @@ public abstract class AUtimerEditMvpP<T extends AUtimerEntity> {
     protected EditMementoOriginator mdMementoOriginator;
     protected EditMementoCaretaker mdMementoCaretaker;
 
-    public AUtimerEditMvpP(AUtimerEntity utimerEntity , IUtimerEditMvpV editMvpV) {
-        this.utimerEntity   = utimerEntity;
-        this.editMvpV       = editMvpV;
-        editMvpM            = getEditMvpM(utimerEntity);
+    public AUtimerEditMvpP(T t , IUtimerEditMvpV editMvpV) {
+        this.t = t;
+        this.editMvpV = editMvpV;
+        editMvpM      = getEditMvpM(t);
     }
 
     public boolean ifEditElementEmpty(){
@@ -85,7 +85,7 @@ public abstract class AUtimerEditMvpP<T extends AUtimerEntity> {
     }
 
     public void toLoadTxt(){
-        if(utimerEntity.getAttachFile() == null || !utimerEntity.getAttachFile().ifValid()){
+        if(t.getAttachFile() == null || !t.getAttachFile().ifValid()){
             Logcat.i(TAG,"toLoadTxt : attachFile is not valid , so cancel");
             initElementList();
             editMvpV.onLoadEnd(editElementList);

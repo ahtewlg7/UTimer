@@ -6,9 +6,9 @@ import com.google.common.base.Optional;
 
 import org.reactivestreams.Subscription;
 
-import ahtewlg7.utimer.entity.gtd.ShortHandEntity;
+import ahtewlg7.utimer.entity.gtd.NoteEntity;
 import ahtewlg7.utimer.entity.md.EditElement;
-import ahtewlg7.utimer.gtd.GtdShortHandEditAction;
+import ahtewlg7.utimer.gtd.NoteEditAction;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
@@ -19,33 +19,33 @@ import io.reactivex.subjects.PublishSubject;
 /**
  * Created by lw on 2018/10/18.
  */
-public class ShorthandEditMvpP extends AUtimerEditMvpP<ShortHandEntity> {
-    public static final String TAG = ShorthandEditMvpP.class.getSimpleName();
+public class NoteEditMvpP extends AUtimerEditMvpP<NoteEntity> {
+    public static final String TAG = NoteEditMvpP.class.getSimpleName();
 
     public PublishSubject<EditElement> editPublishSubject;
 
-    public ShorthandEditMvpP(ShortHandEntity shortHandEntity , IShorthandEditMvpV shorthandEditMvpV) {
-        super(shortHandEntity,shorthandEditMvpV);
+    public NoteEditMvpP(NoteEntity entity , INoteEditMvpV shorthandEditMvpV) {
+        super(entity,shorthandEditMvpV);
         editPublishSubject = PublishSubject.create();
     }
 
     @Override
-    protected IUtimerEditMvpM getEditMvpM(ShortHandEntity utimerEntity) {
-        return new ShorthandEditMvpM(utimerEntity);
+    protected IUtimerEditMvpM getEditMvpM(NoteEntity utimerEntity) {
+        return new NoteEditMvpM((NoteEntity) utimerEntity);
     }
 
-    class ShorthandEditMvpM implements IUtimerEditMvpM{
-        private ShortHandEntity shortHandEntity;
-        private GtdShortHandEditAction shortHandEditAction;
+    class NoteEditMvpM implements IUtimerEditMvpM{
+        private NoteEntity noteEntity;
+        private NoteEditAction editAction;
 
-        public ShorthandEditMvpM(ShortHandEntity shortHandEntity) {
-            this.shortHandEntity = shortHandEntity;
-            shortHandEditAction = new GtdShortHandEditAction(shortHandEntity);
+        public NoteEditMvpM(NoteEntity noteEntity) {
+            this.noteEntity = noteEntity;
+            editAction      = new NoteEditAction(noteEntity);
         }
 
         @Override
         public Flowable<EditElement> toLoadTxt() {
-            return shortHandEditAction.toLoad().filter(new Predicate<Optional<EditElement>>() {
+            return editAction.toLoad().filter(new Predicate<Optional<EditElement>>() {
                         @Override
                         public boolean test(Optional<EditElement> editElementOptional) throws Exception {
                             return editElementOptional.isPresent();
@@ -61,7 +61,7 @@ public class ShorthandEditMvpP extends AUtimerEditMvpP<ShortHandEntity> {
 
         @Override
         public CharSequence toParseRaw(@NonNull String rawTxt) {
-            return shortHandEditAction.toParse(rawTxt);
+            return editAction.toParse(rawTxt);
         }
 
         @Override
@@ -69,18 +69,18 @@ public class ShorthandEditMvpP extends AUtimerEditMvpP<ShortHandEntity> {
             return elementObservable.doOnSubscribe(new Consumer<Subscription>() {
                             @Override
                             public void accept(Subscription subscription) throws Exception {
-                                shortHandEditAction.toSave("",false);//to clear txt first
+                                editAction.toSave("",false);//to clear txt first
                             }
                         })
                     .map(new Function<EditElement, Boolean>() {
                         @Override
                         public Boolean apply(EditElement editElement) throws Exception {
-                            return shortHandEditAction.toSave(editElement.getRawText(),true);
+                            return editAction.toSave(editElement.getRawText(),true);
                         }
                     }).subscribeOn(Schedulers.io());
         }
     }
 
-    public interface IShorthandEditMvpV extends IUtimerEditMvpV{
+    public interface INoteEditMvpV extends IUtimerEditMvpV{
     }
 }

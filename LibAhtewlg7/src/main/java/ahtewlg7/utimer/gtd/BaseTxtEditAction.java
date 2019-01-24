@@ -26,32 +26,32 @@ import static ahtewlg7.utimer.enumtype.errcode.NoteEditErrCode.ERR_EDIT_ENTITY_I
 /**
  * Created by lw on 2018/12/9.
  */
-public class BaseTxtEditAction extends AEditAction {
+public class BaseTxtEditAction<T extends AUtimerEntity>  extends AEditAction<T> {
     public static final String TAG = BaseTxtEditAction.class.getSimpleName();
 
     private MyBypass myBypass;
     private FileIOAction fileIOAction;
 
-    public BaseTxtEditAction(AUtimerEntity utimerEntity) {
-        super(utimerEntity);
+    public BaseTxtEditAction(T t) {
+        super(t);
         myBypass = new MyBypass();
     }
 
     @Override
     public boolean ifReady(){
-        return utimerEntity != null && utimerEntity.ifValid()
-                && utimerEntity.getAttachFile() != null && utimerEntity.ensureAttachFileExist();
+        return t != null && t.ifValid()
+                && t.getAttachFile() != null && t.ensureAttachFileExist();
     }
 
     @Override
     public Flowable<Optional<EditElement>> toLoad() {
-        return Flowable.just(utimerEntity)
-                .flatMap(new Function<AUtimerEntity, Publisher<Optional<EditElement>>>() {
+        return Flowable.just(t)
+                .flatMap(new Function<T, Publisher<Optional<EditElement>>>() {
                     @Override
-                    public Publisher<Optional<EditElement>> apply(AUtimerEntity utimerEntity) throws Exception {
+                    public Publisher<Optional<EditElement>> apply(T entity) throws Exception {
                         if(!ifReady())
                             throw new UtimerEditException(ERR_EDIT_ENTITY_INVALID);
-                        File file = utimerEntity.getAttachFile().getFile();
+                        File file = entity.getAttachFile().getFile();
                         return Flowable.fromIterable(Files.readLines(file, Charsets.UTF_8))
                                 .subscribeOn(Schedulers.io())
                                 .map(new Function<String, Optional<EditElement>>() {
@@ -81,7 +81,7 @@ public class BaseTxtEditAction extends AEditAction {
         boolean result = false;
         try{
             if(fileIOAction == null)
-                fileIOAction = new FileIOAction(utimerEntity.getAttachFile());
+                fileIOAction = new FileIOAction(t.getAttachFile());
             CharSink writer = fileIOAction.getCharWriter();
             if(append)
                 writer = fileIOAction.getAppendCharWriter();

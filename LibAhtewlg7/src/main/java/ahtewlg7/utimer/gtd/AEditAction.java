@@ -9,16 +9,16 @@ import io.reactivex.Flowable;
 /**
  * Created by lw on 2018/10/24.
  */
-public abstract class AEditAction {
+public abstract class AEditAction<T extends AUtimerEntity> {
     public static final String TAG = AEditAction.class.getSimpleName();
 
     public abstract boolean ifReady();
     public abstract boolean toSave(String rawTxt);
     public abstract Flowable<Optional<EditElement>> toLoad();
 
-    protected AUtimerEntity utimerEntity;
+    protected T t;
 
-    public AEditAction(AUtimerEntity utimerEntity){
-        this.utimerEntity = utimerEntity;
+    public AEditAction(T t){
+        this.t = t;
     }
 }
