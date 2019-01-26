@@ -98,4 +98,8 @@ public class ProjectFragment extends AEditFragment {
     private GtdProjectEntity getGtdEntity(){
         return (GtdProjectEntity) getArguments().getSerializable(KEY_GTD_PROJECT);
     }
+
+    //todo: delete
+    protected void onEditEnd(){
+    }
 }

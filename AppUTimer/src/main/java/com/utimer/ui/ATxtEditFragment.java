@@ -52,7 +52,7 @@ public abstract class ATxtEditFragment extends AEditFragment {
         return getUtimerEntity() != null && getUtimerEntity().ifValid();
     }
 
-    /**********************************************IShorthandEditMvpV**********************************************/
+
     public void onEditMode(int position, @NonNull EditMode editMode, @NonNull Optional<EditElement> editElementOptional) {
         Optional<EditText> optional = getEditTextItem(position);
         Logcat.i(TAG,"onEditMode isPresent = " + optional.isPresent() + ", editMode = " + editMode.name());

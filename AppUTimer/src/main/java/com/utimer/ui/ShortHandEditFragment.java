@@ -5,7 +5,6 @@ import android.support.annotation.MenuRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
@@ -60,6 +59,7 @@ public class ShortHandEditFragment extends ATxtEditFragment implements Shorthand
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        /*false means menu off; true means menu on*/
         setHasOptionsMenu(false);
     }
 
@@ -98,7 +98,7 @@ public class ShortHandEditFragment extends ATxtEditFragment implements Shorthand
         toolbar.setTitle(getTitle());
     }
 
-    @Override
+    /*@Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Logcat.i(TAG,"onOptionsItemSelected " + item.getTitle());
         boolean result = false;
@@ -111,7 +111,7 @@ public class ShortHandEditFragment extends ATxtEditFragment implements Shorthand
                 break;
         }
         return result;
-    }
+    }*/
 
     /**********************************************BaseQuickAdapter**********************************************/
     @Override

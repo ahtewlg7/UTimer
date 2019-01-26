@@ -19,6 +19,7 @@ import ahtewlg7.utimer.entity.IMergerEntity;
 import ahtewlg7.utimer.entity.material.AMaterialEntity;
 import ahtewlg7.utimer.entity.material.MdAttachFile;
 import ahtewlg7.utimer.enumtype.GtdType;
+import ahtewlg7.utimer.util.DateTimeAction;
 import ahtewlg7.utimer.util.Logcat;
 
 public class ShortHandEntity extends AUtimerEntity<ShortHandBuilder> implements Serializable {
@@ -92,6 +93,18 @@ public class ShortHandEntity extends AUtimerEntity<ShortHandBuilder> implements 
     @Override
     public IMergerEntity merge(IMergerEntity entity) {
         return this;
+    }
+
+    @Override
+    public boolean ensureAttachFileExist() {
+        if(attachFile == null){
+            String fileName = !TextUtils.isEmpty(getTitle()) ? getTitle() : new DateTimeAction().toFormatNow().toString();
+            String filePath = new FileSystemAction().getInboxGtdAbsPath();
+            attachFile = new MdAttachFile(filePath, fileName);
+        }
+        boolean result = attachFile.createOrExist();
+        Logcat.i(TAG,"ensureAttachFileExist result = " + result);
+        return result;
     }
 
     private void  initByGbBean(ShortHandEntityGdBean inboxEntityGdBean){

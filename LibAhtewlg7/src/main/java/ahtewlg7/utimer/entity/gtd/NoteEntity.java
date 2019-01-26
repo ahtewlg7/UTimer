@@ -14,6 +14,7 @@ import ahtewlg7.utimer.entity.AUtimerEntity;
 import ahtewlg7.utimer.entity.IMergerEntity;
 import ahtewlg7.utimer.entity.material.MdAttachFile;
 import ahtewlg7.utimer.enumtype.GtdType;
+import ahtewlg7.utimer.util.DateTimeAction;
 import ahtewlg7.utimer.util.Logcat;
 
 /**
@@ -29,7 +30,7 @@ public class NoteEntity extends AUtimerEntity<NoteBuilder> implements Serializab
         if(builder.projectEntity != null)
             initByProjectEntity(builder.projectEntity);
         if(!TextUtils.isEmpty(title) && attachFile == null){
-            String filePath = new FileSystemAction().getInboxGtdAbsPath();
+            String filePath = new FileSystemAction().getNoteDocAbsPath();
             attachFile      = new MdAttachFile(filePath, title);
         }
     }
@@ -55,6 +56,13 @@ public class NoteEntity extends AUtimerEntity<NoteBuilder> implements Serializab
         return getDetail();
     }
 
+    @Override
+    public boolean ensureAttachFileExist() {
+        boolean result = attachFile.createOrExist();
+        Logcat.i(TAG,"ensureAttachFileExist result = " + result);
+        return result;
+    }
+
     public void appendDetail(String append){
         if(TextUtils.isEmpty(append)){
             Logcat.i(TAG,"append String empty");
@@ -67,6 +75,17 @@ public class NoteEntity extends AUtimerEntity<NoteBuilder> implements Serializab
     }
 
     private void initByProjectEntity(GtdProjectEntity projectEntity){
-        projectEntity.getAttachFile();
+        if(projectEntity == null || !projectEntity.ifValid()){
+            Logcat.i(TAG,"initByProjectEntity cancel");
+            return;
+        }
+        if(TextUtils.isEmpty(title))
+            title = new DateTimeAction().toFormatNow().toString();
+
+        if(attachFile == null){
+            String filePath = new FileSystemAction().getProjectGtdAbsPath() + projectEntity.getTitle();
+            attachFile      = new MdAttachFile(filePath, title);
+        }
     }
+
 }

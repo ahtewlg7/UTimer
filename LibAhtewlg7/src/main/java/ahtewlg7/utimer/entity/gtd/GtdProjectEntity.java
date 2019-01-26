@@ -1,14 +1,20 @@
 package ahtewlg7.utimer.entity.gtd;
 
+import android.text.TextUtils;
+
 import com.google.common.base.Optional;
 
 import java.io.Serializable;
 
 import javax.annotation.Nonnull;
 
+import ahtewlg7.utimer.common.FileSystemAction;
 import ahtewlg7.utimer.entity.AGtdUtimerEntity;
 import ahtewlg7.utimer.entity.IMergerEntity;
+import ahtewlg7.utimer.entity.material.DirAttachFile;
 import ahtewlg7.utimer.enumtype.GtdType;
+import ahtewlg7.utimer.util.DateTimeAction;
+import ahtewlg7.utimer.util.Logcat;
 
 
 public class GtdProjectEntity extends AGtdUtimerEntity<GtdProjectBuilder> implements Serializable {
@@ -38,5 +44,17 @@ public class GtdProjectEntity extends AGtdUtimerEntity<GtdProjectBuilder> implem
     @Override
     public IMergerEntity merge(IMergerEntity entity) {
         return entity;
+    }
+
+    @Override
+    public boolean ensureAttachFileExist() {
+        if(attachFile == null){
+            String fileName = !TextUtils.isEmpty(getTitle()) ? getTitle() : new DateTimeAction().toFormatNow().toString();
+            String filePath = new FileSystemAction().getProjectGtdAbsPath();
+            attachFile = new DirAttachFile(filePath, fileName);
+        }
+        boolean result = attachFile.createOrExist();
+        Logcat.i(TAG,"ensureAttachFileExist result = " + result);
+        return result;
     }
 }

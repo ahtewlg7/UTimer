@@ -9,13 +9,9 @@ import org.joda.time.DateTime;
 
 import javax.annotation.Nonnull;
 
-import ahtewlg7.utimer.common.FileSystemAction;
 import ahtewlg7.utimer.common.IdAction;
 import ahtewlg7.utimer.entity.material.AAttachFile;
-import ahtewlg7.utimer.entity.material.DirAttachFile;
 import ahtewlg7.utimer.enumtype.GtdType;
-import ahtewlg7.utimer.util.DateTimeAction;
-import ahtewlg7.utimer.util.Logcat;
 
 public abstract class AUtimerEntity<T extends AUtimerBuilder>
         implements ITipsEntity, IMergerEntity{
@@ -24,6 +20,7 @@ public abstract class AUtimerEntity<T extends AUtimerBuilder>
     @NonNull
     public abstract GtdType getGtdType();
     public abstract Optional<String> getDetail();
+    public abstract boolean ensureAttachFileExist();
 
     protected int accessTimes;
     protected boolean isGtdActived;
@@ -124,17 +121,6 @@ public abstract class AUtimerEntity<T extends AUtimerBuilder>
             lastAccessTime = attachFile.getLassAccessTime();
             lastModifyTime = attachFile.getLassModifyTime();
         }
-    }
-
-    public boolean ensureAttachFileExist() {
-        if(attachFile == null){
-            String fileName = !TextUtils.isEmpty(getTitle()) ? getTitle() : new DateTimeAction().toFormatNow().toString();
-            String filePath = new FileSystemAction().getProjectGtdAbsPath();
-            attachFile = new DirAttachFile(filePath, fileName);
-        }
-        boolean result = attachFile.createOrExist();
-        Logcat.i(TAG,"ensureAttachFileExist result = " + result);
-        return result;
     }
 
     @Override
