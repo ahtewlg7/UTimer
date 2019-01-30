@@ -1,56 +1,86 @@
 package ahtewlg7.utimer.gtd;
 
-import android.text.TextUtils;
-import android.util.ArrayMap;
+import android.support.annotation.NonNull;
 
+import com.google.common.base.Optional;
+
+import org.reactivestreams.Publisher;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+
+import ahtewlg7.utimer.common.FileSystemAction;
 import ahtewlg7.utimer.entity.gtd.GtdProjectEntity;
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
+import ahtewlg7.utimer.entity.gtd.NoteBuilder;
+import ahtewlg7.utimer.entity.gtd.NoteEntity;
+import ahtewlg7.utimer.entity.material.MdAttachFile;
+import io.reactivex.Flowable;
+import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
 
 public class GtdProjectAction {
     public static final String TAG = GtdProjectAction.class.getSimpleName();
 
-    private static GtdProjectAction instance;
-    private ArrayMap<String, GtdProjectEntity> projectMap;
+    protected GtdProjectEntity projectEntity;
+    protected FileSystemAction fileSystemAction;
 
-    private GtdProjectAction(){
-        projectMap = new ArrayMap<String, GtdProjectEntity>();
+    public GtdProjectAction(GtdProjectEntity projectEntity){
+        this.projectEntity = projectEntity;
+        fileSystemAction   = new FileSystemAction();
     }
 
-    public static GtdProjectAction getInstance(){
-        if(instance != null)
-            instance = new GtdProjectAction();
-        return instance;
+    public Optional<String> getCurrProjectRDir(){
+        if(projectEntity.ifValid() && projectEntity.getAttachFile() != null
+                && projectEntity.getAttachFile().ifValid())
+            return Optional.of(fileSystemAction.getRPath(projectEntity.getAttachFile().getFile()));
+        return Optional.absent();
+    }
+    public Optional<String> getCurrProjectAbsDir(){
+        if(projectEntity.ifValid() && projectEntity.getAttachFile() != null
+                && projectEntity.getAttachFile().ifValid())
+            return Optional.of(projectEntity.getAttachFile().getFile().getAbsolutePath());
+        return Optional.absent();
     }
 
-    public Observable<GtdProjectEntity> getAllProject(){
-        return Observable.create(new ObservableOnSubscribe<GtdProjectEntity>() {
+    public Flowable<NoteEntity> loadAllNote() {
+        return filterInvalidEntity(getFsNote(getNoteFiles()));
+    }
+    private Flowable<NoteEntity> filterInvalidEntity(@NonNull Flowable<Optional<NoteEntity>> projectNoteRx){
+        return projectNoteRx.filter(new Predicate<Optional<NoteEntity>>() {
+                    @Override
+                    public boolean test(Optional<NoteEntity> entityOptional) throws Exception {
+                        return entityOptional.isPresent();
+                        }
+                })
+                .map(new Function<Optional<NoteEntity>, NoteEntity>() {
+                    @Override
+                    public NoteEntity apply(Optional<NoteEntity> entityOptional) throws Exception {
+                        return entityOptional.get();
+                    }
+                });
+    }
+
+    private Flowable<File> getNoteFiles(){
+        return Flowable.just(projectEntity).flatMap(new Function<GtdProjectEntity, Publisher<File>>() {
             @Override
-            public void subscribe(ObservableEmitter<GtdProjectEntity> emitter) throws Exception {
-                try{
-                    for(GtdProjectEntity projectEntity : projectMap.values())
-                        emitter.onNext(projectEntity);
-                }catch (Exception e){
-                    emitter.onError(e.getCause());
-                }
-                emitter.onComplete();
+            public Publisher<File> apply(GtdProjectEntity projectEntity) throws Exception {
+                if(projectEntity.getAttachFile() == null || !projectEntity.getAttachFile().ifValid())
+                    throw new FileNotFoundException("Project file is missing");
+                return Flowable.fromArray(projectEntity.getAttachFile().getFile().listFiles());
+            }
+        });
+    }
+    private Flowable<Optional<NoteEntity>> getFsNote(Flowable<File> projectNoteRx){
+        return projectNoteRx.map(new Function<File, Optional<NoteEntity>>() {
+            @Override
+            public Optional<NoteEntity> apply(File file) throws Exception {
+                MdAttachFile attachFile = new MdAttachFile(file);
+                if(!attachFile.ifValid())
+                    return Optional.absent();
+                NoteEntity e = (NoteEntity)new NoteBuilder().setAttachFile(attachFile).build();
+                return Optional.fromNullable(e);
             }
         });
     }
 
-    public void addProject(GtdProjectEntity projectEntity){
-        if(projectEntity != null && projectEntity.ifValid() && !projectMap.containsKey(projectEntity.getTitle()))
-            projectMap.put(projectEntity.getTitle(), projectEntity);
-    }
-
-    public void removeProject(GtdProjectEntity projectEntity){
-        if(projectEntity != null && projectEntity.ifValid() && !projectMap.containsKey(projectEntity.getTitle()))
-            projectMap.remove(projectEntity.getTitle());
-    }
-
-    public void removeProject(String key){
-        if(!TextUtils.isEmpty(key) && !projectMap.containsKey(key))
-            projectMap.remove(key);
-    }
 }

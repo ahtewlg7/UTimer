@@ -20,7 +20,7 @@ import ahtewlg7.utimer.entity.gtd.ShortHandBuilder;
 import ahtewlg7.utimer.entity.gtd.ShortHandEntity;
 import ahtewlg7.utimer.entity.md.EditElement;
 import ahtewlg7.utimer.entity.md.EditMementoBean;
-import ahtewlg7.utimer.mvp.AUtimerEditMvpP;
+import ahtewlg7.utimer.mvp.AUtimerTxtEditMvpP;
 import ahtewlg7.utimer.mvp.ShorthandEditMvpP;
 import ahtewlg7.utimer.util.DateTimeAction;
 import ahtewlg7.utimer.util.Logcat;
@@ -65,7 +65,7 @@ public class ShortHandEditFragment extends ATxtEditFragment implements Shorthand
 
     @NonNull
     @Override
-    protected AUtimerEditMvpP getEditMvpP() {
+    protected AUtimerTxtEditMvpP getEditMvpP() {
         if(editMvpP == null)
             editMvpP = new ShorthandEditMvpP(getUtimerEntity(), this);
         return editMvpP;

@@ -19,7 +19,7 @@ import io.reactivex.subjects.PublishSubject;
 /**
  * Created by lw on 2018/10/18.
  */
-public class NoteEditMvpP extends AUtimerEditMvpP<NoteEntity> {
+public class NoteEditMvpP extends AUtimerTxtEditMvpP<NoteEntity> {
     public static final String TAG = NoteEditMvpP.class.getSimpleName();
 
     public PublishSubject<EditElement> editPublishSubject;

@@ -19,7 +19,7 @@ import io.reactivex.subjects.PublishSubject;
 /**
  * Created by lw on 2018/10/18.
  */
-public class ShorthandEditMvpP extends AUtimerEditMvpP<ShortHandEntity> {
+public class ShorthandEditMvpP extends AUtimerTxtEditMvpP<ShortHandEntity> {
     public static final String TAG = ShorthandEditMvpP.class.getSimpleName();
 
     public PublishSubject<EditElement> editPublishSubject;

@@ -2,10 +2,11 @@ package com.utimer.entity;
 
 import com.google.common.base.Optional;
 
+import ahtewlg7.utimer.entity.AUtimerEntity;
 import ahtewlg7.utimer.entity.gtd.GtdProjectEntity;
 import ahtewlg7.utimer.entity.view.BaseSectionEntity;
 
-public class ProjectInfoSectionViewEntity extends BaseSectionEntity<GtdProjectEntity> {
+public class ProjectInfoSectionViewEntity extends BaseSectionEntity<AUtimerEntity> {
     public static final String TAG = ProjectInfoSectionViewEntity.class.getSimpleName();
 
     public ProjectInfoSectionViewEntity(boolean isHeader, String headerName, boolean isMore) {
@@ -22,9 +23,7 @@ public class ProjectInfoSectionViewEntity extends BaseSectionEntity<GtdProjectEn
         return Optional.absent();
     }
     public Optional<String> getDetail(){
-//        if(t != null && t.getDetail() != null)
-//            return t.getDetail();
-        return Optional.absent();
+        return t.getDetail();
     }
     public Optional<String>  getLastAccessTime(){
 //        if(t != null && t.getLastAccessTime() != null)

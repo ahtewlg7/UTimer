@@ -126,22 +126,22 @@ public abstract class AUtimerEntity<T extends AUtimerBuilder>
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("id").append(id);
-        builder.append(",uuid").append(uuid);
-        builder.append(",ifValid").append(ifValid());
-        builder.append(",accessTimes").append(accessTimes);
+        builder.append("id=").append(id);
+        builder.append(",uuid=").append(uuid);
+        builder.append(",ifValid=").append(ifValid());
+        builder.append(",accessTimes=").append(accessTimes);
         if(!TextUtils.isEmpty(title))
-            builder.append(",title").append(title);
+            builder.append(",title=").append(title);
         if(getDetail().isPresent() && !TextUtils.isEmpty(getDetail().get()))
-            builder.append(",detail").append(getDetail().get());
+            builder.append(",detail=").append(getDetail().get());
         if(createTime != null)
-            builder.append(",createTime").append(createTime.toString());
+            builder.append(",createTime=").append(createTime.toString());
         if(lastAccessTime != null)
-            builder.append(",lastAccessTime").append(lastAccessTime.toString());
+            builder.append(",lastAccessTime=").append(lastAccessTime.toString());
         if(lastModifyTime != null)
-            builder.append(",lastModifyTime").append(lastModifyTime.toString());
-        if(attachFile != null)
-            builder.append(",attachFile").append(attachFile.getTitle());
+            builder.append(",lastModifyTime=").append(lastModifyTime.toString());
+        if(attachFile != null && attachFile.getTitle().isPresent())
+            builder.append(",attachFile=").append(attachFile.getTitle().get());
         return builder.toString();
     }
 }

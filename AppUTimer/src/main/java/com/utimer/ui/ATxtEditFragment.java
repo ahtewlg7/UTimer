@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 import ahtewlg7.utimer.entity.AUtimerEntity;
 import ahtewlg7.utimer.entity.md.EditElement;
 import ahtewlg7.utimer.enumtype.EditMode;
+import ahtewlg7.utimer.mvp.AUtimerTxtEditMvpP;
 import ahtewlg7.utimer.util.Logcat;
 import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
@@ -36,7 +37,7 @@ public abstract class ATxtEditFragment extends AEditFragment {
         super.onViewCreated(inflateView);
         editPositionSubject = PublishSubject.create();
 
-        getEditMvpP().toLoadTxt();
+        getEditMvpP().toLoad();
         createEditViewListen();
     }
 
@@ -52,6 +53,11 @@ public abstract class ATxtEditFragment extends AEditFragment {
         return getUtimerEntity() != null && getUtimerEntity().ifValid();
     }
 
+    @NonNull
+    @Override
+    protected AUtimerTxtEditMvpP getEditMvpP() {
+        return getEditMvpP();
+    }
 
     public void onEditMode(int position, @NonNull EditMode editMode, @NonNull Optional<EditElement> editElementOptional) {
         Optional<EditText> optional = getEditTextItem(position);

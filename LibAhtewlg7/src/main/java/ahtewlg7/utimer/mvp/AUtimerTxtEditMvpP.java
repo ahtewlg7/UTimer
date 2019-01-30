@@ -33,8 +33,8 @@ import io.reactivex.functions.Predicate;
 /**
  * Created by lw on 2018/10/20.
  */
-public abstract class AUtimerEditMvpP<T extends AUtimerEntity> {
-    public static final String TAG = AUtimerEditMvpP.class.getSimpleName();
+public abstract class AUtimerTxtEditMvpP<T extends AUtimerEntity> implements IUtimerEditMvpP{
+    public static final String TAG = AUtimerTxtEditMvpP.class.getSimpleName();
 
     public static final int INIT_POSITION = -1;
 
@@ -55,7 +55,7 @@ public abstract class AUtimerEditMvpP<T extends AUtimerEntity> {
     protected EditMementoOriginator mdMementoOriginator;
     protected EditMementoCaretaker mdMementoCaretaker;
 
-    public AUtimerEditMvpP(T t , IUtimerEditMvpV editMvpV) {
+    public AUtimerTxtEditMvpP(T t , IUtimerEditMvpV editMvpV) {
         this.t = t;
         this.editMvpV = editMvpV;
         editMvpM      = getEditMvpM(t);
@@ -84,7 +84,7 @@ public abstract class AUtimerEditMvpP<T extends AUtimerEntity> {
         preEditPosition = position;
     }
 
-    public void toLoadTxt(){
+    public void toLoad(){
         if(t.getAttachFile() == null || !t.getAttachFile().ifValid()){
             Logcat.i(TAG,"toLoadTxt : attachFile is not valid , so cancel");
             initElementList();

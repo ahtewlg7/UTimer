@@ -18,7 +18,7 @@ import ahtewlg7.utimer.entity.gtd.NoteBuilder;
 import ahtewlg7.utimer.entity.gtd.NoteEntity;
 import ahtewlg7.utimer.entity.md.EditElement;
 import ahtewlg7.utimer.entity.md.EditMementoBean;
-import ahtewlg7.utimer.mvp.AUtimerEditMvpP;
+import ahtewlg7.utimer.mvp.AUtimerTxtEditMvpP;
 import ahtewlg7.utimer.mvp.NoteEditMvpP;
 import ahtewlg7.utimer.util.DateTimeAction;
 import ahtewlg7.utimer.util.Logcat;
@@ -89,7 +89,7 @@ public class NoteEditFragment extends ATxtEditFragment
 
     @NonNull
     @Override
-    protected AUtimerEditMvpP getEditMvpP() {
+    protected AUtimerTxtEditMvpP getEditMvpP() {
         if(editMvpP == null)
             editMvpP = new NoteEditMvpP(getUtimerEntity(), this);
         return editMvpP;
