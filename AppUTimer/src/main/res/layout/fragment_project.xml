@@ -2,16 +2,16 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/fragment_shorthand_container"
+    android:id="@+id/fragment_project_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <android.support.design.widget.AppBarLayout
-        android:id="@+id/fragment_shorthand_appbarlayout"
+        android:id="@+id/fragment_project_appbarlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <android.support.v7.widget.Toolbar
-            android:id="@+id/fragment_shorthand_toolbar"
+            android:id="@+id/fragment_project_toolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="?attr/colorPrimary"
@@ -20,8 +20,8 @@
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
     </android.support.design.widget.AppBarLayout>
 
-    <ahtewlg7.utimer.view.EditLinerRecyclerView
-        android:id="@+id/fragment_shorthand_edit_rv"
+    <com.utimer.view.ProjectInfoSectionRecyclerView
+        android:id="@+id/fragment_project_info_rv"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@android:color/holo_blue_dark"
@@ -29,5 +29,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fragment_shorthand_appbarlayout" />
+        app:layout_constraintTop_toBottomOf="@+id/fragment_project_appbarlayout" />
 </android.support.constraint.ConstraintLayout>

@@ -7,8 +7,11 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.common.collect.Lists;
 import com.trello.rxlifecycle2.LifecycleProvider;
 import com.utimer.R;
+import com.utimer.entity.ProjectInfoSectionViewEntity;
+import com.utimer.view.ProjectInfoSectionRecyclerView;
 
 import java.util.List;
 
@@ -31,8 +34,10 @@ public class ProjectFragment extends AEditFragment
 
     public static final String KEY_GTD_PROJECT = "project";
 
-    @BindView(R.id.activity_utimer_toolbar)
+    @BindView(R.id.fragment_project_toolbar)
     Toolbar toolbar;
+    @BindView(R.id.fragment_project_info_rv)
+    ProjectInfoSectionRecyclerView projectRecyclerView;
 
     protected GtdProjectEntity gtdProjectEntity;
     protected ProjectEditMvpP projectEditMvpP;
@@ -50,12 +55,12 @@ public class ProjectFragment extends AEditFragment
     public void onViewCreated(View inflateView) {
         super.onViewCreated(inflateView);
 
-
+        projectRecyclerView.init(getContext(),null);
     }
 
     @Override
     public int getLayoutRid() {
-        return R.layout.un_fragment_recycler;
+        return R.layout.fragment_project;
     }
 
     @Override
@@ -100,7 +105,7 @@ public class ProjectFragment extends AEditFragment
     /*++++++++++++++++++++++++++++++++++++++++++ProjectEditMvpP.IProjectEditMvpV++++++++++++++++++++++++++++++++++++++++*/
     @Override
     public void resetView(List<NoteEntity> dataList) {
-
+        toReloadEntity(dataList);
     }
 
     @Override
@@ -110,22 +115,23 @@ public class ProjectFragment extends AEditFragment
 
     @Override
     public void onItemLoadStart() {
-
+        Logcat.i(TAG, "onItemLoadStart");
     }
 
     @Override
     public void onItemLoad(NoteEntity data) {
+        Logcat.i(TAG, "onItemLoad " + data.toString());
 
     }
 
     @Override
     public void onItemLoadErr(Throwable t) {
-
+        Logcat.i(TAG, "onItemLoadErr : " + t.getMessage());
     }
 
     @Override
     public void onItemLoadEnd(List<NoteEntity> alldata) {
-
+        toReloadEntity(alldata);
     }
 
     @Override
@@ -180,5 +186,23 @@ public class ProjectFragment extends AEditFragment
 
     private GtdProjectEntity getGtdEntity(){
         return (GtdProjectEntity) getArguments().getSerializable(KEY_GTD_PROJECT);
+    }
+    private void toReloadEntity(List<NoteEntity> alldata){
+        if(alldata == null || alldata.isEmpty()){
+            Logcat.i(TAG, "toReloadEntity cancel");
+            return ;
+        }
+        List<ProjectInfoSectionViewEntity> sectionViewEntityList = Lists.newArrayList();
+
+        String noteheaderName = MyRInfo.getStringByID(R.string.title_note_list);
+        ProjectInfoSectionViewEntity projectInfoSectionHeaderEntity = new ProjectInfoSectionViewEntity(true, noteheaderName,true);
+        sectionViewEntityList.add(projectInfoSectionHeaderEntity);
+
+        for(NoteEntity data : alldata){
+            ProjectInfoSectionViewEntity projectInfoSectionViewEntity = new ProjectInfoSectionViewEntity(data);
+            sectionViewEntityList.add(projectInfoSectionViewEntity);
+        }
+
+        projectRecyclerView.resetData(sectionViewEntityList);
     }
 }

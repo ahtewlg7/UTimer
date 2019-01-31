@@ -32,7 +32,7 @@ public class ProjectEditMvpP implements IUtimerEditMvpP{
     public ProjectEditMvpP(IProjectEditMvpV mvpV, GtdProjectEntity entity) {
         this.mvpV       = mvpV;
         this.entity     = entity;
-        mvpM            = new ProjectEditMvpM();
+        mvpM            = new ProjectEditMvpM(entity);
         noteEntityList  = Lists.newArrayList();
     }
 
@@ -84,8 +84,12 @@ public class ProjectEditMvpP implements IUtimerEditMvpP{
 
     }
 
-    public class ProjectEditMvpM{
+    class ProjectEditMvpM{
         private GtdProjectAction projectAction;
+
+        ProjectEditMvpM(GtdProjectEntity entity){
+            projectAction = new GtdProjectAction(entity);
+        }
 
         public Flowable<NoteEntity> loadAllNote() {
             return projectAction.loadAllNote();

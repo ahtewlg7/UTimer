@@ -3,7 +3,6 @@ package com.utimer.entity;
 import com.google.common.base.Optional;
 
 import ahtewlg7.utimer.entity.AUtimerEntity;
-import ahtewlg7.utimer.entity.gtd.GtdProjectEntity;
 import ahtewlg7.utimer.entity.view.BaseSectionEntity;
 
 public class ProjectInfoSectionViewEntity extends BaseSectionEntity<AUtimerEntity> {
@@ -13,7 +12,7 @@ public class ProjectInfoSectionViewEntity extends BaseSectionEntity<AUtimerEntit
         super(isHeader, headerName, isMore);
     }
 
-    public ProjectInfoSectionViewEntity(GtdProjectEntity gtdEntity) {
+    public ProjectInfoSectionViewEntity(AUtimerEntity gtdEntity) {
         super(gtdEntity);
     }
 

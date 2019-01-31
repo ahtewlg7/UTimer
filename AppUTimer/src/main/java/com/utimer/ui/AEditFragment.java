@@ -26,7 +26,10 @@ public abstract class AEditFragment extends AToolbarBkFragment{
             Logcat.i(TAG,"the env is not ready , so pop it");
             ToastUtils.showShort(R.string.entity_invalid);
             pop();
+            return;
         }
+
+        getEditMvpP().toLoad();
     }
 
     @Override

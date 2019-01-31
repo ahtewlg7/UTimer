@@ -37,7 +37,6 @@ public abstract class ATxtEditFragment extends AEditFragment {
         super.onViewCreated(inflateView);
         editPositionSubject = PublishSubject.create();
 
-        getEditMvpP().toLoad();
         createEditViewListen();
     }
 

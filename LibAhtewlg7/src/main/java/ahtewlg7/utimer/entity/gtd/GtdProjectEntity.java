@@ -31,6 +31,7 @@ public class GtdProjectEntity extends AGtdUtimerEntity<GtdProjectBuilder> implem
         return GtdType.PROJECT;
     }
 
+    @Override
     public Optional<String> toTips() {
         return Optional.absent();
     }
