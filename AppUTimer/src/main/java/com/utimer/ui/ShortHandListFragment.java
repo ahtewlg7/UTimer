@@ -38,7 +38,7 @@ public class ShortHandListFragment extends AToolbarBkFragment implements ShortHa
     @BindView(R.id.fragment_shorthand_list_recycler_view)
     ShorthandRecyclerView shorthandRecyclerView;
 
-    private int editPosition = -1;
+    private int editIndex = -1;
     private ShortHandListMvpP shortHandListMvpP;
     private MyClickListener myClickListener;
 
@@ -160,9 +160,9 @@ public class ShortHandListFragment extends AToolbarBkFragment implements ShortHa
 
     @Override
     public void onItemEdit(ShortHandEntity data) {
-        if (editPosition != INIT_POSITION)
-            shortHandListMvpP.onItemEdited(editPosition, data);
-        editPosition = INIT_POSITION;
+        if (editIndex != INIT_POSITION)
+            shortHandListMvpP.onItemEdited(editIndex, data);
+        editIndex = INIT_POSITION;
     }
 
     /**********************************************IShorthandListMvpV**********************************************/
@@ -203,7 +203,7 @@ public class ShortHandListFragment extends AToolbarBkFragment implements ShortHa
     class MyClickListener implements BaseQuickAdapter.OnItemClickListener, BaseQuickAdapter.OnItemLongClickListener {
         @Override
         public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-            editPosition = position;
+            editIndex = position;
             startForResult(ShortHandEditFragment.newInstance((ShortHandEntity) adapter.getData().get(position)), REQ_EDIT_FRAGMENT);
         }
 

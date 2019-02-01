@@ -99,7 +99,20 @@ public class NoteEditFragment extends ATxtEditFragment
     protected NoteEntity getUtimerEntity(){
         return (NoteEntity) getArguments().getSerializable(KEY_NOTE);
     }
+    /**********************************************AEditFragment**********************************************/
+    @Override
+    protected void onEditEnd() {
+        super.onEditEnd();
 
+        int resultCode = RESULT_CANCELED;
+        if(!getEditMvpP().ifEditElementEmpty()){
+            resultCode = RESULT_OK;
+            Optional<EditElement> elementOptional = editMvpP.getEditElement(0);
+            if(elementOptional.isPresent())
+                ((NoteEntity)getArguments().getSerializable(KEY_NOTE)).appendDetail(elementOptional.get().getMdCharSequence().toString());
+        }
+        setFragmentResult(resultCode, getArguments());
+    }
     /******************************************OnItemChildClickListener**********************************************/
     @Override
     public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {

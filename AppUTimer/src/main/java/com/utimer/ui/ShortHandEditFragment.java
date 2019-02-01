@@ -129,7 +129,7 @@ public class ShortHandEditFragment extends ATxtEditFragment implements Shorthand
         }
         return Optional.fromNullable((EditText)currEditText);
     }
-
+    /**********************************************AEditFragment**********************************************/
     @Override
     protected void onEditEnd() {
         super.onEditEnd();

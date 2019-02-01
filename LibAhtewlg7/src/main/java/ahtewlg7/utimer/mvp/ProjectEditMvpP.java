@@ -84,6 +84,19 @@ public class ProjectEditMvpP implements IUtimerEditMvpP{
 
     }
 
+    public void onNoteCreated(NoteEntity entity) {
+        noteEntityList.add(entity);
+        if(mvpV != null)
+            mvpV.resetView(noteEntityList);
+    }
+
+    public void onNoteEdited(int index, NoteEntity entity) {
+        if(index > 0)
+            noteEntityList.set(index - 1, entity);
+        if(mvpV != null)
+            mvpV.resetView(index, entity);
+    }
+
     class ProjectEditMvpM{
         private GtdProjectAction projectAction;
 

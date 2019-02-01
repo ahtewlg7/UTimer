@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.common.collect.Lists;
 import com.trello.rxlifecycle2.LifecycleProvider;
 import com.utimer.R;
@@ -29,6 +30,7 @@ public class ProjectFragment extends AEditFragment
     implements ProjectEditMvpP.IProjectEditMvpV {
     public static final String TAG = ProjectFragment.class.getSimpleName();
 
+    public static final int INIT_POSITION           = -1;
     public static final int REQ_NEW_NOTE_FRAGMENT   = 100;
     public static final int REQ_EDIT_NOTE_FRAGMENT  = 101;
 
@@ -39,8 +41,10 @@ public class ProjectFragment extends AEditFragment
     @BindView(R.id.fragment_project_info_rv)
     ProjectInfoSectionRecyclerView projectRecyclerView;
 
+    private int editIndex = -1;
     protected GtdProjectEntity gtdProjectEntity;
     protected ProjectEditMvpP projectEditMvpP;
+    protected MyClickListener myClickListener;
 
     public static ProjectFragment newInstance(GtdProjectEntity entity) {
         Bundle args = new Bundle();
@@ -55,7 +59,21 @@ public class ProjectFragment extends AEditFragment
     public void onViewCreated(View inflateView) {
         super.onViewCreated(inflateView);
 
-        projectRecyclerView.init(getContext(),null);
+        myClickListener = new MyClickListener();
+        projectRecyclerView.init(getContext(), 0, null, myClickListener, null, myClickListener,null);
+    }
+
+    @Override
+    public void onFragmentResult(int requestCode, int resultCode, Bundle data) {
+        super.onFragmentResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && data != null) {
+            NoteEntity entity = (NoteEntity) data.getSerializable(NoteEditFragment.KEY_NOTE);
+            if (entity != null && requestCode == REQ_NEW_NOTE_FRAGMENT)
+                onItemCreate(entity);
+            else if (entity != null && requestCode == REQ_EDIT_NOTE_FRAGMENT) {
+                onItemEdit(entity);
+            }
+        }
     }
 
     @Override
@@ -110,7 +128,8 @@ public class ProjectFragment extends AEditFragment
 
     @Override
     public void resetView(int index, NoteEntity noteEntity) {
-
+        ProjectInfoSectionViewEntity projectInfoSectionViewEntity = new ProjectInfoSectionViewEntity(noteEntity);
+        projectRecyclerView.resetData(index, projectInfoSectionViewEntity);
     }
 
     @Override
@@ -136,12 +155,14 @@ public class ProjectFragment extends AEditFragment
 
     @Override
     public void onItemCreate(NoteEntity data) {
-
+        projectEditMvpP.onNoteCreated(data);
     }
 
     @Override
     public void onItemEdit(NoteEntity data) {
-
+        if (editIndex != INIT_POSITION)
+            projectEditMvpP.onNoteEdited(editIndex, data);
+        editIndex = INIT_POSITION;
     }
 
     @Override
@@ -187,6 +208,7 @@ public class ProjectFragment extends AEditFragment
     private GtdProjectEntity getGtdEntity(){
         return (GtdProjectEntity) getArguments().getSerializable(KEY_GTD_PROJECT);
     }
+
     private void toReloadEntity(List<NoteEntity> alldata){
         if(alldata == null || alldata.isEmpty()){
             Logcat.i(TAG, "toReloadEntity cancel");
@@ -204,5 +226,25 @@ public class ProjectFragment extends AEditFragment
         }
 
         projectRecyclerView.resetData(sectionViewEntityList);
+    }
+
+    class MyClickListener implements BaseQuickAdapter.OnItemClickListener, BaseQuickAdapter.OnItemLongClickListener {
+        @Override
+        public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+            ProjectInfoSectionViewEntity viewEntity = (ProjectInfoSectionViewEntity) adapter.getData().get(position);
+            editIndex = position;
+            if(!viewEntity.isHeader) {
+                NoteEntity noteEntity = (NoteEntity) viewEntity.t;
+                startForResult(NoteEditFragment.newInstance(noteEntity), REQ_EDIT_NOTE_FRAGMENT);
+            }
+        }
+
+        @Override
+        public boolean onItemLongClick(BaseQuickAdapter adapter, View view, int position) {
+            NoteEntity viewEntity = (NoteEntity)adapter.getItem(position);
+            /*if(viewEntity != null)
+                toCreateDelDialog(viewEntity);*/
+            return false;
+        }
     }
 }
