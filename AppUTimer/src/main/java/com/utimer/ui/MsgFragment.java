@@ -14,7 +14,7 @@ import butterknife.BindView;
 public class MsgFragment extends AToolbarBkFragment {
     public static final String TAG = MsgFragment.class.getSimpleName();
 
-    @BindView(R.id.activity_utimer_toolbar)
+    @BindView(R.id.fragment_shorthand_list_toolbar)
     Toolbar toolbar;
 
     public static MsgFragment newInstance() {
@@ -27,7 +27,7 @@ public class MsgFragment extends AToolbarBkFragment {
 
     @Override
     public int getLayoutRid() {
-        return R.layout.un_fragment_recycler;
+        return R.layout.fragment_shorthand_list;
     }
 
     @Override

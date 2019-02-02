@@ -36,7 +36,6 @@ dependencies {
     implementation 'com.android.support:cardview-v7:28.0.0'
 
     api project(path: ':LibAhtewlg7')
-    implementation project(':LibViewPagerIndicator')
 
     implementation 'com.android.support:percent:28.0.0'
 

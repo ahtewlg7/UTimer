@@ -14,8 +14,6 @@ import ahtewlg7.utimer.common.IdAction;
 import ahtewlg7.utimer.db.DbActionFacade;
 import ahtewlg7.utimer.entity.gtd.un.NoteEntity;
 import ahtewlg7.utimer.enumtype.UnLoadType;
-import ahtewlg7.utimer.mvp.un.NoteEntityEditMvpP;
-import ahtewlg7.utimer.mvp.un.NoteRecyclerViewMvpP;
 import ahtewlg7.utimer.util.DateTimeAction;
 import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MyRInfo;
@@ -27,8 +25,7 @@ import io.reactivex.functions.Function;
  * Created by lw on 2017/12/28.
  */
 
-public class NoteEntityAction
-        implements NoteEntityEditMvpP.INoteEditMvpM, NoteRecyclerViewMvpP.INoteRecyclerViewMvpM {
+public class NoteEntityAction{
     public static final String TAG = NoteEntityAction.class.getSimpleName();
 
     private DbActionFacade dbAction;
@@ -57,17 +54,14 @@ public class NoteEntityAction
     }
 
     //=====================================IBaseRecyclerViewMvpM========================================
-    @Override
     public Flowable<Optional<NoteEntity>> loadAllEntity() {
         return dbAction.loadAllNoteEntity();
     }
 
-    @Override
     public Flowable<Optional<NoteEntity>> loadEntity(@NonNull Flowable<Optional<String>> idObservable) {
         return dbAction.getNoteEntity(idObservable);
     }
 
-    @Override
     public Flowable<Boolean> deleteEntity(@NonNull Flowable<Optional<NoteEntity>> flowable) {
         return dbAction.deleteNoteEntity(flowable);
     }
@@ -85,7 +79,6 @@ public class NoteEntityAction
         return fileSystemAction.getSdcardPath() + noteEntity.getFileRPath() + noteEntity.getNoteName() + noteFileSuffix;
     }
 
-    @Override
     public Flowable<Optional<NoteEntity>> toLoadOrCreateNote(@NonNull Flowable<Optional<String>> noteIdFlowable) {
         return loadEntity(noteIdFlowable)
                 .map(new Function<Optional<NoteEntity>, Optional<NoteEntity>>() {
@@ -98,7 +91,6 @@ public class NoteEntityAction
                 });
     }
 
-    @Override
     public Flowable<Boolean> toSaveNote(NoteEntity noteEntity) {
         return dbAction.saveNoteEntity(Flowable.just(noteEntity).doOnNext(new Consumer<NoteEntity>() {
             @Override
