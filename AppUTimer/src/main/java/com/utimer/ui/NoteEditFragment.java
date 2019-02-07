@@ -91,12 +91,12 @@ public class NoteEditFragment extends ATxtEditFragment
     @Override
     protected AUtimerTxtEditMvpP getEditMvpP() {
         if(editMvpP == null)
-            editMvpP = new NoteEditMvpP(getUtimerEntity(), this);
+            editMvpP = new NoteEditMvpP(getUTimerEntity(), this);
         return editMvpP;
     }
 
     @Override
-    protected NoteEntity getUtimerEntity(){
+    protected NoteEntity getUTimerEntity(){
         return (NoteEntity) getArguments().getSerializable(KEY_NOTE);
     }
     /**********************************************AEditFragment**********************************************/

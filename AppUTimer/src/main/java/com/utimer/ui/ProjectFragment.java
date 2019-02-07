@@ -195,17 +195,18 @@ public class ProjectFragment extends AEditFragment
     @Override
     protected IUtimerEditMvpP getEditMvpP() {
         if(projectEditMvpP == null)
-            projectEditMvpP = new ProjectEditMvpP(this, getGtdEntity());;
+            projectEditMvpP = new ProjectEditMvpP(this, getUTimerEntity());;
         return projectEditMvpP;
     }
 
     @Override
     protected boolean ifEnvOk() {
-        gtdProjectEntity = getGtdEntity();
+        gtdProjectEntity = getUTimerEntity();
         return gtdProjectEntity != null && gtdProjectEntity.ifValid() && gtdProjectEntity.ensureAttachFileExist();
     }
 
-    private GtdProjectEntity getGtdEntity(){
+    @Override
+    protected GtdProjectEntity getUTimerEntity() {
         return (GtdProjectEntity) getArguments().getSerializable(KEY_GTD_PROJECT);
     }
 

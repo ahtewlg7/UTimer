@@ -6,31 +6,24 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.EditText;
 
 import com.blankj.utilcode.util.ToastUtils;
-import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.common.base.Optional;
 import com.trello.rxlifecycle2.LifecycleProvider;
 import com.utimer.R;
 
-import java.util.List;
-
 import ahtewlg7.utimer.entity.gtd.ShortHandBuilder;
 import ahtewlg7.utimer.entity.gtd.ShortHandEntity;
 import ahtewlg7.utimer.entity.md.EditElement;
-import ahtewlg7.utimer.entity.md.EditMementoBean;
 import ahtewlg7.utimer.mvp.AUtimerTxtEditMvpP;
 import ahtewlg7.utimer.mvp.ShorthandEditMvpP;
 import ahtewlg7.utimer.util.DateTimeAction;
-import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MyRInfo;
-import ahtewlg7.utimer.view.EditLinerRecyclerView;
-import ahtewlg7.utimer.view.md.MdEditText;
+import ahtewlg7.utimer.view.BaseUtimerEidtView;
 import butterknife.BindView;
 
-public class ShortHandEditFragment extends ATxtEditFragment implements ShorthandEditMvpP.IShorthandEditMvpV,
-        BaseQuickAdapter.OnItemChildClickListener {
+public class ShortHandEditFragment extends AEditFragment
+        implements BaseUtimerEidtView.IUtimerAttachEditView{
     public static final String TAG = ShortHandEditFragment.class.getSimpleName();
 
     public static final String KEY_SHORTHAND = "shorthand";
@@ -38,7 +31,7 @@ public class ShortHandEditFragment extends ATxtEditFragment implements Shorthand
     @BindView(R.id.fragment_shorthand_toolbar)
     Toolbar toolbar;
     @BindView(R.id.fragment_shorthand_edit_rv)
-    EditLinerRecyclerView editReCyclerView;
+    BaseUtimerEidtView editRecyclerView;
 
     private ShorthandEditMvpP editMvpP;
 
@@ -57,18 +50,18 @@ public class ShortHandEditFragment extends ATxtEditFragment implements Shorthand
     }
 
     @Override
+    public void onViewCreated(View inflateView) {
+        super.onViewCreated(inflateView);
+        editRecyclerView.setAttachEditView(this);
+        editRecyclerView.setUTimerEntity(getUTimerEntity());
+        editRecyclerView.toStartEdit();
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         /*false means menu off; true means menu on*/
         setHasOptionsMenu(false);
-    }
-
-    @NonNull
-    @Override
-    protected AUtimerTxtEditMvpP getEditMvpP() {
-        if(editMvpP == null)
-            editMvpP = new ShorthandEditMvpP(getUtimerEntity(), this);
-        return editMvpP;
     }
 
     @Override
@@ -112,24 +105,45 @@ public class ShortHandEditFragment extends ATxtEditFragment implements Shorthand
         }
         return result;
     }*/
-
-    /**********************************************BaseQuickAdapter**********************************************/
-    @Override
-    public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-        editMvpP.onEditViewClick(position);
-    }
     /**********************************************IShorthandEditMvpV**********************************************/
     @Override
-    protected Optional<EditText> getEditTextItem(int index) {
-        MdEditText currEditText = null;
-        try{
-            currEditText = (MdEditText) editReCyclerView.getAdapter().getViewByPosition(index, R.id.view_md_edit_tv);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return Optional.fromNullable((EditText)currEditText);
+    public void onLoadStart() {
+        ToastUtils.showShort("onLoadStart");
+    }
+
+    @Override
+    public void onLoadSucc() {
+        ToastUtils.showShort("onLoadSucc");
+    }
+
+    @Override
+    public void onLoadErr(Throwable e) {
+        ToastUtils.showShort("onLoadErr : " + e.getMessage());
+    }
+
+    @Override
+    public LifecycleProvider getRxLifeCycleBindView() {
+        return this;
     }
     /**********************************************AEditFragment**********************************************/
+    @NonNull
+    @Override
+    protected AUtimerTxtEditMvpP getEditMvpP() {
+        if(editMvpP == null)
+            editMvpP = new ShorthandEditMvpP(getUTimerEntity(), null);
+        return editMvpP;
+    }
+
+    @Override
+    protected ShortHandEntity getUTimerEntity(){
+        return (ShortHandEntity) getArguments().getSerializable(KEY_SHORTHAND);
+    }
+
+    @Override
+    protected boolean ifEnvOk() {
+        return getUTimerEntity().ifValid();
+    }
+
     @Override
     protected void onEditEnd() {
         super.onEditEnd();
@@ -143,73 +157,19 @@ public class ShortHandEditFragment extends ATxtEditFragment implements Shorthand
         }
         setFragmentResult(resultCode, getArguments());
     }
-
-    /**********************************************IShorthandEditMvpV**********************************************/
-    @Override
-    public void onLoadStart() {
-        ToastUtils.showShort("onLoadStart");
-    }
-
-    @Override
-    public void onLoadErr(Throwable e) {
-        ToastUtils.showShort("onLoadErr : " + e.getMessage());
-    }
-
-    @Override
-    public void onLoadEnd(List<EditElement> mdElementList) {
-        ToastUtils.showShort("onLoadEnd size = " + mdElementList.size());
-        editReCyclerView.init(getContext(), mdElementList, null,
-                this ,null, null,null,null);
-    }
-
-    /**********************************************IShorthandEditMvpV**********************************************/
-    @Override
-    public void onParseStart() {
-        ToastUtils.showShort("to start parse");
-    }
-
-    @Override
-    public void onParseErr(Throwable e) {
-        ToastUtils.showShort("parse err: " + e.getMessage());
-    }
-
-    @Override
-    public void onParseSucc(int index, EditElement editElement) {
-        ToastUtils.showShort("parse succ");
-        editReCyclerView.resetData(index, editElement);
-    }
-
-    @Override
-    public void onParseEnd() {
-    }
-    /**********************************************IShorthandEditMvpV**********************************************/
-    @Override
-    public void onRestoreEnd(EditMementoBean MdMementoBean) {
-
-    }
-    /**********************************************IShorthandEditMvpV**********************************************/
-    @Override
-    public void onSaveStart() {
-        Logcat.i(TAG, "onSaveStart");
-    }
-
-    @Override
-    public void onSaveErr(Throwable e) {
-        Logcat.i(TAG, "onSaveErr");
-    }
-
-    @Override
-    public void onSaveEnd() {
-        Logcat.i(TAG, "onSaveEnd");
-    }
-    /**********************************************IShorthandEditMvpV**********************************************/
-    @Override
-    public LifecycleProvider getRxLifeCycleBindView() {
-        return this;
-    }
-
-    @Override
-    protected ShortHandEntity getUtimerEntity(){
-        return (ShortHandEntity) getArguments().getSerializable(KEY_SHORTHAND);
-    }
+//    /**********************************************IShorthandEditMvpV**********************************************/
+//    @Override
+//    public void onSaveStart() {
+//        Logcat.i(TAG, "onSaveStart");
+//    }
+//
+//    @Override
+//    public void onSaveErr(Throwable e) {
+//        Logcat.i(TAG, "onSaveErr");
+//    }
+//
+//    @Override
+//    public void onSaveEnd() {
+//        Logcat.i(TAG, "onSaveEnd");
+//    }
 }

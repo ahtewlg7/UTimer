@@ -6,6 +6,7 @@ import android.view.View;
 import com.blankj.utilcode.util.ToastUtils;
 import com.utimer.R;
 
+import ahtewlg7.utimer.entity.AUtimerEntity;
 import ahtewlg7.utimer.mvp.IUtimerEditMvpP;
 import ahtewlg7.utimer.util.Logcat;
 
@@ -16,6 +17,7 @@ public abstract class AEditFragment extends AToolbarBkFragment{
     public static final String TAG = AEditFragment.class.getSimpleName();
 
     protected abstract @NonNull IUtimerEditMvpP getEditMvpP();
+    protected abstract @NonNull AUtimerEntity getUTimerEntity();
     protected abstract boolean ifEnvOk();
 
     @Override
@@ -29,7 +31,7 @@ public abstract class AEditFragment extends AToolbarBkFragment{
             return;
         }
 
-        getEditMvpP().toLoad();
+//        getEditMvpP().toLoad();
     }
 
     @Override

@@ -60,6 +60,7 @@ public class MyBypass extends Bypass{
 
         for (int i = 0; i < size; i++) {
             CharSequence spans = recurseElement(document.getElement(i), i, size, imageGetter);
+            //todo: document.getElement(i).getText() is empty, so need to fix by jni
             EditElement element = new EditElement(document.getElement(i).getText());
             element.setMdCharSequence(spans);
             mdElements.add(element);

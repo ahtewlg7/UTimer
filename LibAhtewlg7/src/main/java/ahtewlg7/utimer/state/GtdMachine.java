@@ -41,11 +41,11 @@ public class GtdMachine {
     /*public Flowable<Optional<AUtimerEntity>> toDailyCheck(@NonNull Flowable<AUtimerEntity> entityFlowable){
         return entityFlowable.map(new Function<AUtimerEntity, Optional<AUtimerEntity>>() {
             @Override
-            public Optional<AUtimerEntity> apply(AUtimerEntity utimerEntity) throws Exception {
-                Optional<ABaseGtdState> currState = getCurrState(utimerEntity);
+            public Optional<AUtimerEntity> apply(AUtimerEntity t) throws Exception {
+                Optional<ABaseGtdState> currState = getCurrState(t);
                 if(!currState.isPresent())
-                    return Optional.of(utimerEntity);
-                return currState.get().toDailyCheck(utimerEntity);
+                    return Optional.of(t);
+                return currState.get().toDailyCheck(t);
             }
         });
     }*/
