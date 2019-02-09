@@ -45,7 +45,8 @@ public class ShorthandEditMvpP extends AUtimerTxtEditMvpP<ShortHandEntity> {
                     .map(new Function<EditElement, Boolean>() {
                         @Override
                         public Boolean apply(EditElement editElement) throws Exception {
-                            return shortHandEditAction.toSave(editElement.getRawText(),true);
+                            String rawTxt = editElement.getRawText() + System.getProperty("line.separator");
+                            return shortHandEditAction.toSave(rawTxt,true);
                         }
                     })
                     .subscribeOn(Schedulers.io());

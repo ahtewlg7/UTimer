@@ -6,8 +6,6 @@
         android:id="@+id/view_md_edit_tv"
         android:background="@null"
         android:textColor="@android:color/white"
-        android:focusable="false"
-        android:focusableInTouchMode="false"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 </LinearLayout>

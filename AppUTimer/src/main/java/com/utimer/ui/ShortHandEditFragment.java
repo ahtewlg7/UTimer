@@ -9,8 +9,6 @@ import android.view.View;
 
 import com.blankj.utilcode.util.ToastUtils;
 import com.trello.rxlifecycle2.LifecycleProvider;
-import com.trello.rxlifecycle2.android.FragmentEvent;
-import com.trello.rxlifecycle2.components.support.RxFragment;
 import com.utimer.R;
 
 import java.util.List;
@@ -150,10 +148,10 @@ public class ShortHandEditFragment extends AEditFragment
         editRecyclerView.toEndEdit();
         int resultCode = RESULT_CANCELED;
         List<EditElement> elementList = editRecyclerView.getEditElementList();
-        if(elementList != null){//maybe the entity is not loaded
+        if(elementList.size() > 0){//maybe the entity is not loaded
             resultCode = RESULT_OK;
             editMvpP.toFinishEdit(Flowable.fromIterable(elementList)
-                    .compose(((RxFragment) getRxLifeCycleBindView()).<EditElement>bindUntilEvent(FragmentEvent.DESTROY))
+//                    .compose(((RxFragment) getRxLifeCycleBindView()).<EditElement>bindUntilEvent(FragmentEvent.DESTROY))
             );
             ((ShortHandEntity)getArguments().getSerializable(KEY_SHORTHAND)).appendDetail(elementList.get(0).getMdCharSequence().toString());
         }
@@ -173,5 +171,6 @@ public class ShortHandEditFragment extends AEditFragment
     @Override
     public void onSaveEnd() {
         Logcat.i(TAG, "onSaveEnd");
+        ToastUtils.showShort("onSaveEnd");
     }
 }

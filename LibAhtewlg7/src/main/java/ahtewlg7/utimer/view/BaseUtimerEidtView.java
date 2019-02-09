@@ -5,10 +5,8 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.EditText;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -46,7 +44,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
-import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
 
@@ -132,7 +129,7 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement> {
     }
 
     public List<EditElement> getEditElementList(){
-        return recyclerViewAdapter != null ? recyclerViewAdapter.getData() : null;
+        return editElementList;
     }
 
     public boolean ifTxtChanged(){
@@ -211,7 +208,7 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement> {
     }
 
     public void toEndEdit(){
-        Optional<EditText> lastAccessEditText       = getEditTextItem(preEditPosition);
+        Optional<MdEditText> lastAccessEditText       = getEditTextItem(preEditPosition);
         if(lastAccessEditText.isPresent()){
             String lassAccessTxt    = lastAccessEditText.get().getText().toString();
             EditElement element     = new EditElement(lassAccessTxt);
@@ -226,7 +223,7 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement> {
 
     protected void initEditView(){
         if(editElementList.size() == 0)
-            editElementList.add(new EditElement(""));
+            editElementList.add(new EditElement(" "));
         if(myClickListener == null)
             myClickListener = new MyClickListener();
         init(getContext(), editElementList,
@@ -276,15 +273,14 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement> {
     }
 
     protected void onEditMode(int position, @NonNull EditMode editMode, @NonNull Optional<EditElement> editElementOptional) {
-        Optional<EditText> optional = getEditTextItem(position);
+        Optional<MdEditText> optional = getEditTextItem(position);
         Logcat.i(TAG,"onEditMode isPresent = " + optional.isPresent() + ", position = " + position + ", editMode = " + editMode.name());
         if(!optional.isPresent()){
             Logcat.i(TAG,"onEditMode cancel");
             return;
         }
         if(editMode == EditMode.OFF){
-            optional.get().setFocusable(false);
-            optional.get().setFocusableInTouchMode(false);
+            optional.get().enableEdit(false);
 
             String eidtTxt = optional.get().getText().toString();
             Optional<EditElement> currEditElement = getEditElement(position);
@@ -296,8 +292,7 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement> {
                 toModify(position, Observable.just(eidtTxt));
             }
         }else if(editMode == EditMode.ON){
-            optional.get().setFocusable(true);
-            optional.get().setFocusableInTouchMode(true);
+            optional.get().enableEdit(true);
 
             if(editElementOptional.isPresent()) {
                 optional.get().setText(editElementOptional.get().getRawText());
@@ -305,14 +300,14 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement> {
         }
     }
 
-    protected Optional<EditText> getEditTextItem(int index) {
+    protected Optional<MdEditText> getEditTextItem(int index) {
         MdEditText currEditText = null;
         try{
             currEditText = (MdEditText) getAdapter().getViewByPosition(index, R.id.view_md_edit_tv);
         }catch (Exception e){
             e.printStackTrace();
         }
-        return Optional.fromNullable((EditText)currEditText);
+        return Optional.fromNullable((MdEditText)currEditText);
     }
 
     protected Optional<EditElement> getEditElement(int index){
@@ -324,31 +319,16 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement> {
         }
         return Optional.fromNullable(editElement);
     }
-    protected Optional<EditElement> toParseRawTxt(String rawTxt){
-        EditElement editElement = null;
-        if(!TextUtils.isEmpty(rawTxt)){
-            editElement = new EditElement(rawTxt);
-            editElement.setMdCharSequence(myBypass.markdownToSpannable(rawTxt));
-        }
-        return Optional.fromNullable(editElement);
+    protected EditElement toParseRawTxt(String rawTxt){
+        EditElement editElement = new EditElement(rawTxt);
+        editElement.setMdCharSequence(myBypass.markdownToSpannable(rawTxt));
+        return editElement;
     }
     protected Flowable<EditElement> toParseRawTxt(@NonNull Flowable<String> rawTxtRx) {
-        return rawTxtRx.map(new Function<String, Optional<EditElement>>() {
+        return rawTxtRx.map(new Function<String, EditElement>() {
                     @Override
-                    public Optional<EditElement> apply(String s) throws Exception {
+                    public EditElement apply(String s) throws Exception {
                         return toParseRawTxt(s);
-                    }
-                })
-                .filter(new Predicate<Optional<EditElement>>() {
-                    @Override
-                    public boolean test(Optional<EditElement> editElementOptional) throws Exception {
-                        return editElementOptional.isPresent();
-                    }
-                })
-                .map(new Function<Optional<EditElement>, EditElement>() {
-                    @Override
-                    public EditElement apply(Optional<EditElement> editElementOptional) throws Exception {
-                        return editElementOptional.get();
                     }
                 });
     }
