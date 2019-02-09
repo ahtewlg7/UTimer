@@ -1,9 +1,5 @@
 package ahtewlg7.utimer.mvp;
 
-import android.support.annotation.NonNull;
-
-import com.google.common.base.Optional;
-
 import org.reactivestreams.Subscription;
 
 import ahtewlg7.utimer.entity.gtd.ShortHandEntity;
@@ -12,9 +8,7 @@ import ahtewlg7.utimer.gtd.GtdShortHandEditAction;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
-import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subjects.PublishSubject;
 
 /**
  * Created by lw on 2018/10/18.
@@ -22,11 +16,8 @@ import io.reactivex.subjects.PublishSubject;
 public class ShorthandEditMvpP extends AUtimerTxtEditMvpP<ShortHandEntity> {
     public static final String TAG = ShorthandEditMvpP.class.getSimpleName();
 
-    public PublishSubject<EditElement> editPublishSubject;
-
-    public ShorthandEditMvpP(ShortHandEntity shortHandEntity , IShorthandEditMvpV shorthandEditMvpV) {
+    public ShorthandEditMvpP(ShortHandEntity shortHandEntity , IUtimerEditMvpV shorthandEditMvpV) {
         super(shortHandEntity,shorthandEditMvpV);
-        editPublishSubject = PublishSubject.create();
     }
 
     @Override
@@ -44,27 +35,6 @@ public class ShorthandEditMvpP extends AUtimerTxtEditMvpP<ShortHandEntity> {
         }
 
         @Override
-        public Flowable<EditElement> toLoadTxt() {
-            return shortHandEditAction.toLoad().filter(new Predicate<Optional<EditElement>>() {
-                        @Override
-                        public boolean test(Optional<EditElement> editElementOptional) throws Exception {
-                            return editElementOptional.isPresent();
-                        }
-                    })
-                    .map(new Function<Optional<EditElement>, EditElement>() {
-                        @Override
-                        public EditElement apply(Optional<EditElement> editElementOptional) throws Exception {
-                            return editElementOptional.get();
-                        }
-                    });
-        }
-
-        @Override
-        public CharSequence toParseRaw(@NonNull String rawTxt) {
-            return shortHandEditAction.toParse(rawTxt);
-        }
-
-        @Override
         public Flowable<Boolean> toSave(Flowable<EditElement> elementObservable) {
             return elementObservable.doOnSubscribe(new Consumer<Subscription>() {
                             @Override
@@ -77,10 +47,8 @@ public class ShorthandEditMvpP extends AUtimerTxtEditMvpP<ShortHandEntity> {
                         public Boolean apply(EditElement editElement) throws Exception {
                             return shortHandEditAction.toSave(editElement.getRawText(),true);
                         }
-                    }).subscribeOn(Schedulers.io());
+                    })
+                    .subscribeOn(Schedulers.io());
         }
-    }
-
-    public interface IShorthandEditMvpV extends IUtimerEditMvpV{
     }
 }

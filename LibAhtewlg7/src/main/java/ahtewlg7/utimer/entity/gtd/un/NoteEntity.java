@@ -7,7 +7,6 @@ import java.io.Serializable;
 import ahtewlg7.utimer.entity.taskContext.IPosition;
 import ahtewlg7.utimer.entity.un.IUtimerEntity;
 import ahtewlg7.utimer.enumtype.GtdType;
-import ahtewlg7.utimer.enumtype.UnLoadType;
 
 /**
  * Created by lw on 2017/9/27.
@@ -19,7 +18,6 @@ public class NoteEntity implements IUtimerEntity, Serializable {
     private boolean contextChanged      = false;
     private boolean noteFileExist       = false;
 
-    private UnLoadType loadType;
     private String id;
     private String title;
     private String detail;
@@ -53,9 +51,6 @@ public class NoteEntity implements IUtimerEntity, Serializable {
     public void setNoteFileExist(boolean noteFileExist) {
         this.noteFileExist = noteFileExist;
     }
-
-    public UnLoadType getLoadType() { return loadType; }
-    public void setLoadType(UnLoadType loadType) { this.loadType = loadType; }
 
     public String getId() {
         return id;

@@ -13,7 +13,6 @@ import ahtewlg7.utimer.common.FileSystemAction;
 import ahtewlg7.utimer.common.IdAction;
 import ahtewlg7.utimer.db.DbActionFacade;
 import ahtewlg7.utimer.entity.gtd.un.NoteEntity;
-import ahtewlg7.utimer.enumtype.UnLoadType;
 import ahtewlg7.utimer.util.DateTimeAction;
 import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MyRInfo;
@@ -45,7 +44,6 @@ public class NoteEntityAction{
 
         NoteEntity noteEntity = new NoteEntity();
         noteEntity.setId(id);
-        noteEntity.setLoadType(UnLoadType.NEW);
         noteEntity.setNoteName(dateTimeAction.toFormat(now));
         noteEntity.setCreateTime(now);
         noteEntity.setFileRPath(new FileSystemAction().getNoteDocRPath());

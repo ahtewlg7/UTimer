@@ -3,12 +3,8 @@ package com.utimer.ui;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.widget.EditText;
 
 import com.blankj.utilcode.util.ToastUtils;
-import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.google.common.base.Optional;
 import com.trello.rxlifecycle2.LifecycleProvider;
 import com.utimer.R;
 
@@ -17,18 +13,16 @@ import java.util.List;
 import ahtewlg7.utimer.entity.gtd.NoteBuilder;
 import ahtewlg7.utimer.entity.gtd.NoteEntity;
 import ahtewlg7.utimer.entity.md.EditElement;
-import ahtewlg7.utimer.entity.md.EditMementoBean;
 import ahtewlg7.utimer.mvp.AUtimerTxtEditMvpP;
 import ahtewlg7.utimer.mvp.NoteEditMvpP;
 import ahtewlg7.utimer.util.DateTimeAction;
 import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MyRInfo;
-import ahtewlg7.utimer.view.EditLinerRecyclerView;
-import ahtewlg7.utimer.view.md.MdEditText;
+import ahtewlg7.utimer.view.BaseUtimerEidtView;
 import butterknife.BindView;
 
-public class NoteEditFragment extends ATxtEditFragment
-        implements NoteEditMvpP.INoteEditMvpV , BaseQuickAdapter.OnItemChildClickListener {
+public class NoteEditFragment extends AEditFragment
+        implements NoteEditMvpP.INoteEditMvpV, BaseUtimerEidtView.IUtimerAttachEditView{
     public static final String TAG = NoteEditFragment.class.getSimpleName();
 
     public static final String KEY_NOTE = "note";
@@ -36,7 +30,7 @@ public class NoteEditFragment extends ATxtEditFragment
     @BindView(R.id.fragment_note_toolbar)
     Toolbar toolbar;
     @BindView(R.id.fragment_note_edit_rv)
-    EditLinerRecyclerView editReCyclerView;
+    BaseUtimerEidtView editRecyclerView;
 
     private NoteEditMvpP editMvpP;
 
@@ -76,19 +70,8 @@ public class NoteEditFragment extends ATxtEditFragment
         toolbar.setTitle(getTitle());
     }
 
-    @Override
-    protected Optional<EditText> getEditTextItem(int index) {
-        MdEditText currEditText = null;
-        try{
-            currEditText = (MdEditText) editReCyclerView.getAdapter().getViewByPosition(index, R.id.view_md_edit_tv);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return Optional.fromNullable((EditText)currEditText);
-    }
-
+    /**********************************************AEditFragment**********************************************/
     @NonNull
-    @Override
     protected AUtimerTxtEditMvpP getEditMvpP() {
         if(editMvpP == null)
             editMvpP = new NoteEditMvpP(getUTimerEntity(), this);
@@ -99,30 +82,32 @@ public class NoteEditFragment extends ATxtEditFragment
     protected NoteEntity getUTimerEntity(){
         return (NoteEntity) getArguments().getSerializable(KEY_NOTE);
     }
-    /**********************************************AEditFragment**********************************************/
-    @Override
-    protected void onEditEnd() {
-        super.onEditEnd();
 
+    @Override
+    protected void toStartEdit() {
+        editRecyclerView.setAttachEditView(this);
+        editRecyclerView.setUTimerEntity(getUTimerEntity());
+        editRecyclerView.toStartEdit();
+    }
+    @Override
+    protected void toEndEdit() {
         int resultCode = RESULT_CANCELED;
-        if(!getEditMvpP().ifEditElementEmpty()){
+        List<EditElement> elementList = editRecyclerView.getEditElementList();
+        if(elementList != null){//maybe the entity is not loaded
             resultCode = RESULT_OK;
-            Optional<EditElement> elementOptional = editMvpP.getEditElement(0);
-            if(elementOptional.isPresent())
-                ((NoteEntity)getArguments().getSerializable(KEY_NOTE)).appendDetail(elementOptional.get().getMdCharSequence().toString());
+            ((NoteEntity)getArguments().getSerializable(KEY_NOTE)).appendDetail(elementList.get(0).getMdCharSequence().toString());
         }
         setFragmentResult(resultCode, getArguments());
     }
-    /******************************************OnItemChildClickListener**********************************************/
-    @Override
-    public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-        editMvpP.onEditViewClick(position);
-    }
-
-    /******************************************INoteEditMvpV**********************************************/
+    /**********************************************IShorthandEditMvpV**********************************************/
     @Override
     public void onLoadStart() {
         ToastUtils.showShort("onLoadStart");
+    }
+
+    @Override
+    public void onLoadSucc() {
+        ToastUtils.showShort("onLoadSucc");
     }
 
     @Override
@@ -131,38 +116,10 @@ public class NoteEditFragment extends ATxtEditFragment
     }
 
     @Override
-    public void onLoadEnd(List<EditElement> mdElementList) {
-        ToastUtils.showShort("onLoadEnd size = " + mdElementList.size());
-        editReCyclerView.init(getContext(), mdElementList, null,
-                this,null, null,null,null);
+    public LifecycleProvider getRxLifeCycleBindView() {
+        return this;
     }
-
-    @Override
-    public void onParseStart() {
-        ToastUtils.showShort("to start parse");
-    }
-
-    @Override
-    public void onParseErr(Throwable e) {
-        ToastUtils.showShort("parse err: " + e.getMessage());
-    }
-
-    @Override
-    public void onParseSucc(int index, EditElement editElement) {
-        ToastUtils.showShort("parse succ");
-        editReCyclerView.resetData(index, editElement);
-    }
-
-    @Override
-    public void onParseEnd() {
-    }
-
-
-    @Override
-    public void onRestoreEnd(EditMementoBean MdMementoBean) {
-
-    }
-
+    /******************************************INoteEditMvpV**********************************************/
     @Override
     public void onSaveStart() {
         Logcat.i(TAG, "onSaveStart");
@@ -176,10 +133,5 @@ public class NoteEditFragment extends ATxtEditFragment
     @Override
     public void onSaveEnd() {
         Logcat.i(TAG, "onSaveEnd");
-    }
-
-    @Override
-    public LifecycleProvider getRxLifeCycleBindView() {
-        return this;
     }
 }

@@ -36,7 +36,7 @@ public abstract class MyApplication extends Application {
 			initLibContext();
 			initVcFactory();//it is very important
             initDatabase();
-			toStartIraiBinderService();
+			toStartBinderService();
 		}
 	}
 
@@ -54,7 +54,7 @@ public abstract class MyApplication extends Application {
 		GreenDaoAction.getInstance().init();
 	}
 
-	protected void toStartIraiBinderService(){
+	protected void toStartBinderService(){
 		Logcat.d(TAG,"to start BinderService");
 		ServiceUtils.startService(BinderService.class);
 	}

@@ -36,11 +36,6 @@ public class ProjectEditMvpP implements IUtimerEditMvpP{
         noteEntityList  = Lists.newArrayList();
     }
 
-    @Override
-    public void toLoad() {
-        toLoadNote();
-    }
-
     public void toLoadNote(){
         mvpM.loadAllNote()
             .compose(((RxFragment)mvpV.getRxLifeCycleBindView()).<NoteEntity>bindUntilEvent(FragmentEvent.DESTROY))
@@ -77,11 +72,6 @@ public class ProjectEditMvpP implements IUtimerEditMvpP{
                         mvpV.onItemLoadEnd(noteEntityList);
                 }
             });
-    }
-
-    @Override
-    public void toFinishEdit() {
-
     }
 
     public void onNoteCreated(NoteEntity entity) {

@@ -2,14 +2,14 @@ package com.utimer.ui;
 
 import android.os.Bundle;
 
-import ahtewlg7.utimer.ui.BaseRxActivity;
+import ahtewlg7.utimer.ui.BaseBinderRxActivity;
 import ahtewlg7.utimer.util.Logcat;
 import butterknife.ButterKnife;
 
 /**
  * Created by lw on 2018/10/17.
  */
-public abstract class AButterKnifeActivity extends BaseRxActivity {
+public abstract class AButterKnifeActivity extends BaseBinderRxActivity {
     public static final String TAG = AButterKnifeActivity.class.getSimpleName();
 
     protected abstract int getContentViewLayout();

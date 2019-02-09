@@ -8,9 +8,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.blankj.utilcode.util.ToastUtils;
-import com.google.common.base.Optional;
 import com.trello.rxlifecycle2.LifecycleProvider;
+import com.trello.rxlifecycle2.android.FragmentEvent;
+import com.trello.rxlifecycle2.components.support.RxFragment;
 import com.utimer.R;
+
+import java.util.List;
 
 import ahtewlg7.utimer.entity.gtd.ShortHandBuilder;
 import ahtewlg7.utimer.entity.gtd.ShortHandEntity;
@@ -18,12 +21,14 @@ import ahtewlg7.utimer.entity.md.EditElement;
 import ahtewlg7.utimer.mvp.AUtimerTxtEditMvpP;
 import ahtewlg7.utimer.mvp.ShorthandEditMvpP;
 import ahtewlg7.utimer.util.DateTimeAction;
+import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MyRInfo;
 import ahtewlg7.utimer.view.BaseUtimerEidtView;
 import butterknife.BindView;
+import io.reactivex.Flowable;
 
 public class ShortHandEditFragment extends AEditFragment
-        implements BaseUtimerEidtView.IUtimerAttachEditView{
+        implements BaseUtimerEidtView.IUtimerAttachEditView, AUtimerTxtEditMvpP.IUtimerEditMvpV {
     public static final String TAG = ShortHandEditFragment.class.getSimpleName();
 
     public static final String KEY_SHORTHAND = "shorthand";
@@ -47,14 +52,6 @@ public class ShortHandEditFragment extends AEditFragment
         ShortHandEditFragment fragment = new ShortHandEditFragment();
         fragment.setArguments(args);
         return fragment;
-    }
-
-    @Override
-    public void onViewCreated(View inflateView) {
-        super.onViewCreated(inflateView);
-        editRecyclerView.setAttachEditView(this);
-        editRecyclerView.setUTimerEntity(getUTimerEntity());
-        editRecyclerView.toStartEdit();
     }
 
     @Override
@@ -105,6 +102,7 @@ public class ShortHandEditFragment extends AEditFragment
         }
         return result;
     }*/
+
     /**********************************************IShorthandEditMvpV**********************************************/
     @Override
     public void onLoadStart() {
@@ -125,51 +123,55 @@ public class ShortHandEditFragment extends AEditFragment
     public LifecycleProvider getRxLifeCycleBindView() {
         return this;
     }
+
+
     /**********************************************AEditFragment**********************************************/
-    @NonNull
     @Override
-    protected AUtimerTxtEditMvpP getEditMvpP() {
-        if(editMvpP == null)
-            editMvpP = new ShorthandEditMvpP(getUTimerEntity(), null);
-        return editMvpP;
+    public void onViewCreated(View inflateView) {
+        super.onViewCreated(inflateView);
+
+        editMvpP = new ShorthandEditMvpP(getUTimerEntity(), this);
     }
 
     @Override
-    protected ShortHandEntity getUTimerEntity(){
+    protected @NonNull ShortHandEntity getUTimerEntity(){
         return (ShortHandEntity) getArguments().getSerializable(KEY_SHORTHAND);
     }
 
     @Override
-    protected boolean ifEnvOk() {
-        return getUTimerEntity().ifValid();
+    protected void toStartEdit() {
+        editRecyclerView.setAttachEditView(this);
+        editRecyclerView.setUTimerEntity(getUTimerEntity());
+        editRecyclerView.toStartEdit();
     }
 
     @Override
-    protected void onEditEnd() {
-        super.onEditEnd();
-
+    protected void toEndEdit() {
+        editRecyclerView.toEndEdit();
         int resultCode = RESULT_CANCELED;
-        if(!getEditMvpP().ifEditElementEmpty()){
+        List<EditElement> elementList = editRecyclerView.getEditElementList();
+        if(elementList != null){//maybe the entity is not loaded
             resultCode = RESULT_OK;
-            Optional<EditElement> elementOptional = editMvpP.getEditElement(0);
-            if(elementOptional.isPresent())
-                ((ShortHandEntity)getArguments().getSerializable(KEY_SHORTHAND)).appendDetail(elementOptional.get().getMdCharSequence().toString());
+            editMvpP.toFinishEdit(Flowable.fromIterable(elementList)
+                    .compose(((RxFragment) getRxLifeCycleBindView()).<EditElement>bindUntilEvent(FragmentEvent.DESTROY))
+            );
+            ((ShortHandEntity)getArguments().getSerializable(KEY_SHORTHAND)).appendDetail(elementList.get(0).getMdCharSequence().toString());
         }
         setFragmentResult(resultCode, getArguments());
     }
-//    /**********************************************IShorthandEditMvpV**********************************************/
-//    @Override
-//    public void onSaveStart() {
-//        Logcat.i(TAG, "onSaveStart");
-//    }
-//
-//    @Override
-//    public void onSaveErr(Throwable e) {
-//        Logcat.i(TAG, "onSaveErr");
-//    }
-//
-//    @Override
-//    public void onSaveEnd() {
-//        Logcat.i(TAG, "onSaveEnd");
-//    }
+    /**********************************************IUtimerEditMvpV**********************************************/
+    @Override
+    public void onSaveStart() {
+        Logcat.i(TAG, "onSaveStart");
+    }
+
+    @Override
+    public void onSaveErr(Throwable e) {
+        Logcat.i(TAG, "onSaveErr");
+    }
+
+    @Override
+    public void onSaveEnd() {
+        Logcat.i(TAG, "onSaveEnd");
+    }
 }

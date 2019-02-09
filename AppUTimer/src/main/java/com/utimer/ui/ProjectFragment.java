@@ -192,7 +192,6 @@ public class ProjectFragment extends AEditFragment
     /*++++++++++++++++++++++++++++++++++++++++++AEditFragment++++++++++++++++++++++++++++++++++++++++*/
 
     @NonNull
-    @Override
     protected IUtimerEditMvpP getEditMvpP() {
         if(projectEditMvpP == null)
             projectEditMvpP = new ProjectEditMvpP(this, getUTimerEntity());;
@@ -208,6 +207,14 @@ public class ProjectFragment extends AEditFragment
     @Override
     protected GtdProjectEntity getUTimerEntity() {
         return (GtdProjectEntity) getArguments().getSerializable(KEY_GTD_PROJECT);
+    }
+    @Override
+    protected void toStartEdit() {
+    }
+
+    @Override
+    protected void toEndEdit() {
+
     }
 
     private void toReloadEntity(List<NoteEntity> alldata){

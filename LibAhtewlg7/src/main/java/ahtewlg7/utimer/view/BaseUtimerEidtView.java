@@ -131,6 +131,13 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement> {
         this.attachEditView = attachEditView;
     }
 
+    public List<EditElement> getEditElementList(){
+        return recyclerViewAdapter != null ? recyclerViewAdapter.getData() : null;
+    }
+
+    public boolean ifTxtChanged(){
+        return isTxtChanged;
+    }
     public boolean ifEntityReady(){
         return utimerEntity != null && utimerEntity.ifValid()
                 && utimerEntity.getAttachFile() != null && utimerEntity.ensureAttachFileExist();
@@ -204,7 +211,17 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement> {
     }
 
     public void toEndEdit(){
+        Optional<EditText> lastAccessEditText       = getEditTextItem(preEditPosition);
+        if(lastAccessEditText.isPresent()){
+            String lassAccessTxt    = lastAccessEditText.get().getText().toString();
+            EditElement element     = new EditElement(lassAccessTxt);
+
+            editElementList.set(preEditPosition, element);
+            resetData(preEditPosition, element);
+            preEditPosition = INIT_POSITION;
+        }
         cancelLoad();
+        cancelListenEditClick();
     }
 
     protected void initEditView(){
@@ -276,15 +293,14 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement> {
                 resetData(position, currEditElement.get());
             } else {
                 isTxtChanged = true;
-                toModify(position, Observable.just(eidtTxt.trim()));
+                toModify(position, Observable.just(eidtTxt));
             }
         }else if(editMode == EditMode.ON){
             optional.get().setFocusable(true);
             optional.get().setFocusableInTouchMode(true);
 
             if(editElementOptional.isPresent()) {
-                String rawText = editElementOptional.get().getRawText();
-                optional.get().setText(rawText.trim());
+                optional.get().setText(editElementOptional.get().getRawText());
             }
         }
     }
@@ -351,6 +367,11 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement> {
                         preEditPosition = position;
                     }
                 });
+    }
+    protected void cancelListenEditClick(){
+        if(clickPositionDisposable != null && !clickPositionDisposable.isDisposed())
+            clickPositionDisposable.dispose();
+        clickPositionDisposable = null;
     }
 
     class BaseUtimerEditItemAdapter extends BaseItemAdapter<EditElement>{

@@ -1,9 +1,5 @@
 package ahtewlg7.utimer.mvp;
 
-import android.support.annotation.NonNull;
-
-import com.google.common.base.Optional;
-
 import org.reactivestreams.Subscription;
 
 import ahtewlg7.utimer.entity.gtd.NoteEntity;
@@ -12,7 +8,6 @@ import ahtewlg7.utimer.gtd.NoteEditAction;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
-import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
 
@@ -43,26 +38,6 @@ public class NoteEditMvpP extends AUtimerTxtEditMvpP<NoteEntity> {
             editAction      = new NoteEditAction(noteEntity);
         }
 
-        @Override
-        public Flowable<EditElement> toLoadTxt() {
-            return editAction.toLoad().filter(new Predicate<Optional<EditElement>>() {
-                        @Override
-                        public boolean test(Optional<EditElement> editElementOptional) throws Exception {
-                            return editElementOptional.isPresent();
-                        }
-                    })
-                    .map(new Function<Optional<EditElement>, EditElement>() {
-                        @Override
-                        public EditElement apply(Optional<EditElement> editElementOptional) throws Exception {
-                            return editElementOptional.get();
-                        }
-                    });
-        }
-
-        @Override
-        public CharSequence toParseRaw(@NonNull String rawTxt) {
-            return editAction.toParse(rawTxt);
-        }
 
         @Override
         public Flowable<Boolean> toSave(Flowable<EditElement> elementObservable) {

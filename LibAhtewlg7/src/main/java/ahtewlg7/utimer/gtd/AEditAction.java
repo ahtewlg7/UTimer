@@ -1,10 +1,6 @@
 package ahtewlg7.utimer.gtd;
 
-import com.google.common.base.Optional;
-
 import ahtewlg7.utimer.entity.AUtimerEntity;
-import ahtewlg7.utimer.entity.md.EditElement;
-import io.reactivex.Flowable;
 
 /**
  * Created by lw on 2018/10/24.
@@ -14,7 +10,6 @@ public abstract class AEditAction<T extends AUtimerEntity> {
 
     public abstract boolean ifReady();
     public abstract boolean toSave(String rawTxt);
-    public abstract Flowable<Optional<EditElement>> toLoad();
 
     protected T t;
 

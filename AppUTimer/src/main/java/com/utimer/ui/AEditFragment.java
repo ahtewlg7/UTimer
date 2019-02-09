@@ -7,7 +7,6 @@ import com.blankj.utilcode.util.ToastUtils;
 import com.utimer.R;
 
 import ahtewlg7.utimer.entity.AUtimerEntity;
-import ahtewlg7.utimer.mvp.IUtimerEditMvpP;
 import ahtewlg7.utimer.util.Logcat;
 
 /**
@@ -16,9 +15,9 @@ import ahtewlg7.utimer.util.Logcat;
 public abstract class AEditFragment extends AToolbarBkFragment{
     public static final String TAG = AEditFragment.class.getSimpleName();
 
-    protected abstract @NonNull IUtimerEditMvpP getEditMvpP();
     protected abstract @NonNull AUtimerEntity getUTimerEntity();
-    protected abstract boolean ifEnvOk();
+    protected abstract void toStartEdit();
+    protected abstract void toEndEdit();
 
     @Override
     public void onViewCreated(View inflateView) {
@@ -30,24 +29,23 @@ public abstract class AEditFragment extends AToolbarBkFragment{
             pop();
             return;
         }
-
-//        getEditMvpP().toLoad();
+        toStartEdit();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        onEditEnd();
+        toEndEdit();
     }
 
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if(hidden)
-            onEditEnd();
+            toEndEdit();
     }
 
-    protected void onEditEnd(){
-        getEditMvpP().toFinishEdit();
+    protected boolean ifEnvOk() {
+        return getUTimerEntity().ifValid();
     }
 }
