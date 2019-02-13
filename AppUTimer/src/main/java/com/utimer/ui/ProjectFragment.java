@@ -198,7 +198,7 @@ public class ProjectFragment extends AEditFragment
     @Override
     protected boolean ifEnvOk() {
         gtdProjectEntity = getUTimerEntity();
-        return gtdProjectEntity != null && gtdProjectEntity.ifValid() && gtdProjectEntity.ensureAttachFileExist();
+        return gtdProjectEntity.ifValid() && gtdProjectEntity.ensureAttachFileExist();
     }
 
     @Override
