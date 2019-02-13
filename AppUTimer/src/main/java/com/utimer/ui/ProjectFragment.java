@@ -97,6 +97,8 @@ public class ProjectFragment extends AEditFragment
     protected void onEnvReady(View inflateView) {
         myClickListener = new MyClickListener();
         projectRecyclerView.init(getContext(), 0, null, myClickListener, null, myClickListener,null);
+
+        getEditMvpP().toLoadNote();
     }
     /*++++++++++++++++++++++++++++++++++++++++++AToolbarBkFragment++++++++++++++++++++++++++++++++++++++++*/
      @NonNull
