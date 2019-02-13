@@ -68,6 +68,16 @@ public class ProjectFragment extends AEditFragment
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+        if(ifEnvReady){
+            int resultCode = RESULT_CANCELED;
+            resultCode = RESULT_OK;
+            setFragmentResult(resultCode, getArguments());
+        }
+    }
+
+    @Override
     public int getLayoutRid() {
         return R.layout.fragment_project;
     }

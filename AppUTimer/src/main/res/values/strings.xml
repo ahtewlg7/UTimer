@@ -4,6 +4,7 @@
 
     <string name="yes">yes</string>
     <string name="no">no</string>
+    <string name="cancel">cancel</string>
 
     <string name="welcome_slogan">Time is Money!</string>
     <string name="err_id_empty">Gtd Id is empty!</string>
@@ -39,10 +40,12 @@
     <string name="create_note">create note</string>
 
     <string name="prompt_del">Sure to delete it?</string>
+    <string name="prompt_del_cancel">It is very important, please delete it manually!</string>
     <string name="prompt_del_succ">to del succ</string>
     <string name="prompt_del_fail">to del fail</string>
     <string name="prompt_del_err">del err</string>
     <string name="prompt_new_project_name">please input the project name</string>
+    <string name="prompt_not_ready">"No, Not Yet! I'm Not Ready, Please wait!" </string>
 
     <string name="entity_invalid">the env is not ready , so pop it</string>
 </resources>
