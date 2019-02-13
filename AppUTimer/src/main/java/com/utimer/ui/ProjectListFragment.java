@@ -26,6 +26,8 @@ import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MyRInfo;
 import butterknife.BindView;
 
+import static com.utimer.ui.ProjectFragment.KEY_GTD_PROJECT;
+
 public class ProjectListFragment extends AToolbarBkFragment implements ProjectListMvpP.IProjectListMvpV {
     public static final String TAG = ProjectListFragment.class.getSimpleName();
 
@@ -71,7 +73,7 @@ public class ProjectListFragment extends AToolbarBkFragment implements ProjectLi
     public void onFragmentResult(int requestCode, int resultCode, Bundle data) {
         super.onFragmentResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && data != null) {
-            GtdProjectEntity entity = (GtdProjectEntity) data.getSerializable(ShortHandEditFragment.KEY_SHORTHAND);
+            GtdProjectEntity entity = (GtdProjectEntity) data.getSerializable(KEY_GTD_PROJECT);
             if (entity != null && requestCode == REQ_NEW_FRAGMENT)
                 onItemCreate(entity);
             else if (entity != null && requestCode == REQ_EDIT_FRAGMENT) {
@@ -210,9 +212,7 @@ public class ProjectListFragment extends AToolbarBkFragment implements ProjectLi
 
         @Override
         public boolean onItemLongClick(BaseQuickAdapter adapter, View view, int position) {
-//            ShortHandEntity viewEntity = (GtdProjectEntity)adapter.getItem(position);
-//            if(viewEntity != null)
-//                toCreateDelDialog(viewEntity);
+            toCreateDelDialog();
             return false;
         }
     }
@@ -242,5 +242,17 @@ public class ProjectListFragment extends AToolbarBkFragment implements ProjectLi
                     startForResult(ProjectFragment.newInstance(entity), REQ_NEW_FRAGMENT);
                 }
             }).show();
+    }
+    private void toCreateDelDialog(){
+        new MaterialDialog.Builder(getContext()).title(R.string.del)
+                .content(R.string.prompt_del_cancel)
+                .negativeText(R.string.cancel)
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
     }
 }
