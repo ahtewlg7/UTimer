@@ -208,6 +208,8 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement> {
     }
 
     public void toEndEdit(){
+        if(preEditPosition == INIT_POSITION)
+            preEditPosition = 0;
         Optional<MdEditText> lastAccessEditText       = getEditTextItem(preEditPosition);
         if(lastAccessEditText.isPresent()){
             String lassAccessTxt    = lastAccessEditText.get().getText().toString();
@@ -227,7 +229,7 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement> {
         if(myClickListener == null)
             myClickListener = new MyClickListener();
         init(getContext(), editElementList,
-                null, myClickListener,
+                myClickListener, myClickListener,
                 null, null,
                 null,null);
         toListenEditClick();

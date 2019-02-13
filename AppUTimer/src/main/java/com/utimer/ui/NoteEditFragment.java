@@ -21,7 +21,7 @@ import ahtewlg7.utimer.util.MyRInfo;
 import ahtewlg7.utimer.view.BaseUtimerEidtView;
 import butterknife.BindView;
 
-public class NoteEditFragment extends AEditFragment
+public class NoteEditFragment extends ATxtEditFragment
         implements NoteEditMvpP.INoteEditMvpV, BaseUtimerEidtView.IUtimerAttachEditView{
     public static final String TAG = NoteEditFragment.class.getSimpleName();
 

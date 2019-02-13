@@ -25,7 +25,7 @@ import ahtewlg7.utimer.view.BaseUtimerEidtView;
 import butterknife.BindView;
 import io.reactivex.Flowable;
 
-public class ShortHandEditFragment extends AEditFragment
+public class ShortHandEditFragment extends ATxtEditFragment
         implements BaseUtimerEidtView.IUtimerAttachEditView, AUtimerTxtEditMvpP.IUtimerEditMvpV {
     public static final String TAG = ShortHandEditFragment.class.getSimpleName();
 
@@ -125,9 +125,8 @@ public class ShortHandEditFragment extends AEditFragment
 
     /**********************************************AEditFragment**********************************************/
     @Override
-    public void onViewCreated(View inflateView) {
-        super.onViewCreated(inflateView);
-
+    public void onEnvReady(View inflateView) {
+        super.onEnvReady(inflateView);
         editMvpP = new ShorthandEditMvpP(getUTimerEntity(), this);
     }
 

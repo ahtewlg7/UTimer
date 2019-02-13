@@ -19,7 +19,6 @@ import java.util.List;
 import ahtewlg7.utimer.entity.gtd.GtdProjectEntity;
 import ahtewlg7.utimer.entity.gtd.NoteBuilder;
 import ahtewlg7.utimer.entity.gtd.NoteEntity;
-import ahtewlg7.utimer.mvp.IUtimerEditMvpP;
 import ahtewlg7.utimer.mvp.ProjectEditMvpP;
 import ahtewlg7.utimer.util.DateTimeAction;
 import ahtewlg7.utimer.util.Logcat;
@@ -56,14 +55,6 @@ public class ProjectFragment extends AEditFragment
     }
 
     @Override
-    public void onViewCreated(View inflateView) {
-        super.onViewCreated(inflateView);
-
-        myClickListener = new MyClickListener();
-        projectRecyclerView.init(getContext(), 0, null, myClickListener, null, myClickListener,null);
-    }
-
-    @Override
     public void onFragmentResult(int requestCode, int resultCode, Bundle data) {
         super.onFragmentResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && data != null) {
@@ -91,8 +82,14 @@ public class ProjectFragment extends AEditFragment
         return MyRInfo.getStringByID(R.string.title_project);
     }
 
+    /*++++++++++++++++++++++++++++++++++++++++++AEditFragment++++++++++++++++++++++++++++++++++++++++*/
+    @Override
+    protected void onEnvReady(View inflateView) {
+        myClickListener = new MyClickListener();
+        projectRecyclerView.init(getContext(), 0, null, myClickListener, null, myClickListener,null);
+    }
     /*++++++++++++++++++++++++++++++++++++++++++AToolbarBkFragment++++++++++++++++++++++++++++++++++++++++*/
-    @NonNull
+     @NonNull
     @Override
     protected Toolbar getToolbar() {
         return toolbar;
@@ -155,13 +152,13 @@ public class ProjectFragment extends AEditFragment
 
     @Override
     public void onItemCreate(NoteEntity data) {
-        projectEditMvpP.onNoteCreated(data);
+        getEditMvpP().onNoteCreated(data);
     }
 
     @Override
     public void onItemEdit(NoteEntity data) {
         if (editIndex != INIT_POSITION)
-            projectEditMvpP.onNoteEdited(editIndex, data);
+            getEditMvpP().onNoteEdited(editIndex, data);
         editIndex = INIT_POSITION;
     }
 
@@ -192,7 +189,7 @@ public class ProjectFragment extends AEditFragment
     /*++++++++++++++++++++++++++++++++++++++++++AEditFragment++++++++++++++++++++++++++++++++++++++++*/
 
     @NonNull
-    protected IUtimerEditMvpP getEditMvpP() {
+    protected ProjectEditMvpP getEditMvpP() {
         if(projectEditMvpP == null)
             projectEditMvpP = new ProjectEditMvpP(this, getUTimerEntity());;
         return projectEditMvpP;
@@ -207,14 +204,6 @@ public class ProjectFragment extends AEditFragment
     @Override
     protected GtdProjectEntity getUTimerEntity() {
         return (GtdProjectEntity) getArguments().getSerializable(KEY_GTD_PROJECT);
-    }
-    @Override
-    protected void toStartEdit() {
-    }
-
-    @Override
-    protected void toEndEdit() {
-
     }
 
     private void toReloadEntity(List<NoteEntity> alldata){

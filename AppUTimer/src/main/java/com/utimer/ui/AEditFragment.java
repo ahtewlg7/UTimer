@@ -15,9 +15,9 @@ import ahtewlg7.utimer.util.Logcat;
 public abstract class AEditFragment extends AToolbarBkFragment{
     public static final String TAG = AEditFragment.class.getSimpleName();
 
+    protected boolean ifEnvReady;
     protected abstract @NonNull AUtimerEntity getUTimerEntity();
-    protected abstract void toStartEdit();
-    protected abstract void toEndEdit();
+    protected abstract void onEnvReady(View inflateView);
 
     @Override
     public void onViewCreated(View inflateView) {
@@ -27,22 +27,11 @@ public abstract class AEditFragment extends AToolbarBkFragment{
             Logcat.i(TAG,"the env is not ready , so pop it");
             ToastUtils.showShort(R.string.entity_invalid);
             pop();
+            ifEnvReady = false;
             return;
         }
-        toStartEdit();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        toEndEdit();
-    }
-
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        if(hidden)
-            toEndEdit();
+        ifEnvReady = true;
+        onEnvReady(inflateView);
     }
 
     protected boolean ifEnvOk() {
