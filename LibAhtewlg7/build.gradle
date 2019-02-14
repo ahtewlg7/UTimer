@@ -50,8 +50,8 @@ dependencies {
 
     implementation 'org.greenrobot:greendao:3.2.2'
     implementation 'com.alibaba:fastjson:1.2.44'
-    implementation 'com.google.code.findbugs:jsr305:3.0.1'
 
+    implementation 'com.google.code.findbugs:jsr305:3.0.1'
     api 'com.google.guava:guava:24.0-android'
 
     api 'com.trello.rxlifecycle2:rxlifecycle:2.2.1'
