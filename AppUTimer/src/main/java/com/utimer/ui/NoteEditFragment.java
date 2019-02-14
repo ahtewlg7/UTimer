@@ -3,6 +3,7 @@ package com.utimer.ui;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import com.blankj.utilcode.util.ToastUtils;
 import com.trello.rxlifecycle2.LifecycleProvider;
@@ -13,13 +14,13 @@ import java.util.List;
 import ahtewlg7.utimer.entity.gtd.NoteBuilder;
 import ahtewlg7.utimer.entity.gtd.NoteEntity;
 import ahtewlg7.utimer.entity.md.EditElement;
-import ahtewlg7.utimer.mvp.AUtimerTxtEditMvpP;
 import ahtewlg7.utimer.mvp.NoteEditMvpP;
 import ahtewlg7.utimer.util.DateTimeAction;
 import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MyRInfo;
 import ahtewlg7.utimer.view.BaseUtimerEidtView;
 import butterknife.BindView;
+import io.reactivex.Flowable;
 
 public class NoteEditFragment extends ATxtEditFragment
         implements NoteEditMvpP.INoteEditMvpV, BaseUtimerEidtView.IUtimerAttachEditView{
@@ -70,14 +71,13 @@ public class NoteEditFragment extends ATxtEditFragment
         toolbar.setTitle(getTitle());
     }
 
-    /**********************************************AEditFragment**********************************************/
-    @NonNull
-    protected AUtimerTxtEditMvpP getEditMvpP() {
-        if(editMvpP == null)
-            editMvpP = new NoteEditMvpP(getUTimerEntity(), this);
-        return editMvpP;
+    @Override
+    protected void onEnvReady(View inflateView) {
+        super.onEnvReady(inflateView);
+        editMvpP = new NoteEditMvpP(getUTimerEntity(), this);
     }
 
+    /**********************************************AEditFragment**********************************************/
     @Override
     protected NoteEntity getUTimerEntity(){
         return (NoteEntity) getArguments().getSerializable(KEY_NOTE);
@@ -91,11 +91,15 @@ public class NoteEditFragment extends ATxtEditFragment
     }
     @Override
     protected void toEndEdit() {
+        editRecyclerView.toEndEdit();
         int resultCode = RESULT_CANCELED;
         List<EditElement> elementList = editRecyclerView.getEditElementList();
-        if(elementList != null){//maybe the entity is not loaded
+        if(elementList.size() > 0){//maybe the entity is not loaded
             resultCode = RESULT_OK;
-            ((NoteEntity)getArguments().getSerializable(KEY_NOTE)).appendDetail(elementList.get(0).getMdCharSequence().toString());
+            editMvpP.toFinishEdit(Flowable.fromIterable(elementList)
+//                    .compose(((RxFragment) getRxLifeCycleBindView()).<EditElement>bindUntilEvent(FragmentEvent.DESTROY))
+            );
+        ((NoteEntity)getArguments().getSerializable(KEY_NOTE)).appendDetail(elementList.get(0).getMdCharSequence().toString());
         }
         setFragmentResult(resultCode, getArguments());
     }

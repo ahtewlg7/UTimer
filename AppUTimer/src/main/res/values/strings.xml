@@ -45,7 +45,7 @@
     <string name="prompt_del_fail">to del fail</string>
     <string name="prompt_del_err">del err</string>
     <string name="prompt_new_project_name">please input the project name</string>
-    <string name="prompt_not_ready">"No, Not Yet! I'm Not Ready, Please wait!" </string>
+    <string name="prompt_not_ready">"No, Not Yet! I'm Not Ready, Please Wait!" </string>
 
     <string name="entity_invalid">the env is not ready , so pop it</string>
 </resources>

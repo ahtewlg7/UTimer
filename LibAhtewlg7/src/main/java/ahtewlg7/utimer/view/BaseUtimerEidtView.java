@@ -55,7 +55,7 @@ import static ahtewlg7.utimer.enumtype.errcode.NoteEditErrCode.ERR_EDIT_ENTITY_N
  * Created by lw on 2019/2/3.
  */
 public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement> {
-    public static final String TAG = EditLinerRecyclerView.class.getSimpleName();
+    public static final String TAG = BaseUtimerEidtView.class.getSimpleName();
 
     public static final int INIT_POSITION = -1;
 
