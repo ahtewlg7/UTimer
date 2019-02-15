@@ -1,18 +1,12 @@
 package ahtewlg7.utimer.md;
 
+import ahtewlg7.utimer.view.md.MdEditorWidget;
+
 /**
  * Created by lw on 2016/5/17.
  */
-public interface IEditAction {
-    public enum Head{
-        H1,
-        H2,
-        H3,
-        H4,
-        H5,
-        H6,
-    }
-
+public interface IMdEditListener {
+    public void setMdEditorWidget(MdEditorWidget mdEditorWidget);
     public void toAlignLeft();
     public void toAlignRight();
     public void toAlignTop();
@@ -37,7 +31,12 @@ public interface IEditAction {
     public void toTextColor();
     public void toTextBackgroundColor();
     public void toRemoveFormat();
-    public void toHeading(Head heading);
+    public void toHead1();
+    public void toHead2();
+    public void toHead3();
+    public void toHead4();
+    public void toHead5();
+    public void toHead6();
     public void toIndent();
     public void toOutdent();
     public void toBlockQuote();
@@ -46,5 +45,4 @@ public interface IEditAction {
     public void toInsertLink();
     public void toInsertOrderedList();
     public void toInsertUnorderedList();
-    public void toInsertTodo();
 }

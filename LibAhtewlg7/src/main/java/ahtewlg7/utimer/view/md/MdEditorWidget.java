@@ -6,10 +6,8 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
-import com.blankj.utilcode.util.ToastUtils;
-
 import ahtewlg7.utimer.R;
-import ahtewlg7.utimer.md.IEditAction;
+import ahtewlg7.utimer.md.IMdEditListener;
 import ahtewlg7.utimer.util.AndrManagerFactory;
 
 /**
@@ -18,37 +16,35 @@ import ahtewlg7.utimer.util.AndrManagerFactory;
 public class MdEditorWidget extends RelativeLayout {
     public static final String TAG = MdEditorWidget.class.getSimpleName();
 
-    public ImageButton actionUndo;
-    public ImageButton actionRedo;
-    public ImageButton actionBold;
-    public ImageButton actionItalic;
-    public ImageButton actionSubscript;
-    public ImageButton actionSuperscript;
-    public ImageButton actionStrikethrough;
-    public ImageButton actionUnderline;
-    public ImageButton actionHorizontalRule;
-    public ImageButton actionHeading1;
-    public ImageButton actionHeading2;
-    public ImageButton actionHeading3;
-    public ImageButton actionHeading4;
-    public ImageButton actionHeading5;
-    public ImageButton actionHeading6;
-    public ImageButton actionTxtColor;
-    public ImageButton actionTxtBgColor;
-    public ImageButton actionIndent;
-    public ImageButton actionOutdent;
-    public ImageButton actionAlignLeft;
-    public ImageButton actionAlignCenter;
-    public ImageButton actionAlignRight;
-    public ImageButton actionBlockquote;
-    public ImageButton actionInsertImage;
-    public ImageButton actionInsertLink;
-    public ImageButton actionInsertUnorderedList;
-    public ImageButton actionInsertOrderedList;
-    public ImageButton actionInsertCheckbox;
+    private ImageButton actionUndo;
+    private ImageButton actionRedo;
+    private ImageButton actionBold;
+    private ImageButton actionItalic;
+    private ImageButton actionSubscript;
+    private ImageButton actionSuperscript;
+    private ImageButton actionStrikethrough;
+    private ImageButton actionUnderline;
+    private ImageButton actionHorizontalRule;
+    private ImageButton actionHeading1;
+    private ImageButton actionHeading2;
+    private ImageButton actionHeading3;
+    private ImageButton actionHeading4;
+    private ImageButton actionHeading5;
+    private ImageButton actionHeading6;
+    private ImageButton actionTxtColor;
+    private ImageButton actionTxtBgColor;
+    private ImageButton actionIndent;
+    private ImageButton actionOutdent;
+    private ImageButton actionAlignLeft;
+    private ImageButton actionAlignCenter;
+    private ImageButton actionAlignRight;
+    private ImageButton actionBlockquote;
+    private ImageButton actionInsertImage;
+    private ImageButton actionInsertLink;
+    private ImageButton actionInsertUnorderedList;
+    private ImageButton actionInsertOrderedList;
 
-    private boolean ifToast;
-    private IEditAction mEditor;
+    private IMdEditListener editListener;
 
     public MdEditorWidget(Context context) {
         super(context);
@@ -59,13 +55,6 @@ public class MdEditorWidget extends RelativeLayout {
         findView();
     }
 
-    public void setEditorListener(IEditAction mEditor) {
-        this.mEditor = mEditor;
-    }
-
-    public void setIfToast(boolean ifToast){
-        this.ifToast = ifToast;
-    }
 
     private void findView(){
         View layout = null;
@@ -98,239 +87,180 @@ public class MdEditorWidget extends RelativeLayout {
             actionInsertLink     = (ImageButton)layout.findViewById(R.id.action_insert_link);
             actionInsertUnorderedList   = (ImageButton)layout.findViewById(R.id.action_insert_list_unordered);
             actionInsertOrderedList     = (ImageButton)layout.findViewById(R.id.action_insert_ordered_list);
-            actionInsertCheckbox = (ImageButton)layout.findViewById(R.id.action_insert_checkbox);
+
+            initClickListener();
         }catch (Exception e){
             e.printStackTrace();
         }
         this.addView(layout);
     }
 
-    public boolean initClickListener(){
-        if(mEditor == null)
-            return false;
+    public void initEditListener(IMdEditListener editListener) {
+        this.editListener = editListener;
+        editListener.setMdEditorWidget(this);
+    }
 
+    public boolean initClickListener(){
         actionUndo.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View v) {
-                if(ifToast)
-                    ToastUtils.showShort(R.string.editor_undo);
-                if(mEditor != null)
-                    mEditor.toUndo();
+                if(editListener != null)
+                    editListener.toUndo();
             }
         });
         actionRedo.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View v) {
-                if(ifToast)
-                    ToastUtils.showShort(R.string.editor_redo);
-                if(mEditor != null)
-                    mEditor.toRedo();
+                if(editListener != null)
+                    editListener.toRedo();
             }
         });
         actionBold.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View v) {
-                if(ifToast)
-                    ToastUtils.showShort(R.string.editor_bold);
-                if(mEditor != null)
-                    mEditor.toBold();
+                if(editListener != null)
+                    editListener.toBold();
             }
         });
         actionItalic.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View v) {
-                if(ifToast)
-                    ToastUtils.showShort(R.string.editor_italic);
-                if(mEditor != null)
-                    mEditor.toItalic();
+                if(editListener != null)
+                    editListener.toItalic();
             }
         });
         actionSubscript.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View v) {
-                if(ifToast)
-                    ToastUtils.showShort(R.string.editor_subscript);
-                if(mEditor != null)
-                    mEditor.toSubscript();
+                if(editListener != null)
+                    editListener.toSubscript();
             }
         });
         actionSuperscript.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View v) {
-                if(ifToast)
-                    ToastUtils.showShort(R.string.editor_superscript);
-                if(mEditor != null)
-                    mEditor.toSuperscript();
+                if(editListener != null)
+                    editListener.toSuperscript();
             }
         });
         actionStrikethrough.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View v) {
-                if(ifToast)
-                    ToastUtils.showShort(R.string.editor_strike_through);
-                if(mEditor != null)
-                    mEditor.toStrikeThrough();
+                if(editListener != null)
+                    editListener.toStrikeThrough();
             }
         });
         actionUnderline.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View v) {
-                if(ifToast)
-                    ToastUtils.showShort(R.string.editor_under_line);
-                if(mEditor != null)
-                    mEditor.toUnderLine();
+                if(editListener != null)
+                    editListener.toUnderLine();
             }
         });
         actionHorizontalRule.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View v) {
-                if(ifToast)
-                    ToastUtils.showShort(R.string.action_horizontal_rule);
-                if(mEditor != null)
-                    mEditor.toHorizontalRule();
+                if(editListener != null)
+                    editListener.toHorizontalRule();
             }
         });
         actionHeading1.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View v) {
-                if(ifToast)
-                    ToastUtils.showShort(R.string.editor_heading1);
-                if(mEditor != null)
-                    mEditor.toHeading(IEditAction.Head.H1);
+                if(editListener != null)
+                    editListener.toHead1();
             }
         });
         actionHeading2.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View v) {
-                if(ifToast)
-                    ToastUtils.showShort(R.string.editor_heading2);
-                if(mEditor != null)
-                    mEditor.toHeading(IEditAction.Head.H2);
+                if(editListener != null)
+                    editListener.toHead2();
             }
         });
         actionHeading3.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View v) {
-                if(ifToast)
-                    ToastUtils.showShort(R.string.editor_heading3);
-                if(mEditor != null)
-                    mEditor.toHeading(IEditAction.Head.H3);
+                if(editListener != null)
+                    editListener.toHead3();
             }
         });
         actionHeading4.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View v) {
-                if(ifToast)
-                    ToastUtils.showShort(R.string.editor_heading4);
-                if(mEditor != null)
-                    mEditor.toHeading(IEditAction.Head.H4);
+                if(editListener != null)
+                    editListener.toHead4();
             }
         });
         actionHeading5.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View v) {
-                if(ifToast)
-                    ToastUtils.showShort(R.string.editor_heading5);
-                if(mEditor != null)
-                    mEditor.toHeading(IEditAction.Head.H5);
+                if(editListener != null)
+                    editListener.toHead5();
             }
         });
         actionHeading6.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View v) {
-                if(ifToast)
-                    ToastUtils.showShort(R.string.editor_heading6);
-                if(mEditor != null)
-                    mEditor.toHeading(IEditAction.Head.H6);
+                if(editListener != null)
+                    editListener.toHead6();
             }
         });
         actionTxtColor.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View v) {
-                if(ifToast)
-                    ToastUtils.showShort(R.string.editor_text_color);
-                if(mEditor != null)
-                    mEditor.toTextColor();
+                if(editListener != null)
+                    editListener.toTextColor();
             }
         });
         actionTxtBgColor.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View v) {
-                if(ifToast)
-                    ToastUtils.showShort(R.string.editor_text_background_color);
-                if(mEditor != null)
-                    mEditor.toTextBackgroundColor();
+                if(editListener != null)
+                    editListener.toTextBackgroundColor();
             }
         });
         actionIndent.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View v) {
-                if(ifToast)
-                    ToastUtils.showShort(R.string.editor_indent);
-                if(mEditor != null)
-                    mEditor.toIndent();
+                if(editListener != null)
+                    editListener.toIndent();
             }
         });
         actionOutdent.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View v) {
-                if(ifToast)
-                    ToastUtils.showShort(R.string.editor_outdent);
-                if(mEditor != null)
-                    mEditor.toOutdent();
+                if(editListener != null)
+                    editListener.toOutdent();
             }
         });
         actionAlignLeft.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View v) {
-                if(ifToast)
-                    ToastUtils.showShort(R.string.editor_align_left);
-                if(mEditor != null)
-                    mEditor.toAlignLeft();
+                if(editListener != null)
+                    editListener.toAlignLeft();
             }
         });
         actionAlignCenter.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View v) {
-                if(ifToast)
-                    ToastUtils.showShort(R.string.editor_align_center);
-                if(mEditor != null)
-                    mEditor.toAligenCenter();
+                if(editListener != null)
+                    editListener.toAligenCenter();
             }
         });
         actionAlignRight.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View v) {
-                if(ifToast)
-                    ToastUtils.showShort(R.string.editor_align_right);
-                if(mEditor != null)
-                    mEditor.toAlignRight();
+                if(editListener != null)
+                    editListener.toAlignRight();
             }
         });
         actionBlockquote.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View v) {
-                if(ifToast)
-                    ToastUtils.showShort(R.string.editor_block_quote);
-                if(mEditor != null)
-                    mEditor.toBlockQuote();
+                if(editListener != null)
+                    editListener.toBlockQuote();
             }
         });
         actionInsertImage.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View v) {
-                if(ifToast)
-                    ToastUtils.showShort(R.string.editor_insert_file);
-                if(mEditor != null)
-                    mEditor.toInsertFile();
+                if(editListener != null)
+                    editListener.toInsertFile();
             }
         });
         actionInsertLink.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View v) {
-                if(ifToast)
-                    ToastUtils.showShort(R.string.editor_insert_link);
-                if(mEditor != null)
-                    mEditor.toInsertLink();
+                if(editListener != null)
+                    editListener.toInsertLink();
             }
         });
         actionInsertUnorderedList.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View v) {
-                if(ifToast)
-                    ToastUtils.showShort(R.string.editor_insert_unordered_list);
-                if(mEditor != null)
-                    mEditor.toInsertUnorderedList();
+                if(editListener != null)
+                    editListener.toInsertUnorderedList();
             }
         });
         actionInsertOrderedList.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View v) {
-                if(ifToast)
-                    ToastUtils.showShort(R.string.editor_insert_ordered_list);
-                if(mEditor != null)
-                    mEditor.toInsertOrderedList();
-            }
-        });
-       actionInsertCheckbox.setOnClickListener(new OnClickListener() {
-            @Override public void onClick(View v) {
-                if(ifToast)
-                    ToastUtils.showShort(R.string.editor_insert_todo);
-                if(mEditor != null)
-                    mEditor.toInsertTodo();
+                if(editListener != null)
+                    editListener.toInsertOrderedList();
             }
         });
         return true;

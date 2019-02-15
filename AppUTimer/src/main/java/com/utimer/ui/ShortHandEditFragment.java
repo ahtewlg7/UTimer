@@ -22,6 +22,7 @@ import ahtewlg7.utimer.util.DateTimeAction;
 import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MyRInfo;
 import ahtewlg7.utimer.view.BaseUtimerEidtView;
+import ahtewlg7.utimer.view.md.MdEditorWidget;
 import butterknife.BindView;
 import io.reactivex.Flowable;
 
@@ -33,8 +34,11 @@ public class ShortHandEditFragment extends ATxtEditFragment
 
     @BindView(R.id.fragment_shorthand_toolbar)
     Toolbar toolbar;
-    @BindView(R.id.fragment_shorthand_edit_rv)
+    @BindView(R.id.layout_edit_rv)
     BaseUtimerEidtView editRecyclerView;
+    @BindView(R.id.layout_edit_widget)
+    MdEditorWidget editorWidget;
+
 
     private ShorthandEditMvpP editMvpP;
 
@@ -139,6 +143,8 @@ public class ShortHandEditFragment extends ATxtEditFragment
     protected void toStartEdit() {
         editRecyclerView.setAttachEditView(this);
         editRecyclerView.setUTimerEntity(getUTimerEntity());
+        editRecyclerView.toInitMdToastable();
+        editorWidget.initEditListener(editRecyclerView.getMdEditListener());
         editRecyclerView.toStartEdit();
     }
 

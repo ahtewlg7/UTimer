@@ -95,4 +95,8 @@ public class BaseConfig {
     public String getToDoListNoteDir(){
         return MyRInfo.getStringByID(R.string.config_note_todolist_dir_name);
     }
+
+    public boolean ifMdEditToastable(){
+        return true;
+    }
 }

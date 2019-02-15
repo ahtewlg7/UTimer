@@ -3,11 +3,14 @@ package ahtewlg7.utimer.common;
 
 import android.support.annotation.NonNull;
 
+import com.google.common.base.Optional;
+
 import java.io.File;
 
 import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.StorageAction;
 import ahtewlg7.utimer.verctrl.BaseConfig;
+import ahtewlg7.utimer.verctrl.VcFactoryBuilder;
 
 
 /**
@@ -19,7 +22,11 @@ public class FileSystemAction {
     private BaseConfig baseConfig;
 
     public FileSystemAction(){
-        baseConfig = new BaseConfig();
+        Optional<? extends BaseConfig> configOptional = VcFactoryBuilder.getInstance().getVcConfig();
+        if(configOptional.isPresent())
+            baseConfig = configOptional.get();
+        else
+            baseConfig = new BaseConfig();
     }
 
     public void toInitWorkingEnv(){

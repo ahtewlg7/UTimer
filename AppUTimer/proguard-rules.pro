@@ -158,36 +158,7 @@
     public <init>(android.content.Context, android.util.AttributeSet, int);
 }
 
-#
-#----------------------------- WebView(项目中没有可以忽略) -----------------------------
-#
-#webView需要进行特殊处理
-#-keepclassmembers class fqcn.of.javascript.interface.for.Webview {
-#   public *;
-#}
-#-keepclassmembers class * extends android.webkit.WebViewClient {
-#    public void *(android.webkit.WebView, java.lang.String, android.graphics.Bitmap);
-#    public boolean *(android.webkit.WebView, java.lang.String);
-#}
-#-keepclassmembers class * extends android.webkit.WebViewClient {
-#    public void *(android.webkit.WebView, jav.lang.String);
-#}
-##在app中与HTML5的JavaScript的交互进行特殊处理
-##我们需要确保这些js要调用的原生方法不能够被混淆，于是我们需要做如下处理：
-#-keepclassmembers class com.ljd.example.JSInterface {
-#    <methods>;
-#}
 
-#
-#---------------------------------实体类---------------------------------
-#--------(实体Model不能混淆，否则找不到对应的属性获取不到值)-----
-#
-#-dontwarn com.suchengkeji.android.confusiondemo.md.**
-#对含有反射类的处理
-#-keep class com.suchengkeji.android.confusiondemo.md.** { *; }
-#
-# ----------------------------- 其他的 -----------------------------
-#
 # 删除代码中Log相关的代码
 -assumenosideeffects class android.util.Log {
     public static boolean isLoggable(java.lang.String, int);

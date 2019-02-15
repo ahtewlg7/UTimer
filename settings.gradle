@@ -1,1 +1,1 @@
-include ':AppUTimer', ':LibViewKnifeTextEditor', ':LibBypass', ':LibAhtewlg7'
+include ':AppUTimer', ':LibBypass', ':LibAhtewlg7'

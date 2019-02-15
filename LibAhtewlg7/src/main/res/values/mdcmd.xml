@@ -1,0 +1,18 @@
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingTranslation">
+    <string name="H1">#</string>
+    <string name="H2">##</string>
+    <string name="H3">###</string>
+    <string name="H4">####</string>
+    <string name="H5">#####</string>
+    <string name="H6">######</string>
+    <string name="indent">&#160;&#160;&#160;&#160;</string>
+    <string name="blockquote">&gt;</string> <!--"&gt;" means '>'-->
+    <string name="codeline">    </string>
+    <string name="block">**</string> <!--In Md, block should be "**test**"-->
+    <string name="italic">*</string> <!--In Md, italic should be "*test*"-->
+    <string name="unorderedlists">\n+\t</string>
+    <string name="orderedlists">\n1.\t</string>
+    <string name="horizontalrule">------</string>
+    <string name="strikethrough">~~</string>
+</resources>

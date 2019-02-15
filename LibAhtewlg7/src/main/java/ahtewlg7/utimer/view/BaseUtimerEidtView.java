@@ -5,9 +5,11 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chad.library.adapter.base.listener.OnItemDragListener;
@@ -30,13 +32,19 @@ import ahtewlg7.utimer.entity.AUtimerEntity;
 import ahtewlg7.utimer.entity.md.EditElement;
 import ahtewlg7.utimer.enumtype.EditMode;
 import ahtewlg7.utimer.enumtype.ElementEditType;
+import ahtewlg7.utimer.enumtype.MdEditOperateType;
 import ahtewlg7.utimer.exception.UtimerEditException;
+import ahtewlg7.utimer.md.IMdEditListener;
 import ahtewlg7.utimer.md.MyBypass;
 import ahtewlg7.utimer.mvp.IRxLifeCycleBindView;
 import ahtewlg7.utimer.util.Logcat;
+import ahtewlg7.utimer.util.MyRInfo;
 import ahtewlg7.utimer.util.MySafeSubscriber;
 import ahtewlg7.utimer.util.MySimpleObserver;
+import ahtewlg7.utimer.verctrl.BaseConfig;
+import ahtewlg7.utimer.verctrl.VcFactoryBuilder;
 import ahtewlg7.utimer.view.md.MdEditText;
+import ahtewlg7.utimer.view.md.MdEditorWidget;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
@@ -54,7 +62,7 @@ import static ahtewlg7.utimer.enumtype.errcode.NoteEditErrCode.ERR_EDIT_ENTITY_N
 /**
  * Created by lw on 2019/2/3.
  */
-public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement> {
+public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
     public static final String TAG = BaseUtimerEidtView.class.getSimpleName();
 
     public static final int INIT_POSITION = -1;
@@ -62,6 +70,7 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement> {
     protected int preEditPosition  = INIT_POSITION;
     protected boolean isTxtChanged = false;
 
+    protected boolean toastEnable;
     protected AUtimerEntity utimerEntity;
     protected List<EditElement> editElementList;
 
@@ -71,32 +80,26 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement> {
     protected Disposable insertDisposable;
     protected Disposable modifyDisposable;
     protected PublishSubject<Integer> clickPositionRx;
+    protected PublishSubject<MdEditOperateType> mdEditOperateRx;
 
+    protected MdEditorWidget editorWidget;
     protected IUtimerAttachEditView attachEditView;
     protected MyClickListener myClickListener;
+    protected MdEditListener mdEditListener;
 
     public BaseUtimerEidtView(Context context) {
         super(context);
-
-        setDescendantFocusability(FOCUS_BEFORE_DESCENDANTS);
-        myBypass        = new MyBypass();
-        editElementList = Lists.newArrayList();
+        init();
     }
 
     public BaseUtimerEidtView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-
-        setDescendantFocusability(FOCUS_BEFORE_DESCENDANTS);
-        myBypass        = new MyBypass();
-        editElementList = Lists.newArrayList();
+        init();
     }
 
     public BaseUtimerEidtView(Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-
-        setDescendantFocusability(FOCUS_BEFORE_DESCENDANTS);
-        myBypass        = new MyBypass();
-        editElementList = Lists.newArrayList();
+        init();
     }
 
     @Override
@@ -114,6 +117,18 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement> {
     @Override
     public BaseItemAdapter<EditElement> createAdapter(List<EditElement> entityList) {
         return new BaseUtimerEditItemAdapter(entityList);
+    }
+
+    public MdEditListener getMdEditListener() {
+        return mdEditListener;
+    }
+
+    public boolean isToastEnable() {
+        return toastEnable;
+    }
+
+    public void setToastEnable(boolean toastEnable) {
+        this.toastEnable = toastEnable;
     }
 
     public AUtimerEntity getUTimerEntity() {
@@ -142,6 +157,16 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement> {
 
     public boolean ifAttachViewReady(){
         return attachEditView != null;
+    }
+
+    public void toInitMdToastable(){
+        Optional configOptional = VcFactoryBuilder.getInstance().getVcConfig();
+        boolean toastEnable = true;
+        if(configOptional.isPresent()){
+            BaseConfig config = (BaseConfig)configOptional.get();
+            toastEnable       = config.ifMdEditToastable();
+        }
+        setToastEnable(toastEnable);
     }
 
     public void toStartEdit() {
@@ -201,6 +226,7 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement> {
                     super.onComplete();
                     Logcat.i(TAG,"toLoadTxt succ");
                     initEditView();
+                    toListenMdEditOperate();
                     if(attachEditView != null)
                         attachEditView.onLoadSucc();
                 }
@@ -223,6 +249,168 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement> {
         cancelListenEditClick();
     }
 
+    public void toListenMdEditOperate(){
+        mdEditOperateRx.debounce(1, TimeUnit.SECONDS)
+            .compose(((RxFragment) attachEditView.getRxLifeCycleBindView()).<MdEditOperateType>bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new MySimpleObserver<MdEditOperateType>(){
+                @Override
+                public void onNext(MdEditOperateType mdEditOperateType) {
+                    Optional<MdEditText> optional = getEditTextItem(preEditPosition);
+                    if(!optional.isPresent()) {
+                        Logcat.i(TAG,"to cancel edit operate");
+                        return;
+                    }
+                    Optional<Integer> toastOptional = null;
+                    String cmd = null;
+                    switch (mdEditOperateType){
+                        case UNDO:
+                            toastOptional = Optional.of(R.string.editor_undo);
+                            break;
+                        case REDO:
+                            toastOptional = Optional.of(R.string.editor_redo);
+                            break;
+                        case BOLD:
+                            cmd = MyRInfo.getStringByID(R.string.block);
+                            optional.get().insert(cmd);
+                            toastOptional = Optional.of(R.string.editor_bold);
+                            break;
+                        case ITALIC:
+                            cmd = MyRInfo.getStringByID(R.string.italic);
+                            optional.get().insert(cmd);
+                            toastOptional = Optional.of(R.string.editor_italic);
+                            break;
+                        case SUB_SCRIPT:
+                            /*cmd = MyRInfo.getStringByID(R.string.);
+                            optional.get().insert(cmd);*/
+                            toastOptional = Optional.of(R.string.editor_subscript);
+                            break;
+                        case SUPER_SCRIPT:
+                            /*cmd = MyRInfo.getStringByID(R.string.block);
+                            optional.get().insert(cmd);*/
+                            toastOptional = Optional.of(R.string.editor_superscript);
+                            break;
+                        case STRIKE_THROUGH:
+                            cmd = MyRInfo.getStringByID(R.string.strikethrough);
+                            optional.get().insert(cmd);
+                            toastOptional = Optional.of(R.string.editor_strike_through);
+                            break;
+                        case UNDER_LINE:
+                            /*cmd = MyRInfo.getStringByID(R.string.line);
+                            optional.get().insert(cmd);*/
+                            toastOptional = Optional.of(R.string.editor_under_line);
+                            break;
+                        case HORIZONTAL_RULE:
+                            cmd = MyRInfo.getStringByID(R.string.horizontalrule);
+                            optional.get().insert(cmd);
+                            toastOptional = Optional.of(R.string.action_horizontal_rule);
+                            break;
+                        case HEAD1:
+                            cmd = MyRInfo.getStringByID(R.string.H1);
+                            optional.get().insert(cmd);
+                            toastOptional = Optional.of(R.string.editor_heading1);
+                            break;
+                        case HEAD2:
+                            cmd = MyRInfo.getStringByID(R.string.H2);
+                            optional.get().insert(cmd);
+                            toastOptional = Optional.of(R.string.editor_heading2);
+                            break;
+                        case HEAD3:
+                            cmd = MyRInfo.getStringByID(R.string.H3);
+                            optional.get().insert(cmd);
+                            toastOptional = Optional.of(R.string.editor_heading3);
+                            break;
+                        case HEAD4:
+                            cmd = MyRInfo.getStringByID(R.string.H4);
+                            optional.get().insert(cmd);
+                            toastOptional = Optional.of(R.string.editor_heading4);
+                            break;
+                        case HEAD5:
+                            cmd = MyRInfo.getStringByID(R.string.H5);
+                            optional.get().insert(cmd);
+                            toastOptional = Optional.of(R.string.editor_heading5);
+                            break;
+                        case HEAD6:
+                            cmd = MyRInfo.getStringByID(R.string.H6);
+                            optional.get().insert(cmd);
+                            toastOptional = Optional.of(R.string.editor_heading6);
+                            break;
+                        case TXT_COLOR:
+                            /*cmd = MyRInfo.getStringByID(R.string.colo);
+                            optional.get().insert(cmd);*/
+                            toastOptional = Optional.of(R.string.editor_text_color);
+                            break;
+                        case BACKGROUND_COLOR:
+                            /*cmd = MyRInfo.getStringByID(R.string.block);
+                            optional.get().insert(cmd);*/
+                            toastOptional = Optional.of(R.string.editor_text_background_color);
+                            break;
+                        case INDENT:
+                            cmd = MyRInfo.getStringByID(R.string.indent);
+                            optional.get().insert(cmd);
+                            toastOptional = Optional.of(R.string.editor_indent);
+                            break;
+                        case OUTDENT:
+                            /*cmd = MyRInfo.getStringByID(R.string.block);
+                            optional.get().insert(cmd);*/
+                            toastOptional = Optional.of(R.string.editor_outdent);
+                            break;
+                        case ALIGN_LEFT:
+                            /*cmd = MyRInfo.getStringByID(R.string.block);
+                            optional.get().insert(cmd);*/
+                            toastOptional = Optional.of(R.string.editor_align_left);
+                            break;
+                        case ALIGN_CENTER:
+                            /*cmd = MyRInfo.getStringByID(R.string.cent);
+                            optional.get().insert(cmd);*/
+                            toastOptional = Optional.of(R.string.editor_align_center);
+                            break;
+                        case ALIGN_RIGHT:
+                            /*cmd = MyRInfo.getStringByID(R.string.block);
+                            optional.get().insert(cmd);*/
+                            toastOptional = Optional.of(R.string.editor_align_right);
+                            break;
+                        case BLOCK_QUOTE:
+                            cmd = MyRInfo.getStringByID(R.string.blockquote);
+                            optional.get().insert(cmd);
+                            toastOptional = Optional.of(R.string.editor_block_quote);
+                            break;
+                        case FILE:
+                            /*cmd = MyRInfo.getStringByID(R.string.block);
+                            optional.get().insert(cmd);*/
+                            toastOptional = Optional.of(R.string.editor_insert_file);
+                            break;
+                        case LINK:
+                            /*cmd = MyRInfo.getStringByID(R.string.block);
+                            optional.get().insert(cmd);*/
+                            toastOptional = Optional.of(R.string.editor_insert_link);
+                            break;
+                        case UNORDERED_LIST:
+                            cmd = MyRInfo.getStringByID(R.string.unorderedlists);
+                            optional.get().insert(cmd);
+                            toastOptional = Optional.of(R.string.editor_insert_unordered_list);
+                            break;
+                        case ORDERED_LIST:
+                            cmd = MyRInfo.getStringByID(R.string.orderedlists);
+                            optional.get().insert(cmd);
+                            toastOptional = Optional.of(R.string.editor_insert_ordered_list);
+                            break;
+                    }
+                    if(toastEnable && toastOptional.isPresent())
+                        ToastUtils.showShort(toastOptional.get());
+
+                    if(TextUtils.isEmpty(cmd))
+                        ToastUtils.showShort(R.string.prompt_not_ready);
+                }
+            });
+    }
+    protected void init(){
+        setDescendantFocusability(FOCUS_BEFORE_DESCENDANTS);
+        myBypass        = new MyBypass();
+        editElementList = Lists.newArrayList();
+        mdEditListener  = new MdEditListener();
+        mdEditOperateRx = PublishSubject.create();
+    }
     protected void initEditView(){
         if(editElementList.size() == 0)
             editElementList.add(new EditElement(" "));
@@ -283,6 +471,7 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement> {
         }
         if(editMode == EditMode.OFF){
             optional.get().enableEdit(false);
+            editorWidget.setVisibility(View.GONE);
 
             String eidtTxt = optional.get().getText().toString();
             Optional<EditElement> currEditElement = getEditElement(position);
@@ -295,10 +484,10 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement> {
             }
         }else if(editMode == EditMode.ON){
             optional.get().enableEdit(true);
+            editorWidget.setVisibility(View.VISIBLE);
 
-            if(editElementOptional.isPresent()) {
+            if(editElementOptional.isPresent())
                 optional.get().setText(editElementOptional.get().getRawText());
-            }
         }
     }
 
@@ -345,6 +534,7 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement> {
                         if(preEditPosition != position) {
                             onEditMode(preEditPosition, EditMode.OFF, getEditElement(preEditPosition));
                             onEditMode(position, EditMode.ON, getEditElement(position));
+
                         }
                         preEditPosition = position;
                     }
@@ -377,6 +567,205 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement> {
         public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
             clickPositionRx.onNext(position);
         }
+    }
+    class MdEditListener implements IMdEditListener {
+        @Override
+        public void setMdEditorWidget(MdEditorWidget mdEditorWidget) {
+            editorWidget = mdEditorWidget;
+        }
+
+        @Override
+        public void toAlignLeft() {
+            mdEditOperateRx.onNext(MdEditOperateType.ALIGN_LEFT);
+        }
+
+        @Override
+        public void toAlignRight() {
+            mdEditOperateRx.onNext(MdEditOperateType.ALIGN_RIGHT);
+        }
+
+        @Override
+        public void toAlignTop() {
+
+        }
+
+        @Override
+        public void toAlignBottom() {
+
+        }
+
+        @Override
+        public void toAlignMiddle() {
+        }
+
+        @Override
+        public void toAligenCenterHori() {
+
+        }
+
+        @Override
+        public void toAligenCenter() {
+            mdEditOperateRx.onNext(MdEditOperateType.ALIGN_CENTER);
+        }
+
+        @Override
+        public void toFontColor() {
+
+        }
+
+        @Override
+        public void toFontSizeByPx() {
+
+        }
+
+        @Override
+        public void toFontSizeByLevel() {
+
+        }
+
+        @Override
+        public void toBackgroundColor() {
+            mdEditOperateRx.onNext(MdEditOperateType.BACKGROUND_COLOR);
+        }
+
+        @Override
+        public void toBackground() {
+
+        }
+
+        @Override
+        public void toUndo() {
+            mdEditOperateRx.onNext(MdEditOperateType.UNDO);
+        }
+
+        @Override
+        public void toRedo() {
+            mdEditOperateRx.onNext(MdEditOperateType.REDO);
+        }
+
+        @Override
+        public void toBold() {
+            mdEditOperateRx.onNext(MdEditOperateType.BOLD);
+        }
+
+        @Override
+        public void toItalic() {
+            mdEditOperateRx.onNext(MdEditOperateType.ITALIC);
+        }
+
+        @Override
+        public void toSubscript() {
+            mdEditOperateRx.onNext(MdEditOperateType.SUB_SCRIPT);
+        }
+
+        @Override
+        public void toSuperscript() {
+            mdEditOperateRx.onNext(MdEditOperateType.SUPER_SCRIPT);
+        }
+
+        @Override
+        public void toStrikeThrough() {
+            mdEditOperateRx.onNext(MdEditOperateType.STRIKE_THROUGH);
+        }
+
+        @Override
+        public void toUnderLine() {
+            mdEditOperateRx.onNext(MdEditOperateType.UNDER_LINE);
+        }
+
+        @Override
+        public void toHorizontalRule() {
+            mdEditOperateRx.onNext(MdEditOperateType.HORIZONTAL_RULE);
+        }
+
+        @Override
+        public void toTextColor() {
+            mdEditOperateRx.onNext(MdEditOperateType.TXT_COLOR);
+        }
+
+        @Override
+        public void toTextBackgroundColor() {
+
+        }
+
+        @Override
+        public void toRemoveFormat() {
+
+        }
+
+        @Override
+        public void toHead1() {
+            mdEditOperateRx.onNext(MdEditOperateType.HEAD1);
+        }
+
+        @Override
+        public void toHead2() {
+            mdEditOperateRx.onNext(MdEditOperateType.HEAD2);
+        }
+
+        @Override
+        public void toHead3() {
+            mdEditOperateRx.onNext(MdEditOperateType.HEAD3);
+        }
+
+        @Override
+        public void toHead4() {
+            mdEditOperateRx.onNext(MdEditOperateType.HEAD4);
+        }
+
+        @Override
+        public void toHead5() {
+            mdEditOperateRx.onNext(MdEditOperateType.HEAD5);
+        }
+
+        @Override
+        public void toHead6() {
+            mdEditOperateRx.onNext(MdEditOperateType.HEAD6);
+        }
+
+        @Override
+        public void toIndent() {
+            mdEditOperateRx.onNext(MdEditOperateType.INDENT);
+        }
+
+        @Override
+        public void toOutdent() {
+            mdEditOperateRx.onNext(MdEditOperateType.OUTDENT);
+        }
+
+        @Override
+        public void toBlockQuote() {
+            mdEditOperateRx.onNext(MdEditOperateType.BLOCK_QUOTE);
+        }
+
+        @Override
+        public void toBullets() {
+        }
+
+        @Override
+        public void toInsertFile() {
+            mdEditOperateRx.onNext(MdEditOperateType.FILE);
+        }
+
+        @Override
+        public void toInsertLink() {
+            mdEditOperateRx.onNext(MdEditOperateType.LINK);
+        }
+
+        @Override
+        public void toInsertOrderedList() {
+            mdEditOperateRx.onNext(MdEditOperateType.ORDERED_LIST);
+        }
+
+        @Override
+        public void toInsertUnorderedList() {
+            mdEditOperateRx.onNext(MdEditOperateType.UNORDERED_LIST);
+        }
+
+        /*@Override
+        public void toInsertTodo() {
+
+        }*/
     }
     public interface IUtimerAttachEditView extends IRxLifeCycleBindView {
         public void onLoadStart();

@@ -16,6 +16,7 @@
                 android:id="@+id/action_undo"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
+                android:visibility="gone"
                 android:background="@null"
                 android:contentDescription="@null"
                 android:src="@drawable/undo"/>
@@ -24,6 +25,7 @@
                 android:id="@+id/action_redo"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
+                android:visibility="gone"
                 android:background="@null"
                 android:contentDescription="@null"
                 android:src="@drawable/redo"
@@ -253,17 +255,6 @@
                 android:background="@null"
                 android:contentDescription="@null"
                 android:src="@drawable/num_list"
-                />
-
-
-            <ImageButton
-                android:id="@+id/action_insert_checkbox"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:visibility="gone"
-                android:background="@null"
-                android:contentDescription="@null"
-                android:src="@android:drawable/checkbox_on_background"
                 />
         </LinearLayout>
     </HorizontalScrollView>

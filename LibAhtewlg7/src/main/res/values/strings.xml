@@ -9,4 +9,5 @@
     <string name="editor_enable">enable to edit</string>
     <string name="editor_disable">disable to edit</string>
 
+    <string name="prompt_not_ready">Not Ready, Please Wait! </string>
 </resources>

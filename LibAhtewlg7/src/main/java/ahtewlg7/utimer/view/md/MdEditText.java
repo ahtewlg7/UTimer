@@ -111,18 +111,19 @@ public class MdEditText extends android.support.v7.widget.AppCompatEditText {
         setSelection(cursorPosition + content.length());
     }
 
-    /*public void insert(String content, int startPosition){
+    public void insert(String content, int startPosition){
         int cursorPosition = getSelectionStart();
         getEditableText().insert(startPosition, content);
         setSelection(cursorPosition + content.length());
     }
+
     public void insert(String stContent, String endContent){
         int stCursorPosition  = getSelectionStart();
         int endCursorPosition = getSelectionEnd();
         getEditableText().insert(stCursorPosition, stContent);
         getEditableText().insert(endCursorPosition + stContent.length(), endContent);
         setSelection(endCursorPosition + stContent.length() + endContent.length());
-    }*/
+    }
 
     public void replace(@NonNull Range<Integer> srcRange, @NonNull String replaceContent){
         getEditableText().replace(srcRange.lowerEndpoint(), srcRange.upperEndpoint(),replaceContent);

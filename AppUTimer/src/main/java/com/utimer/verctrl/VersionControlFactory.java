@@ -15,6 +15,6 @@ public class VersionControlFactory implements IBaseVersionControlFactory {
     @NonNull
     @Override
     public BaseConfig getBaseConfig() {
-        return new ConfigFactory();
+        return new VcConfig();
     }
 }
