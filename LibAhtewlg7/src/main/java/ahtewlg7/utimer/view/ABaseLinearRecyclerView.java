@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.AttributeSet;
+import android.view.View;
 
 import com.chad.library.adapter.base.BaseItemDraggableAdapter;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -50,9 +51,8 @@ public abstract class ABaseLinearRecyclerView<T> extends RecyclerView{
     }
 
     public void init(Context context, List<T> entityList) {
-        init(context,entityList,null,null,null,null,null,null);
+        init(context,entityList,null,null,null,null,null,null,null);
     }
-
     public void init(Context context, List<T> entityList,
                      BaseQuickAdapter.OnItemClickListener itemClickListener,
                      BaseQuickAdapter.OnItemChildClickListener itemChildClickListener,
@@ -65,6 +65,26 @@ public abstract class ABaseLinearRecyclerView<T> extends RecyclerView{
         recyclerViewAdapter.toSetOnItemChildClickListener(itemChildClickListener);
         recyclerViewAdapter.toSetOnItemLongClickListener(itemLongClickListener);
         recyclerViewAdapter.toSetOnItemChildLongClickListener(itemChildLongClickListener);
+        recyclerViewAdapter.toSetOnItemSwipeListener(itemSwipeListener);
+        recyclerViewAdapter.toSetOnItemDragListener(itemDragListener);
+        recyclerViewAdapter.bindToRecyclerView(this);
+        setAdapter(recyclerViewAdapter);
+    }
+
+    public void init(Context context, List<T> entityList,
+                     BaseQuickAdapter.OnItemClickListener itemClickListener,
+                     BaseQuickAdapter.OnItemChildClickListener itemChildClickListener,
+                     BaseQuickAdapter.OnItemLongClickListener itemLongClickListener,
+                     BaseQuickAdapter.OnItemChildLongClickListener itemChildLongClickListener,
+                     IOnItemTouchListener itemTouchListener,
+                     OnItemSwipeListener itemSwipeListener,
+                     OnItemDragListener itemDragListener) {
+        recyclerViewAdapter = createAdapter(entityList);
+        recyclerViewAdapter.toSetOnItemClickListener(itemClickListener);
+        recyclerViewAdapter.toSetOnItemChildClickListener(itemChildClickListener);
+        recyclerViewAdapter.toSetOnItemLongClickListener(itemLongClickListener);
+        recyclerViewAdapter.toSetOnItemChildLongClickListener(itemChildLongClickListener);
+        recyclerViewAdapter.toSetOnItemTouchListener(itemTouchListener);
         recyclerViewAdapter.toSetOnItemSwipeListener(itemSwipeListener);
         recyclerViewAdapter.toSetOnItemDragListener(itemDragListener);
         recyclerViewAdapter.bindToRecyclerView(this);
@@ -94,8 +114,9 @@ public abstract class ABaseLinearRecyclerView<T> extends RecyclerView{
     }
 
     public abstract class BaseItemAdapter<K> extends BaseItemDraggableAdapter<K,BaseViewHolder> {
-        protected ItemDragAndSwipeCallback mItemDragAndSwipeCallback;
         protected ItemTouchHelper mItemTouchHelper;
+        protected IOnItemTouchListener mItemTouchListener;
+        protected ItemDragAndSwipeCallback mItemDragAndSwipeCallback;
 
         public BaseItemAdapter(List<K> dataList){
             super(getViewItemLayout(), dataList);
@@ -117,12 +138,17 @@ public abstract class ABaseLinearRecyclerView<T> extends RecyclerView{
             if(itemChildLongClickListener != null)
                 setOnItemChildLongClickListener(itemChildLongClickListener);
         }
+        public void toSetOnItemTouchListener(IOnItemTouchListener itemTouchListener){
+            if(itemTouchListener != null)
+                mItemTouchListener = itemTouchListener;
+        }
         public void toSetOnItemSwipeListener(OnItemSwipeListener itemSwipeListener){
             if(itemSwipeListener != null) {
                 enableSwipeItem();
                 setOnItemSwipeListener(itemSwipeListener);
             }
         }
+
         public void toSetOnItemDragListener(OnItemDragListener itemDragListener){
             if(itemDragListener != null) {
                 mItemDragAndSwipeCallback = new ItemDragAndSwipeCallback(this);
@@ -132,5 +158,9 @@ public abstract class ABaseLinearRecyclerView<T> extends RecyclerView{
                 setOnItemDragListener(itemDragListener);
             }
         }
+    }
+
+    public interface IOnItemTouchListener {
+        void onItemTouch(View view, int position);
     }
 }

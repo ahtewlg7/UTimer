@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 
 import com.blankj.utilcode.util.ToastUtils;
@@ -108,8 +109,11 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
     }
 
     @Override
-    public void init(Context context, List<EditElement> entityList, BaseQuickAdapter.OnItemClickListener itemClickListener, BaseQuickAdapter.OnItemChildClickListener itemChildClickListener, BaseQuickAdapter.OnItemLongClickListener itemLongClickListener, BaseQuickAdapter.OnItemChildLongClickListener itemChildLongClickListener, OnItemSwipeListener itemSwipeListener, OnItemDragListener itemDragListener) {
-        super.init(context, entityList, itemClickListener, itemChildClickListener, itemLongClickListener, itemChildLongClickListener, itemSwipeListener, itemDragListener);
+    public void init(Context context, List<EditElement> entityList,
+                     BaseQuickAdapter.OnItemClickListener itemClickListener, BaseQuickAdapter.OnItemChildClickListener itemChildClickListener,
+                     BaseQuickAdapter.OnItemLongClickListener itemLongClickListener, BaseQuickAdapter.OnItemChildLongClickListener itemChildLongClickListener,
+                     IOnItemTouchListener itemTouchListener, OnItemSwipeListener itemSwipeListener, OnItemDragListener itemDragListener) {
+        super.init(context, entityList, itemClickListener, itemChildClickListener, itemLongClickListener, itemChildLongClickListener, itemTouchListener, itemSwipeListener, itemDragListener);
         setLayoutManager(new LinearLayoutManager(context));
     }
 
@@ -419,7 +423,7 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
         init(getContext(), editElementList,
                 myClickListener, myClickListener,
                 null, null,
-                null,null);
+                myClickListener,null,null);
         toListenEditClick();
     }
 
@@ -526,7 +530,7 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
     protected void toListenEditClick(){
         if(clickPositionRx == null)
             clickPositionRx = PublishSubject.create();
-        clickPositionDisposable = clickPositionRx.debounce(1, TimeUnit.SECONDS).observeOn(AndroidSchedulers.mainThread())
+        clickPositionDisposable = clickPositionRx.throttleFirst(1, TimeUnit.SECONDS).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Integer>() {
                     @Override
                     public void accept(Integer position) throws Exception {
@@ -534,7 +538,6 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
                         if(preEditPosition != position) {
                             onEditMode(preEditPosition, EditMode.OFF, getEditElement(preEditPosition));
                             onEditMode(position, EditMode.ON, getEditElement(position));
-
                         }
                         preEditPosition = position;
                     }
@@ -553,18 +556,35 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
 
         @Override
         protected void convert(BaseViewHolder helper, EditElement item) {
-            helper.setText(R.id.view_md_edit_tv, item.getMdCharSequence())
-                    .addOnClickListener(R.id.view_md_edit_tv);
+            helper.setText(R.id.view_md_edit_tv, item.getMdCharSequence());
+        }
+        @Override
+        public void onBindViewHolder(BaseViewHolder holder, final int position) {
+            super.onBindViewHolder(holder,position);
+            holder.getView(R.id.view_md_edit_tv).setOnTouchListener(new OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if(mItemTouchListener != null && event.getAction() == MotionEvent.ACTION_UP)
+                        mItemTouchListener.onItemTouch(v, position);
+                    return false;
+                }
+            });
         }
     }
-    class MyClickListener implements BaseQuickAdapter.OnItemClickListener, BaseQuickAdapter.OnItemChildClickListener{
+
+    class MyClickListener implements BaseQuickAdapter.OnItemClickListener, BaseQuickAdapter.OnItemChildClickListener, IOnItemTouchListener{
         @Override
         public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-            Logcat.i(TAG, "onItemClick position = " + position + ", preEditPosition = " + preEditPosition);
+            clickPositionRx.onNext(position);
         }
 
         @Override
         public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+            clickPositionRx.onNext(position);
+        }
+
+        @Override
+        public void onItemTouch(View view, int position) {
             clickPositionRx.onNext(position);
         }
     }
