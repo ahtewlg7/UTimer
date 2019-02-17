@@ -22,7 +22,7 @@ public class ExDatabaseContext extends ContextWrapper {
     public static final String TAG = ExDatabaseContext.class.getSimpleName();
 
     public ExDatabaseContext() {
-        super(Utils.getApp().getBaseContext());
+        super(Utils.getApp().getApplicationContext());
     }
 
     @Override
@@ -36,6 +36,7 @@ public class ExDatabaseContext extends ContextWrapper {
             return null;
         }
         String dbFilePath = new FileSystemAction().getDbDataAbsPath() + name;
+        boolean create = FileUtils.createOrExistsFile(dbFilePath);
         return FileUtils.getFileByPath(dbFilePath);
     }
 

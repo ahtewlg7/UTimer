@@ -17,7 +17,7 @@ public class GreenDaoAction {
     private DaoMaster daoMaster;
 
     private GreenDaoAction(){
-        openHelper = new GreenDaoOpenHelper(new ExDatabaseContext(),DATABASE_NAME,null);
+        openHelper = new GreenDaoOpenHelper(new ExDatabaseContext(), DATABASE_NAME,null);
     }
 
     public static GreenDaoAction getInstance(){
