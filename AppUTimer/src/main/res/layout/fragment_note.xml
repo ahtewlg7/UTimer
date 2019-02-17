@@ -20,8 +20,8 @@
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
     </android.support.design.widget.AppBarLayout>
 
-    <ahtewlg7.utimer.view.BaseUtimerEidtView
-        android:id="@+id/fragment_note_edit_rv"
+    <ahtewlg7.utimer.view.md.MdEditView
+        android:id="@+id/fragment_note_edit_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@android:color/holo_blue_dark"

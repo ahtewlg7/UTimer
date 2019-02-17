@@ -22,7 +22,7 @@ import ahtewlg7.utimer.util.DateTimeAction;
 import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MyRInfo;
 import ahtewlg7.utimer.view.BaseUtimerEidtView;
-import ahtewlg7.utimer.view.md.MdEditorWidget;
+import ahtewlg7.utimer.view.md.MdEditView;
 import butterknife.BindView;
 import io.reactivex.Flowable;
 
@@ -34,10 +34,8 @@ public class ShortHandEditFragment extends ATxtEditFragment
 
     @BindView(R.id.fragment_shorthand_toolbar)
     Toolbar toolbar;
-    @BindView(R.id.layout_edit_rv)
-    BaseUtimerEidtView editRecyclerView;
-    @BindView(R.id.layout_edit_widget)
-    MdEditorWidget editorWidget;
+    @BindView(R.id.fragment_shorthand_editview)
+    MdEditView mdEditView;
 
 
     private ShorthandEditMvpP editMvpP;
@@ -141,18 +139,16 @@ public class ShortHandEditFragment extends ATxtEditFragment
 
     @Override
     protected void toStartEdit() {
-        editRecyclerView.setAttachEditView(this);
-        editRecyclerView.setUTimerEntity(getUTimerEntity());
-        editRecyclerView.toInitMdToastable();
-        editorWidget.initEditListener(editRecyclerView.getMdEditListener());
-        editRecyclerView.toStartEdit();
+        mdEditView.setAttachEditView(this);
+        mdEditView.setUTimerEntity(getUTimerEntity());
+        mdEditView.toStartEdit();
     }
 
     @Override
     protected void toEndEdit() {
-        editRecyclerView.toEndEdit();
+        mdEditView.toEndEdit();
         int resultCode = RESULT_CANCELED;
-        List<EditElement> elementList = editRecyclerView.getEditElementList();
+        List<EditElement> elementList = mdEditView.getEditElementList();
         if(elementList.size() > 0){//maybe the entity is not loaded
             resultCode = RESULT_OK;
             editMvpP.toFinishEdit(Flowable.fromIterable(elementList)

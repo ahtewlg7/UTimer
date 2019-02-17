@@ -19,6 +19,7 @@ import ahtewlg7.utimer.util.DateTimeAction;
 import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MyRInfo;
 import ahtewlg7.utimer.view.BaseUtimerEidtView;
+import ahtewlg7.utimer.view.md.MdEditView;
 import butterknife.BindView;
 import io.reactivex.Flowable;
 
@@ -30,8 +31,8 @@ public class NoteEditFragment extends ATxtEditFragment
 
     @BindView(R.id.fragment_note_toolbar)
     Toolbar toolbar;
-    @BindView(R.id.fragment_note_edit_rv)
-    BaseUtimerEidtView editRecyclerView;
+    @BindView(R.id.fragment_note_edit_view)
+    MdEditView mdEditView;
 
     private NoteEditMvpP editMvpP;
 
@@ -85,15 +86,15 @@ public class NoteEditFragment extends ATxtEditFragment
 
     @Override
     protected void toStartEdit() {
-        editRecyclerView.setAttachEditView(this);
-        editRecyclerView.setUTimerEntity(getUTimerEntity());
-        editRecyclerView.toStartEdit();
+        mdEditView.setAttachEditView(this);
+        mdEditView.setUTimerEntity(getUTimerEntity());
+        mdEditView.toStartEdit();
     }
     @Override
     protected void toEndEdit() {
-        editRecyclerView.toEndEdit();
+        mdEditView.toEndEdit();
         int resultCode = RESULT_CANCELED;
-        List<EditElement> elementList = editRecyclerView.getEditElementList();
+        List<EditElement> elementList = mdEditView.getEditElementList();
         if(elementList.size() > 0){//maybe the entity is not loaded
             resultCode = RESULT_OK;
             editMvpP.toFinishEdit(Flowable.fromIterable(elementList)
