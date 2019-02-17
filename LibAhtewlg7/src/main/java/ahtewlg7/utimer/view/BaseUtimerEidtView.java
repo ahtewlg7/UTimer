@@ -705,7 +705,7 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
 
         @Override
         public void toTextBackgroundColor() {
-
+            mdEditOperateRx.onNext(MdEditOperateType.TXT_BACKGROUND_COLOR);
         }
 
         @Override

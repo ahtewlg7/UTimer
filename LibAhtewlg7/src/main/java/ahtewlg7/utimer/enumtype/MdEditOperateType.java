@@ -21,6 +21,7 @@ public enum MdEditOperateType {
     HEAD5,
     HEAD6,
     TXT_COLOR,
+    TXT_BACKGROUND_COLOR,
     BACKGROUND_COLOR,
     INDENT,
     OUTDENT,
