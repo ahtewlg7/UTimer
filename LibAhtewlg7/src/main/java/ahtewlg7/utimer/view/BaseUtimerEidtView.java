@@ -5,7 +5,6 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -265,7 +264,7 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
                         Logcat.i(TAG,"to cancel edit operate");
                         return;
                     }
-                    Optional<Integer> toastOptional = null;
+                    Optional<Integer> toastOptional = Optional.absent();
                     String cmd = null;
                     switch (mdEditOperateType){
                         case UNDO:
@@ -275,14 +274,22 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
                             toastOptional = Optional.of(R.string.editor_redo);
                             break;
                         case BOLD:
-                            cmd = MyRInfo.getStringByID(R.string.block);
-                            optional.get().insert(cmd);
-                            toastOptional = Optional.of(R.string.editor_bold);
+                            if(optional.get().ifHasSelected()){
+                                cmd = MyRInfo.getStringByID(R.string.block);
+                                optional.get().insert(cmd, cmd);
+                                toastOptional = Optional.of(R.string.editor_bold);
+                            }else{
+                                toastOptional = Optional.of(R.string.prompt_md_edit_select_first);
+                            }
                             break;
                         case ITALIC:
-                            cmd = MyRInfo.getStringByID(R.string.italic);
-                            optional.get().insert(cmd);
-                            toastOptional = Optional.of(R.string.editor_italic);
+                            if(optional.get().ifHasSelected()){
+                                cmd = MyRInfo.getStringByID(R.string.italic);
+                                optional.get().insert(cmd, cmd);
+                                toastOptional = Optional.of(R.string.editor_italic);
+                            }else{
+                                toastOptional = Optional.of(R.string.prompt_md_edit_select_first);
+                            }
                             break;
                         case SUB_SCRIPT:
                             /*cmd = MyRInfo.getStringByID(R.string.);
@@ -295,9 +302,13 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
                             toastOptional = Optional.of(R.string.editor_superscript);
                             break;
                         case STRIKE_THROUGH:
-                            cmd = MyRInfo.getStringByID(R.string.strikethrough);
-                            optional.get().insert(cmd);
-                            toastOptional = Optional.of(R.string.editor_strike_through);
+                            if(optional.get().ifHasSelected()){
+                                cmd = MyRInfo.getStringByID(R.string.strikethrough);
+                                optional.get().insert(cmd, cmd);
+                                toastOptional = Optional.of(R.string.editor_strike_through);
+                            }else{
+                                toastOptional = Optional.of(R.string.prompt_md_edit_select_first);
+                            }
                             break;
                         case UNDER_LINE:
                             /*cmd = MyRInfo.getStringByID(R.string.line);
@@ -305,36 +316,43 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
                             toastOptional = Optional.of(R.string.editor_under_line);
                             break;
                         case HORIZONTAL_RULE:
+                            optional.get().goToNewLine();
                             cmd = MyRInfo.getStringByID(R.string.horizontalrule);
-                            optional.get().insert(cmd);
+                            optional.get().insert(cmd, cmd);
                             toastOptional = Optional.of(R.string.action_horizontal_rule);
                             break;
                         case HEAD1:
+                            optional.get().goToNewLine();
                             cmd = MyRInfo.getStringByID(R.string.H1);
                             optional.get().insert(cmd);
                             toastOptional = Optional.of(R.string.editor_heading1);
                             break;
                         case HEAD2:
+                            optional.get().goToNewLine();
                             cmd = MyRInfo.getStringByID(R.string.H2);
                             optional.get().insert(cmd);
                             toastOptional = Optional.of(R.string.editor_heading2);
                             break;
                         case HEAD3:
+                            optional.get().goToNewLine();
                             cmd = MyRInfo.getStringByID(R.string.H3);
                             optional.get().insert(cmd);
                             toastOptional = Optional.of(R.string.editor_heading3);
                             break;
                         case HEAD4:
+                            optional.get().goToNewLine();
                             cmd = MyRInfo.getStringByID(R.string.H4);
                             optional.get().insert(cmd);
                             toastOptional = Optional.of(R.string.editor_heading4);
                             break;
                         case HEAD5:
+                            optional.get().goToNewLine();
                             cmd = MyRInfo.getStringByID(R.string.H5);
                             optional.get().insert(cmd);
                             toastOptional = Optional.of(R.string.editor_heading5);
                             break;
                         case HEAD6:
+                            optional.get().goToNewLine();
                             cmd = MyRInfo.getStringByID(R.string.H6);
                             optional.get().insert(cmd);
                             toastOptional = Optional.of(R.string.editor_heading6);
@@ -350,6 +368,7 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
                             toastOptional = Optional.of(R.string.editor_text_background_color);
                             break;
                         case INDENT:
+                            optional.get().goToNewLine();
                             cmd = MyRInfo.getStringByID(R.string.indent);
                             optional.get().insert(cmd);
                             toastOptional = Optional.of(R.string.editor_indent);
@@ -375,6 +394,7 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
                             toastOptional = Optional.of(R.string.editor_align_right);
                             break;
                         case BLOCK_QUOTE:
+                            optional.get().goToNewLine();
                             cmd = MyRInfo.getStringByID(R.string.blockquote);
                             optional.get().insert(cmd);
                             toastOptional = Optional.of(R.string.editor_block_quote);
@@ -390,11 +410,13 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
                             toastOptional = Optional.of(R.string.editor_insert_link);
                             break;
                         case UNORDERED_LIST:
+                            optional.get().goToNewLine();
                             cmd = MyRInfo.getStringByID(R.string.unorderedlists);
                             optional.get().insert(cmd);
                             toastOptional = Optional.of(R.string.editor_insert_unordered_list);
                             break;
                         case ORDERED_LIST:
+                            optional.get().goToNewLine();
                             cmd = MyRInfo.getStringByID(R.string.orderedlists);
                             optional.get().insert(cmd);
                             toastOptional = Optional.of(R.string.editor_insert_ordered_list);
@@ -402,9 +424,6 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
                     }
                     if(toastEnable && toastOptional.isPresent())
                         ToastUtils.showShort(toastOptional.get());
-
-                    if(TextUtils.isEmpty(cmd))
-                        ToastUtils.showShort(R.string.prompt_not_ready);
                 }
             });
     }
@@ -488,7 +507,8 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
             }
         }else if(editMode == EditMode.ON){
             optional.get().enableEdit(true);
-            editorWidget.setVisibility(View.VISIBLE);
+            if(optional.get().ifEditable())
+                editorWidget.setVisibility(View.VISIBLE);
 
             if(editElementOptional.isPresent())
                 optional.get().setText(editElementOptional.get().getRawText());

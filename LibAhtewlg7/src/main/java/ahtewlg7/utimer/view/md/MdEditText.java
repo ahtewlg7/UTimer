@@ -19,23 +19,30 @@ import io.reactivex.annotations.NonNull;
 public class MdEditText extends android.support.v7.widget.AppCompatEditText {
     public static final String TAG = MdEditText.class.getSimpleName();
 
-    public static  final int INVALID_LINE_INDEX = -1;
+    public static  final int INVALID_LINE_INDEX     = -1;
+    public static  final int DEFAULT_PADDING_LEFT   = 20;
+    public static  final int DEFAULT_PADDING_RIGHT  = 0;
+    public static  final int DEFAULT_PADDING_TOP    = 0;
+    public static  final int DEFAULT_PADDING_BOTTOM = 0;
 
     private GestureDetector gestureDetector;
 
     public MdEditText(Context context) {
         super(context);
         setCursorVisible(true);
+        setPadding(DEFAULT_PADDING_LEFT,DEFAULT_PADDING_TOP,DEFAULT_PADDING_RIGHT,DEFAULT_PADDING_BOTTOM);
         setMovementMethod(ClickableMovementMethod.getInstance());
     }
     public MdEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
         setCursorVisible(true);
+        setPadding(DEFAULT_PADDING_LEFT,DEFAULT_PADDING_TOP,DEFAULT_PADDING_RIGHT,DEFAULT_PADDING_BOTTOM);
         setMovementMethod(ClickableMovementMethod.getInstance());
     }
     public MdEditText(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         setCursorVisible(true);
+        setPadding(DEFAULT_PADDING_LEFT,DEFAULT_PADDING_TOP,DEFAULT_PADDING_RIGHT,DEFAULT_PADDING_BOTTOM);
         setMovementMethod(ClickableMovementMethod.getInstance());
     }
 
@@ -110,6 +117,8 @@ public class MdEditText extends android.support.v7.widget.AppCompatEditText {
     }
     public void insert(String content){
         int cursorPosition = getSelectionStart();
+        if(cursorPosition < 0)
+            cursorPosition = 0;
         getEditableText().insert(cursorPosition, content);
         setSelection(cursorPosition + content.length());
     }
