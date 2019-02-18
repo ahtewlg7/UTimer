@@ -197,7 +197,6 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:background="@null"
-                android:visibility="gone"
                 android:contentDescription="@null"
                 android:src="@drawable/justify_left"
                 />
@@ -207,7 +206,6 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:background="@null"
-                android:visibility="gone"
                 android:contentDescription="@null"
                 android:src="@drawable/justify_center"
                 />
@@ -217,7 +215,6 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:background="@null"
-                android:visibility="gone"
                 android:contentDescription="@null"
                 android:src="@drawable/justify_right"
                 />
