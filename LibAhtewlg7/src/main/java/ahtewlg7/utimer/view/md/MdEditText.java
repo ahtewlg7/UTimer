@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.Layout;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
+import android.view.Gravity;
 import android.view.MotionEvent;
 
 import com.blankj.utilcode.util.Utils;
@@ -114,6 +115,16 @@ public class MdEditText extends android.support.v7.widget.AppCompatEditText {
 
         Logcat.d(TAG,"ifHasSelected stCursorPosition = " + stCursorPosition + ", endCursorPosition = " + endCursorPosition);
         return stCursorPosition != endCursorPosition;
+    }
+
+    public void setAlignLeft(){
+        setGravity(Gravity.LEFT);
+    }
+    public void setAlignCenter(){
+        setGravity(Gravity.CENTER);
+    }
+    public void setAlignRight(){
+        setGravity(Gravity.RIGHT);
     }
     public void insert(String content){
         int cursorPosition = getSelectionStart();

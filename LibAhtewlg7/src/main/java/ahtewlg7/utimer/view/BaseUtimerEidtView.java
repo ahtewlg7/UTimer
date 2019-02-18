@@ -379,18 +379,15 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
                             toastOptional = Optional.of(R.string.editor_outdent);
                             break;
                         case ALIGN_LEFT:
-                            /*cmd = MyRInfo.getStringByID(R.string.block);
-                            optional.get().insert(cmd);*/
+                            optional.get().setAlignLeft();
                             toastOptional = Optional.of(R.string.editor_align_left);
                             break;
                         case ALIGN_CENTER:
-                            /*cmd = MyRInfo.getStringByID(R.string.cent);
-                            optional.get().insert(cmd);*/
+                            optional.get().setAlignCenter();
                             toastOptional = Optional.of(R.string.editor_align_center);
                             break;
                         case ALIGN_RIGHT:
-                            /*cmd = MyRInfo.getStringByID(R.string.block);
-                            optional.get().insert(cmd);*/
+                            optional.get().setAlignRight();
                             toastOptional = Optional.of(R.string.editor_align_right);
                             break;
                         case BLOCK_QUOTE:
