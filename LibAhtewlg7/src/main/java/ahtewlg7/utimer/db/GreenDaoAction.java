@@ -1,5 +1,7 @@
 package ahtewlg7.utimer.db;
 
+import com.blankj.utilcode.util.Utils;
+
 import ahtewlg7.utimer.db.autogen.DaoMaster;
 import ahtewlg7.utimer.db.autogen.DaoSession;
 
@@ -17,7 +19,8 @@ public class GreenDaoAction {
     private DaoMaster daoMaster;
 
     private GreenDaoAction(){
-        openHelper = new GreenDaoOpenHelper(new ExDatabaseContext(), DATABASE_NAME,null);
+//        openHelper = new GreenDaoOpenHelper(new ExDatabaseContext(), DATABASE_NAME,null);
+        openHelper = new GreenDaoOpenHelper(Utils.getApp().getApplicationContext(), DATABASE_NAME,null);
     }
 
     public static GreenDaoAction getInstance(){
