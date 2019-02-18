@@ -25,14 +25,17 @@ public class MdEditText extends android.support.v7.widget.AppCompatEditText {
 
     public MdEditText(Context context) {
         super(context);
+        setCursorVisible(true);
         setMovementMethod(ClickableMovementMethod.getInstance());
     }
     public MdEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
+        setCursorVisible(true);
         setMovementMethod(ClickableMovementMethod.getInstance());
     }
     public MdEditText(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        setCursorVisible(true);
         setMovementMethod(ClickableMovementMethod.getInstance());
     }
 
