@@ -138,10 +138,20 @@ public class ShortHandEditFragment extends ATxtEditFragment
     }
 
     @Override
+    protected boolean ifTxtEditing() {
+        return mdEditView.ifEditing();
+    }
+
+    @Override
     protected void toStartEdit() {
         mdEditView.setAttachEditView(this);
         mdEditView.setUTimerEntity(getUTimerEntity());
         mdEditView.toStartEdit();
+    }
+
+    @Override
+    protected void toPauseEdit() {
+        mdEditView.toPauseEdit();
     }
 
     @Override

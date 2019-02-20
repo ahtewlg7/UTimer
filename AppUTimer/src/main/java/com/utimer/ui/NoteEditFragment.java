@@ -85,11 +85,22 @@ public class NoteEditFragment extends ATxtEditFragment
     }
 
     @Override
+    protected boolean ifTxtEditing() {
+        return mdEditView.ifEditing();
+    }
+
+    @Override
     protected void toStartEdit() {
         mdEditView.setAttachEditView(this);
         mdEditView.setUTimerEntity(getUTimerEntity());
         mdEditView.toStartEdit();
     }
+
+    @Override
+    protected void toPauseEdit() {
+        mdEditView.toPauseEdit();
+    }
+
     @Override
     protected void toEndEdit() {
         mdEditView.toEndEdit();

@@ -1,9 +1,9 @@
 package com.utimer.ui;
 
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
 
 import ahtewlg7.utimer.ui.BaseBinderRxActivity;
-import ahtewlg7.utimer.util.Logcat;
 import butterknife.ButterKnife;
 
 /**
@@ -12,14 +12,13 @@ import butterknife.ButterKnife;
 public abstract class AButterKnifeActivity extends BaseBinderRxActivity {
     public static final String TAG = AButterKnifeActivity.class.getSimpleName();
 
-    protected abstract int getContentViewLayout();
+    protected abstract @LayoutRes int getContentViewLayout();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getContentViewLayout());
 
-        Logcat.i(TAG, "onCreate");
         ButterKnife.bind(this);
     }
 
