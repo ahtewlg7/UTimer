@@ -154,8 +154,7 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
         return isTxtChanged;
     }
     public boolean ifEntityReady(){
-        return utimerEntity != null && utimerEntity.ifValid()
-                && utimerEntity.getAttachFile() != null && utimerEntity.ensureAttachFileExist();
+        return utimerEntity != null && utimerEntity.ifValid() && utimerEntity.ensureAttachFileExist();
     }
 
     public boolean ifAttachViewReady(){
@@ -170,6 +169,11 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
             toastEnable       = config.ifMdEditToastable();
         }
         setToastEnable(toastEnable);
+    }
+
+
+    public boolean ifEditing(){
+        return preEditPosition != INIT_POSITION;
     }
 
     public void toStartEdit() {
@@ -236,9 +240,13 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
             });
     }
 
+    public void toPauseEdit(){
+        clickPositionRx.onNext(INIT_POSITION);
+    }
+
     public void toEndEdit(){
-        if(preEditPosition == INIT_POSITION)
-            preEditPosition = 0;
+        /*if(preEditPosition == INIT_POSITION)
+            preEditPosition = 0;*/
         Optional<MdEditText> lastAccessEditText       = getEditTextItem(preEditPosition);
         if(lastAccessEditText.isPresent()){
             String lassAccessTxt    = lastAccessEditText.get().getText().toString();

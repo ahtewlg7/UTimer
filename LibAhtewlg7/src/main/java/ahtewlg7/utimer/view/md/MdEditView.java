@@ -34,18 +34,6 @@ public class MdEditView extends FrameLayout {
     }
 
 
-    private void findView(){
-        View layout = null;
-        try{
-            layout = new AndrManagerFactory().getLayoutInflater().inflate(R.layout.layout_md_edit, null);
-            editorWidget         = (MdEditorWidget)layout.findViewById(R.id.layout_edit_widget);
-            editRecyclerView     = (BaseUtimerEidtView)layout.findViewById(R.id.layout_edit_recycler_view);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        this.addView(layout);
-    }
-
     public void setAttachEditView(BaseUtimerEidtView.IUtimerAttachEditView attachEditView) {
         editRecyclerView.setAttachEditView(attachEditView);
     }
@@ -58,11 +46,19 @@ public class MdEditView extends FrameLayout {
         this.utimerEntity = utimerEntity;
     }
 
+    public boolean ifEditing(){
+        return editRecyclerView.ifEditing();
+    }
+
     public void toStartEdit(){
         editRecyclerView.setUTimerEntity(utimerEntity);
         editRecyclerView.toInitMdToastable();
         editorWidget.initEditListener(editRecyclerView.getMdEditListener());
         editRecyclerView.toStartEdit();
+    }
+
+    public void toPauseEdit(){
+        editRecyclerView.toPauseEdit();
     }
 
     public void toEndEdit(){
@@ -71,5 +67,17 @@ public class MdEditView extends FrameLayout {
 
     public List<EditElement> getEditElementList(){
         return editRecyclerView.getEditElementList();
+    }
+
+    private void findView(){
+        View layout = null;
+        try{
+            layout = new AndrManagerFactory().getLayoutInflater().inflate(R.layout.layout_md_edit, null);
+            editorWidget         = (MdEditorWidget)layout.findViewById(R.id.layout_edit_widget);
+            editRecyclerView     = (BaseUtimerEidtView)layout.findViewById(R.id.layout_edit_recycler_view);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        this.addView(layout);
     }
 }
