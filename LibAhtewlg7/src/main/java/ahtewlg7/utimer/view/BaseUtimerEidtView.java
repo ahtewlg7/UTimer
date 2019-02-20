@@ -5,6 +5,7 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -324,43 +325,43 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
                             toastOptional = Optional.of(R.string.editor_under_line);
                             break;
                         case HORIZONTAL_RULE:
-                            optional.get().goToNewLine();
+                            gotoLineStart(optional);
                             cmd = MyRInfo.getStringByID(R.string.horizontalrule);
                             optional.get().insert(cmd, cmd);
                             toastOptional = Optional.of(R.string.action_horizontal_rule);
                             break;
                         case HEAD1:
-                            optional.get().goToNewLine();
+                            gotoLineStart(optional);
                             cmd = MyRInfo.getStringByID(R.string.H1);
                             optional.get().insert(cmd);
                             toastOptional = Optional.of(R.string.editor_heading1);
                             break;
                         case HEAD2:
-                            optional.get().goToNewLine();
+                            gotoLineStart(optional);
                             cmd = MyRInfo.getStringByID(R.string.H2);
                             optional.get().insert(cmd);
                             toastOptional = Optional.of(R.string.editor_heading2);
                             break;
                         case HEAD3:
-                            optional.get().goToNewLine();
+                            gotoLineStart(optional);
                             cmd = MyRInfo.getStringByID(R.string.H3);
                             optional.get().insert(cmd);
                             toastOptional = Optional.of(R.string.editor_heading3);
                             break;
                         case HEAD4:
-                            optional.get().goToNewLine();
+                            gotoLineStart(optional);
                             cmd = MyRInfo.getStringByID(R.string.H4);
                             optional.get().insert(cmd);
                             toastOptional = Optional.of(R.string.editor_heading4);
                             break;
                         case HEAD5:
-                            optional.get().goToNewLine();
+                            gotoLineStart(optional);
                             cmd = MyRInfo.getStringByID(R.string.H5);
                             optional.get().insert(cmd);
                             toastOptional = Optional.of(R.string.editor_heading5);
                             break;
                         case HEAD6:
-                            optional.get().goToNewLine();
+                            gotoLineStart(optional);
                             cmd = MyRInfo.getStringByID(R.string.H6);
                             optional.get().insert(cmd);
                             toastOptional = Optional.of(R.string.editor_heading6);
@@ -376,7 +377,7 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
                             toastOptional = Optional.of(R.string.editor_text_background_color);
                             break;
                         case INDENT:
-                            optional.get().goToNewLine();
+                            gotoLineStart(optional);
                             cmd = MyRInfo.getStringByID(R.string.indent);
                             optional.get().insert(cmd);
                             toastOptional = Optional.of(R.string.editor_indent);
@@ -399,7 +400,7 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
                             toastOptional = Optional.of(R.string.editor_align_right);
                             break;
                         case BLOCK_QUOTE:
-                            optional.get().goToNewLine();
+                            gotoLineStart(optional);
                             cmd = MyRInfo.getStringByID(R.string.blockquote);
                             optional.get().insert(cmd);
                             toastOptional = Optional.of(R.string.editor_block_quote);
@@ -415,13 +416,13 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
                             toastOptional = Optional.of(R.string.editor_insert_link);
                             break;
                         case UNORDERED_LIST:
-                            optional.get().goToNewLine();
+                            gotoLineStart(optional);
                             cmd = MyRInfo.getStringByID(R.string.unorderedlists);
                             optional.get().insert(cmd);
                             toastOptional = Optional.of(R.string.editor_insert_unordered_list);
                             break;
                         case ORDERED_LIST:
-                            optional.get().goToNewLine();
+                            gotoLineStart(optional);
                             cmd = MyRInfo.getStringByID(R.string.orderedlists);
                             optional.get().insert(cmd);
                             toastOptional = Optional.of(R.string.editor_insert_ordered_list);
@@ -431,6 +432,13 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
                         ToastUtils.showShort(toastOptional.get());
                 }
             });
+    }
+    protected void gotoLineStart(Optional<MdEditText> curEditText){
+        if(curEditText.isPresent()){
+            MdEditText mdEditText = curEditText.get();
+            if(mdEditText.getCursorColumnIndex(mdEditText.getCurrLineIndex()) > 0 || !TextUtils.isEmpty(String.valueOf(mdEditText.getText().charAt(mdEditText.getSelectionStart()-1))))
+                mdEditText.goToNewLine();
+        }
     }
     protected void init(){
         setDescendantFocusability(FOCUS_BEFORE_DESCENDANTS);
