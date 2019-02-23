@@ -2,12 +2,12 @@ package ahtewlg7.utimer.view.md;
 
 import android.content.Context;
 import android.text.Layout;
+import android.text.Selection;
+import android.text.Spannable;
+import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.view.GestureDetector;
 import android.view.Gravity;
-import android.view.MotionEvent;
 
-import com.blankj.utilcode.util.Utils;
 import com.google.common.collect.Range;
 
 import ahtewlg7.utimer.md.ClickableMovementMethod;
@@ -26,8 +26,6 @@ public class MdEditText extends android.support.v7.widget.AppCompatEditText {
     public static  final int DEFAULT_PADDING_TOP    = 0;
     public static  final int DEFAULT_PADDING_BOTTOM = 0;
 
-    private GestureDetector gestureDetector;
-
     public MdEditText(Context context) {
         super(context);
         setCursorVisible(true);
@@ -45,13 +43,6 @@ public class MdEditText extends android.support.v7.widget.AppCompatEditText {
         setCursorVisible(true);
         setPadding(DEFAULT_PADDING_LEFT,DEFAULT_PADDING_TOP,DEFAULT_PADDING_RIGHT,DEFAULT_PADDING_BOTTOM);
         setMovementMethod(ClickableMovementMethod.getInstance());
-    }
-
-    public void setGestureListener(GestureDetector.OnGestureListener gestureListener) {
-        if(gestureListener != null)
-            gestureDetector = new GestureDetector(Utils.getApp().getApplicationContext(), gestureListener);
-        else
-            gestureDetector = null;
     }
 
     public int getCurrLineIndex() {
@@ -92,13 +83,37 @@ public class MdEditText extends android.support.v7.widget.AppCompatEditText {
         return INVALID_LINE_INDEX;
     }
 
+    public void setCursorToStart(){
+        setCursorIndex(0);
+    }
+    public void setCursorToEnd(){
+        if(TextUtils.isEmpty(getText()))
+            setCursorIndex(0);
+        else
+            setCursorIndex(getText().length());
+    }
+    public void setCursorIndex(int index){
+        CharSequence text = getText();
+        if(text instanceof Spannable) {
+            int tmp = index;
+            if(index < 0)
+                tmp = 0;
+            else if(index > text.length())
+                tmp = text.length();
+            Selection.setSelection((Spannable)text, tmp);
+
+        }
+    }
+
     public void enableEdit(boolean enable){
         if(enable){
             setFocusableInTouchMode(true);
             setFocusable(true);
+            requestFocus();
         }else{
             setFocusableInTouchMode(false);
             setFocusable(false);
+            clearFocus();
         }
     }
     public boolean ifEditable(){
@@ -155,12 +170,5 @@ public class MdEditText extends android.support.v7.widget.AppCompatEditText {
     public void replace(@NonNull Range<Integer> srcRange, @NonNull String replaceContent, @NonNull Range<Integer> replaceRange){
         getEditableText().replace(srcRange.lowerEndpoint(), srcRange.upperEndpoint(),
                 replaceContent, replaceRange.lowerEndpoint(),replaceRange.upperEndpoint());
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        if(gestureDetector != null)
-            gestureDetector.onTouchEvent(event);
-        return super.onTouchEvent(event);
     }
 }

@@ -5,7 +5,6 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -121,6 +120,14 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
     @Override
     public BaseItemAdapter<EditElement> createAdapter(List<EditElement> entityList) {
         return new BaseUtimerEditItemAdapter(entityList);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent e) {
+        if(e.getAction() == MotionEvent.ACTION_UP){
+            clickPositionRx.onNext(getChildCount() - 1);
+        }
+        return super.onTouchEvent(e);
     }
 
     public MdEditListener getMdEditListener() {
@@ -246,8 +253,6 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
     }
 
     public void toEndEdit(){
-        /*if(preEditPosition == INIT_POSITION)
-            preEditPosition = 0;*/
         Optional<MdEditText> lastAccessEditText       = getEditTextItem(preEditPosition);
         if(lastAccessEditText.isPresent()){
             String lassAccessTxt    = lastAccessEditText.get().getText().toString();
@@ -262,7 +267,7 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
     }
 
     public void toListenMdEditOperate(){
-        mdEditOperateRx.debounce(1, TimeUnit.SECONDS)
+        mdEditOperateRx/*.debounce(1, TimeUnit.SECONDS)*/
             .compose(((RxFragment) attachEditView.getRxLifeCycleBindView()).<MdEditOperateType>bindUntilEvent(FragmentEvent.DESTROY_VIEW))
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(new MySimpleObserver<MdEditOperateType>(){
@@ -436,7 +441,7 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
     protected void gotoLineStart(Optional<MdEditText> curEditText){
         if(curEditText.isPresent()){
             MdEditText mdEditText = curEditText.get();
-            if(mdEditText.getCursorColumnIndex(mdEditText.getCurrLineIndex()) > 0 || !TextUtils.isEmpty(String.valueOf(mdEditText.getText().charAt(mdEditText.getSelectionStart()-1))))
+            if(mdEditText.getCursorColumnIndex(mdEditText.getCurrLineIndex()) > 0 || +mdEditText.getSelectionStart() > 0 )
                 mdEditText.goToNewLine();
         }
     }
@@ -449,7 +454,7 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
     }
     protected void initEditView(){
         if(editElementList.size() == 0)
-            editElementList.add(new EditElement(" "));
+            editElementList.add(new EditElement(""));
         if(myClickListener == null)
             myClickListener = new MyClickListener();
         init(getContext(), editElementList,
@@ -525,6 +530,7 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
 
             if(editElementOptional.isPresent())
                 optional.get().setText(editElementOptional.get().getRawText());
+            optional.get().setCursorToEnd();
         }
     }
 
