@@ -35,7 +35,7 @@ public abstract class MyApplication extends Application {
 		if (!TextUtils.isEmpty(currProcessName) && currProcessName.equalsIgnoreCase(this.getPackageName())) {
 			initLibContext();
 			initVcFactory();//it is very important
-//            initDatabase();
+            initDatabase();
 			toStartBinderService();
 		}
 	}
@@ -43,7 +43,7 @@ public abstract class MyApplication extends Application {
 	protected void initLibContext(){
         Log.d(TAG,"onCreate ifDebug = " + AppInfoAction.ifDebug());
         LibContextInit.initLog(AppInfoAction.ifDebug(), false);
-//		LibContextInit.initWorkingFileSystem();
+		LibContextInit.initWorkingFileSystem();
 	}
 
 	protected void initVcFactory(){
@@ -64,4 +64,5 @@ public abstract class MyApplication extends Application {
 				.stackViewMode(Fragmentation.NONE)
 				.debug(BuildConfig.DEBUG);
 	}
+
 }

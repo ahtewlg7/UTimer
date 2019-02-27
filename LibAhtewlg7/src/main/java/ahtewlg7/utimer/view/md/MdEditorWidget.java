@@ -95,9 +95,8 @@ public class MdEditorWidget extends RelativeLayout {
         this.addView(layout);
     }
 
-    public void initEditListener(IMdEditListener editListener) {
+    public void setEditListener(IMdEditListener editListener) {
         this.editListener = editListener;
-        editListener.setMdEditorWidget(this);
     }
 
     public boolean initClickListener(){

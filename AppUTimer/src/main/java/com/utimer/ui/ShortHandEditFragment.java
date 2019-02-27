@@ -144,7 +144,7 @@ public class ShortHandEditFragment extends ATxtEditFragment
 
     @Override
     protected void toStartEdit() {
-        mdEditView.setAttachEditView(this);
+        mdEditView.toSetAttachEditView(this);
         mdEditView.setUTimerEntity(getUTimerEntity());
         mdEditView.toStartEdit();
     }

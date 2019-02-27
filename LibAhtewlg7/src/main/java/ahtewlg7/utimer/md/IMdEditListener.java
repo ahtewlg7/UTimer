@@ -1,12 +1,9 @@
 package ahtewlg7.utimer.md;
 
-import ahtewlg7.utimer.view.md.MdEditorWidget;
-
 /**
  * Created by lw on 2016/5/17.
  */
 public interface IMdEditListener {
-    public void setMdEditorWidget(MdEditorWidget mdEditorWidget);
     public void toAlignLeft();
     public void toAlignRight();
     public void toAlignTop();
