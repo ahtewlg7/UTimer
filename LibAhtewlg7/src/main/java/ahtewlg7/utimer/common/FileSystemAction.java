@@ -81,6 +81,13 @@ public class FileSystemAction {
         return getSdcardPath() + getBackUpDataRPath();
     }
 
+    public String getNlpDataRPath(){
+        return getWorkingDataRPath() + baseConfig.getWorkingNlpDir() + File.separator;
+    }
+    public String getNlpDataAbsPath(){
+        return getSdcardPath() + getNlpDataRPath();
+    }
+
     public String getLogDataRPath(){
         return getWorkingDataRPath() + baseConfig.getWorkingLogDir() + File.separator;
     }
@@ -226,6 +233,7 @@ public class FileSystemAction {
 
         //======================================/UTimer/Data/=======================================
         StorageAction.getInstance().createExRelDir(getDbDataAbsPath());
+        StorageAction.getInstance().createExRelDir(getNlpDataAbsPath());
         StorageAction.getInstance().createExRelDir(getLogDataAbsPath());
         StorageAction.getInstance().createExRelDir(getBackUpDataAbsPath());
         StorageAction.getInstance().createExRelDir(getCacheDataAbsPath());

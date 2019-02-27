@@ -7,6 +7,7 @@ import android.app.SearchManager;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.content.res.AssetManager;
 import android.hardware.input.InputManager;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
@@ -24,8 +25,6 @@ import com.blankj.utilcode.util.Utils;
 
 
 public class AndrManagerFactory {
-	private static final String TAG = AndrManagerFactory.class.getSimpleName();
-	
 	public ActivityManager getActivityManager(){
         return (ActivityManager) Utils.getApp().getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
 	}
@@ -79,5 +78,8 @@ public class AndrManagerFactory {
 
 	public InputManager getInputManager(){
         return (InputManager)Utils.getApp().getApplicationContext().getSystemService(Context.INPUT_SERVICE);
+	}
+	public AssetManager getAssetManager(){
+		return (AssetManager)Utils.getApp().getApplicationContext().getAssets();
 	}
 }

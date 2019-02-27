@@ -3,6 +3,8 @@ package ahtewlg7.utimer.util;
 import android.text.TextUtils;
 
 import com.google.common.base.Charsets;
+import com.google.common.io.ByteSink;
+import com.google.common.io.ByteSource;
 import com.google.common.io.CharSink;
 import com.google.common.io.CharSource;
 import com.google.common.io.FileWriteMode;
@@ -47,5 +49,15 @@ public class FileIOAction {
 
     public CharSource getCharReader(){
         return Files.asCharSource(hostFile,Charsets.UTF_8);
+    }
+
+    public ByteSink getStreamWriter(){
+        return Files.asByteSink(hostFile);
+    }
+    public ByteSink getAppendStreamWriter(){
+        return Files.asByteSink(hostFile, FileWriteMode.APPEND);
+    }
+    public ByteSource getStreamReader(){
+        return Files.asByteSource(hostFile);
     }
 }

@@ -40,6 +40,9 @@ public class BaseConfig {
     public String getWorkingBackupDir(){
         return MyRInfo.getStringByID(R.string.configs_app_working_dir_backup);
     }
+    public String getWorkingNlpDir(){
+        return MyRInfo.getStringByID(R.string.configs_app_working_dir_nlp);
+    }
     public String getWorkingFontDir(){
         return MyRInfo.getStringByID(R.string.configs_app_working_dir_font);
     }

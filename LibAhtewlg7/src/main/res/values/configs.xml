@@ -13,6 +13,7 @@
     <string name="configs_app_working_dir_db">db</string>
     <string name="configs_app_working_dir_note">notebook</string>
     <string name="configs_app_working_dir_backup">backup</string>
+    <string name="configs_app_working_dir_nlp">nlp</string>
     <string name="configs_app_working_dir_font">font</string>
     <string name="configs_app_working_dir_save">save</string>
     <string name="configs_app_working_dir_tmp">tmp</string>
