@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 
-import ahtewlg7.utimer.util.Logcat;
+import ahtewlg7.utimer.nlp.HanlpAction;
 
 
 /**
@@ -13,18 +13,18 @@ import ahtewlg7.utimer.util.Logcat;
  */
 
 public class BinderService extends Service{
-    public static final String TAG = BinderService.class.getSimpleName();
+
+    private HanlpAction hanlpAction;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        Logcat.i(TAG, "onCreate");
+//        toInitNLP();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Logcat.i(TAG, "onDestroy");
     }
 
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -37,6 +37,13 @@ public class BinderService extends Service{
         public BinderService getService() {
             return BinderService.this;
         }
+    }
+
+
+    protected void toInitNLP(){
+        hanlpAction = new HanlpAction();
+        hanlpAction.initNLP();
+        hanlpAction.toTest();
     }
 
 }
