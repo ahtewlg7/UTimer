@@ -21,6 +21,7 @@ public abstract class AToolbarBkFragment extends AButterKnifeFragment{
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        /*false means menu off; true means menu on*/
         setHasOptionsMenu(true);
     }
 

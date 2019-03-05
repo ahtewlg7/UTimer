@@ -11,4 +11,5 @@
 
     <string name="prompt_not_ready">Not Ready, Please Wait! </string>
     <string name="prompt_md_edit_select_first">Please select the words you want to edit</string>
+    <string name="prompt_w5h2e1">What,Who,Where,When,Why,How,How Much,Effect</string>
 </resources>

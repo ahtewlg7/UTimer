@@ -1,5 +1,6 @@
 package ahtewlg7.utimer.util;
 
+import android.net.Uri;
 import android.text.TextUtils;
 
 import com.google.common.base.Charsets;
@@ -11,6 +12,8 @@ import com.google.common.io.FileWriteMode;
 import com.google.common.io.Files;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URI;
 
 import ahtewlg7.utimer.entity.material.AAttachFile;
 
@@ -29,7 +32,14 @@ public class FileIOAction {
         if(hostFile.ifValid())
             this.hostFile = hostFile.getFile();
     }
-
+    public FileIOAction(Uri fileUri){
+        try{
+            if(fileUri != null)
+                hostFile = new File(new URI(fileUri.toString()));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
     public FileIOAction(String filePath){
         if(TextUtils.isEmpty(filePath))
             hostFile = new File(filePath);
@@ -57,7 +67,7 @@ public class FileIOAction {
     public ByteSink getAppendStreamWriter(){
         return Files.asByteSink(hostFile, FileWriteMode.APPEND);
     }
-    public ByteSource getStreamReader(){
+    public ByteSource getStreamReader() throws IOException {
         return Files.asByteSource(hostFile);
     }
 }
