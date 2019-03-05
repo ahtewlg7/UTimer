@@ -9,9 +9,7 @@ import ahtewlg7.utimer.entity.material.AAttachFile;
 /**
  * Created by lw on 2018/10/26.
  */
-public abstract class AUtimerBuilder<E extends AUtimerEntity> {
-    public static final String TAG = AUtimerBuilder.class.getSimpleName();
-
+public abstract class AUtimerBuilder<E extends AUtimerEntity, K extends AUtimerBuilder> {
     protected String id;
     protected String uuid;
     protected String title;
@@ -22,33 +20,33 @@ public abstract class AUtimerBuilder<E extends AUtimerEntity> {
     @NonNull
     public abstract E build();
 
-    public AUtimerBuilder setId(String id){
+    public K setId(String id){
         this.id = id;
-        return this;
+        return (K)this;
     }
 
-    public AUtimerBuilder setUuid(String uuid) {
+    public K setUuid(String uuid) {
         this.uuid = uuid;
-        return this;
+        return (K)this;
     }
 
-    public AUtimerBuilder setTitle(String title){
+    public K setTitle(String title){
         this.title = title;
-        return this;
+        return (K)this;
     }
 
-    public AUtimerBuilder setCreateTime(DateTime createTime){
+    public K setCreateTime(DateTime createTime){
         this.createTime = createTime;
-        return this;
+        return (K)this;
     }
 
-    public AUtimerBuilder setCopyEntity(E entity){
+    public K setCopyEntity(E entity){
         this.entity = entity;
-        return this;
+        return (K)this;
     }
 
-    public AUtimerBuilder setAttachFile(AAttachFile attachFile){
+    public K setAttachFile(AAttachFile attachFile){
         this.attachFile = attachFile;
-        return this;
+        return (K)this;
     }
 }

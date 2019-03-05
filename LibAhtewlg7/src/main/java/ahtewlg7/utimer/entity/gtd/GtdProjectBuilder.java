@@ -7,7 +7,7 @@ import ahtewlg7.utimer.entity.AGtdUtimerBuilder;
 /**
  * Created by lw on 2018/10/26.
  */
-public class GtdProjectBuilder extends AGtdUtimerBuilder<GtdProjectEntity> {
+public class GtdProjectBuilder extends AGtdUtimerBuilder<GtdProjectEntity, GtdProjectBuilder> {
     public static final String TAG = GtdProjectBuilder.class.getSimpleName();
 
     /*protected ShortHandEntityGdBean gdBean;

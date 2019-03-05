@@ -7,7 +7,7 @@ import ahtewlg7.utimer.entity.AUtimerBuilder;
 /**
  * Created by lw on 2018/10/26.
  */
-public class NoteBuilder extends AUtimerBuilder<NoteEntity> {
+public class NoteBuilder extends AUtimerBuilder<NoteEntity, NoteBuilder> {
     public static final String TAG = NoteBuilder.class.getSimpleName();
 
     protected GtdProjectEntity projectEntity;

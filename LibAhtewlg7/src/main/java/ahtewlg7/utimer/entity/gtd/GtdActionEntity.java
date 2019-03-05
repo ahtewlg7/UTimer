@@ -1,92 +1,76 @@
 package ahtewlg7.utimer.entity.gtd;
 
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.google.common.base.Optional;
 
-import ahtewlg7.utimer.entity.taskContext.IPosition;
-import ahtewlg7.utimer.enumtype.GtdActionType;
-import ahtewlg7.utimer.enumtype.GtdType;
+import org.joda.time.DateTime;
 
-public class GtdActionEntity extends AGtdEntity{
+import java.io.Serializable;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+
+import ahtewlg7.utimer.common.FileSystemAction;
+import ahtewlg7.utimer.entity.AGtdUtimerEntity;
+import ahtewlg7.utimer.entity.IMergerEntity;
+import ahtewlg7.utimer.entity.material.DirAttachFile;
+import ahtewlg7.utimer.entity.md.EditElement;
+import ahtewlg7.utimer.enumtype.GtdType;
+import ahtewlg7.utimer.util.DateTimeAction;
+import ahtewlg7.utimer.util.Logcat;
+
+
+public class GtdActionEntity extends AGtdUtimerEntity<GtdActionBuilder> implements Serializable {
     public static final String TAG = GtdActionEntity.class.getSimpleName();
 
-    private int attachNum;
-    private IPosition position;
-    private GtdActionType actionType;
-    private GtdTaskEntity gtdTaskEntity;
+    private String action;
+    private List<DateTime> timeList;
+    private StringBuilder detailBuilder;
 
-    @NonNull
+    protected GtdActionEntity(@Nonnull GtdActionBuilder builder) {
+        super(builder);
+//        if(builder.timeList != null)
+//            initByEditElement(builder.timeList);
+    }
+
     @Override
     public GtdType getGtdType() {
-        return GtdType.ACTION;
-    }
-
-    public int getAttachNum() {
-        return attachNum;
-    }
-
-    public void setAttachNum(int attachNum) {
-        this.attachNum = attachNum;
-    }
-
-    public IPosition getPosition() {
-        return position;
-    }
-
-    public void setPostion(IPosition position) {
-        this.position = position;
-    }
-
-    public GtdActionType getActionType() {
-        return actionType;
-    }
-
-    public void setActionType(GtdActionType actionType) {
-        this.actionType = actionType;
-    }
-
-    public GtdTaskEntity getGtdTaskEntity() {
-        return gtdTaskEntity;
-    }
-
-    public void setGtdTaskEntity(GtdTaskEntity gtdTaskEntity) {
-        this.gtdTaskEntity = gtdTaskEntity;
-    }
-
-    @Override
-    public @NonNull String toJson() {
-        //todo
-        return "";
-    }
-
-    @Override
-    public boolean isDone() {
-        return w5h2Entity != null && w5h2Entity.getHowMuch() != null && w5h2Entity.getHowMuch().getPlanPercent() == 100;
+        return GtdType.PROJECT;
     }
 
     @Override
     public Optional<String> toTips() {
-        if(w5h2Entity == null && !ifValid())
-            return Optional.absent();
-        StringBuilder builder = new StringBuilder();
-        if(TextUtils.isEmpty(title))
-            builder.append(title);
-        if(TextUtils.isEmpty(detail))
-            builder.append(detail);
-        builder.append(", done = ").append(isDone());
-        if(w5h2Entity != null && w5h2Entity.toTips().isPresent())
-            builder.append(w5h2Entity.toTips().get());
-        return Optional.fromNullable(TextUtils.isEmpty(builder.toString()) ? null : builder.toString());
+        return Optional.absent();
     }
 
     @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder(TAG);
-        if(position != null)
-            builder.append("，position" ).append(position.toString());
-        builder.append(super.toString());
-        return builder.toString();
+    public Optional<String> getDetail() {
+        return detailBuilder == null ? Optional.<String>absent() : Optional.of(detailBuilder.toString());
+    }
+
+    //todo
+    @Override
+    public IMergerEntity merge(IMergerEntity entity) {
+        return entity;
+    }
+
+    @Override
+    public boolean ensureAttachFileExist() {
+        if(attachFile == null){
+            String fileName = !TextUtils.isEmpty(getTitle()) ? getTitle() : new DateTimeAction().toFormatNow().toString();
+            String filePath = new FileSystemAction().getProjectGtdAbsPath();
+            attachFile = new DirAttachFile(filePath, fileName);
+        }
+        boolean result = attachFile.createOrExist();
+        Logcat.i(TAG,"ensureAttachFileExist result = " + result);
+        return result;
+    }
+
+    private void initByEditElement(EditElement editElement){
+        if(!TextUtils.isEmpty(editElement.getMdCharSequence()))
+            action = editElement.getMdCharSequence().toString();
+        else
+            action = editElement.getRawText();
     }
 }

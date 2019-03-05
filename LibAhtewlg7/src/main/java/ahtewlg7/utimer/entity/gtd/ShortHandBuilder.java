@@ -8,7 +8,7 @@ import ahtewlg7.utimer.entity.AUtimerBuilder;
 /**
  * Created by lw on 2018/10/26.
  */
-public class ShortHandBuilder extends AUtimerBuilder<ShortHandEntity> {
+public class ShortHandBuilder extends AUtimerBuilder<ShortHandEntity, ShortHandBuilder> {
     public static final String TAG = ShortHandBuilder.class.getSimpleName();
 
     protected ShortHandEntityGdBean gdBean;

@@ -1,4 +1,4 @@
-package ahtewlg7.utimer.entity.gtd;
+package ahtewlg7.utimer.entity.gtd.un;
 
 import com.google.common.base.Optional;
 

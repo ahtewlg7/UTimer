@@ -1,10 +1,9 @@
-package ahtewlg7.utimer.entity.gtd;
+package ahtewlg7.utimer.entity.gtd.un;
 
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import ahtewlg7.utimer.entity.ITipsEntity;
-import ahtewlg7.utimer.entity.gtd.un.W5h2Entity;
 import ahtewlg7.utimer.entity.un.IUtimerEntity;
 
 public abstract class AGtdEntity implements IUtimerEntity, ITipsEntity {
