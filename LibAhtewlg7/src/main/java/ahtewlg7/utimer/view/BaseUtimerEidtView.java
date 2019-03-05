@@ -35,7 +35,6 @@ import ahtewlg7.utimer.enumtype.ElementEditType;
 import ahtewlg7.utimer.exception.UtimerEditException;
 import ahtewlg7.utimer.md.MyBypass;
 import ahtewlg7.utimer.mvp.IRxLifeCycleBindView;
-import ahtewlg7.utimer.nlp.TimeNlpAction;
 import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MySafeSubscriber;
 import ahtewlg7.utimer.util.MySimpleObserver;
@@ -67,7 +66,6 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
 
     protected AUtimerEntity utimerEntity;
     protected List<EditElement> editElementList;
-    protected TimeNlpAction timeNlpAction;
 
     protected MyBypass myBypass;
     protected Subscription loadSubscription;
@@ -288,11 +286,8 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
 
     protected void init(){
         setDescendantFocusability(FOCUS_BEFORE_DESCENDANTS);
-        myBypass        = new MyBypass();
-        timeNlpAction   = new TimeNlpAction();
-
-        timeNlpAction.initNLP();
         editElementList = Lists.newArrayList();
+        myBypass        = new MyBypass();
     }
     protected void initEditView(){
         if(editElementList.size() == 0)
@@ -341,14 +336,6 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
                         editElementList.set(index, element);
                         resetData(index, element);
                         preEditPosition = INIT_POSITION;
-
-                        /*com.time.nlp.TimeUnit[] timeUnit = timeNlpAction.toParse(element.getMdCharSequence().toString());
-                        if(timeUnit != null) {
-                            for(com.time.nlp.TimeUnit t : timeUnit){
-                                String tmp = DateUtil.formatDateDefault(t.getTime()) + "-" + t.getIsAllDayTime();
-                                Logcat.i(TAG,"TimeNlp " + element.getMdCharSequence().toString() + ":" + tmp);
-                            }
-                        }*/
                     }
                 });
     }

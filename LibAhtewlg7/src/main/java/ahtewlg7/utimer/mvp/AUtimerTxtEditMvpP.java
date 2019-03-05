@@ -10,14 +10,18 @@ import org.reactivestreams.Subscription;
 import java.util.List;
 
 import ahtewlg7.utimer.entity.AUtimerEntity;
+import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
 import ahtewlg7.utimer.entity.md.EditElement;
 import ahtewlg7.utimer.entity.md.EditMementoBean;
 import ahtewlg7.utimer.entity.md.EditMementoCaretaker;
 import ahtewlg7.utimer.entity.md.EditMementoOriginator;
+import ahtewlg7.utimer.factory.EventBusFatory;
+import ahtewlg7.utimer.nlp.NlpAction;
 import ahtewlg7.utimer.util.MySafeSubscriber;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 
 /**
  * Created by lw on 2018/10/20.
@@ -27,11 +31,13 @@ public abstract class AUtimerTxtEditMvpP<T extends AUtimerEntity> implements IUt
 
     protected abstract IUtimerEditMvpM getEditMvpM(T t);
 
+
     protected Disposable insertDisplose;
     protected Disposable modifyDispose;
 
     protected T t;
 
+    protected NlpAction nlpAction;
     protected IUtimerEditMvpV editMvpV;
     protected IUtimerEditMvpM editMvpM;
     protected EditMementoOriginator mdMementoOriginator;
@@ -41,6 +47,7 @@ public abstract class AUtimerTxtEditMvpP<T extends AUtimerEntity> implements IUt
         this.t = t;
         this.editMvpV = editMvpV;
         editMvpM      = getEditMvpM(t);
+        nlpAction     = new NlpAction();
     }
 
     public void toDel(int fromIndex, int toIndex){
@@ -67,7 +74,12 @@ public abstract class AUtimerTxtEditMvpP<T extends AUtimerEntity> implements IUt
     }
 
     public void toFinishEdit(@NonNull Flowable<EditElement> editElementRx){
-        editMvpM.toSave(editElementRx)
+        editMvpM.toSave(editElementRx.doOnNext(new Consumer<EditElement>() {
+                        @Override
+                        public void accept(EditElement editElement) throws Exception {
+                            toCheckGtdAction(editElement);
+                        }
+                    }))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new MySafeSubscriber<Boolean>() {
                     @Override
@@ -118,6 +130,12 @@ public abstract class AUtimerTxtEditMvpP<T extends AUtimerEntity> implements IUt
             return true;
         }
         return false;
+    }
+
+    protected void toCheckGtdAction(EditElement editElement){
+        Optional<GtdActionEntity> entityOptional = nlpAction.toParseAction(editElement.getMdCharSequence().toString());
+        if(entityOptional.isPresent())
+            EventBusFatory.getInstance().getDefaultEventBus().post((GtdActionEntity)entityOptional.get());
     }
 
     public interface IUtimerEditMvpM{

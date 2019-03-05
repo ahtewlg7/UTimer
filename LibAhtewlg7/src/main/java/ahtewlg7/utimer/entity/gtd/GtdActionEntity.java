@@ -15,7 +15,6 @@ import ahtewlg7.utimer.common.FileSystemAction;
 import ahtewlg7.utimer.entity.AGtdUtimerEntity;
 import ahtewlg7.utimer.entity.IMergerEntity;
 import ahtewlg7.utimer.entity.material.DirAttachFile;
-import ahtewlg7.utimer.entity.md.EditElement;
 import ahtewlg7.utimer.enumtype.GtdType;
 import ahtewlg7.utimer.util.DateTimeAction;
 import ahtewlg7.utimer.util.Logcat;
@@ -24,19 +23,18 @@ import ahtewlg7.utimer.util.Logcat;
 public class GtdActionEntity extends AGtdUtimerEntity<GtdActionBuilder> implements Serializable {
     public static final String TAG = GtdActionEntity.class.getSimpleName();
 
-    private String action;
     private List<DateTime> timeList;
     private StringBuilder detailBuilder;
 
     protected GtdActionEntity(@Nonnull GtdActionBuilder builder) {
         super(builder);
-//        if(builder.timeList != null)
-//            initByEditElement(builder.timeList);
+        if(builder.timeList != null)
+            timeList = builder.timeList;
     }
 
     @Override
     public GtdType getGtdType() {
-        return GtdType.PROJECT;
+        return GtdType.ACTION;
     }
 
     @Override
@@ -67,10 +65,7 @@ public class GtdActionEntity extends AGtdUtimerEntity<GtdActionBuilder> implemen
         return result;
     }
 
-    private void initByEditElement(EditElement editElement){
-        if(!TextUtils.isEmpty(editElement.getMdCharSequence()))
-            action = editElement.getMdCharSequence().toString();
-        else
-            action = editElement.getRawText();
+    public List<DateTime> getTimeList() {
+        return timeList;
     }
 }
