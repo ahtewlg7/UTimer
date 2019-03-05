@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 
-import ahtewlg7.utimer.nlp.HanlpAction;
-
 
 /**
  * Created by lw on 2016/11/15.
@@ -14,12 +12,9 @@ import ahtewlg7.utimer.nlp.HanlpAction;
 
 public class BinderService extends Service{
 
-    private HanlpAction hanlpAction;
-
     @Override
     public void onCreate() {
         super.onCreate();
-//        toInitNLP();
     }
 
     @Override
@@ -38,12 +33,4 @@ public class BinderService extends Service{
             return BinderService.this;
         }
     }
-
-
-    protected void toInitNLP(){
-        hanlpAction = new HanlpAction();
-        hanlpAction.initNLP();
-        hanlpAction.toTest();
-    }
-
 }
