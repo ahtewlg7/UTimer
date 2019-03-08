@@ -31,11 +31,11 @@ public class ShortHandEntityGdBean {
     private String uuid;
     private String value;
     private boolean isActived;
-    @Convert(converter = DateTimeTypeConverter.class, columnType = String.class)
+    @Convert(converter = DateTimeTypeConverter.class, columnType = Long.class)
     private DateTime createTime;
-    @Convert(converter = DateTimeTypeConverter.class, columnType = String.class)
+    @Convert(converter = DateTimeTypeConverter.class, columnType = Long.class)
     private DateTime lastAccessTime;
-    @Convert(converter = DateTimeTypeConverter.class, columnType = String.class)
+    @Convert(converter = DateTimeTypeConverter.class, columnType = Long.class)
     private DateTime lastModifyTime;
 
     @Generated(hash = 666411087)

@@ -15,6 +15,7 @@ import ahtewlg7.utimer.common.FileSystemAction;
 import ahtewlg7.utimer.entity.AGtdUtimerEntity;
 import ahtewlg7.utimer.entity.IMergerEntity;
 import ahtewlg7.utimer.entity.material.DirAttachFile;
+import ahtewlg7.utimer.enumtype.GtdActionType;
 import ahtewlg7.utimer.enumtype.GtdType;
 import ahtewlg7.utimer.util.DateTimeAction;
 import ahtewlg7.utimer.util.Logcat;
@@ -24,6 +25,7 @@ public class GtdActionEntity extends AGtdUtimerEntity<GtdActionBuilder> implemen
     public static final String TAG = GtdActionEntity.class.getSimpleName();
 
     private List<DateTime> timeList;
+    private GtdActionType actionType;
     private StringBuilder detailBuilder;
 
     protected GtdActionEntity(@Nonnull GtdActionBuilder builder) {
@@ -45,6 +47,14 @@ public class GtdActionEntity extends AGtdUtimerEntity<GtdActionBuilder> implemen
     @Override
     public Optional<String> getDetail() {
         return detailBuilder == null ? Optional.<String>absent() : Optional.of(detailBuilder.toString());
+    }
+
+    public GtdActionType getActionType() {
+        return actionType;
+    }
+
+    public void setActionType(GtdActionType actionType) {
+        this.actionType = actionType;
     }
 
     //todo

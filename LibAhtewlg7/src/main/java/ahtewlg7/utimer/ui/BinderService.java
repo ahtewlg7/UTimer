@@ -7,14 +7,11 @@ import android.os.IBinder;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.joda.time.DateTime;
-
-import java.util.List;
 
 import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
 import ahtewlg7.utimer.factory.EventBusFatory;
-import ahtewlg7.utimer.util.DateTimeAction;
-import ahtewlg7.utimer.util.Logcat;
+import ahtewlg7.utimer.mvp.GtdActionMvpP;
+import io.reactivex.Flowable;
 
 
 /**
@@ -22,10 +19,16 @@ import ahtewlg7.utimer.util.Logcat;
  */
 
 public class BinderService extends Service{
+    private MyGtdMvpV myGtdMvpV;
+    private GtdActionMvpP gtdActionMvpP;
 
     @Override
     public void onCreate() {
         super.onCreate();
+
+        myGtdMvpV       = new MyGtdMvpV();
+        gtdActionMvpP   = new GtdActionMvpP(myGtdMvpV);
+
         EventBusFatory.getInstance().getDefaultEventBus().register(this);
     }
 
@@ -49,10 +52,12 @@ public class BinderService extends Service{
     //+++++++++++++++++++++++++++++++++++++++++++EventBus+++++++++++++++++++++++++++++++++++++++++++++++++++
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onGtdActionEntity(GtdActionEntity actionEntity) {
-        List<DateTime> dateTimes = actionEntity.getTimeList();
-        for(DateTime date : dateTimes){
-            String tmp = new DateTimeAction().toFormat(date);
-            Logcat.i("test", "onGtdActionEntity : " + tmp);
-        }
+        gtdActionMvpP.toSaveAction(Flowable.just(actionEntity));
     }
+
+    //+++++++++++++++++++++++++++++++++++++++++++GtdMpvV+++++++++++++++++++++++++++++++++++++++++++++++++++
+    class MyGtdMvpV implements GtdActionMvpP.IGtdActionMvpV{
+
+    }
+
 }
