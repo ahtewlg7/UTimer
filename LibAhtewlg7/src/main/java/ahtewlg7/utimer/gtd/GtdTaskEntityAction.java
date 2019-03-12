@@ -7,7 +7,7 @@ import com.google.common.base.Optional;
 
 import ahtewlg7.utimer.common.FileSystemAction;
 import ahtewlg7.utimer.db.DbActionFacade;
-import ahtewlg7.utimer.entity.gtd.GtdTaskEntity;
+import ahtewlg7.utimer.entity.gtd.un.GtdTaskEntity;
 import ahtewlg7.utimer.util.Logcat;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Function;

@@ -6,6 +6,7 @@ import com.google.common.base.Optional;
 
 import ahtewlg7.utimer.db.dao.ActionEntityDaoAction;
 import ahtewlg7.utimer.db.entity.ActionEntityGdBean;
+import ahtewlg7.utimer.entity.gtd.GtdActionBuilder;
 import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
 import ahtewlg7.utimer.entity.gtd.ShortHandEntity;
 import ahtewlg7.utimer.entity.gtd.un.GtdTaskEntity;
@@ -13,6 +14,7 @@ import ahtewlg7.utimer.entity.gtd.un.NoteEntity;
 import ahtewlg7.utimer.util.Logcat;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by lw on 2018/1/8.
@@ -136,15 +138,14 @@ public class DbActionFacade {
     }
     /*******************************************Action**************************************************/
     public Flowable<Optional<GtdActionEntity>> loadAllUndoActionEntity() {
-        /*return Flowable.fromIterable(ActionEntityDaoAction.getInstance().loadAll())
+        return Flowable.fromIterable(ActionEntityDaoAction.getInstance().loadAll())
                 .map(new Function<ActionEntityGdBean, Optional<GtdActionEntity>>() {
                     @Override
                     public Optional<GtdActionEntity> apply(ActionEntityGdBean actionEntityGdBean) throws Exception {
-                        return Optional.fromNullable(JSON.parseObject(actionEntityGdBean.getValue(), GtdActionEntity.class));
+                        return Optional.of(new GtdActionBuilder().setGbBean(actionEntityGdBean).build());
                     }
                 })
-                .subscribeOn(Schedulers.io());*/
-        return Flowable.empty();
+                .subscribeOn(Schedulers.io());
     }
     public Flowable<Optional<GtdActionEntity>> getUndoActionEntity(@NonNull Flowable<String> nameFlowable) {
         /*return nameFlowable.map(new Function<String, Optional<GtdActionEntity>>() {

@@ -1,16 +1,15 @@
 package com.utimer.ui;
 
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import com.amulyakhare.textdrawable.TextDrawable;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.common.collect.Lists;
 import com.utimer.R;
+import com.utimer.common.TextImageFactory;
 import com.utimer.view.UtimerFuncRecyclerView;
 
 import java.util.List;
@@ -77,16 +76,21 @@ public class UtimerFragment extends AToolbarBkFragment {
     private void initFuncList(){
         funcViewEntityList = Lists.newArrayList();
 
-        Drawable shortHandDrawable = TextDrawable.builder().buildRect("S",Color.parseColor("#177bbd"));
+        Drawable shortHandDrawable = TextImageFactory.getInstance().getShortHandImage();
         String shortHandTitle      = getResources().getString(R.string.title_shorthand);
         UtimerFuncRecyclerView.FuncViewEntity shorthandViewEntity = new UtimerFuncRecyclerView.FuncViewEntity(shortHandDrawable, shortHandTitle);
 
-        Drawable projectDrawable = TextDrawable.builder().buildRect("P",Color.parseColor("#177bbd"));
+        Drawable projectDrawable = TextImageFactory.getInstance().getProjectImage();
         String projectTitle      = getResources().getString(R.string.title_project);
         UtimerFuncRecyclerView.FuncViewEntity projectViewEntity = new UtimerFuncRecyclerView.FuncViewEntity(projectDrawable, projectTitle);
 
+        Drawable actionDrawable = TextImageFactory.getInstance().getGtdActionImage();
+        String actionTitle      = getResources().getString(R.string.title_action);
+        UtimerFuncRecyclerView.FuncViewEntity actionViewEntity = new UtimerFuncRecyclerView.FuncViewEntity(actionDrawable, actionTitle);
+
         funcViewEntityList.add(shorthandViewEntity);
         funcViewEntityList.add(projectViewEntity);
+        funcViewEntityList.add(actionViewEntity);
 ;    }
     class MyClickListener implements BaseQuickAdapter.OnItemClickListener{
         @Override
@@ -99,6 +103,10 @@ public class UtimerFragment extends AToolbarBkFragment {
                 case 1:
                     Logcat.i(TAG,"onItemClick : start Project list");
                     ((MainFragment)getParentFragment()).start(ProjectListFragment.newInstance());
+                    break;
+                case 2:
+                    Logcat.i(TAG,"onItemClick : start Project list");
+                    ((MainFragment)getParentFragment()).start(GtdActionListFragment.newInstance());
                     break;
             }
         }

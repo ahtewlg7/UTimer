@@ -21,8 +21,6 @@ import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 
 public class GtdShortHandListAction {
-    public static final String TAG = GtdShortHandListAction.class.getSimpleName();
-
     protected DbActionFacade dbActionFacade;
     protected FileSystemAction fileSystemAction;
 

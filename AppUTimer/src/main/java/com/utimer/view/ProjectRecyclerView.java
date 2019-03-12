@@ -1,19 +1,18 @@
 package com.utimer.view;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 
-import com.amulyakhare.textdrawable.TextDrawable;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chad.library.adapter.base.listener.OnItemDragListener;
 import com.chad.library.adapter.base.listener.OnItemSwipeListener;
 import com.utimer.R;
+import com.utimer.common.TextImageFactory;
 
 import java.util.List;
 
@@ -74,7 +73,7 @@ public class ProjectRecyclerView extends ABaseLinearRecyclerView<GtdProjectEntit
                 detailBuilder.append(item.getDetail().get());
             helper.setText(R.id.view_shorthand_list_item_title, titleBuilder.toString())
                 .setText(R.id.view_shorthand_list_item_detail, detailBuilder.toString())
-                .setImageDrawable(R.id.view_shorthand_list_item_image, TextDrawable.builder().buildRect("P", Color.parseColor("#177bbd")));
+                .setImageDrawable(R.id.view_shorthand_list_item_image, TextImageFactory.getInstance().getProjectImage());
         }
     }
 }

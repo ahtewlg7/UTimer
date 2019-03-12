@@ -12,6 +12,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import ahtewlg7.utimer.common.FileSystemAction;
+import ahtewlg7.utimer.db.entity.ActionEntityGdBean;
 import ahtewlg7.utimer.entity.AGtdUtimerEntity;
 import ahtewlg7.utimer.entity.IMergerEntity;
 import ahtewlg7.utimer.entity.material.DirAttachFile;
@@ -32,6 +33,8 @@ public class GtdActionEntity extends AGtdUtimerEntity<GtdActionBuilder> implemen
         super(builder);
         if(builder.timeList != null)
             timeList = builder.timeList;
+        if(builder.gdBean != null)
+            initByGbBean(builder.gdBean);
     }
 
     @Override
@@ -77,5 +80,15 @@ public class GtdActionEntity extends AGtdUtimerEntity<GtdActionBuilder> implemen
 
     public List<DateTime> getTimeList() {
         return timeList;
+    }
+
+    private void  initByGbBean(ActionEntityGdBean gdBean){
+        id              = String.valueOf(gdBean.getId());
+//        uuid            = gdBean.getUuid();
+        title           = gdBean.getTitle();
+//        accessTimes     = gdBean.getAccessTimes();
+        createTime      = gdBean.getCreateTime();
+//        lastAccessTime  = gdBean.getLastAccessTime();
+//        lastModifyTime  = gdBean.getLastModifyTime();
     }
 }

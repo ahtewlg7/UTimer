@@ -14,36 +14,36 @@ import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.trello.rxlifecycle2.LifecycleProvider;
 import com.utimer.R;
-import com.utimer.view.ShorthandRecyclerView;
+import com.utimer.view.GtdActionRecyclerView;
 
 import java.util.List;
 
-import ahtewlg7.utimer.entity.gtd.ShortHandEntity;
-import ahtewlg7.utimer.mvp.ShortHandListMvpP;
+import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
+import ahtewlg7.utimer.mvp.GtdActionListMvpP;
 import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MyRInfo;
 import butterknife.BindView;
 import io.reactivex.Flowable;
 
-public class ShortHandListFragment extends AToolbarBkFragment implements ShortHandListMvpP.IShorthandListMvpV {
+public class GtdActionListFragment extends AToolbarBkFragment implements GtdActionListMvpP.IGtdActionListMvpV {
     public static final int INIT_POSITION = -1;
 
     public static final int REQ_NEW_FRAGMENT = 100;
     public static final int REQ_EDIT_FRAGMENT = 101;
 
-    @BindView(R.id.fragment_shorthand_list_toolbar)
+    @BindView(R.id.fragment_gtd_action_list_toolbar)
     Toolbar toolbar;
-    @BindView(R.id.fragment_shorthand_list_recycler_view)
-    ShorthandRecyclerView shorthandRecyclerView;
+    @BindView(R.id.fragment_gtd_action_list_recycler_view)
+    GtdActionRecyclerView recyclerView;
 
     private int editIndex = -1;
-    private ShortHandListMvpP shortHandListMvpP;
+    private GtdActionListMvpP listMvpP;
     private MyClickListener myClickListener;
 
-    public static ShortHandListFragment newInstance() {
+    public static GtdActionListFragment newInstance() {
         Bundle args = new Bundle();
 
-        ShortHandListFragment fragment = new ShortHandListFragment();
+        GtdActionListFragment fragment = new GtdActionListFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -54,21 +54,21 @@ public class ShortHandListFragment extends AToolbarBkFragment implements ShortHa
 
         myClickListener = new MyClickListener();
 
-        shorthandRecyclerView.init(getContext(), null, myClickListener, null,myClickListener,null,null,null);
-        shortHandListMvpP = new ShortHandListMvpP(this);
+        recyclerView.init(getContext(), null, myClickListener, null,myClickListener,null,null,null);
+        listMvpP = new GtdActionListMvpP(this);
     }
 
     @Override
     public void onLazyInitView(@Nullable Bundle savedInstanceState) {
         super.onLazyInitView(savedInstanceState);
-        shortHandListMvpP.toLoadAllItem();
+        listMvpP.toLoadAllItem();
     }
 
     @Override
     public void onFragmentResult(int requestCode, int resultCode, Bundle data) {
         super.onFragmentResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && data != null) {
-            ShortHandEntity shorthandEntity = (ShortHandEntity) data.getSerializable(ShortHandEditFragment.KEY_SHORTHAND);
+            GtdActionEntity shorthandEntity = (GtdActionEntity) data.getSerializable(ShortHandEditFragment.KEY_SHORTHAND);
             if (shorthandEntity != null && requestCode == REQ_NEW_FRAGMENT)
                 onItemCreate(shorthandEntity);
             else if (shorthandEntity != null && requestCode == REQ_EDIT_FRAGMENT) {
@@ -81,12 +81,12 @@ public class ShortHandListFragment extends AToolbarBkFragment implements ShortHa
 
     @Override
     public int getLayoutRid() {
-        return R.layout.fragment_shorthand_list;
+        return R.layout.fragment_gtd_action_list;
     }
 
     @Override
     protected String getTitle() {
-        return MyRInfo.getStringByID(R.string.title_shorthand_list);
+        return MyRInfo.getStringByID(R.string.title_action_list);
     }
 
     @Override
@@ -134,7 +134,7 @@ public class ShortHandListFragment extends AToolbarBkFragment implements ShortHa
     }
 
     @Override
-    public void onItemLoad(ShortHandEntity data) {
+    public void onItemLoad(GtdActionEntity data) {
 //        Logcat.i(TAG, "onItemLoad " + data.toString());
     }
 
@@ -144,45 +144,45 @@ public class ShortHandListFragment extends AToolbarBkFragment implements ShortHa
     }
 
     @Override
-    public void onItemLoadEnd(List<ShortHandEntity> alldata) {
+    public void onItemLoadEnd(List<GtdActionEntity> alldata) {
         Logcat.i(TAG, "onItemLoadEnd");
         if(alldata != null)
-            shorthandRecyclerView.resetData(alldata);
+            recyclerView.resetData(alldata);
     }
 
     /**********************************************IGtdActionListMvpV**********************************************/
     @Override
-    public void onItemCreate(ShortHandEntity data) {
-        shortHandListMvpP.onItemCreated(data);
+    public void onItemCreate(GtdActionEntity data) {
+        listMvpP.onItemCreated(data);
     }
 
     @Override
-    public void onItemEdit(ShortHandEntity data) {
+    public void onItemEdit(GtdActionEntity data) {
         if (editIndex != INIT_POSITION)
-            shortHandListMvpP.onItemEdited(editIndex, data);
+            listMvpP.onItemEdited(editIndex, data);
         editIndex = INIT_POSITION;
     }
 
     /**********************************************IGtdActionListMvpV**********************************************/
     @Override
-    public void resetView(List<ShortHandEntity> dataList) {
-        shorthandRecyclerView.resetData(dataList);
+    public void resetView(List<GtdActionEntity> dataList) {
+        recyclerView.resetData(dataList);
     }
 
     @Override
-    public void resetView(int index, ShortHandEntity entity) {
-        shorthandRecyclerView.resetData(index, entity);
+    public void resetView(int index, GtdActionEntity entity) {
+        recyclerView.resetData(index, entity);
     }
 
     /**********************************************IGtdActionListMvpV**********************************************/
     @Override
-    public void onDeleteSucc(int index , ShortHandEntity entity) {
+    public void onDeleteSucc(int index , GtdActionEntity entity) {
         ToastUtils.showShort(R.string.prompt_del_succ);
-        shorthandRecyclerView.removeData(index);
+        recyclerView.removeData(index);
     }
 
     @Override
-    public void onDeleteFail(ShortHandEntity entity) {
+    public void onDeleteFail(GtdActionEntity entity) {
         ToastUtils.showShort(R.string.prompt_del_fail);
     }
 
@@ -202,18 +202,18 @@ public class ShortHandListFragment extends AToolbarBkFragment implements ShortHa
         @Override
         public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
             editIndex = position;
-            startForResult(ShortHandEditFragment.newInstance((ShortHandEntity) adapter.getData().get(position)), REQ_EDIT_FRAGMENT);
+//            startForResult(ShortHandEditFragment.newInstance((GtdActionEntity) adapter.getData().get(position)), REQ_EDIT_FRAGMENT);
         }
 
         @Override
         public boolean onItemLongClick(BaseQuickAdapter adapter, View view, int position) {
-            ShortHandEntity viewEntity = (ShortHandEntity)adapter.getItem(position);
+            GtdActionEntity viewEntity = (GtdActionEntity)adapter.getItem(position);
             if(viewEntity != null)
                 toCreateDelDialog(viewEntity);
             return false;
         }
     }
-    private void toCreateDelDialog(final ShortHandEntity entity){
+    private void toCreateDelDialog(final GtdActionEntity entity){
         new MaterialDialog.Builder(getContext()).title(R.string.del)
             .content(R.string.prompt_del)
             .negativeText(R.string.no)
@@ -227,7 +227,7 @@ public class ShortHandListFragment extends AToolbarBkFragment implements ShortHa
             .onPositive(new MaterialDialog.SingleButtonCallback() {
                 @Override
                 public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                    shortHandListMvpP.toDeleteItem(Flowable.just(entity));
+                    listMvpP.toDeleteItem(Flowable.just(entity));
                 }
             }).show();
     }

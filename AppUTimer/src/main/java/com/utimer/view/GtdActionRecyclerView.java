@@ -16,21 +16,21 @@ import com.utimer.common.TextImageFactory;
 
 import java.util.List;
 
-import ahtewlg7.utimer.entity.gtd.ShortHandEntity;
+import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
 import ahtewlg7.utimer.view.ABaseLinearRecyclerView;
 
-public class ShorthandRecyclerView extends ABaseLinearRecyclerView<ShortHandEntity> {
-    public static final String TAG = ShorthandRecyclerView.class.getSimpleName();
+public class GtdActionRecyclerView extends ABaseLinearRecyclerView<GtdActionEntity> {
+    public static final String TAG = GtdActionRecyclerView.class.getSimpleName();
 
-    public ShorthandRecyclerView(Context context) {
+    public GtdActionRecyclerView(Context context) {
         super(context);
     }
 
-    public ShorthandRecyclerView(Context context, @Nullable AttributeSet attrs) {
+    public GtdActionRecyclerView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public ShorthandRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyle) {
+    public GtdActionRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 
@@ -41,23 +41,23 @@ public class ShorthandRecyclerView extends ABaseLinearRecyclerView<ShortHandEnti
 
     @NonNull
     @Override
-    public BaseItemAdapter<ShortHandEntity> createAdapter(List<ShortHandEntity> entityList) {
-        return new ShorthandItemAdapter(entityList);
+    public BaseItemAdapter<GtdActionEntity> createAdapter(List<GtdActionEntity> entityList) {
+        return new ActionItemAdapter(entityList);
     }
 
     @Override
-    public void init(Context context, List<ShortHandEntity> entityList, BaseQuickAdapter.OnItemClickListener itemClickListener, BaseQuickAdapter.OnItemChildClickListener itemChildClickListener, BaseQuickAdapter.OnItemLongClickListener itemLongClickListener, BaseQuickAdapter.OnItemChildLongClickListener itemChildLongClickListener, OnItemSwipeListener itemSwipeListener, OnItemDragListener itemDragListener) {
+    public void init(Context context, List<GtdActionEntity> entityList, BaseQuickAdapter.OnItemClickListener itemClickListener, BaseQuickAdapter.OnItemChildClickListener itemChildClickListener, BaseQuickAdapter.OnItemLongClickListener itemLongClickListener, BaseQuickAdapter.OnItemChildLongClickListener itemChildLongClickListener, OnItemSwipeListener itemSwipeListener, OnItemDragListener itemDragListener) {
         super.init(context, entityList, itemClickListener, itemChildClickListener, itemLongClickListener, itemChildLongClickListener, itemSwipeListener, itemDragListener);
         setLayoutManager(new LinearLayoutManager(context));
     }
 
-    class ShorthandItemAdapter extends BaseItemAdapter<ShortHandEntity>{
-        ShorthandItemAdapter(List<ShortHandEntity> dataList){
+    class ActionItemAdapter extends BaseItemAdapter<GtdActionEntity>{
+        ActionItemAdapter(List<GtdActionEntity> dataList){
             super(dataList);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, ShortHandEntity item) {
+        protected void convert(BaseViewHolder helper, GtdActionEntity item) {
             StringBuilder titleBuilder = new StringBuilder();
             StringBuilder detailBuilder = new StringBuilder();
 
@@ -71,7 +71,7 @@ public class ShorthandRecyclerView extends ABaseLinearRecyclerView<ShortHandEnti
                 detailBuilder.append(item.toTips().get());
             helper.setText(R.id.view_shorthand_list_item_title, titleBuilder.toString())
                 .setText(R.id.view_shorthand_list_item_detail, detailBuilder.toString())
-                .setImageDrawable(R.id.view_shorthand_list_item_image, TextImageFactory.getInstance().getShortHandImage());
+                .setImageDrawable(R.id.view_shorthand_list_item_image, TextImageFactory.getInstance().getGtdActionImage());
         }
     }
 }
