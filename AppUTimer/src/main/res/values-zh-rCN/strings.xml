@@ -6,6 +6,7 @@
     <string name="note_detail">笔记简介:</string>
 
     <string name="title_msg">消息</string>
+    <string name="title_time">时间</string>
     <string name="title_note">笔记</string>
     <string name="title_note_list">笔记</string>
     <string name="title_gtd">事务</string>

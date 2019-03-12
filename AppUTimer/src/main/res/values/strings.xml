@@ -24,6 +24,7 @@
 
     <string name="title_activity_utimer">UTimerActivity</string>
     <string name="title_msg">Msg</string>
+    <string name="title_time">Time</string>
     <string name="title_note">Note</string>
     <string name="title_note_list">NoteList</string>
     <string name="title_gtd">Gtd</string>
@@ -32,6 +33,8 @@
     <string name="title_shorthand_list">ShortHandList</string>
     <string name="title_project">Project</string>
     <string name="title_project_list">ProjectList</string>
+    <string name="title_action">Action</string>
+    <string name="title_action_list">ActionList</string>
 
     <string name="create">new</string>
     <string name="add">add</string>

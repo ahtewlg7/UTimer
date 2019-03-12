@@ -85,12 +85,12 @@ public class MainFragment extends AButterKnifeFragment {
                     prePosition = 0;
                     result = true;
                     break;
-                case R.id.navigation_gtd:
+                case R.id.navigation_note:
                     showHideFragment(fragments[1], fragments[prePosition]);
                     prePosition = 1;
                     result = true;
                     break;
-                case R.id.navigation_note:
+                case R.id.navigation_gtd:
                     showHideFragment(fragments[2], fragments[prePosition]);
                     prePosition = 2;
                     result = true;

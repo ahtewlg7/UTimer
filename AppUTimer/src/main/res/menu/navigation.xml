@@ -7,14 +7,14 @@
         android:title="@string/title_msg" />
 
     <item
-        android:id="@+id/navigation_gtd"
+        android:id="@+id/navigation_note"
         android:icon="@drawable/ic_gtd_black_24dp"
-        android:title="@string/title_gtd" />
+        android:title="@string/title_note" />
 
     <item
-        android:id="@+id/navigation_note"
+        android:id="@+id/navigation_gtd"
         android:icon="@drawable/ic_note_black_24dp"
-        android:title="@string/title_note" />
+        android:title="@string/title_gtd" />
 
     <item
         android:id="@+id/navigation_about"
