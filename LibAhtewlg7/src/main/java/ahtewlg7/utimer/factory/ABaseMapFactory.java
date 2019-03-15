@@ -5,8 +5,6 @@ import com.google.common.collect.HashBiMap;
 
 
 public abstract class ABaseMapFactory<K, V> {
-    public static final String TAG = ABaseMapFactory.class.getSimpleName();
-
     protected BiMap<K, V> baseMap;
 
     public abstract boolean ifKeyValid(K k);

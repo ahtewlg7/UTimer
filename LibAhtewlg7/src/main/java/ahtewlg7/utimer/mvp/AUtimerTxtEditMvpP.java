@@ -9,6 +9,7 @@ import org.reactivestreams.Subscription;
 
 import java.util.List;
 
+import ahtewlg7.utimer.common.GtdActParser;
 import ahtewlg7.utimer.entity.AUtimerEntity;
 import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
 import ahtewlg7.utimer.entity.md.EditElement;
@@ -16,7 +17,6 @@ import ahtewlg7.utimer.entity.md.EditMementoBean;
 import ahtewlg7.utimer.entity.md.EditMementoCaretaker;
 import ahtewlg7.utimer.entity.md.EditMementoOriginator;
 import ahtewlg7.utimer.factory.EventBusFatory;
-import ahtewlg7.utimer.nlp.NlpAction;
 import ahtewlg7.utimer.util.MySafeSubscriber;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -37,7 +37,7 @@ public abstract class AUtimerTxtEditMvpP<T extends AUtimerEntity> implements IUt
 
     protected T t;
 
-    protected NlpAction nlpAction;
+    protected GtdActParser gtdActParser;
     protected IUtimerEditMvpV editMvpV;
     protected IUtimerEditMvpM editMvpM;
     protected EditMementoOriginator mdMementoOriginator;
@@ -47,7 +47,7 @@ public abstract class AUtimerTxtEditMvpP<T extends AUtimerEntity> implements IUt
         this.t = t;
         this.editMvpV = editMvpV;
         editMvpM      = getEditMvpM(t);
-        nlpAction     = new NlpAction();
+        gtdActParser  = new GtdActParser();
     }
 
     public void toDel(int fromIndex, int toIndex){
@@ -77,7 +77,7 @@ public abstract class AUtimerTxtEditMvpP<T extends AUtimerEntity> implements IUt
         editMvpM.toSave(editElementRx.doOnNext(new Consumer<EditElement>() {
                         @Override
                         public void accept(EditElement editElement) throws Exception {
-                            toCheckGtdAction(editElement);
+                            toPostGtdAction(editElement);
                         }
                     }))
                 .observeOn(AndroidSchedulers.mainThread())
@@ -132,10 +132,10 @@ public abstract class AUtimerTxtEditMvpP<T extends AUtimerEntity> implements IUt
         return false;
     }
 
-    protected void toCheckGtdAction(EditElement editElement){
-        Optional<GtdActionEntity> entityOptional = nlpAction.toParseAction(editElement.getMdCharSequence().toString());
-        if(entityOptional.isPresent())
-            EventBusFatory.getInstance().getDefaultEventBus().post((GtdActionEntity)entityOptional.get());
+    protected void toPostGtdAction(EditElement editElement){
+        Optional<GtdActionEntity> gtdActionOptional = gtdActParser.toParseAction(editElement.getMdCharSequence().toString());
+        if(gtdActionOptional.isPresent())
+            EventBusFatory.getInstance().getDefaultEventBus().post((GtdActionEntity)gtdActionOptional.get());
     }
 
     public interface IUtimerEditMvpM{

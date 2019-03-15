@@ -35,6 +35,12 @@ public class GtdActionEntity extends AGtdUtimerEntity<GtdActionBuilder> implemen
             timeList = builder.timeList;
         if(builder.gdBean != null)
             initByGbBean(builder.gdBean);
+        toMakeUuidOk();
+    }
+
+    @Override
+    public boolean ifValid() {
+        return super.ifValid() && !TextUtils.isEmpty(uuid);
     }
 
     @Override

@@ -256,6 +256,7 @@ public class DbActionFacade {
     /***********************************************************************************************/
     private ActionEntityGdBean mapActionToGdBean(@NonNull GtdActionEntity entity){
         ActionEntityGdBean bean = new ActionEntityGdBean();
+        bean.setUuid(entity.getUuid());
         bean.setTitle(entity.getTitle());
         bean.setTimeList(entity.getTimeList());
         bean.setActionType(entity.getActionType());

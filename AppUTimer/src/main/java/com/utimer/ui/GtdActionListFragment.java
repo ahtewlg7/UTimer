@@ -16,9 +16,14 @@ import com.trello.rxlifecycle2.LifecycleProvider;
 import com.utimer.R;
 import com.utimer.view.GtdActionRecyclerView;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.List;
 
+import ahtewlg7.utimer.entity.busevent.ActionLoadBusEvent;
 import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
+import ahtewlg7.utimer.factory.EventBusFatory;
 import ahtewlg7.utimer.mvp.GtdActionListMvpP;
 import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MyRInfo;
@@ -56,6 +61,14 @@ public class GtdActionListFragment extends AToolbarBkFragment implements GtdActi
 
         recyclerView.init(getContext(), null, myClickListener, null,myClickListener,null,null,null);
         listMvpP = new GtdActionListMvpP(this);
+
+        EventBusFatory.getInstance().getDefaultEventBus().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBusFatory.getInstance().getDefaultEventBus().unregister(this);
     }
 
     @Override
@@ -196,6 +209,11 @@ public class GtdActionListFragment extends AToolbarBkFragment implements GtdActi
     public void onDeleteEnd() {
     }
 
+    /**********************************************EventBus**********************************************/
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onActionLoadBusEvent(ActionLoadBusEvent eventBus) {
+        listMvpP.toLoadAllItem();
+    }
     /**********************************************IGtdActionListMvpV**********************************************/
 
     class MyClickListener implements BaseQuickAdapter.OnItemClickListener, BaseQuickAdapter.OnItemLongClickListener {
@@ -231,4 +249,6 @@ public class GtdActionListFragment extends AToolbarBkFragment implements GtdActi
                 }
             }).show();
     }
+
+
 }

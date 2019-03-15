@@ -8,6 +8,7 @@ import android.os.IBinder;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import ahtewlg7.utimer.entity.busevent.ActionLoadBusEvent;
 import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
 import ahtewlg7.utimer.factory.EventBusFatory;
 import ahtewlg7.utimer.mvp.GtdActionMvpP;
@@ -30,6 +31,8 @@ public class BinderService extends Service{
         gtdActionMvpP   = new GtdActionMvpP(myGtdMvpV);
 
         EventBusFatory.getInstance().getDefaultEventBus().register(this);
+
+        gtdActionMvpP.toLoadAllItem();
     }
 
     @Override
@@ -57,7 +60,9 @@ public class BinderService extends Service{
 
     //+++++++++++++++++++++++++++++++++++++++++++GtdMpvV+++++++++++++++++++++++++++++++++++++++++++++++++++
     class MyGtdMvpV implements GtdActionMvpP.IGtdActionMvpV{
-
+        @Override
+        public void onActionAllLoaded() {
+            EventBusFatory.getInstance().getDefaultEventBus().post(new ActionLoadBusEvent());
+        }
     }
-
 }

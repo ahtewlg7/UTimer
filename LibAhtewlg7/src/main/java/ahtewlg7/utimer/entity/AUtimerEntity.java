@@ -122,6 +122,10 @@ public abstract class AUtimerEntity<T extends AUtimerBuilder>
             lastModifyTime = attachFile.getLassModifyTime();
         }
     }
+    protected void toMakeUuidOk(){
+        if(TextUtils.isEmpty(uuid))
+            uuid = new IdAction().getUUId();
+    }
 
     @Override
     public String toString() {

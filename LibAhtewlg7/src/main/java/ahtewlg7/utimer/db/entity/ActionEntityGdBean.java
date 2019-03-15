@@ -33,6 +33,8 @@ public class ActionEntityGdBean {
     public String toString() {
         StringBuilder builder = new StringBuilder(TAG);
         builder.append("{").append(id);
+        if(!TextUtils.isEmpty(uuid))
+            builder.append(",uuid=").append(uuid);
         if(!TextUtils.isEmpty(title))
             builder.append(",title=").append(title);
         if(!TextUtils.isEmpty(detail))
@@ -85,10 +87,17 @@ public class ActionEntityGdBean {
     public void setCreateTime(DateTime createTime) {
         this.createTime = createTime;
     }
+    public String getUuid() {
+        return this.uuid;
+    }
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
 
     @Id(autoincrement = true)
     private long id;
     @Index(unique = true)
+    private String uuid;
     private String title;
     private String detail;
     private String warningCount;
@@ -99,11 +108,12 @@ public class ActionEntityGdBean {
     @Convert(converter = DateTimeListTypeConverter.class, columnType = String.class)
     private List<DateTime> timeList;
 
-    @Generated(hash = 1738281266)
-    public ActionEntityGdBean(long id, String title, String detail,
+    @Generated(hash = 1011435786)
+    public ActionEntityGdBean(long id, String uuid, String title, String detail,
             String warningCount, DateTime createTime, GtdActionType actionType,
             List<DateTime> timeList) {
         this.id = id;
+        this.uuid = uuid;
         this.title = title;
         this.detail = detail;
         this.warningCount = warningCount;

@@ -1,11 +1,8 @@
 package ahtewlg7.utimer.nlp;
 
-import android.text.TextUtils;
+import org.joda.time.DateTime;
 
-import com.google.common.base.Optional;
-
-import ahtewlg7.utimer.entity.gtd.GtdActionBuilder;
-import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
+import java.util.List;
 
 /**
  * Created by lw on 2019/3/2.
@@ -22,10 +19,11 @@ public class NlpAction {
         timeNlpAction.initNLP();
     }
 
-    public Optional<GtdActionEntity> toParseAction(String raw){
-        if(TextUtils.isEmpty(raw))
-            return Optional.absent();
-        GtdActionEntity gtdActionEntity = new GtdActionBuilder().setTitle(raw).setTimeList(timeNlpAction.toParse(raw)).build();
-        return Optional.of(gtdActionEntity);
+    public List<DateTime> toSegTimes(String raw){
+        return timeNlpAction.toParse(raw);
+    }
+
+    public List<String> getKeyWords(String raw){
+        return hanlpAction.getKeyWords(raw);
     }
 }

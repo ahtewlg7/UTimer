@@ -8,8 +8,6 @@ import io.reactivex.Flowable;
 
 
 public abstract class ABaseTableFactory<K, M, V> {
-    public static final String TAG = ABaseTableFactory.class.getSimpleName();
-
     protected Table<K, M, V> baseTable;
 
     public abstract boolean ifPriKeyValid(K k);

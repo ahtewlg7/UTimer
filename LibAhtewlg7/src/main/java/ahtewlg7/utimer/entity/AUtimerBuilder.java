@@ -13,6 +13,7 @@ public abstract class AUtimerBuilder<E extends AUtimerEntity, K extends AUtimerB
     protected String id;
     protected String uuid;
     protected String title;
+    protected String detail;
     protected AAttachFile attachFile;
     protected DateTime createTime;
     protected E entity;
@@ -32,6 +33,10 @@ public abstract class AUtimerBuilder<E extends AUtimerEntity, K extends AUtimerB
 
     public K setTitle(String title){
         this.title = title;
+        return (K)this;
+    }
+    public K setDetail(String detail){
+        this.detail = detail;
         return (K)this;
     }
 
