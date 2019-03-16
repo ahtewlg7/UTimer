@@ -21,7 +21,7 @@ import ahtewlg7.utimer.enumtype.GtdActionType;
  */
 
 @Entity(
-    nameInDb = "ACTION_ENTITY"
+    nameInDb = "ACTION"
 )
 public class ActionEntityGdBean {
     // KEEP FIELDS - put your custom fields here
@@ -51,6 +51,18 @@ public class ActionEntityGdBean {
     public void setId(long id) {
         this.id = id;
     }
+    public int getWarningCount() {
+        return this.warningCount;
+    }
+    public void setWarningCount(int warningCount) {
+        this.warningCount = warningCount;
+    }
+    public String getUuid() {
+        return this.uuid;
+    }
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
     public String getTitle() {
         return this.title;
     }
@@ -63,11 +75,11 @@ public class ActionEntityGdBean {
     public void setDetail(String detail) {
         this.detail = detail;
     }
-    public String getWarningCount() {
-        return this.warningCount;
+    public DateTime getCreateTime() {
+        return this.createTime;
     }
-    public void setWarningCount(String warningCount) {
-        this.warningCount = warningCount;
+    public void setCreateTime(DateTime createTime) {
+        this.createTime = createTime;
     }
     public GtdActionType getActionType() {
         return this.actionType;
@@ -81,26 +93,14 @@ public class ActionEntityGdBean {
     public void setTimeList(List<DateTime> timeList) {
         this.timeList = timeList;
     }
-    public DateTime getCreateTime() {
-        return this.createTime;
-    }
-    public void setCreateTime(DateTime createTime) {
-        this.createTime = createTime;
-    }
-    public String getUuid() {
-        return this.uuid;
-    }
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
 
     @Id(autoincrement = true)
     private long id;
+    private int warningCount;
     @Index(unique = true)
     private String uuid;
     private String title;
     private String detail;
-    private String warningCount;
     @Convert(converter = DateTimeTypeConverter.class, columnType = Long.class)
     private DateTime createTime;
     @Convert(converter = GtdActionTypeConverter.class, columnType = Integer.class)
@@ -108,15 +108,15 @@ public class ActionEntityGdBean {
     @Convert(converter = DateTimeListTypeConverter.class, columnType = String.class)
     private List<DateTime> timeList;
 
-    @Generated(hash = 1011435786)
-    public ActionEntityGdBean(long id, String uuid, String title, String detail,
-            String warningCount, DateTime createTime, GtdActionType actionType,
+    @Generated(hash = 926896940)
+    public ActionEntityGdBean(long id, int warningCount, String uuid, String title,
+            String detail, DateTime createTime, GtdActionType actionType,
             List<DateTime> timeList) {
         this.id = id;
+        this.warningCount = warningCount;
         this.uuid = uuid;
         this.title = title;
         this.detail = detail;
-        this.warningCount = warningCount;
         this.createTime = createTime;
         this.actionType = actionType;
         this.timeList = timeList;
@@ -124,5 +124,4 @@ public class ActionEntityGdBean {
     @Generated(hash = 1154478005)
     public ActionEntityGdBean() {
     }
-
 }

@@ -56,7 +56,7 @@ public class NoteEntityDaoAction extends AGreenDaoAction<NoteEntityGdBean, Long>
 
         @Override
         public QueryBuilder<NoteEntityGdBean> toFilt(QueryBuilder<NoteEntityGdBean> queryBuilder) {
-            return queryBuilder.where(NoteEntityGdBeanDao.Properties.Key.eq(key));
+            return queryBuilder.where(NoteEntityGdBeanDao.Properties.Title.eq(key));
         }
     }
 }
