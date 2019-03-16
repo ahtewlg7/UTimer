@@ -25,7 +25,6 @@ import ahtewlg7.utimer.util.Logcat;
 public class ShortHandEntity extends AUtimerEntity<ShortHandBuilder> implements Serializable {
     public static final String TAG = ShortHandEntity.class.getSimpleName();
 
-    private boolean isActived;
     private StringBuilder detailBuilder;
 
     protected ShortHandEntity(@Nonnull ShortHandBuilder builder) {
@@ -61,14 +60,6 @@ public class ShortHandEntity extends AUtimerEntity<ShortHandBuilder> implements 
         Optional<String> tips = materialEntity.toTips();
         if(tips.isPresent())
             appendDetail(tips.get());
-    }
-
-    public boolean isActived() {
-        return isActived;
-    }
-
-    public void setActived(boolean actived) {
-        isActived = actived;
     }
 
     public DateTime getLastModifyTime() {
@@ -112,17 +103,14 @@ public class ShortHandEntity extends AUtimerEntity<ShortHandBuilder> implements 
         uuid            = inboxEntityGdBean.getUuid();
         title           = inboxEntityGdBean.getTitle();
         accessTimes     = inboxEntityGdBean.getAccessTimes();
-        isActived       = inboxEntityGdBean.getIsActived();
         createTime      = inboxEntityGdBean.getCreateTime();
         lastAccessTime  = inboxEntityGdBean.getLastAccessTime();
-        lastModifyTime  = inboxEntityGdBean.getLastModifyTime();
     }
 
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder(TAG);
         builder.append(",").append(super.toString());
-        builder.append(",isActived").append(isActived);
         return builder.toString();
     }
 }

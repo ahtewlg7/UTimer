@@ -261,6 +261,7 @@ public class DbActionFacade {
         bean.setTimeList(entity.getTimeList());
         bean.setActionType(entity.getActionType());
         bean.setCreateTime(entity.getCreateTime());
+        bean.setWarningCount(entity.getWarningTimes());
         if(entity.getDetail().isPresent())
             bean.setDetail(entity.getDetail().get());
         return bean;

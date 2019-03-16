@@ -10,6 +10,7 @@ import java.util.List;
 
 import ahtewlg7.utimer.entity.gtd.GtdActionBuilder;
 import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
+import ahtewlg7.utimer.enumtype.GtdActionType;
 import ahtewlg7.utimer.nlp.NlpAction;
 
 /**
@@ -28,11 +29,15 @@ public class GtdActParser {
         List<DateTime> timeList = nlpAction.toSegTimes(raw);
         if(timeList == null || timeList.size() == 0)
             return Optional.absent();
-        GtdActionBuilder builder  = new GtdActionBuilder().setDetail(raw).setUuid(new IdAction().getUUId());
+
+        GtdActionBuilder builder  = new GtdActionBuilder().setTimeList(timeList).setCreateTime(DateTime.now()).setDetail(raw).setUuid(new IdAction().getUUId());
         Optional<String> keyWords = getActionTitle(raw);
         if(keyWords.isPresent())
             builder.setTitle(keyWords.get());
         GtdActionEntity gtdActionEntity = builder.build();
+        gtdActionEntity.setActionType(GtdActionType.MAYBE);
+        gtdActionEntity.setLastModifyTime(DateTime.now());
+        gtdActionEntity.setLastAccessTime(DateTime.now());
         return Optional.of(gtdActionEntity);
     }
 
@@ -42,7 +47,7 @@ public class GtdActParser {
             return Optional.absent();
         StringBuilder title = new StringBuilder();
         for(String keyword : keyWords){
-            title.append(keyword).append(";");
+            title.append(keyword).append(",");
         }
         return Optional.of(title.toString());
     }

@@ -14,9 +14,12 @@ import com.chad.library.adapter.base.listener.OnItemSwipeListener;
 import com.utimer.R;
 import com.utimer.common.TextImageFactory;
 
+import org.joda.time.DateTime;
+
 import java.util.List;
 
 import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
+import ahtewlg7.utimer.util.DateTimeAction;
 import ahtewlg7.utimer.view.ABaseLinearRecyclerView;
 
 public class GtdActionRecyclerView extends ABaseLinearRecyclerView<GtdActionEntity> {
@@ -65,10 +68,12 @@ public class GtdActionRecyclerView extends ABaseLinearRecyclerView<GtdActionEnti
                 titleBuilder.append(item.getTitle());
             /*if(item.getRPath().isPresent() && !TextUtils.isEmpty(item.getRPath().get()))
                 builder.append(item.getRPath().get());*/
-            if(item.getLastAccessTime() != null)
-                titleBuilder.append("\n").append(item.getLastAccessTime().toDateTime());
-            if(item.toTips().isPresent() && !TextUtils.isEmpty(item.toTips().get()))
-                detailBuilder.append(item.toTips().get());
+            /*if(item.getLastAccessTime() != null)
+                titleBuilder.append("\n").append(item.getLastAccessTime().toDateTime());*/
+            if(item.getDetail().isPresent() && !TextUtils.isEmpty(item.getDetail().get()))
+                detailBuilder.append(item.getDetail().get());
+            if(item.getTimeList() != null)
+                titleBuilder.append("\nat:").append(new DateTimeAction().toFormat(new DateTime(item.getTimeList().get(0))));
             helper.setText(R.id.view_shorthand_list_item_title, titleBuilder.toString())
                 .setText(R.id.view_shorthand_list_item_detail, detailBuilder.toString())
                 .setImageDrawable(R.id.view_shorthand_list_item_image, TextImageFactory.getInstance().getGtdActionImage());

@@ -134,8 +134,10 @@ public abstract class AUtimerTxtEditMvpP<T extends AUtimerEntity> implements IUt
 
     protected void toPostGtdAction(EditElement editElement){
         Optional<GtdActionEntity> gtdActionOptional = gtdActParser.toParseAction(editElement.getMdCharSequence().toString());
-        if(gtdActionOptional.isPresent())
-            EventBusFatory.getInstance().getDefaultEventBus().post((GtdActionEntity)gtdActionOptional.get());
+        if(gtdActionOptional.isPresent()) {
+            gtdActionOptional.get().setDetail(editElement.getRawText());
+            EventBusFatory.getInstance().getDefaultEventBus().post((GtdActionEntity) gtdActionOptional.get());
+        }
     }
 
     public interface IUtimerEditMvpM{

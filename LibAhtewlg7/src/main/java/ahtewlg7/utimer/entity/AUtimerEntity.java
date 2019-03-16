@@ -29,6 +29,7 @@ public abstract class AUtimerEntity<T extends AUtimerBuilder>
     protected String id;
     protected String uuid;
     protected String title;
+    protected String detail;
     protected DateTime createTime;
     protected DateTime lastAccessTime;
     protected DateTime lastModifyTime;
@@ -94,6 +95,10 @@ public abstract class AUtimerEntity<T extends AUtimerBuilder>
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public void setDetail(String detail) {
+        this.detail = detail;
     }
 
     public DateTime getLastAccessTime() {

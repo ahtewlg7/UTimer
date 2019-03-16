@@ -25,9 +25,9 @@ import ahtewlg7.utimer.util.Logcat;
 public class GtdActionEntity extends AGtdUtimerEntity<GtdActionBuilder> implements Serializable {
     public static final String TAG = GtdActionEntity.class.getSimpleName();
 
+    private int warningTimes;
     private List<DateTime> timeList;
     private GtdActionType actionType;
-    private StringBuilder detailBuilder;
 
     protected GtdActionEntity(@Nonnull GtdActionBuilder builder) {
         super(builder);
@@ -55,7 +55,7 @@ public class GtdActionEntity extends AGtdUtimerEntity<GtdActionBuilder> implemen
 
     @Override
     public Optional<String> getDetail() {
-        return detailBuilder == null ? Optional.<String>absent() : Optional.of(detailBuilder.toString());
+        return TextUtils.isEmpty(detail) ? Optional.<String>absent() : Optional.of(detail);
     }
 
     public GtdActionType getActionType() {
@@ -64,6 +64,14 @@ public class GtdActionEntity extends AGtdUtimerEntity<GtdActionBuilder> implemen
 
     public void setActionType(GtdActionType actionType) {
         this.actionType = actionType;
+    }
+
+    public int getWarningTimes() {
+        return warningTimes;
+    }
+
+    public void setWarningTimes(int warningTimes) {
+        this.warningTimes = warningTimes;
     }
 
     //todo
@@ -90,11 +98,11 @@ public class GtdActionEntity extends AGtdUtimerEntity<GtdActionBuilder> implemen
 
     private void  initByGbBean(ActionEntityGdBean gdBean){
         id              = String.valueOf(gdBean.getId());
-//        uuid            = gdBean.getUuid();
+        uuid            = gdBean.getUuid();
         title           = gdBean.getTitle();
-//        accessTimes     = gdBean.getAccessTimes();
+        detail          = gdBean.getDetail();
+        timeList        = gdBean.getTimeList();
         createTime      = gdBean.getCreateTime();
-//        lastAccessTime  = gdBean.getLastAccessTime();
-//        lastModifyTime  = gdBean.getLastModifyTime();
+        lastAccessTime  = gdBean.getCreateTime();
     }
 }
