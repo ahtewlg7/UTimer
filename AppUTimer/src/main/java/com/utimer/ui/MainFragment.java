@@ -61,16 +61,16 @@ public class MainFragment extends AButterKnifeFragment {
         AButterKnifeFragment firstFragment = findChildFragment(MsgFragment.class);
         if (firstFragment == null) {
             fragments[0] = MsgFragment.newInstance();
-            fragments[1] = UtimerFragment.newInstance();
-            fragments[2] = EssayListFragment.newInstance();
+            fragments[1] = NoteFragment.newInstance();
+            fragments[2] = GtdFragment.newInstance();
             fragments[3] = AboutFragment.newInstance();
 
             loadMultipleRootFragment(R.id.fragment_main_fragment_container, prePosition,
                     fragments[0],fragments[1],fragments[2],fragments[3]);
         } else {
             fragments[0] = firstFragment;
-            fragments[1] = findChildFragment(UtimerFragment.class);
-            fragments[2] = findChildFragment(EssayListFragment.class);
+            fragments[1] = findChildFragment(NoteFragment.class);
+            fragments[2] = findChildFragment(GtdFragment.class);
             fragments[3] = findChildFragment(AboutFragment.class);
         }
     }

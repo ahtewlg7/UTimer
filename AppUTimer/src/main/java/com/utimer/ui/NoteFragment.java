@@ -18,8 +18,8 @@ import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MyRInfo;
 import butterknife.BindView;
 
-public class UtimerFragment extends AToolbarBkFragment {
-    public static final String TAG = UtimerFragment.class.getSimpleName();
+public class NoteFragment extends AToolbarBkFragment {
+    public static final String TAG = NoteFragment.class.getSimpleName();
 
     @BindView(R.id.fragment_utimer_main_func_toolbar)
     Toolbar toolbar;
@@ -29,10 +29,10 @@ public class UtimerFragment extends AToolbarBkFragment {
     private MyClickListener myClickListener;
     private List<UtimerFuncRecyclerView.FuncViewEntity> funcViewEntityList;
 
-    public static UtimerFragment newInstance() {
+    public static NoteFragment newInstance() {
         Bundle args = new Bundle();
 
-        UtimerFragment fragment = new UtimerFragment();
+        NoteFragment fragment = new NoteFragment();
         fragment.setArguments(args);
         return fragment;
     }

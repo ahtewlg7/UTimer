@@ -7,13 +7,13 @@ import com.utimer.R;
 
 import ahtewlg7.utimer.util.MyRInfo;
 
-public class EssayListFragment extends AButterKnifeFragment {
-    public static final String TAG = EssayListFragment.class.getSimpleName();
+public class GtdFragment extends AButterKnifeFragment {
+    public static final String TAG = GtdFragment.class.getSimpleName();
 
-    public static EssayListFragment newInstance() {
+    public static GtdFragment newInstance() {
         Bundle args = new Bundle();
 
-        EssayListFragment fragment = new EssayListFragment();
+        GtdFragment fragment = new GtdFragment();
         fragment.setArguments(args);
         return fragment;
     }
