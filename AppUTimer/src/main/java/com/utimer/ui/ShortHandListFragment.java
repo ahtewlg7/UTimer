@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -20,7 +19,6 @@ import java.util.List;
 
 import ahtewlg7.utimer.entity.gtd.ShortHandEntity;
 import ahtewlg7.utimer.mvp.ShortHandListMvpP;
-import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MyRInfo;
 import butterknife.BindView;
 import io.reactivex.Flowable;
@@ -107,11 +105,9 @@ public class ShortHandListFragment extends AToolbarBkFragment implements ShortHa
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Logcat.i(TAG, "onOptionsItemSelected " + item.getTitle());
         boolean result = false;
         switch (item.getItemId()) {
             case R.id.tool_menu_add:
-                Log.i(TAG, "to create shorthand");
                 startForResult(ShortHandEditFragment.newInstance(null), REQ_NEW_FRAGMENT);
                 break;
             default:
@@ -130,22 +126,18 @@ public class ShortHandListFragment extends AToolbarBkFragment implements ShortHa
     /**********************************************IGtdActionListMvpV**********************************************/
     @Override
     public void onItemLoadStart() {
-        Logcat.i(TAG, "onItemLoadStart");
     }
 
     @Override
     public void onItemLoad(ShortHandEntity data) {
-//        Logcat.i(TAG, "onItemLoad " + data.toString());
     }
 
     @Override
     public void onItemLoadErr(Throwable t) {
-        Logcat.i(TAG, "onItemLoadErr : " + t.getMessage());
     }
 
     @Override
     public void onItemLoadEnd(List<ShortHandEntity> alldata) {
-        Logcat.i(TAG, "onItemLoadEnd");
         if(alldata != null)
             shorthandRecyclerView.resetData(alldata);
     }
@@ -188,7 +180,6 @@ public class ShortHandListFragment extends AToolbarBkFragment implements ShortHa
 
     @Override
     public void onDeleteErr(Throwable throwable) {
-        Logcat.i(TAG,"onDeleteErr : " + throwable.getMessage());
         ToastUtils.showShort(R.string.prompt_del_err);
     }
 

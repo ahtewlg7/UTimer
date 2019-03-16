@@ -24,7 +24,6 @@ import me.yokeyword.fragmentation.anim.FragmentAnimator;
  * Created by lw on 2016/9/11.
  */
 public abstract class ABaseRxFragement extends RxFragment implements ISupportFragment {
-    public static final String TAG = ABaseRxFragement.class.getSimpleName();
 
     public abstract void onViewCreated(View inflateView);
     public abstract int getLayoutRid();
@@ -33,7 +32,6 @@ public abstract class ABaseRxFragement extends RxFragment implements ISupportFra
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Logcat.i(TAG, "onCreateView");
         View view = inflater.inflate(getLayoutRid(), container, false);
         onViewCreated(view);
         return view;

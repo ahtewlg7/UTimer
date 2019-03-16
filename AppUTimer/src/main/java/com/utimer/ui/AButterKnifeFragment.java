@@ -7,7 +7,6 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 public abstract class AButterKnifeFragment extends ABaseRxFragement{
-    public static final String TAG = AButterKnifeFragment.class.getSimpleName();
 
     protected abstract String getTitle();
 

@@ -12,7 +12,6 @@ import android.view.View;
 
 
 public abstract class AToolbarBkFragment extends AButterKnifeFragment{
-    public static final String TAG = AToolbarBkFragment.class.getSimpleName();
 
     @NonNull
     protected abstract Toolbar getToolbar();

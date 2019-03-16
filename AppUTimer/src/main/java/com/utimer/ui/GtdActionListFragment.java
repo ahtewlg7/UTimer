@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -25,7 +24,6 @@ import ahtewlg7.utimer.entity.busevent.ActionLoadBusEvent;
 import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
 import ahtewlg7.utimer.factory.EventBusFatory;
 import ahtewlg7.utimer.mvp.GtdActionListMvpP;
-import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MyRInfo;
 import butterknife.BindView;
 import io.reactivex.Flowable;
@@ -120,11 +118,9 @@ public class GtdActionListFragment extends AToolbarBkFragment implements GtdActi
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Logcat.i(TAG, "onOptionsItemSelected " + item.getTitle());
         boolean result = false;
         switch (item.getItemId()) {
             case R.id.tool_menu_add:
-                Log.i(TAG, "to create shorthand");
                 startForResult(ShortHandEditFragment.newInstance(null), REQ_NEW_FRAGMENT);
                 break;
             default:
@@ -143,22 +139,18 @@ public class GtdActionListFragment extends AToolbarBkFragment implements GtdActi
     /**********************************************IGtdActionListMvpV**********************************************/
     @Override
     public void onItemLoadStart() {
-        Logcat.i(TAG, "onItemLoadStart");
     }
 
     @Override
     public void onItemLoad(GtdActionEntity data) {
-//        Logcat.i(TAG, "onItemLoad " + data.toString());
     }
 
     @Override
     public void onItemLoadErr(Throwable t) {
-        Logcat.i(TAG, "onItemLoadErr : " + t.getMessage());
     }
 
     @Override
     public void onItemLoadEnd(List<GtdActionEntity> alldata) {
-        Logcat.i(TAG, "onItemLoadEnd");
         if(alldata != null)
             recyclerView.resetData(alldata);
     }
@@ -201,7 +193,6 @@ public class GtdActionListFragment extends AToolbarBkFragment implements GtdActi
 
     @Override
     public void onDeleteErr(Throwable throwable) {
-        Logcat.i(TAG,"onDeleteErr : " + throwable.getMessage());
         ToastUtils.showShort(R.string.prompt_del_err);
     }
 

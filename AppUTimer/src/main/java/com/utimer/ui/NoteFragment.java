@@ -14,12 +14,10 @@ import com.utimer.view.UtimerFuncRecyclerView;
 
 import java.util.List;
 
-import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MyRInfo;
 import butterknife.BindView;
 
 public class NoteFragment extends AToolbarBkFragment {
-    public static final String TAG = NoteFragment.class.getSimpleName();
 
     @BindView(R.id.fragment_utimer_main_func_toolbar)
     Toolbar toolbar;
@@ -54,7 +52,7 @@ public class NoteFragment extends AToolbarBkFragment {
 
     @Override
     protected String getTitle() {
-        return MyRInfo.getStringByID(R.string.title_gtd);
+        return MyRInfo.getStringByID(R.string.title_note);
     }
 
     @Override
@@ -84,29 +82,19 @@ public class NoteFragment extends AToolbarBkFragment {
         String projectTitle      = getResources().getString(R.string.title_project);
         UtimerFuncRecyclerView.FuncViewEntity projectViewEntity = new UtimerFuncRecyclerView.FuncViewEntity(projectDrawable, projectTitle);
 
-        Drawable actionDrawable = TextImageFactory.getInstance().getGtdActionImage();
-        String actionTitle      = getResources().getString(R.string.title_action);
-        UtimerFuncRecyclerView.FuncViewEntity actionViewEntity = new UtimerFuncRecyclerView.FuncViewEntity(actionDrawable, actionTitle);
 
         funcViewEntityList.add(shorthandViewEntity);
         funcViewEntityList.add(projectViewEntity);
-        funcViewEntityList.add(actionViewEntity);
 ;    }
     class MyClickListener implements BaseQuickAdapter.OnItemClickListener{
         @Override
         public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
             switch (position){
                 case 0:
-                    Logcat.i(TAG,"onItemClick : start ShortHand list");
                     ((MainFragment)getParentFragment()).start(ShortHandListFragment.newInstance());
                     break;
                 case 1:
-                    Logcat.i(TAG,"onItemClick : start Project list");
                     ((MainFragment)getParentFragment()).start(ProjectListFragment.newInstance());
-                    break;
-                case 2:
-                    Logcat.i(TAG,"onItemClick : start Project list");
-                    ((MainFragment)getParentFragment()).start(GtdActionListFragment.newInstance());
                     break;
             }
         }
