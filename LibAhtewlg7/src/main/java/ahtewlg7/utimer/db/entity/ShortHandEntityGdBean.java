@@ -5,7 +5,6 @@ import android.text.TextUtils;
 import org.greenrobot.greendao.annotation.Convert;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
-import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Index;
 import org.joda.time.DateTime;
 
@@ -22,8 +21,6 @@ public class ShortHandEntityGdBean {
     // KEEP FIELDS - put your custom fields here
     //KEEP FIELDS END
 
-    @Id(autoincrement = true)
-    private long id;
     private int accessTimes;
     @Index(unique = true)
     private String title;
@@ -35,15 +32,10 @@ public class ShortHandEntityGdBean {
     private DateTime lastAccessTime;
 
 
-    @Generated(hash = 283632925)
-    public ShortHandEntityGdBean() {
-    }
 
-    @Generated(hash = 763349104)
-    public ShortHandEntityGdBean(long id, int accessTimes, String title,
-            String uuid, String value, DateTime createTime,
-            DateTime lastAccessTime) {
-        this.id = id;
+    @Generated(hash = 1459928673)
+    public ShortHandEntityGdBean(int accessTimes, String title, String uuid,
+            String value, DateTime createTime, DateTime lastAccessTime) {
         this.accessTimes = accessTimes;
         this.title = title;
         this.uuid = uuid;
@@ -52,25 +44,23 @@ public class ShortHandEntityGdBean {
         this.lastAccessTime = lastAccessTime;
     }
 
+    @Generated(hash = 283632925)
+    public ShortHandEntityGdBean() {
+    }
+
+
+
     // KEEP METHODS - put your custom methods here
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("{").append(id);
+        builder.append("{");
         if(!TextUtils.isEmpty(title))
             builder.append(",title").append(title);
 
         return builder.append("}").toString();
     }
     // KEEP METHODS END
-
-    public long getId() {
-        return this.id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
 
     public int getAccessTimes() {
         return this.accessTimes;

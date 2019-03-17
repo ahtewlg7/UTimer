@@ -5,7 +5,6 @@ import android.text.TextUtils;
 import org.greenrobot.greendao.annotation.Convert;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
-import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Index;
 import org.joda.time.DateTime;
 
@@ -32,7 +31,7 @@ public class ActionEntityGdBean {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder(TAG);
-        builder.append("{").append(id);
+        builder.append("{");
         if(!TextUtils.isEmpty(uuid))
             builder.append(",uuid=").append(uuid);
         if(!TextUtils.isEmpty(title))
@@ -45,12 +44,6 @@ public class ActionEntityGdBean {
         return builder.append("}").toString();
     }
     // KEEP METHODS END
-    public long getId() {
-        return this.id;
-    }
-    public void setId(long id) {
-        this.id = id;
-    }
     public int getWarningCount() {
         return this.warningCount;
     }
@@ -94,8 +87,6 @@ public class ActionEntityGdBean {
         this.timeList = timeList;
     }
 
-    @Id(autoincrement = true)
-    private long id;
     private int warningCount;
     @Index(unique = true)
     private String uuid;
@@ -108,11 +99,10 @@ public class ActionEntityGdBean {
     @Convert(converter = DateTimeListTypeConverter.class, columnType = String.class)
     private List<DateTime> timeList;
 
-    @Generated(hash = 926896940)
-    public ActionEntityGdBean(long id, int warningCount, String uuid, String title,
+    @Generated(hash = 1198511598)
+    public ActionEntityGdBean(int warningCount, String uuid, String title,
             String detail, DateTime createTime, GtdActionType actionType,
             List<DateTime> timeList) {
-        this.id = id;
         this.warningCount = warningCount;
         this.uuid = uuid;
         this.title = title;
@@ -124,4 +114,5 @@ public class ActionEntityGdBean {
     @Generated(hash = 1154478005)
     public ActionEntityGdBean() {
     }
+
 }

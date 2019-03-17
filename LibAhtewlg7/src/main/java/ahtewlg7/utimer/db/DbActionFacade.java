@@ -11,7 +11,6 @@ import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
 import ahtewlg7.utimer.entity.gtd.ShortHandEntity;
 import ahtewlg7.utimer.entity.gtd.un.GtdTaskEntity;
 import ahtewlg7.utimer.entity.gtd.un.NoteEntity;
-import ahtewlg7.utimer.util.Logcat;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
@@ -21,9 +20,6 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class DbActionFacade {
-    public static final String TAG = DbActionFacade.class.getSimpleName();
-
-
     /*******************************************note**************************************************/
     public Flowable<Optional<NoteEntity>> loadAllNoteEntity() {
         /*return Flowable.fromIterable(NoteEntityDaoAction.getInstance().loadAll())
@@ -181,9 +177,8 @@ public class DbActionFacade {
             @Override
             public Boolean apply(GtdActionEntity eventEntity) throws Exception {
                 ActionEntityGdBean bean = mapActionToGdBean(eventEntity);
-                Logcat.i(TAG,"saveActionEntity : " + bean.toString());
                 long index = ActionEntityDaoAction.getInstance().insert(bean);
-                return index >= 0;
+                return index > 0;
             }
         });
     }

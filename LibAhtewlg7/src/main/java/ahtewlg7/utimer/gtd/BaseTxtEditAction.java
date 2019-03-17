@@ -11,8 +11,6 @@ import ahtewlg7.utimer.util.Logcat;
  * Created by lw on 2018/12/9.
  */
 public class BaseTxtEditAction<T extends AUtimerEntity>  extends AEditAction<T> {
-    public static final String TAG = BaseTxtEditAction.class.getSimpleName();
-
     private MyBypass myBypass;
     private FileIOAction fileIOAction;
 

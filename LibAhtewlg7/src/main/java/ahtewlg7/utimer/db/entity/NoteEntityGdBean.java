@@ -1,7 +1,6 @@
 package ahtewlg7.utimer.db.entity;
 
 import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Index;
 
 /**
@@ -13,8 +12,6 @@ import org.greenrobot.greendao.annotation.Index;
     generateConstructors = false
 )
 public class  NoteEntityGdBean{
-    @Id
-    private long id;
     @Index(unique = true)
     private String uuid;
     private String title;
@@ -23,13 +20,10 @@ public class  NoteEntityGdBean{
     public NoteEntityGdBean() {
     }
 
-    public long getId() { return id; }
-    public void setId(long id) { this.id = id; }
-
     // KEEP METHODS - put your custom methods here
     @Override
     public String toString() {
-        return "NoteEntityGdBean{id = " + id + ", title = " + title + ", detail = " + detail + "}";
+        return "NoteEntityGdBean{title = " + title + ", detail = " + detail + "}";
     }
     // KEEP METHODS END
 

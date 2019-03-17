@@ -3,7 +3,6 @@ package ahtewlg7.utimer.db.entity;
 import android.text.TextUtils;
 
 import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Index;
 import org.greenrobot.greendao.annotation.Generated;
 
@@ -22,18 +21,12 @@ public class TaskEntityGdBean {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("{").append(id);
+        builder.append("{");
         if(!TextUtils.isEmpty(title))
             builder.append(",title").append(title);
         return builder.append("}").toString();
     }
     // KEEP METHODS END
-    public long getId() {
-        return this.id;
-    }
-    public void setId(long id) {
-        this.id = id;
-    }
     public String getUuid() {
         return this.uuid;
     }
@@ -54,16 +47,12 @@ public class TaskEntityGdBean {
     }
 
 
-    @Id(autoincrement = true)
-    private long id;
     @Index(unique = true)
     private String uuid;
     private String title;
     private String detail;
-
-    @Generated(hash = 1188380601)
-    public TaskEntityGdBean(long id, String uuid, String title, String detail) {
-        this.id = id;
+    @Generated(hash = 1077203469)
+    public TaskEntityGdBean(String uuid, String title, String detail) {
         this.uuid = uuid;
         this.title = title;
         this.detail = detail;

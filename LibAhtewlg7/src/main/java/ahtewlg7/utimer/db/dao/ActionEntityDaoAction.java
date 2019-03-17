@@ -17,7 +17,7 @@ import ahtewlg7.utimer.db.entity.ActionEntityGdBean;
 /**
  * Created by lw on 2016/9/6.
  */
-public class ActionEntityDaoAction extends AGreenDaoAction<ActionEntityGdBean, Long> {
+public class ActionEntityDaoAction extends AGreenDaoAction<ActionEntityGdBean, Void> {
     public static final String TAG = ActionEntityDaoAction.class.getSimpleName();
 
     private static ActionEntityDaoAction gtdEventEntityDaoAction;
@@ -33,7 +33,7 @@ public class ActionEntityDaoAction extends AGreenDaoAction<ActionEntityGdBean, L
     }
 
     @Override
-    protected @NonNull AbstractDao<ActionEntityGdBean,Long> getCustomDao() {
+    protected @NonNull AbstractDao<ActionEntityGdBean,Void> getCustomDao() {
         return daoSession.getActionEntityGdBeanDao();
     }
 
