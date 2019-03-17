@@ -53,7 +53,7 @@ public class BinderService extends Service{
         }
     }
     //+++++++++++++++++++++++++++++++++++++++++++EventBus+++++++++++++++++++++++++++++++++++++++++++++++++++
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.MAIN,sticky=true)
     public void onGtdActionEntity(GtdActionEntity actionEntity) {
         gtdActionMvpP.toSaveAction(Flowable.just(actionEntity));
     }

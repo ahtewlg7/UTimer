@@ -17,6 +17,7 @@ import ahtewlg7.utimer.entity.md.EditMementoBean;
 import ahtewlg7.utimer.entity.md.EditMementoCaretaker;
 import ahtewlg7.utimer.entity.md.EditMementoOriginator;
 import ahtewlg7.utimer.factory.EventBusFatory;
+import ahtewlg7.utimer.factory.GtdActionLruCacheFactory;
 import ahtewlg7.utimer.util.MySafeSubscriber;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -74,7 +75,7 @@ public abstract class AUtimerTxtEditMvpP<T extends AUtimerEntity> implements IUt
     }
 
     public void toFinishEdit(@NonNull Flowable<EditElement> editElementRx){
-        editMvpM.toSave(editElementRx.doOnNext(new Consumer<EditElement>() {
+        editMvpM.toSave(editElementRx.doAfterNext(new Consumer<EditElement>() {
                         @Override
                         public void accept(EditElement editElement) throws Exception {
                             toPostGtdAction(editElement);
@@ -136,7 +137,8 @@ public abstract class AUtimerTxtEditMvpP<T extends AUtimerEntity> implements IUt
         Optional<GtdActionEntity> gtdActionOptional = gtdActParser.toParseAction(editElement.getMdCharSequence().toString());
         if(gtdActionOptional.isPresent()) {
             gtdActionOptional.get().setDetail(editElement.getRawText());
-            EventBusFatory.getInstance().getDefaultEventBus().post((GtdActionEntity) gtdActionOptional.get());
+            GtdActionLruCacheFactory.getInstance().add(gtdActionOptional.get().getUuid(), gtdActionOptional.get());
+            EventBusFatory.getInstance().getDefaultEventBus().postSticky((GtdActionEntity) gtdActionOptional.get());
         }
     }
 

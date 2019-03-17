@@ -12,7 +12,6 @@ import java.util.List;
 
 import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
 import ahtewlg7.utimer.factory.GtdActionLruCacheFactory;
-import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MySafeSubscriber;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -23,8 +22,6 @@ import io.reactivex.schedulers.Schedulers;
  * Created by lw on 2018/12/9.
  */
 public class GtdActionListMvpP{
-    public static final String TAG = GtdActionListMvpP.class.getSimpleName();
-
     private IGtdActionListMvpV mvpV;
     private EntityListMvpM entityFlowable;
 
@@ -34,7 +31,6 @@ public class GtdActionListMvpP{
     }
 
     public void toLoadAllItem() {
-        Logcat.i(TAG,"toLoadAllItem");
         entityFlowable.loadAllEntity()
                 .compose(((RxFragment)mvpV.getRxLifeCycleBindView()).<List<GtdActionEntity>>bindUntilEvent(FragmentEvent.DESTROY))
                 .observeOn(AndroidSchedulers.mainThread())
@@ -68,7 +64,6 @@ public class GtdActionListMvpP{
                     @Override
                     public void accept(GtdActionEntity entity) throws Exception {
                         boolean result = entityFlowable.toDelEntity(entity);
-                        Logcat.i(TAG,"toDeleteItem " + entity.getTitle() + " : " + result);
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())

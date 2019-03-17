@@ -13,7 +13,6 @@ import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MySafeSubscriber;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 
@@ -35,12 +34,7 @@ public class GtdActionMvpP {
     }
 
     public void toSaveAction(@NonNull Flowable<GtdActionEntity> actionEntityRx){
-        mvpM.toSaveAction(actionEntityRx.doOnNext(new Consumer<GtdActionEntity>() {
-                    @Override
-                    public void accept(GtdActionEntity actionEntity) throws Exception {
-                        GtdActionLruCacheFactory.getInstance().add(actionEntity.getUuid(), actionEntity);
-                    }
-                }))
+        mvpM.toSaveAction(actionEntityRx)
             .subscribeOn(AndroidSchedulers.mainThread())
             .subscribe(new MySafeSubscriber<Boolean>(){
                 @Override
