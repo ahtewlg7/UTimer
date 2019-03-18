@@ -11,7 +11,7 @@ import org.reactivestreams.Subscription;
 import java.util.List;
 
 import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
-import ahtewlg7.utimer.factory.GtdActionLruCacheFactory;
+import ahtewlg7.utimer.factory.GtdActionCacheFactory;
 import ahtewlg7.utimer.util.MySafeSubscriber;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -113,7 +113,7 @@ public class GtdActionListMvpP{
     class EntityListMvpM{
 
         public Flowable<List<GtdActionEntity>> loadAllEntity() {
-            return Flowable.just(GtdActionLruCacheFactory.getInstance().getAll());
+            return Flowable.just(GtdActionCacheFactory.getInstance().getAll());
         }
 
         public boolean toDelEntity(GtdActionEntity entity) {

@@ -8,7 +8,7 @@ import org.reactivestreams.Subscription;
 
 import ahtewlg7.utimer.db.DbActionFacade;
 import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
-import ahtewlg7.utimer.factory.GtdActionLruCacheFactory;
+import ahtewlg7.utimer.factory.GtdActionCacheFactory;
 import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MySafeSubscriber;
 import io.reactivex.Flowable;
@@ -49,19 +49,14 @@ public class GtdActionMvpP {
                 @Override
                 public void onSubscribe(Subscription s) {
                     super.onSubscribe(s);
-                    GtdActionLruCacheFactory.getInstance().clearAll();
+                    GtdActionCacheFactory.getInstance().clearAll();
                 }
 
                 @Override
                 public void onNext(GtdActionEntity entity) {
                     super.onNext(entity);
                     Logcat.i(TAG,"toLoadAllItem onNext : " + entity.toString());
-                    GtdActionLruCacheFactory.getInstance().add(entity.getUuid(), entity);
-                }
-
-                @Override
-                public void onError(Throwable t) {
-                    super.onError(t);
+                    GtdActionCacheFactory.getInstance().add(entity.getUuid(), entity);
                 }
 
                 @Override

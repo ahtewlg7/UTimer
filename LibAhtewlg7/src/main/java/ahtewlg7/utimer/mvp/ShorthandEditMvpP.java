@@ -1,5 +1,7 @@
 package ahtewlg7.utimer.mvp;
 
+import android.support.annotation.NonNull;
+
 import org.reactivestreams.Subscription;
 
 import ahtewlg7.utimer.entity.gtd.ShortHandEntity;
@@ -35,7 +37,7 @@ public class ShorthandEditMvpP extends AUtimerTxtEditMvpP<ShortHandEntity> {
         }
 
         @Override
-        public Flowable<Boolean> toSave(Flowable<EditElement> elementObservable) {
+        public Flowable<Boolean> toSave(@NonNull Flowable<EditElement> elementObservable) {
             return elementObservable.doOnSubscribe(new Consumer<Subscription>() {
                             @Override
                             public void accept(Subscription subscription) throws Exception {

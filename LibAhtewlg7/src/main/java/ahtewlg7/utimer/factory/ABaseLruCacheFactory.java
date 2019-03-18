@@ -2,8 +2,8 @@ package ahtewlg7.utimer.factory;
 
 import android.util.LruCache;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by lw on 2019/3/13.
@@ -14,6 +14,7 @@ public abstract class ABaseLruCacheFactory<K,V> {
 
     protected abstract boolean ifKeyValid(K k);
     protected abstract boolean ifValueValid(V v);
+    public abstract List<V> getAll();
 
     protected ABaseLruCacheFactory(){
         long maxMemory = Runtime.getRuntime().maxMemory();
@@ -36,12 +37,12 @@ public abstract class ABaseLruCacheFactory<K,V> {
         return cache.get(k);
     }
 
-    public boolean remove(K k){
-        return cache.remove(k) != null;
+    public V remove(K k){
+        return cache.remove(k);
     }
 
-    public List<V> getAll(){
-        return new ArrayList<V>(cache.snapshot().values());
+    public Map<K, V> snapshot(){
+        return cache.snapshot();
     }
 
     public void clearAll(){

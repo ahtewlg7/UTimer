@@ -17,12 +17,12 @@ import ahtewlg7.utimer.entity.md.EditMementoBean;
 import ahtewlg7.utimer.entity.md.EditMementoCaretaker;
 import ahtewlg7.utimer.entity.md.EditMementoOriginator;
 import ahtewlg7.utimer.factory.EventBusFatory;
-import ahtewlg7.utimer.factory.GtdActionLruCacheFactory;
+import ahtewlg7.utimer.factory.GtdActionCacheFactory;
 import ahtewlg7.utimer.util.MySafeSubscriber;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by lw on 2018/10/20.
@@ -75,12 +75,7 @@ public abstract class AUtimerTxtEditMvpP<T extends AUtimerEntity> implements IUt
     }
 
     public void toFinishEdit(@NonNull Flowable<EditElement> editElementRx){
-        editMvpM.toSave(editElementRx.doAfterNext(new Consumer<EditElement>() {
-                        @Override
-                        public void accept(EditElement editElement) throws Exception {
-                            toPostGtdAction(editElement);
-                        }
-                    }))
+        editMvpM.toSave(editElementRx)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new MySafeSubscriber<Boolean>() {
                     @Override
@@ -102,6 +97,21 @@ public abstract class AUtimerTxtEditMvpP<T extends AUtimerEntity> implements IUt
 //                        isChangeSaved = true;
                     }
                 });
+    }
+    public void toPostAction(@NonNull Flowable<EditElement> elementRx){
+        elementRx.subscribeOn(Schedulers.computation())
+            .subscribe(new MySafeSubscriber<EditElement>() {
+                @Override
+                public void onNext(EditElement editElement) {
+                    super.onNext(editElement);
+                    Optional<GtdActionEntity> gtdActionOptional = gtdActParser.toParseAction(editElement.getMdCharSequence().toString());
+                    if(gtdActionOptional.isPresent()) {
+                        gtdActionOptional.get().setDetail(editElement.getRawText());
+                        GtdActionCacheFactory.getInstance().add(gtdActionOptional.get().getUuid(), gtdActionOptional.get());
+                        EventBusFatory.getInstance().getDefaultEventBus().postSticky((GtdActionEntity) gtdActionOptional.get());
+                    }
+                }
+            });
     }
 
     public void cancelInsert(){
@@ -131,15 +141,6 @@ public abstract class AUtimerTxtEditMvpP<T extends AUtimerEntity> implements IUt
             return true;
         }
         return false;
-    }
-
-    protected void toPostGtdAction(EditElement editElement){
-        Optional<GtdActionEntity> gtdActionOptional = gtdActParser.toParseAction(editElement.getMdCharSequence().toString());
-        if(gtdActionOptional.isPresent()) {
-            gtdActionOptional.get().setDetail(editElement.getRawText());
-            GtdActionLruCacheFactory.getInstance().add(gtdActionOptional.get().getUuid(), gtdActionOptional.get());
-            EventBusFatory.getInstance().getDefaultEventBus().postSticky((GtdActionEntity) gtdActionOptional.get());
-        }
     }
 
     public interface IUtimerEditMvpM{

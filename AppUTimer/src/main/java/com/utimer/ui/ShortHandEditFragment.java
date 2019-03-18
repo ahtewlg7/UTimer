@@ -161,9 +161,8 @@ public class ShortHandEditFragment extends ATxtEditFragment
         List<EditElement> elementList = mdEditView.getEditElementList();
         if(elementList.size() > 0){//maybe the entity is not loaded
             resultCode = RESULT_OK;
-            editMvpP.toFinishEdit(Flowable.fromIterable(elementList)
-//                    .compose(((RxFragment) getRxLifeCycleBindView()).<EditElement>bindUntilEvent(FragmentEvent.DESTROY))
-            );
+            editMvpP.toPostAction(Flowable.fromIterable(elementList));
+            editMvpP.toFinishEdit(Flowable.fromIterable(elementList));
             ((ShortHandEntity)getArguments().getSerializable(KEY_SHORTHAND)).appendDetail(elementList.get(0).getMdCharSequence().toString());
         }
         setFragmentResult(resultCode, getArguments());
