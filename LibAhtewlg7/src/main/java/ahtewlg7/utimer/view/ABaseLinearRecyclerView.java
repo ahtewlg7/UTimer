@@ -26,8 +26,6 @@ import java.util.List;
  */
 
 public abstract class ABaseLinearRecyclerView<T> extends RecyclerView{
-    public static final String TAG = ABaseLinearRecyclerView.class.getSimpleName();
-
     protected BaseItemAdapter<T> recyclerViewAdapter;
 
     public abstract @LayoutRes int getViewItemLayout();

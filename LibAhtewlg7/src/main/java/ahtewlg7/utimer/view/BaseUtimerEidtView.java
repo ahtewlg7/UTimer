@@ -16,7 +16,9 @@ import com.chad.library.adapter.base.listener.OnItemDragListener;
 import com.chad.library.adapter.base.listener.OnItemSwipeListener;
 import com.google.common.base.Charsets;
 import com.google.common.base.Optional;
+import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Table;
 import com.google.common.io.Files;
 import com.trello.rxlifecycle2.android.FragmentEvent;
 import com.trello.rxlifecycle2.components.support.RxFragment;
@@ -24,6 +26,7 @@ import com.trello.rxlifecycle2.components.support.RxFragment;
 import org.reactivestreams.Publisher;
 import org.reactivestreams.Subscription;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -66,6 +69,7 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
 
     protected AUtimerEntity utimerEntity;
     protected List<EditElement> editElementList;
+    protected Table<Integer, Integer, EditElement> editElementTable;
 
     protected MyBypass myBypass;
     protected Subscription loadSubscription;
@@ -140,6 +144,10 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
         return editElementList;
     }
 
+    public List<EditElement> getInitEditElementList(){
+        return new ArrayList<EditElement>(editElementTable.column(0).values());
+    }
+
     public boolean ifTxtChanged(){
         return isTxtChanged;
     }
@@ -183,12 +191,14 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
             .compose(((RxFragment) attachEditView.getRxLifeCycleBindView()).<EditElement>bindUntilEvent(FragmentEvent.DESTROY_VIEW))
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(new MySafeSubscriber<EditElement>(){
+                int index = 0;
                 @Override
                 public void onSubscribe(Subscription s) {
                     super.onSubscribe(s);
                     Logcat.i(TAG,"toLoadTxt start");
                     loadSubscription = s;
                     editElementList.clear();
+                    editElementTable.clear();
                     if(attachEditView != null)
                         attachEditView.onLoadStart();
                 }
@@ -197,6 +207,7 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
                 public void onNext(EditElement editElement) {
                     super.onNext(editElement);
                     editElementList.add(editElement);
+                    editElementTable.put(index++, 0, editElement);
                 }
 
                 @Override
@@ -286,8 +297,9 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
 
     protected void init(){
         setDescendantFocusability(FOCUS_BEFORE_DESCENDANTS);
-        editElementList = Lists.newArrayList();
-        myBypass        = new MyBypass();
+        editElementList  = Lists.newArrayList();
+        myBypass         = new MyBypass();
+        editElementTable = HashBasedTable.create();
     }
     protected void initEditView(){
         if(editElementList.size() == 0)
@@ -336,6 +348,7 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
                         editElementList.set(index, element);
                         resetData(index, element);
                         preEditPosition = INIT_POSITION;
+                        editElementTable.put(index, editElementTable.row(index).size(),element);
                     }
                 });
     }
