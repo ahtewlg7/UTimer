@@ -253,12 +253,15 @@ public class DbActionFacade {
         ActionEntityGdBean bean = new ActionEntityGdBean();
         bean.setUuid(entity.getUuid());
         bean.setTitle(entity.getTitle());
-        bean.setTimeList(entity.getTimeList());
         bean.setActionType(entity.getActionType());
-        bean.setCreateTime(entity.getCreateTime());
-        bean.setWarningCount(entity.getWarningTimes());
         if(entity.getDetail().isPresent())
             bean.setDetail(entity.getDetail().get());
+        if(entity.getW5h2Entity().getWhat() != null)
+            bean.setW5h2What(entity.getW5h2Entity().getWhat());
+        if(entity.getW5h2Entity().getWhen() != null)
+            bean.setW5h2When(entity.getW5h2Entity().getWhen());
+        if(entity.getW5h2Entity().getHowMuch() != null)
+            bean.setW5h2HowMuch(entity.getW5h2Entity().getHowMuch());
         return bean;
     }
     /*private NoteEntityGdBean mapNoteToGdBean(@NonNull NoteEntity entity){

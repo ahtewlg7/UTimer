@@ -6,13 +6,16 @@ import org.greenrobot.greendao.annotation.Convert;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Index;
-import org.joda.time.DateTime;
+import org.greenrobot.greendao.annotation.NotNull;
+import org.greenrobot.greendao.annotation.Property;
 
-import java.util.List;
-
-import ahtewlg7.utimer.db.converter.DateTimeListTypeConverter;
-import ahtewlg7.utimer.db.converter.DateTimeTypeConverter;
 import ahtewlg7.utimer.db.converter.GtdActionTypeConverter;
+import ahtewlg7.utimer.db.converter.W5h2HowMuchConverter;
+import ahtewlg7.utimer.db.converter.W5h2WhatConverter;
+import ahtewlg7.utimer.db.converter.W5h2WhenConverter;
+import ahtewlg7.utimer.entity.w5h2.W5h2HowMuch;
+import ahtewlg7.utimer.entity.w5h2.W5h2What;
+import ahtewlg7.utimer.entity.w5h2.W5h2When;
 import ahtewlg7.utimer.enumtype.GtdActionType;
 
 /**
@@ -38,18 +41,11 @@ public class ActionEntityGdBean {
             builder.append(",title=").append(title);
         if(!TextUtils.isEmpty(detail))
             builder.append(",detail=").append(detail);
-        builder.append(",warningCount=").append(warningCount);
         if(actionType != null)
             builder.append(",actionType=").append(actionType.name());
         return builder.append("}").toString();
     }
     // KEEP METHODS END
-    public int getWarningCount() {
-        return this.warningCount;
-    }
-    public void setWarningCount(int warningCount) {
-        this.warningCount = warningCount;
-    }
     public String getUuid() {
         return this.uuid;
     }
@@ -68,11 +64,11 @@ public class ActionEntityGdBean {
     public void setDetail(String detail) {
         this.detail = detail;
     }
-    public DateTime getCreateTime() {
-        return this.createTime;
+    public String getAttachFileRPath() {
+        return this.attachFileRPath;
     }
-    public void setCreateTime(DateTime createTime) {
-        this.createTime = createTime;
+    public void setAttachFileRPath(String attachFileRPath) {
+        this.attachFileRPath = attachFileRPath;
     }
     public GtdActionType getActionType() {
         return this.actionType;
@@ -80,39 +76,60 @@ public class ActionEntityGdBean {
     public void setActionType(GtdActionType actionType) {
         this.actionType = actionType;
     }
-    public List<DateTime> getTimeList() {
-        return this.timeList;
+    public W5h2When getW5h2When() {
+        return this.w5h2When;
     }
-    public void setTimeList(List<DateTime> timeList) {
-        this.timeList = timeList;
+    public void setW5h2When(W5h2When w5h2When) {
+        this.w5h2When = w5h2When;
+    }
+    public W5h2What getW5h2What() {
+        return this.w5h2What;
+    }
+    public void setW5h2What(W5h2What w5h2What) {
+        this.w5h2What = w5h2What;
+    }
+    public W5h2HowMuch getW5h2HowMuch() {
+        return this.w5h2HowMuch;
+    }
+    public void setW5h2HowMuch(W5h2HowMuch w5h2HowMuch) {
+        this.w5h2HowMuch = w5h2HowMuch;
     }
 
-    private int warningCount;
+    @NotNull
     @Index(unique = true)
     private String uuid;
+    @NotNull
     private String title;
+    @NotNull
     private String detail;
-    @Convert(converter = DateTimeTypeConverter.class, columnType = Long.class)
-    private DateTime createTime;
+    private String attachFileRPath;
     @Convert(converter = GtdActionTypeConverter.class, columnType = Integer.class)
     private GtdActionType actionType;
-    @Convert(converter = DateTimeListTypeConverter.class, columnType = String.class)
-    private List<DateTime> timeList;
+    @Property(nameInDb = "WHEN")
+    @Convert(converter = W5h2WhenConverter.class, columnType = String.class)
+    private W5h2When w5h2When;
+    @Property(nameInDb = "WHAT")
+    @Convert(converter = W5h2WhatConverter.class, columnType = String.class)
+    private W5h2What w5h2What;
+    @Property(nameInDb = "HOWMUCh")
+    @Convert(converter = W5h2HowMuchConverter.class, columnType = String.class)
+    private W5h2HowMuch w5h2HowMuch;
 
-    @Generated(hash = 1198511598)
-    public ActionEntityGdBean(int warningCount, String uuid, String title,
-            String detail, DateTime createTime, GtdActionType actionType,
-            List<DateTime> timeList) {
-        this.warningCount = warningCount;
+    @Generated(hash = 1603180036)
+    public ActionEntityGdBean(@NotNull String uuid, @NotNull String title,
+            @NotNull String detail, String attachFileRPath,
+            GtdActionType actionType, W5h2When w5h2When, W5h2What w5h2What,
+            W5h2HowMuch w5h2HowMuch) {
         this.uuid = uuid;
         this.title = title;
         this.detail = detail;
-        this.createTime = createTime;
+        this.attachFileRPath = attachFileRPath;
         this.actionType = actionType;
-        this.timeList = timeList;
+        this.w5h2When = w5h2When;
+        this.w5h2What = w5h2What;
+        this.w5h2HowMuch = w5h2HowMuch;
     }
     @Generated(hash = 1154478005)
     public ActionEntityGdBean() {
     }
-
 }
