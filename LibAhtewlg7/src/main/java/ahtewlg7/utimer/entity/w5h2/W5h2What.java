@@ -5,13 +5,9 @@ import android.text.TextUtils;
 /**
  * Created by lw on 2019/1/16.
  */
-public class BaseW5h2What implements AW5h2What {
-    public static final String TAG = BaseW5h2What.class.getSimpleName();
-
+public class W5h2What {
     private String target;
-
-    public BaseW5h2What() {
-    }
+    private String behavior;
 
     public String getTarget() {
         return target;
@@ -21,12 +17,21 @@ public class BaseW5h2What implements AW5h2What {
         this.target = target;
     }
 
+    public String getBehavior() {
+        return behavior;
+    }
+
+    public void setBehavior(String behavior) {
+        this.behavior = behavior;
+    }
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder(TAG).append("{");
+        StringBuilder builder = new StringBuilder("{");
         if(!TextUtils.isEmpty(target))
-            builder.append("target = "+ target);
+            builder.append(",").append(target);
+        if(!TextUtils.isEmpty(behavior))
+            builder.append(",").append(behavior);
         return builder.append("}").toString();
     }
 }

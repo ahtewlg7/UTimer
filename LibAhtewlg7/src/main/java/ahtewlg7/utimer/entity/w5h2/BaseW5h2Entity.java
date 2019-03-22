@@ -3,20 +3,20 @@ package ahtewlg7.utimer.entity.w5h2;
 /**
  * Created by lw on 2019/1/16.
  */
-public abstract class AW5h2Entity {
-    private AW5h2What what;
+public class BaseW5h2Entity {
+    private W5h2What what;
+    private W5h2When when;
     private AW5h2Why why;
     private AW5h2Who who;
-    private AW5h2When when;
     private AW5h2Where where;
     private AW5h2How how;
-    private AW5h2HowMuch howMuch;
+    private W5h2HowMuch howMuch;
 
-    public AW5h2What getWhat() {
+    public W5h2What getWhat() {
         return what;
     }
 
-    public void setWhat(AW5h2What what) {
+    public void setWhat(W5h2What what) {
         this.what = what;
     }
 
@@ -36,11 +36,11 @@ public abstract class AW5h2Entity {
         this.who = who;
     }
 
-    public AW5h2When getWhen() {
+    public W5h2When getWhen() {
         return when;
     }
 
-    public void setWhen(AW5h2When when) {
+    public void setWhen(W5h2When when) {
         this.when = when;
     }
 
@@ -60,31 +60,31 @@ public abstract class AW5h2Entity {
         this.how = how;
     }
 
-    public AW5h2HowMuch getHowMuch() {
+    public W5h2HowMuch getHowMuch() {
         return howMuch;
     }
 
-    public void setHowMuch(AW5h2HowMuch howMuch) {
+    public void setHowMuch(W5h2HowMuch howMuch) {
         this.howMuch = howMuch;
     }
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
+        StringBuilder builder = new StringBuilder("{");
         if(what != null)
             builder.append(what.toString());
         if(why != null)
-            builder.append("," + why.toString());
+            builder.append(",").append(why.toString());
         if(who != null)
-            builder.append("," + who.toString());
+            builder.append(",").append(who.toString());
         if(when != null)
-            builder.append("," + when.toString());
+            builder.append(",").append(when.toString());
         if(where != null)
-            builder.append("," + where.toString());
+            builder.append(",").append(where.toString());
         if(how != null)
-            builder.append("," + how.toString());
+            builder.append(",").append(how.toString());
         if(howMuch != null)
-            builder.append("," + howMuch.toString());
-        return builder.toString();
+            builder.append(",").append(howMuch.toString());
+        return builder.append("}").toString();
     }
 }
