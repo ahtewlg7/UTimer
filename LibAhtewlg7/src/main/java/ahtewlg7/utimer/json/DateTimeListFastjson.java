@@ -28,7 +28,7 @@ public class DateTimeListFastjson implements ObjectSerializer, ObjectDeserialize
             Long timeL = Long.parseLong(timeS);
             dateTimeList.add(new DateTime(timeL));
         }
-        return (T)timeLists;
+        return (T)dateTimeList;
     }
 
     @Override
