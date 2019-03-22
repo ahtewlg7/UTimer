@@ -16,6 +16,10 @@ import ahtewlg7.utimer.db.entity.ActionEntityGdBean;
 import ahtewlg7.utimer.entity.AGtdUtimerEntity;
 import ahtewlg7.utimer.entity.IMergerEntity;
 import ahtewlg7.utimer.entity.material.DirAttachFile;
+import ahtewlg7.utimer.entity.w5h2.BaseW5h2Entity;
+import ahtewlg7.utimer.entity.w5h2.W5h2HowMuch;
+import ahtewlg7.utimer.entity.w5h2.W5h2What;
+import ahtewlg7.utimer.entity.w5h2.W5h2When;
 import ahtewlg7.utimer.enumtype.GtdActionType;
 import ahtewlg7.utimer.enumtype.GtdType;
 import ahtewlg7.utimer.util.DateTimeAction;
@@ -25,14 +29,10 @@ import ahtewlg7.utimer.util.Logcat;
 public class GtdActionEntity extends AGtdUtimerEntity<GtdActionBuilder> implements Serializable {
     public static final String TAG = GtdActionEntity.class.getSimpleName();
 
-    private int warningTimes;
-    private List<DateTime> timeList;
     private GtdActionType actionType;
 
     protected GtdActionEntity(@Nonnull GtdActionBuilder builder) {
         super(builder);
-        if(builder.timeList != null)
-            timeList = builder.timeList;
         if(builder.gdBean != null)
             initByGbBean(builder.gdBean);
         toMakeUuidOk();
@@ -40,7 +40,8 @@ public class GtdActionEntity extends AGtdUtimerEntity<GtdActionBuilder> implemen
 
     @Override
     public boolean ifValid() {
-        return super.ifValid() && !TextUtils.isEmpty(uuid);
+        return super.ifValid() && !toTips().isPresent()
+                && !TextUtils.isEmpty(uuid) && !TextUtils.isEmpty(detail);
     }
 
     @Override
@@ -66,14 +67,6 @@ public class GtdActionEntity extends AGtdUtimerEntity<GtdActionBuilder> implemen
         this.actionType = actionType;
     }
 
-    public int getWarningTimes() {
-        return warningTimes;
-    }
-
-    public void setWarningTimes(int warningTimes) {
-        this.warningTimes = warningTimes;
-    }
-
     //todo
     @Override
     public IMergerEntity merge(IMergerEntity entity) {
@@ -92,16 +85,47 @@ public class GtdActionEntity extends AGtdUtimerEntity<GtdActionBuilder> implemen
         return result;
     }
 
-    public List<DateTime> getTimeList() {
-        return timeList;
+    @Override
+    public String toString() {
+        if(actionType != null)
+            return new StringBuilder(super.toString()).append(actionType.name()).toString();
+         return super.toString();
+    }
+
+    public Optional<String> getWorkTimeInfo(){
+        if(getW5h2Entity().getWhen() == null || getW5h2Entity().getWhen().getWorkTime() == null )
+            return Optional.absent();
+        StringBuilder builder   = new StringBuilder();
+        List<DateTime> workTime = getW5h2Entity().getWhen().getWorkTime();
+        for(DateTime dateTime : workTime)
+            builder.append(new DateTimeAction().toFormat(dateTime)).append(",");
+        return Optional.of(builder.toString());
     }
 
     private void  initByGbBean(ActionEntityGdBean gdBean){
         uuid            = gdBean.getUuid();
         title           = gdBean.getTitle();
         detail          = gdBean.getDetail();
-        timeList        = gdBean.getTimeList();
-        createTime      = gdBean.getCreateTime();
-        lastAccessTime  = gdBean.getCreateTime();
+
+        if(w5h2Entity  == null)
+            w5h2Entity  = new BaseW5h2Entity();
+        updateWhen(gdBean.getW5h2When());
+        updateWhat(gdBean.getW5h2What());
+        updateHowMuch(gdBean.getW5h2HowMuch());
+    }
+    private void updateWhat(W5h2What what){
+        if(what != null)
+            w5h2Entity.setWhat(what);
+    }
+    private void updateWhen(W5h2When when){
+        if(when != null){
+            w5h2Entity.setWhen(when);
+            createTime      = when.getCreateTime();
+            lastAccessTime  = when.getLastAccessTime();
+        }
+    }
+    private void updateHowMuch(W5h2HowMuch howMuch){
+        if(howMuch != null)
+            w5h2Entity.setHowMuch(howMuch);
     }
 }

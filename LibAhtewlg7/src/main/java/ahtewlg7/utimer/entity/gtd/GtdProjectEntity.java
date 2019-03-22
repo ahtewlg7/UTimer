@@ -9,7 +9,7 @@ import java.io.Serializable;
 import javax.annotation.Nonnull;
 
 import ahtewlg7.utimer.common.FileSystemAction;
-import ahtewlg7.utimer.entity.AGtdUtimerEntity;
+import ahtewlg7.utimer.entity.AUtimerEntity;
 import ahtewlg7.utimer.entity.IMergerEntity;
 import ahtewlg7.utimer.entity.material.DirAttachFile;
 import ahtewlg7.utimer.enumtype.GtdType;
@@ -17,7 +17,7 @@ import ahtewlg7.utimer.util.DateTimeAction;
 import ahtewlg7.utimer.util.Logcat;
 
 
-public class GtdProjectEntity extends AGtdUtimerEntity<GtdProjectBuilder> implements Serializable {
+public class GtdProjectEntity extends AUtimerEntity<GtdProjectBuilder> implements Serializable {
     public static final String TAG = GtdProjectEntity.class.getSimpleName();
 
     private StringBuilder detailBuilder;

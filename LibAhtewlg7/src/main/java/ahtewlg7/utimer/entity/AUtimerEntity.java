@@ -13,9 +13,7 @@ import ahtewlg7.utimer.common.IdAction;
 import ahtewlg7.utimer.entity.material.AAttachFile;
 import ahtewlg7.utimer.enumtype.GtdType;
 
-public abstract class AUtimerEntity<T extends AUtimerBuilder>
-        implements ITipsEntity, IMergerEntity{
-    public static final String TAG = AUtimerEntity.class.getSimpleName();
+public abstract class AUtimerEntity<T extends AUtimerBuilder> implements ITipsEntity, IMergerEntity{
 
     @NonNull
     public abstract GtdType getGtdType();
@@ -40,6 +38,7 @@ public abstract class AUtimerEntity<T extends AUtimerBuilder>
             merge(t.entity);
         id         = t.id;
         title      = t.title;
+        detail     = t.detail;
         uuid       = TextUtils.isEmpty(t.uuid) ? new IdAction().getUUId() : t.uuid;
         createTime = t.createTime;
         if(t.attachFile != null){
@@ -71,6 +70,10 @@ public abstract class AUtimerEntity<T extends AUtimerBuilder>
 
     public AAttachFile getAttachFile() {
         return attachFile;
+    }
+
+    public Optional<String> getAttachFileRPath(){
+        return attachFile != null ? attachFile.getRPath() : Optional.<String>absent();
     }
 
     public boolean isGtdActived() {

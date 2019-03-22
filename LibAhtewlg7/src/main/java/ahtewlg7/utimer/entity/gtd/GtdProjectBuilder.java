@@ -2,12 +2,12 @@ package ahtewlg7.utimer.entity.gtd;
 
 import android.support.annotation.NonNull;
 
-import ahtewlg7.utimer.entity.AGtdUtimerBuilder;
+import ahtewlg7.utimer.entity.AUtimerBuilder;
 
 /**
  * Created by lw on 2018/10/26.
  */
-public class GtdProjectBuilder extends AGtdUtimerBuilder<GtdProjectEntity, GtdProjectBuilder> {
+public class GtdProjectBuilder extends AUtimerBuilder<GtdProjectEntity, GtdProjectBuilder> {
     public static final String TAG = GtdProjectBuilder.class.getSimpleName();
 
     /*protected ShortHandEntityGdBean gdBean;
