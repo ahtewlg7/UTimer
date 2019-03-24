@@ -23,12 +23,9 @@ import ahtewlg7.utimer.entity.w5h2.W5h2When;
 import ahtewlg7.utimer.enumtype.GtdActionType;
 import ahtewlg7.utimer.enumtype.GtdType;
 import ahtewlg7.utimer.util.DateTimeAction;
-import ahtewlg7.utimer.util.Logcat;
 
 
 public class GtdActionEntity extends AGtdUtimerEntity<GtdActionBuilder> implements Serializable {
-    public static final String TAG = GtdActionEntity.class.getSimpleName();
-
     private GtdActionType actionType;
 
     protected GtdActionEntity(@Nonnull GtdActionBuilder builder) {
@@ -69,8 +66,12 @@ public class GtdActionEntity extends AGtdUtimerEntity<GtdActionBuilder> implemen
 
     //todo
     @Override
-    public IMergerEntity merge(IMergerEntity entity) {
-        return entity;
+    public void update(IMergerEntity entity) {
+        BaseW5h2Entity baseW5h2Entity = ((GtdActionEntity)entity).getW5h2Entity();
+        super.update(entity);
+        updateWhen(baseW5h2Entity.getWhen());
+        updateWhat(baseW5h2Entity.getWhat());
+        updateHowMuch(baseW5h2Entity.getHowMuch());
     }
 
     @Override
@@ -80,9 +81,7 @@ public class GtdActionEntity extends AGtdUtimerEntity<GtdActionBuilder> implemen
             String filePath = new FileSystemAction().getProjectGtdAbsPath();
             attachFile = new DirAttachFile(filePath, fileName);
         }
-        boolean result = attachFile.createOrExist();
-        Logcat.i(TAG,"ensureAttachFileExist result = " + result);
-        return result;
+        return attachFile.createOrExist();
     }
 
     @Override

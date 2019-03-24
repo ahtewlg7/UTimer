@@ -6,8 +6,6 @@ import ahtewlg7.utimer.entity.w5h2.BaseW5h2Entity;
 
 
 public abstract class AGtdUtimerEntity<T extends AGtdUtimerBuilder> extends AUtimerEntity<T>  {
-    public static final String TAG = AGtdUtimerEntity.class.getSimpleName();
-
     protected BaseW5h2Entity w5h2Entity;
 
     protected AGtdUtimerEntity(@Nonnull T builder) {
@@ -26,5 +24,10 @@ public abstract class AGtdUtimerEntity<T extends AGtdUtimerBuilder> extends AUti
         if(w5h2Entity != null)
             builder.append(w5h2Entity.toString());
         return builder.toString();
+    }
+
+    @Override
+    public void update(IMergerEntity entity) {
+        w5h2Entity = ((AGtdUtimerEntity)entity).getW5h2Entity();
     }
 }

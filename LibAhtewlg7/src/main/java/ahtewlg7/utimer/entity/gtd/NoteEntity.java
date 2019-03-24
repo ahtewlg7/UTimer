@@ -47,8 +47,7 @@ public class NoteEntity extends AUtimerEntity<NoteBuilder> implements Serializab
     }
 
     @Override
-    public IMergerEntity merge(IMergerEntity entity) {
-        return entity;
+    public void update(IMergerEntity entity) {
     }
 
     @Override

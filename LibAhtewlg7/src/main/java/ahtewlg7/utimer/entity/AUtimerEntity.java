@@ -33,9 +33,9 @@ public abstract class AUtimerEntity<T extends AUtimerBuilder> implements ITipsEn
     protected DateTime lastModifyTime;
 
     protected AUtimerEntity(@Nonnull T t){
-        //merge first
+        //update first
         if(t.entity != null)
-            merge(t.entity);
+            update(t.entity);
         id         = t.id;
         title      = t.title;
         detail     = t.detail;

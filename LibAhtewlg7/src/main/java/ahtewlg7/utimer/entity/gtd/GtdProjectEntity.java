@@ -43,8 +43,7 @@ public class GtdProjectEntity extends AUtimerEntity<GtdProjectBuilder> implement
 
     //todo
     @Override
-    public IMergerEntity merge(IMergerEntity entity) {
-        return entity;
+    public void update(IMergerEntity entity) {
     }
 
     @Override

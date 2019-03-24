@@ -82,8 +82,8 @@ public class ShortHandEntity extends AUtimerEntity<ShortHandBuilder> implements 
     }
 
     @Override
-    public IMergerEntity merge(IMergerEntity entity) {
-        return this;
+    public void update(IMergerEntity entity) {
+
     }
 
     @Override

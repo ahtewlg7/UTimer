@@ -37,7 +37,7 @@ public class GtdShortHandListAction {
     }
 
     public Flowable<ShortHandEntity> loadAllEntity() {
-//        return Flowable.merge(filterInvalidEntity(getFsShortHand(getShortHandFiles())),
+//        return Flowable.update(filterInvalidEntity(getFsShortHand(getShortHandFiles())),
 //                              filterInvalidEntity(getDbShortHand(getShortHandFiles())))
         return filterInvalidEntity(getFsShortHand(getShortHandFiles()));
     }

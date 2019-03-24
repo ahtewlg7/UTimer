@@ -39,7 +39,7 @@ public class GtdProjectListAction {
     }
 
     public Flowable<GtdProjectEntity> loadAllEntity() {
-//        return Flowable.merge(filterInvalidEntity(getFsProject(getProjectDirs())),
+//        return Flowable.update(filterInvalidEntity(getFsProject(getProjectDirs())),
 //                              filterInvalidEntity(getDbShortHand(getProjectDirs())))
         return filterInvalidEntity(getFsProject(getProjectDirs()));
     }
