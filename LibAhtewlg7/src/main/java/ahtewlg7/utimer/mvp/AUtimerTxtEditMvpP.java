@@ -4,10 +4,12 @@ package ahtewlg7.utimer.mvp;
 import android.support.annotation.NonNull;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.Table;
 
 import org.reactivestreams.Subscription;
 
 import java.util.List;
+import java.util.Map;
 
 import ahtewlg7.utimer.common.GtdActParser;
 import ahtewlg7.utimer.entity.AUtimerEntity;
@@ -17,9 +19,12 @@ import ahtewlg7.utimer.entity.md.EditMementoBean;
 import ahtewlg7.utimer.entity.md.EditMementoCaretaker;
 import ahtewlg7.utimer.entity.md.EditMementoOriginator;
 import ahtewlg7.utimer.factory.EventBusFatory;
-import ahtewlg7.utimer.factory.GtdActionCacheFactory;
+import ahtewlg7.utimer.factory.GtdActionByUuidFactory;
+import ahtewlg7.utimer.util.MySafeFlowableOnSubscribe;
 import ahtewlg7.utimer.util.MySafeSubscriber;
+import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
+import io.reactivex.FlowableEmitter;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
@@ -28,10 +33,7 @@ import io.reactivex.schedulers.Schedulers;
  * Created by lw on 2018/10/20.
  */
 public abstract class AUtimerTxtEditMvpP<T extends AUtimerEntity> implements IUtimerEditMvpP{
-    public static final String TAG = AUtimerTxtEditMvpP.class.getSimpleName();
-
     protected abstract IUtimerEditMvpM getEditMvpM(T t);
-
 
     protected Disposable insertDisplose;
     protected Disposable modifyDispose;
@@ -98,22 +100,54 @@ public abstract class AUtimerTxtEditMvpP<T extends AUtimerEntity> implements IUt
                     }
                 });
     }
-    public void toPostAction(@NonNull Flowable<EditElement> elementRx){
-        elementRx.subscribeOn(Schedulers.computation())
-            .subscribe(new MySafeSubscriber<EditElement>() {
-                @Override
-                public void onNext(EditElement editElement) {
-                    super.onNext(editElement);
-                    Optional<GtdActionEntity> gtdActionOptional = gtdActParser.toParseAction(editElement.getMdCharSequence().toString());
-                    if(gtdActionOptional.isPresent()) {
-                        gtdActionOptional.get().setDetail(editElement.getRawText());
-                        GtdActionCacheFactory.getInstance().add(gtdActionOptional.get().getUuid(), gtdActionOptional.get());
-                        EventBusFatory.getInstance().getDefaultEventBus().postSticky((GtdActionEntity) gtdActionOptional.get());
+    public void toPostAction(@NonNull final Table<Integer, Integer, EditElement> editElementTable){
+        Flowable.create(new MySafeFlowableOnSubscribe<GtdActionEntity>() {
+            @Override
+            public void subscribe(FlowableEmitter<GtdActionEntity> e) throws Exception {
+                super.subscribe(e);
+                try{
+                    Map<Integer,Map<Integer,EditElement>> rowMap = editElementTable.rowMap();
+                    for(int i = 0 ; i < rowMap.size() ; i++) {
+                        Map<Integer, EditElement> columnMap = rowMap.get(i);
+                        EditElement eLast = columnMap.get(columnMap.size() - 1);
+                        Optional<GtdActionEntity> gtdActionOptional = gtdActParser.toParseAction(eLast.getMdCharSequence().toString());
+                        if (!gtdActionOptional.isPresent())
+                            continue;
+                        EditElement eFirst = columnMap.get(0);
+                        Optional<GtdActionEntity> firstGtdActionOptional =
+                                GtdActionByUuidFactory.getInstance().getActionByDetail(columnMap.get(0).getMdCharSequence().toString());
+                        if (columnMap.size() == 1
+                                && !firstGtdActionOptional.isPresent()) {
+                            GtdActionByUuidFactory.getInstance().add(gtdActionOptional.get().getUuid(), gtdActionOptional.get());
+                            e.onNext(gtdActionOptional.get());
+                        } else if (columnMap.size() > 1) {
+                            if (firstGtdActionOptional.isPresent() && !eLast.getRawText().equals(eFirst.getMdCharSequence().toString())) {
+                                //means : action is edit
+                                firstGtdActionOptional.get().update(gtdActionOptional.get());
+                                GtdActionByUuidFactory.getInstance().update(firstGtdActionOptional.get().getUuid(), firstGtdActionOptional.get());
+                                e.onNext(firstGtdActionOptional.get());
+                            } else {
+                                //add
+                                GtdActionByUuidFactory.getInstance().add(gtdActionOptional.get().getUuid(), gtdActionOptional.get());
+                                e.onNext(gtdActionOptional.get());
+                            }
+                        }
                     }
+                    e.onComplete();
+                }catch (Exception exc){
+                    e.onError(exc.getCause());
                 }
-            });
+            }
+        }, BackpressureStrategy.MISSING)
+        .subscribeOn(Schedulers.computation())
+        .subscribe(new MySafeSubscriber<GtdActionEntity>() {
+            @Override
+            public void onNext(GtdActionEntity entity) {
+                super.onNext(entity);
+                EventBusFatory.getInstance().getDefaultEventBus().postSticky(entity);
+            }
+        });
     }
-
     public void cancelInsert(){
         if(insertDisplose != null && !insertDisplose.isDisposed())
             insertDisplose.dispose();

@@ -11,21 +11,21 @@ import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
 /**
  * Created by lw on 2019/3/13.
  */
-public class GtdUuidActionFactory extends ABaseLruCacheFactory<String, GtdActionEntity> {
-    private static GtdUuidActionFactory instance;
+public class GtdActionByUuidFactory extends ABaseLruCacheFactory<String, GtdActionEntity> {
+    private static GtdActionByUuidFactory instance;
 
     private BiMap<String, String> tipsUuidMap;
     private BiMap<String, String> detailUuidMap;
 
-    protected GtdUuidActionFactory(){
+    protected GtdActionByUuidFactory(){
         super();
         tipsUuidMap   = HashBiMap.create();
         detailUuidMap = HashBiMap.create();
     }
 
-    public static GtdUuidActionFactory getInstance() {
+    public static GtdActionByUuidFactory getInstance() {
         if(instance == null)
-            instance = new GtdUuidActionFactory();
+            instance = new GtdActionByUuidFactory();
         return instance;
     }
 

@@ -7,6 +7,7 @@ import android.widget.FrameLayout;
 
 import com.blankj.utilcode.util.ToastUtils;
 import com.google.common.base.Optional;
+import com.google.common.collect.Table;
 import com.trello.rxlifecycle2.android.FragmentEvent;
 import com.trello.rxlifecycle2.components.support.RxFragment;
 
@@ -97,8 +98,8 @@ public class MdEditView extends FrameLayout {
         return editRecyclerView.getEditElementList();
     }
 
-    public List<EditElement> getInitEditElementList(){
-        return editRecyclerView.getInitEditElementList();
+    public Table<Integer, Integer, EditElement> getEditElementTable(){
+        return editRecyclerView.getEditElementTable();
     }
 
     private void initView(){

@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.blankj.utilcode.util.ToastUtils;
+import com.google.common.collect.Table;
 import com.trello.rxlifecycle2.LifecycleProvider;
 import com.utimer.R;
 
@@ -45,8 +46,8 @@ public class ShortHandEditFragment extends ATxtEditFragment
         if(entity != null)
             args.putSerializable(KEY_SHORTHAND, entity);
         else {
-            String now = new DateTimeAction().toFormatNow().toString();
-            ShortHandEntity e = (ShortHandEntity)new ShortHandBuilder().setTitle(now).build();
+            String now = new DateTimeAction().toFormatNow();
+            ShortHandEntity e = new ShortHandBuilder().setTitle(now).build();
             args.putSerializable(KEY_SHORTHAND, e);
         }
         ShortHandEditFragment fragment = new ShortHandEditFragment();
@@ -159,9 +160,10 @@ public class ShortHandEditFragment extends ATxtEditFragment
         mdEditView.toEndEdit();
         int resultCode = RESULT_CANCELED;
         List<EditElement> elementList = mdEditView.getEditElementList();
+        Table<Integer, Integer, EditElement> editElementTable = mdEditView.getEditElementTable();
         if(elementList.size() > 0){//maybe the entity is not loaded
             resultCode = RESULT_OK;
-            editMvpP.toPostAction(Flowable.fromIterable(elementList));
+            editMvpP.toPostAction(editElementTable);
             editMvpP.toFinishEdit(Flowable.fromIterable(elementList));
             ((ShortHandEntity)getArguments().getSerializable(KEY_SHORTHAND)).appendDetail(elementList.get(0).getMdCharSequence().toString());
         }

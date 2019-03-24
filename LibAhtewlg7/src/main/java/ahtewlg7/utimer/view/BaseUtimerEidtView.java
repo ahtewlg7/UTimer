@@ -26,7 +26,6 @@ import com.trello.rxlifecycle2.components.support.RxFragment;
 import org.reactivestreams.Publisher;
 import org.reactivestreams.Subscription;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -144,8 +143,9 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
         return editElementList;
     }
 
-    public List<EditElement> getInitEditElementList(){
-        return new ArrayList<EditElement>(editElementTable.column(0).values());
+    //Table: line_index + column_index + EditElement
+    public Table<Integer, Integer, EditElement> getEditElementTable(){
+        return editElementTable;
     }
 
     public boolean ifTxtChanged(){

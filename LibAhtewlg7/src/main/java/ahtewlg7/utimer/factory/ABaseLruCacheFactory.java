@@ -25,6 +25,10 @@ public abstract class ABaseLruCacheFactory<K,V> {
         this.maxSize = maxSize;
         cache = new LruCache<K,V>(maxSize);
     }
+    public boolean update(K k, V v){
+        remove(k);
+        return add(k,v);
+    }
 
     public boolean add(K k, V v){
         if(!ifKeyValid(k) || !ifValueValid(v))
