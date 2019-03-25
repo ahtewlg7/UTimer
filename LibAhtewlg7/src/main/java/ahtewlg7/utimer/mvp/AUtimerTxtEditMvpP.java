@@ -13,11 +13,13 @@ import java.util.Map;
 
 import ahtewlg7.utimer.common.GtdActParser;
 import ahtewlg7.utimer.entity.AUtimerEntity;
+import ahtewlg7.utimer.entity.busevent.ActionBusEvent;
 import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
 import ahtewlg7.utimer.entity.md.EditElement;
 import ahtewlg7.utimer.entity.md.EditMementoBean;
 import ahtewlg7.utimer.entity.md.EditMementoCaretaker;
 import ahtewlg7.utimer.entity.md.EditMementoOriginator;
+import ahtewlg7.utimer.enumtype.GtdBusEventType;
 import ahtewlg7.utimer.factory.EventBusFatory;
 import ahtewlg7.utimer.factory.GtdActionByUuidFactory;
 import ahtewlg7.utimer.util.MySafeFlowableOnSubscribe;
@@ -144,7 +146,8 @@ public abstract class AUtimerTxtEditMvpP<T extends AUtimerEntity> implements IUt
             @Override
             public void onNext(GtdActionEntity entity) {
                 super.onNext(entity);
-                EventBusFatory.getInstance().getDefaultEventBus().postSticky(entity);
+                ActionBusEvent actionBusEvent = new ActionBusEvent(GtdBusEventType.SAVE, entity);
+                EventBusFatory.getInstance().getDefaultEventBus().postSticky(actionBusEvent);
             }
         });
     }

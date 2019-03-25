@@ -8,11 +8,10 @@ import android.os.IBinder;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import ahtewlg7.utimer.entity.busevent.ActionLoadBusEvent;
-import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
+import ahtewlg7.utimer.entity.busevent.ActionBusEvent;
+import ahtewlg7.utimer.enumtype.GtdBusEventType;
 import ahtewlg7.utimer.factory.EventBusFatory;
 import ahtewlg7.utimer.mvp.GtdActionMvpP;
-import io.reactivex.Flowable;
 
 
 /**
@@ -53,16 +52,17 @@ public class BinderService extends Service{
         }
     }
     //+++++++++++++++++++++++++++++++++++++++++++EventBus+++++++++++++++++++++++++++++++++++++++++++++++++++
-    @Subscribe(threadMode = ThreadMode.MAIN,sticky=true)
-    public void onGtdActionEntity(GtdActionEntity actionEntity) {
-        gtdActionMvpP.toSaveAction(Flowable.just(actionEntity));
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky=true)
+    public void onGtdActionEntity(ActionBusEvent actionBusEvent) {
+        gtdActionMvpP.toHandleActionEvent(actionBusEvent);
     }
 
     //+++++++++++++++++++++++++++++++++++++++++++GtdMpvV+++++++++++++++++++++++++++++++++++++++++++++++++++
     class MyGtdMvpV implements GtdActionMvpP.IGtdActionMvpV{
         @Override
         public void onActionAllLoaded() {
-            EventBusFatory.getInstance().getDefaultEventBus().post(new ActionLoadBusEvent());
+            ActionBusEvent actionBusEvent = new ActionBusEvent(GtdBusEventType.LOAD);
+            EventBusFatory.getInstance().getDefaultEventBus().post(actionBusEvent);
         }
     }
 }

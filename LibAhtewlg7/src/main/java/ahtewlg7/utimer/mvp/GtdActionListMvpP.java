@@ -10,7 +10,9 @@ import org.reactivestreams.Subscription;
 
 import java.util.List;
 
+import ahtewlg7.utimer.entity.busevent.ActionBusEvent;
 import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
+import ahtewlg7.utimer.enumtype.GtdBusEventType;
 import ahtewlg7.utimer.factory.GtdActionByUuidFactory;
 import ahtewlg7.utimer.util.MySafeSubscriber;
 import io.reactivex.Flowable;
@@ -23,15 +25,22 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class GtdActionListMvpP{
     private IGtdActionListMvpV mvpV;
-    private EntityListMvpM entityFlowable;
+    private EntityListMvpM mvpM;
 
     public GtdActionListMvpP(IGtdActionListMvpV mvpV) {
         this.mvpV  = mvpV;
-        entityFlowable = new EntityListMvpM();
+        mvpM = new EntityListMvpM();
+    }
+
+    public void toHandleActionEvent(ActionBusEvent actionBusEvent){
+        if(actionBusEvent == null || !actionBusEvent.ifValid())
+            return;
+        if(actionBusEvent.getEventType() == GtdBusEventType.LOAD)
+            toLoadAllItem();
     }
 
     public void toLoadAllItem() {
-        entityFlowable.loadAllEntity()
+        mvpM.loadAllEntity()
                 .compose(((RxFragment)mvpV.getRxLifeCycleBindView()).<List<GtdActionEntity>>bindUntilEvent(FragmentEvent.DESTROY))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new MySafeSubscriber<List<GtdActionEntity>>() {
@@ -58,12 +67,13 @@ public class GtdActionListMvpP{
                 });
     }
 
-    public void toDeleteItem(@NonNull Flowable<GtdActionEntity>  entityRx) {
+    public void
+    toDeleteItem(@NonNull Flowable<GtdActionEntity>  entityRx) {
         entityRx.subscribeOn(Schedulers.io())
                 .doOnNext(new Consumer<GtdActionEntity>() {
                     @Override
                     public void accept(GtdActionEntity entity) throws Exception {
-                        boolean result = entityFlowable.toDelEntity(entity);
+                        boolean result = mvpM.toDelEntity(entity);
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
@@ -72,7 +82,7 @@ public class GtdActionListMvpP{
                     public void onNext(GtdActionEntity entity) {
                         super.onNext(entity);
 
-                        boolean ifExited = entity.getAttachFile().ifValid();
+                        boolean ifExited = entity.getAttachFile() != null && entity.getAttachFile().ifValid();
                         if (mvpV != null && !ifExited) {
 //                            int index  = entityList.indexOf(entity);
 //                            entityList.remove(entity);
@@ -124,7 +134,7 @@ public class GtdActionListMvpP{
 
             boolean result = false;
             try{
-                if(entity != null && entity.getAttachFile().ifValid())
+                if(entity != null && entity.getAttachFile() != null && entity.getAttachFile().ifValid())
                     result = FileUtils.deleteFile(entity.getAttachFile().getFile());
             }catch (Exception e){
                 e.printStackTrace();

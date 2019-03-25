@@ -20,7 +20,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
-import ahtewlg7.utimer.entity.busevent.ActionLoadBusEvent;
+import ahtewlg7.utimer.entity.busevent.ActionBusEvent;
 import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
 import ahtewlg7.utimer.factory.EventBusFatory;
 import ahtewlg7.utimer.mvp.GtdActionListMvpP;
@@ -202,8 +202,8 @@ public class GtdActionListFragment extends AToolbarBkFragment implements GtdActi
 
     /**********************************************EventBus**********************************************/
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onActionLoadBusEvent(ActionLoadBusEvent eventBus) {
-        listMvpP.toLoadAllItem();
+    public void onActionBusEvent(ActionBusEvent eventBus) {
+        listMvpP.toHandleActionEvent(eventBus);
     }
     /**********************************************IGtdActionListMvpV**********************************************/
 

@@ -7,8 +7,9 @@ import com.google.common.base.Optional;
 import org.reactivestreams.Subscription;
 
 import ahtewlg7.utimer.db.DbActionFacade;
+import ahtewlg7.utimer.entity.busevent.ActionBusEvent;
 import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
-import ahtewlg7.utimer.factory.GtdActionCacheFactory;
+import ahtewlg7.utimer.factory.GtdActionByUuidFactory;
 import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MySafeSubscriber;
 import io.reactivex.Flowable;
@@ -33,6 +34,20 @@ public class GtdActionMvpP {
         return isLoaded;
     }
 
+    public void toHandleActionEvent(ActionBusEvent actionBusEvent){
+        if(actionBusEvent == null || !actionBusEvent.ifValid())
+            return;
+        switch (actionBusEvent.getEventType()){
+            case LOAD:
+                break;
+            case SAVE:
+                toSaveAction(Flowable.just(actionBusEvent.getActionEntity()));
+                break;
+            case DELETE:
+                break;
+        }
+    }
+
     public void toSaveAction(@NonNull Flowable<GtdActionEntity> actionEntityRx){
         mvpM.toSaveAction(actionEntityRx)
             .subscribeOn(AndroidSchedulers.mainThread())
@@ -49,14 +64,14 @@ public class GtdActionMvpP {
                 @Override
                 public void onSubscribe(Subscription s) {
                     super.onSubscribe(s);
-                    GtdActionCacheFactory.getInstance().clearAll();
+                    GtdActionByUuidFactory.getInstance().clearAll();
                 }
 
                 @Override
                 public void onNext(GtdActionEntity entity) {
                     super.onNext(entity);
                     Logcat.i(TAG,"toLoadAllItem onNext : " + entity.toString());
-                    GtdActionCacheFactory.getInstance().add(entity.getUuid(), entity);
+                    GtdActionByUuidFactory.getInstance().add(entity.getUuid(), entity);
                 }
 
                 @Override
