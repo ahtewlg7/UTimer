@@ -10,7 +10,7 @@ import ahtewlg7.utimer.entity.material.AAttachFile;
  * Created by lw on 2018/10/26.
  */
 public abstract class AUtimerBuilder<E extends AUtimerEntity, K extends AUtimerBuilder> {
-    protected String id;
+    protected long id;
     protected String uuid;
     protected String title;
     protected String detail;
@@ -21,7 +21,7 @@ public abstract class AUtimerBuilder<E extends AUtimerEntity, K extends AUtimerB
     @NonNull
     public abstract E build();
 
-    public K setId(String id){
+    public K setId(long id){
         this.id = id;
         return (K)this;
     }

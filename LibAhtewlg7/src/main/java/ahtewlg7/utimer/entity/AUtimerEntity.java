@@ -15,22 +15,23 @@ import ahtewlg7.utimer.enumtype.GtdType;
 
 public abstract class AUtimerEntity<T extends AUtimerBuilder> implements ITipsEntity, IMergerEntity{
 
+    public static final long INVALID_INDEX  = -1;
     @NonNull
     public abstract GtdType getGtdType();
     public abstract Optional<String> getDetail();
     public abstract boolean ensureAttachFileExist();
 
     protected int accessTimes;
+    protected long id = INVALID_INDEX;
     protected boolean isGtdActived;
 
-    protected AAttachFile attachFile;
-    protected String id;
     protected String uuid;
     protected String title;
     protected String detail;
     protected DateTime createTime;
     protected DateTime lastAccessTime;
     protected DateTime lastModifyTime;
+    protected AAttachFile attachFile;
 
     protected AUtimerEntity(@Nonnull T t){
         //update first
@@ -56,7 +57,7 @@ public abstract class AUtimerEntity<T extends AUtimerBuilder> implements ITipsEn
             attachFile.deleteOnExit();
     }
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 
