@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import org.greenrobot.greendao.annotation.Convert;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Index;
 import org.greenrobot.greendao.annotation.NotNull;
 import org.greenrobot.greendao.annotation.Property;
@@ -94,7 +95,16 @@ public class ActionEntityGdBean {
     public void setW5h2HowMuch(W5h2HowMuch w5h2HowMuch) {
         this.w5h2HowMuch = w5h2HowMuch;
     }
+    public Long getId() {
+        return this.id;
+    }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
+
+    @Id
+    private Long id;
     @NotNull
     @Index(unique = true)
     private String uuid;
@@ -115,11 +125,12 @@ public class ActionEntityGdBean {
     @Convert(converter = W5h2HowMuchConverter.class, columnType = String.class)
     private W5h2HowMuch w5h2HowMuch;
 
-    @Generated(hash = 1603180036)
-    public ActionEntityGdBean(@NotNull String uuid, @NotNull String title,
+    @Generated(hash = 2129590227)
+    public ActionEntityGdBean(Long id, @NotNull String uuid, @NotNull String title,
             @NotNull String detail, String attachFileRPath,
             GtdActionType actionType, W5h2When w5h2When, W5h2What w5h2What,
             W5h2HowMuch w5h2HowMuch) {
+        this.id = id;
         this.uuid = uuid;
         this.title = title;
         this.detail = detail;

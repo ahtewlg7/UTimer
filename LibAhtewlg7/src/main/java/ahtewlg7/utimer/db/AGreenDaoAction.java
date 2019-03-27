@@ -27,10 +27,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public abstract class AGreenDaoAction<T,K>{
     public static final String TAG = AGreenDaoAction.class.getSimpleName();
 
-    public abstract Optional<T> queryByKey(String key);
-    protected abstract @NonNull AbstractDao<T,K> getCustomDao();
+    public abstract Optional<T> queryByKey(K key);
+    protected abstract @NonNull AbstractDao<T,Long> getCustomDao();
 
-    protected AbstractDao<T,K> greenDao;
+    protected AbstractDao<T,Long> greenDao;
     protected DaoSession daoSession;
 
     protected AGreenDaoAction(){
@@ -76,10 +76,6 @@ public abstract class AGreenDaoAction<T,K>{
                 delete(t);
             }
         });
-    }
-
-    public void deleteByKey(@NonNull K key) {
-        greenDao.deleteByKey(key);
     }
 
     public void update(@NonNull T entity) {

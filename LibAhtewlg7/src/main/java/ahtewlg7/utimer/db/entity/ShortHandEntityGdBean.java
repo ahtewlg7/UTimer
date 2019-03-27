@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import org.greenrobot.greendao.annotation.Convert;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Index;
 import org.joda.time.DateTime;
 
@@ -21,6 +22,8 @@ public class ShortHandEntityGdBean {
     // KEEP FIELDS - put your custom fields here
     //KEEP FIELDS END
 
+    @Id
+    private Long id;
     private int accessTimes;
     @Index(unique = true)
     private String title;
@@ -33,9 +36,11 @@ public class ShortHandEntityGdBean {
 
 
 
-    @Generated(hash = 1459928673)
-    public ShortHandEntityGdBean(int accessTimes, String title, String uuid,
-            String value, DateTime createTime, DateTime lastAccessTime) {
+    @Generated(hash = 339200117)
+    public ShortHandEntityGdBean(Long id, int accessTimes, String title,
+            String uuid, String value, DateTime createTime,
+            DateTime lastAccessTime) {
+        this.id = id;
         this.accessTimes = accessTimes;
         this.title = title;
         this.uuid = uuid;
@@ -109,6 +114,14 @@ public class ShortHandEntityGdBean {
 
     public void setLastAccessTime(DateTime lastAccessTime) {
         this.lastAccessTime = lastAccessTime;
+    }
+
+    public Long getId() {
+        return this.id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
 }
