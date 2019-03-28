@@ -8,10 +8,14 @@ import android.os.IBinder;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import ahtewlg7.utimer.entity.IEventBusBean;
 import ahtewlg7.utimer.entity.busevent.ActionBusEvent;
 import ahtewlg7.utimer.enumtype.GtdBusEventType;
 import ahtewlg7.utimer.factory.EventBusFatory;
-import ahtewlg7.utimer.mvp.GtdActionMvpP;
+import ahtewlg7.utimer.mvp.db.TableActionMvpP;
+import ahtewlg7.utimer.mvp.db.TableNextIdMvpP;
+import ahtewlg7.utimer.util.MySimpleObserver;
+import io.reactivex.subjects.PublishSubject;
 
 
 /**
@@ -19,19 +23,29 @@ import ahtewlg7.utimer.mvp.GtdActionMvpP;
  */
 
 public class BinderService extends Service{
-    private MyGtdMvpV myGtdMvpV;
-    private GtdActionMvpP gtdActionMvpP;
+    private MyTableActioMvpV myTableGtdMvpV;
+    private MyTableNextIdMvpV myTableNextIdMvpV;
+
+    private TableNextIdMvpP tableNextIdMvpP;
+    private TableActionMvpP tableActionMvpP;
+    private PublishSubject<IEventBusBean> eventBusRx;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        myGtdMvpV       = new MyGtdMvpV();
-        gtdActionMvpP   = new GtdActionMvpP(myGtdMvpV);
+        myTableGtdMvpV      = new MyTableActioMvpV();
+        myTableNextIdMvpV   = new MyTableNextIdMvpV();
+        tableNextIdMvpP     = new TableNextIdMvpP(myTableNextIdMvpV);
+        tableActionMvpP     = new TableActionMvpP(myTableGtdMvpV);
+
+        eventBusRx          = PublishSubject.create();
 
         EventBusFatory.getInstance().getDefaultEventBus().register(this);
+        toListenEventBus();
 
-        gtdActionMvpP.toLoadAllItem();
+//        tableNextIdMvpP.toLoadAll();
+        tableActionMvpP.toLoadAll();
     }
 
     @Override
@@ -54,15 +68,42 @@ public class BinderService extends Service{
     //+++++++++++++++++++++++++++++++++++++++++++EventBus+++++++++++++++++++++++++++++++++++++++++++++++++++
     @Subscribe(threadMode = ThreadMode.MAIN, sticky=true)
     public void onGtdActionEntity(ActionBusEvent actionBusEvent) {
-        gtdActionMvpP.toHandleActionEvent(actionBusEvent);
+        eventBusRx.onNext(actionBusEvent);
+    }
+
+    private void toListenEventBus(){
+        eventBusRx/*.observeOn(AndroidSchedulers.mainThread())*/
+            .subscribe(new MySimpleObserver<IEventBusBean>(){
+                @Override
+                public void onNext(IEventBusBean iEventBusBean) {
+                    super.onNext(iEventBusBean);
+                    if(iEventBusBean instanceof ActionBusEvent)
+                        tableActionMvpP.toHandleActionEvent((ActionBusEvent)iEventBusBean);
+                }
+            });
     }
 
     //+++++++++++++++++++++++++++++++++++++++++++GtdMpvV+++++++++++++++++++++++++++++++++++++++++++++++++++
-    class MyGtdMvpV implements GtdActionMvpP.IGtdActionMvpV{
+    class MyTableActioMvpV implements TableActionMvpP.ITableActionMvpV {
         @Override
-        public void onActionAllLoaded() {
+        public void onAllLoadStarted() {
+
+        }
+
+        @Override
+        public void onAllLoadEnd() {
             ActionBusEvent actionBusEvent = new ActionBusEvent(GtdBusEventType.LOAD);
             EventBusFatory.getInstance().getDefaultEventBus().post(actionBusEvent);
+        }
+    }
+    //+++++++++++++++++++++++++++++++++++++++++++IDbActionMvpV+++++++++++++++++++++++++++++++++++++++++++++++
+    class MyTableNextIdMvpV implements TableNextIdMvpP.IGtdIdKeyMvpV {
+        @Override
+        public void onAllLoadStarted() {
+        }
+
+        @Override
+        public void onAllLoadEnd() {
         }
     }
 }

@@ -5,12 +5,16 @@ import android.support.annotation.NonNull;
 import com.google.common.base.Optional;
 
 import ahtewlg7.utimer.db.dao.ActionEntityDaoAction;
+import ahtewlg7.utimer.db.dao.DbNextIdEntityDaoAction;
 import ahtewlg7.utimer.db.entity.ActionEntityGdBean;
+import ahtewlg7.utimer.db.entity.NextIdGdBean;
 import ahtewlg7.utimer.entity.gtd.GtdActionBuilder;
 import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
 import ahtewlg7.utimer.entity.gtd.ShortHandEntity;
 import ahtewlg7.utimer.entity.gtd.un.GtdTaskEntity;
 import ahtewlg7.utimer.entity.gtd.un.NoteEntity;
+import ahtewlg7.utimer.enumtype.GtdType;
+import ahtewlg7.utimer.factory.DbNextIdFactory;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
@@ -20,6 +24,38 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class DbActionFacade {
+    /*******************************************id**************************************************/
+    public Flowable<NextIdGdBean> loadAllNextIdBean() {
+        return Flowable.fromIterable(DbNextIdEntityDaoAction.getInstance().loadAll())
+                .subscribeOn(Schedulers.io());
+    }
+    public Flowable<Boolean> saveNextIdBean(@NonNull Flowable<NextIdGdBean> entityRx) {
+        return entityRx.map(new Function<NextIdGdBean, Boolean>() {
+                        @Override
+                        public Boolean apply(NextIdGdBean idKeyGdBean) throws Exception {
+                            long index = DbNextIdEntityDaoAction.getInstance().insert(idKeyGdBean);
+                            boolean result = index > 0;
+                            if(result)
+                                DbNextIdFactory.getInstance().add(idKeyGdBean.getGtdType(), idKeyGdBean.getNextId());
+                            return result;
+                        }
+                    });
+    }
+    public Flowable<Boolean> delNextIdBean(@NonNull Flowable<NextIdGdBean> entityRx){
+        return entityRx.map(new Function<NextIdGdBean, Boolean>() {
+            @Override
+            public Boolean apply(NextIdGdBean idKeyGdBean) throws Exception {
+                boolean result = false;
+                try{
+                    DbNextIdEntityDaoAction.getInstance().delete(idKeyGdBean);
+                    result = true;
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                return result;
+            }
+        });
+    }
     /*******************************************note**************************************************/
     public Flowable<Optional<NoteEntity>> loadAllNoteEntity() {
         /*return Flowable.fromIterable(NoteEntityDaoAction.getInstance().loadAll())
@@ -133,12 +169,12 @@ public class DbActionFacade {
         return Flowable.empty();
     }
     /*******************************************Action**************************************************/
-    public Flowable<Optional<GtdActionEntity>> loadAllUndoActionEntity() {
+    public Flowable<GtdActionEntity> loadAllUndoActionEntity() {
         return Flowable.fromIterable(ActionEntityDaoAction.getInstance().loadAll())
-                .map(new Function<ActionEntityGdBean, Optional<GtdActionEntity>>() {
+                .map(new Function<ActionEntityGdBean, GtdActionEntity>() {
                     @Override
-                    public Optional<GtdActionEntity> apply(ActionEntityGdBean actionEntityGdBean) throws Exception {
-                        return Optional.of(new GtdActionBuilder().setGbBean(actionEntityGdBean).build());
+                    public GtdActionEntity apply(ActionEntityGdBean actionEntityGdBean) throws Exception {
+                        return new GtdActionBuilder().setGbBean(actionEntityGdBean).build();
                     }
                 })
                 .subscribeOn(Schedulers.io());
@@ -147,7 +183,7 @@ public class DbActionFacade {
         /*return nameFlowable.map(new Function<String, Optional<GtdActionEntity>>() {
             @Override
             public Optional<GtdActionEntity> apply(String name) throws Exception {
-                Optional<ActionEntityGdBean> beanOptional = ActionEntityDaoAction.getInstance().queryByKey(name);
+                Optional<IdKeyEntityBean> beanOptional = ActionEntityDaoAction.getInstance().queryByKey(name);
                 if(beanOptional.isPresent())
                     return Optional.fromNullable(JSON.parseObject(beanOptional.get().getValue(), GtdActionEntity.class));
                 return Optional.absent();
@@ -156,20 +192,21 @@ public class DbActionFacade {
         return Flowable.empty();
     }
 
-    public Flowable<Boolean> deleteUndoctionEntity(@NonNull Flowable<Optional<GtdActionEntity>> eventFlowable){
-        /*return eventFlowable.map(new Function<Optional<GtdActionEntity>, Boolean>() {
+    public Flowable<Boolean> deleteActionEntity(@NonNull Flowable<GtdActionEntity> eventFlowable){
+        return eventFlowable.map(new Function<GtdActionEntity, Boolean>() {
             @Override
-            public Boolean apply(Optional<GtdActionEntity> entityOptional) throws Exception {
-                if(entityOptional.isPresent()){
-                    ActionEntityGdBean bean = mapActionToGdBean(entityOptional.get());
-                    Logcat.i(TAG,"deleteActionEntity ：" + bean.toString());
+            public Boolean apply(GtdActionEntity eventEntity) throws Exception {
+                ActionEntityGdBean bean = mapActionToGdBean(eventEntity);
+                boolean result = false;
+                try{
                     ActionEntityDaoAction.getInstance().delete(bean);
-                    return true;
+                    result = true;
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
-                return false;
+                return result;
             }
-        });*/
-        return Flowable.empty();
+        });
     }
 
     public Flowable<Boolean> saveActionEntity(Flowable<GtdActionEntity> eventFlowable) {
@@ -178,7 +215,7 @@ public class DbActionFacade {
             public Boolean apply(GtdActionEntity eventEntity) throws Exception {
                 ActionEntityGdBean bean = mapActionToGdBean(eventEntity);
                 long index = ActionEntityDaoAction.getInstance().insert(bean);
-                return index > 0;
+                return index >= 0;
             }
         });
     }
@@ -251,6 +288,7 @@ public class DbActionFacade {
     /***********************************************************************************************/
     private ActionEntityGdBean mapActionToGdBean(@NonNull GtdActionEntity entity){
         ActionEntityGdBean bean = new ActionEntityGdBean();
+        bean.setId(DbNextIdFactory.getInstance().getValue(GtdType.ACTION));
         bean.setUuid(entity.getUuid());
         bean.setTitle(entity.getTitle());
         bean.setActionType(entity.getActionType());

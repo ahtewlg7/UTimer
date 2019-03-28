@@ -110,6 +110,10 @@ public abstract class ABaseLinearRecyclerView<T> extends RecyclerView{
         if(recyclerViewAdapter != null)
             recyclerViewAdapter.remove(index);
     }
+    public void removeData(T t) {
+        if(recyclerViewAdapter != null)
+            recyclerViewAdapter.remove(t);
+    }
 
     public abstract class BaseItemAdapter<K> extends BaseItemDraggableAdapter<K,BaseViewHolder> {
         protected ItemTouchHelper mItemTouchHelper;
@@ -118,6 +122,12 @@ public abstract class ABaseLinearRecyclerView<T> extends RecyclerView{
 
         public BaseItemAdapter(List<K> dataList){
             super(getViewItemLayout(), dataList);
+        }
+
+        public void remove(K k){
+            List<K> dataList = getData();
+            if(dataList.contains(k))
+                remove(dataList.indexOf(k));
         }
 
         public void toSetOnItemClickListener(BaseQuickAdapter.OnItemClickListener itemClickListener){

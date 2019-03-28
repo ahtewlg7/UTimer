@@ -9,21 +9,26 @@ public abstract class ABaseMapFactory<K, V> {
 
     public abstract boolean ifKeyValid(K k);
     public abstract boolean ifValueValid(V v);
-    public abstract V newValue();
 
     protected ABaseMapFactory(){
         baseMap = HashBiMap.create();
     }
 
-    public int getNum(){
+    public int getSize(){
         return baseMap.size();
     }
 
-    public void addValue(K k, V v){
-        if(ifKeyValid(k) && ifValueValid(v) && !baseMap.containsKey(k))
+    public void add(K k, V v){
+        if(ifKeyValid(k) && ifValueValid(v))
             baseMap.put(k, v);
     }
 
+    public boolean containsKey(K k) {
+        return baseMap.containsKey(k);
+    }
+    public boolean containsValue(V v) {
+        return baseMap.containsValue(v);
+    }
 
     public V getValue(K k){
         return baseMap.get(k);
@@ -31,7 +36,6 @@ public abstract class ABaseMapFactory<K, V> {
     public K getKey(V v){
         return baseMap.inverse().get(v);
     }
-
 
     public void removeByKey(K k){
         baseMap.remove(k);

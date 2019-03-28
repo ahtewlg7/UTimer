@@ -183,7 +183,10 @@ public class GtdActionListFragment extends AToolbarBkFragment implements GtdActi
     @Override
     public void onDeleteSucc(int index , GtdActionEntity entity) {
         ToastUtils.showShort(R.string.prompt_del_succ);
-        recyclerView.removeData(index);
+        if(index == INVALID_INDEX)
+            recyclerView.removeData(entity);
+        else
+            recyclerView.removeData(index);
     }
 
     @Override

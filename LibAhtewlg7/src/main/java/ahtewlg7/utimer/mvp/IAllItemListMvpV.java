@@ -7,6 +7,8 @@ import java.util.List;
  */
 
 public interface IAllItemListMvpV<T> extends IRxLifeCycleBindView{
+    public static final int INVALID_INDEX = -1;
+
     public void resetView(List<T> dataList);
     public void resetView(int index , T t);
 
