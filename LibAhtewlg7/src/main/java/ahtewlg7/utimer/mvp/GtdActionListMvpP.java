@@ -67,8 +67,7 @@ public class GtdActionListMvpP{
             });
     }
 
-    public void
-    toDeleteItem(@NonNull Flowable<GtdActionEntity>  entityRx) {
+    public void toDeleteItem(@NonNull Flowable<GtdActionEntity>  entityRx) {
         entityRx.subscribe(new MySafeSubscriber<GtdActionEntity>() {
                     @Override
                     public void onNext(GtdActionEntity entity) {

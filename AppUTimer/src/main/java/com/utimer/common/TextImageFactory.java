@@ -24,6 +24,9 @@ public class TextImageFactory {
     public TextDrawable getGtdAllActionImage(){
         return TextDrawable.builder().buildRect("ALL", Color.parseColor("#177bbd"));
     }
+    public TextDrawable getGtdMaybeActionImage(){
+        return TextDrawable.builder().buildRect("M", Color.parseColor("#177bbd"));
+    }
 
     public TextDrawable getShortHandImage(){
         return TextDrawable.builder().buildRect("S", Color.parseColor("#177bbd"));
