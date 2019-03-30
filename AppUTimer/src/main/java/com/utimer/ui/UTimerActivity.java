@@ -8,10 +8,13 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 
 import com.tbruyelle.rxpermissions2.RxPermissions;
+import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.utimer.R;
 
 import ahtewlg7.utimer.common.LibContextInit;
 import ahtewlg7.utimer.db.GreenDaoAction;
+import ahtewlg7.utimer.entity.busevent.ActivityBusEvent;
+import ahtewlg7.utimer.factory.EventBusFatory;
 import ahtewlg7.utimer.util.MySimpleObserver;
 import butterknife.BindView;
 
@@ -44,6 +47,12 @@ public class UTimerActivity extends AButterKnifeActivity{
         if(getTopFragment().onKeyUp(keyCode, event))
             return true;
         return super.onKeyUp(keyCode, event);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EventBusFatory.getInstance().getDefaultEventBus().post(new ActivityBusEvent(ActivityEvent.STOP));
     }
 
     @Override

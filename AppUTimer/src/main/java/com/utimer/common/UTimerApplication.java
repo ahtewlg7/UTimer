@@ -13,8 +13,6 @@ import ahtewlg7.utimer.verctrl.IBaseVersionControlFactory;
  */
 
 public class UTimerApplication extends MyApplication {
-    public static final String TAG = UTimerApplication.class.getSimpleName();
-
     @Override
     public void onCreate() {
         super.onCreate();

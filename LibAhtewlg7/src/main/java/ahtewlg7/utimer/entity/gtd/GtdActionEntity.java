@@ -102,6 +102,7 @@ public class GtdActionEntity extends AGtdUtimerEntity<GtdActionBuilder> implemen
     }
 
     private void  initByGbBean(ActionEntityGdBean gdBean){
+        id              = gdBean.getId();
         uuid            = gdBean.getUuid();
         title           = gdBean.getTitle();
         detail          = gdBean.getDetail();
