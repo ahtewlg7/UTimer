@@ -28,6 +28,6 @@ public class DbNextIdFactory extends ABaseMapFactory<GtdType, Long> {
     }
 
     private void initMap(){
-        add(GtdType.ACTION,0L);
+        put(GtdType.ACTION,0L);
     }
 }

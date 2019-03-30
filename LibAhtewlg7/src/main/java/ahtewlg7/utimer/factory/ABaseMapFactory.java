@@ -18,7 +18,7 @@ public abstract class ABaseMapFactory<K, V> {
         return baseMap.size();
     }
 
-    public void add(K k, V v){
+    public void put(K k, V v){
         if(ifKeyValid(k) && ifValueValid(v))
             baseMap.put(k, v);
     }

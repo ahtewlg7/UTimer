@@ -13,16 +13,16 @@ import ahtewlg7.utimer.common.IdAction;
 import ahtewlg7.utimer.entity.material.AAttachFile;
 import ahtewlg7.utimer.enumtype.GtdType;
 
-public abstract class AUtimerEntity<T extends AUtimerBuilder> implements ITipsEntity, IMergerEntity{
+import static ahtewlg7.utimer.common.Constants.INVALID_NEXT_ID_INDEX;
 
-    public static final long INVALID_INDEX  = -1;
+public abstract class AUtimerEntity<T extends AUtimerBuilder> implements ITipsEntity, IMergerEntity{
     @NonNull
     public abstract GtdType getGtdType();
     public abstract Optional<String> getDetail();
     public abstract boolean ensureAttachFileExist();
 
     protected int accessTimes;
-    protected long id = INVALID_INDEX;
+    protected long id = INVALID_NEXT_ID_INDEX;
     protected boolean isGtdActived;
 
     protected String uuid;

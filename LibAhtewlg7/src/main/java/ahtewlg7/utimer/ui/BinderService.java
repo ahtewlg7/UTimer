@@ -10,6 +10,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import ahtewlg7.utimer.entity.IEventBusBean;
 import ahtewlg7.utimer.entity.busevent.ActionBusEvent;
+import ahtewlg7.utimer.entity.busevent.ActivityBusEvent;
 import ahtewlg7.utimer.enumtype.GtdBusEventType;
 import ahtewlg7.utimer.factory.EventBusFatory;
 import ahtewlg7.utimer.mvp.db.TableActionMvpP;
@@ -44,7 +45,7 @@ public class BinderService extends Service{
         EventBusFatory.getInstance().getDefaultEventBus().register(this);
         toListenEventBus();
 
-//        tableNextIdMvpP.toLoadAll();
+        tableNextIdMvpP.toLoadAll();
         tableActionMvpP.toLoadAll();
     }
 
@@ -66,9 +67,15 @@ public class BinderService extends Service{
         }
     }
     //+++++++++++++++++++++++++++++++++++++++++++EventBus+++++++++++++++++++++++++++++++++++++++++++++++++++
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky=true)
-    public void onGtdActionEntity(ActionBusEvent actionBusEvent) {
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void onActionBusEvent(ActionBusEvent actionBusEvent) {
         eventBusRx.onNext(actionBusEvent);
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onActivityBusEvent(ActivityBusEvent actionBusEvent) {
+        if(actionBusEvent.ifBackground())
+            tableNextIdMvpP.toSaveAll();
     }
 
     private void toListenEventBus(){

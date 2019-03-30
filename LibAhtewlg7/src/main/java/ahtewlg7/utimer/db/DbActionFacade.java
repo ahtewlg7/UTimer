@@ -19,6 +19,8 @@ import io.reactivex.Flowable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
+import static ahtewlg7.utimer.common.Constants.INVALID_NEXT_ID_INDEX;
+
 /**
  * Created by lw on 2018/1/8.
  */
@@ -34,10 +36,7 @@ public class DbActionFacade {
                         @Override
                         public Boolean apply(NextIdGdBean idKeyGdBean) throws Exception {
                             long index = DbNextIdEntityDaoAction.getInstance().insert(idKeyGdBean);
-                            boolean result = index > 0;
-                            if(result)
-                                DbNextIdFactory.getInstance().add(idKeyGdBean.getGtdType(), idKeyGdBean.getNextId());
-                            return result;
+                            return index >= 0;
                         }
                     });
     }
@@ -214,8 +213,11 @@ public class DbActionFacade {
             @Override
             public Boolean apply(GtdActionEntity eventEntity) throws Exception {
                 ActionEntityGdBean bean = mapActionToGdBean(eventEntity);
-                long index = ActionEntityDaoAction.getInstance().insert(bean);
-                return index >= 0;
+                long index     = ActionEntityDaoAction.getInstance().insert(bean);
+                boolean result = index >= 0;
+                if(result)
+                    DbNextIdFactory.getInstance().put(GtdType.ACTION, bean.getId() + 1);
+                return result;
             }
         });
     }
@@ -288,7 +290,10 @@ public class DbActionFacade {
     /***********************************************************************************************/
     private ActionEntityGdBean mapActionToGdBean(@NonNull GtdActionEntity entity){
         ActionEntityGdBean bean = new ActionEntityGdBean();
-        bean.setId(DbNextIdFactory.getInstance().getValue(GtdType.ACTION));
+        if(entity.getId() == INVALID_NEXT_ID_INDEX)
+            bean.setId(DbNextIdFactory.getInstance().getValue(GtdType.ACTION));
+        else
+            bean.setId(entity.getId());
         bean.setUuid(entity.getUuid());
         bean.setTitle(entity.getTitle());
         bean.setActionType(entity.getActionType());
