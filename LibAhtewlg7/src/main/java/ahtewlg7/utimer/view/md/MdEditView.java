@@ -102,6 +102,10 @@ public class MdEditView extends FrameLayout {
         return editRecyclerView.getEditElementTable();
     }
 
+    public EditElement getLastAccessEditElement(){
+        return editRecyclerView.getLastAccessEditElement();
+    }
+
     private void initView(){
         View layout = null;
         try{

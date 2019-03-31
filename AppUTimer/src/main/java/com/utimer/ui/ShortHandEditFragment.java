@@ -5,6 +5,7 @@ import android.support.annotation.MenuRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.blankj.utilcode.util.ToastUtils;
@@ -165,7 +166,8 @@ public class ShortHandEditFragment extends ATxtEditFragment
             resultCode = RESULT_OK;
             editMvpP.toPostAction(editElementTable);
             editMvpP.toFinishEdit(Flowable.fromIterable(elementList));
-            ((ShortHandEntity)getArguments().getSerializable(KEY_SHORTHAND)).appendDetail(elementList.get(0).getMdCharSequence().toString());
+            if(!TextUtils.isEmpty(mdEditView.getLastAccessEditElement().getMdCharSequence()))
+                ((ShortHandEntity)getArguments().getSerializable(KEY_SHORTHAND)).setDetail(mdEditView.getLastAccessEditElement().getMdCharSequence().toString());
         }
         setFragmentResult(resultCode, getArguments());
     }

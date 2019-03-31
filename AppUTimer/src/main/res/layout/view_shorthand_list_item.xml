@@ -57,6 +57,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
+            android:maxLines="1"
             android:gravity="start|top"
             android:textColor="@color/txt_color"
             android:textStyle="bold"

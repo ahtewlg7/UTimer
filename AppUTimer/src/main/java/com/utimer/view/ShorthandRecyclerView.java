@@ -67,8 +67,8 @@ public class ShorthandRecyclerView extends ABaseLinearRecyclerView<ShortHandEnti
                 builder.append(item.getRPath().get());*/
             if(item.getLastAccessTime() != null)
                 titleBuilder.append("\n").append(item.getLastAccessTime().toDateTime());
-            if(item.toTips().isPresent() && !TextUtils.isEmpty(item.toTips().get()))
-                detailBuilder.append(item.toTips().get());
+            if(item.getDetail().isPresent())
+                detailBuilder.append(item.getDetail().get());
             helper.setText(R.id.view_shorthand_list_item_title, titleBuilder.toString())
                 .setText(R.id.view_shorthand_list_item_detail, detailBuilder.toString())
                 .setImageDrawable(R.id.view_shorthand_list_item_image, TextImageFactory.getInstance().getShortHandImage());

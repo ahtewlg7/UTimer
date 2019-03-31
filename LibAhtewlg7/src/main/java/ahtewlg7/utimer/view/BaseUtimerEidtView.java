@@ -139,6 +139,10 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
         this.editModeListener = editModeListener;
     }
 
+    public EditElement getLastAccessEditElement(){
+        return preEditPosition != INIT_POSITION ? editElementList.get(preEditPosition) : editElementList.get(0);
+    }
+
     public List<EditElement> getEditElementList(){
         return editElementList;
     }
