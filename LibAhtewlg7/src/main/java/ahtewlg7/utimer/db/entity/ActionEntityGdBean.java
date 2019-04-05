@@ -10,14 +10,14 @@ import org.greenrobot.greendao.annotation.Index;
 import org.greenrobot.greendao.annotation.NotNull;
 import org.greenrobot.greendao.annotation.Property;
 
-import ahtewlg7.utimer.db.converter.GtdActionTypeConverter;
+import ahtewlg7.utimer.db.converter.GtdActStateConverter;
 import ahtewlg7.utimer.db.converter.W5h2HowMuchConverter;
 import ahtewlg7.utimer.db.converter.W5h2WhatConverter;
 import ahtewlg7.utimer.db.converter.W5h2WhenConverter;
 import ahtewlg7.utimer.entity.w5h2.W5h2HowMuch;
 import ahtewlg7.utimer.entity.w5h2.W5h2What;
 import ahtewlg7.utimer.entity.w5h2.W5h2When;
-import ahtewlg7.utimer.enumtype.GtdActionType;
+import ahtewlg7.utimer.enumtype.ActState;
 
 /**
  * Created by lw on 2018/1/6.
@@ -42,8 +42,8 @@ public class ActionEntityGdBean {
             builder.append(",title=").append(title);
         if(!TextUtils.isEmpty(detail))
             builder.append(",detail=").append(detail);
-        if(actionType != null)
-            builder.append(",actionType=").append(actionType.name());
+        if(actionState != null)
+            builder.append(",actionState=").append(actionState.name());
         return builder.append("}").toString();
     }
     // KEEP METHODS END
@@ -71,11 +71,11 @@ public class ActionEntityGdBean {
     public void setAttachFileRPath(String attachFileRPath) {
         this.attachFileRPath = attachFileRPath;
     }
-    public GtdActionType getActionType() {
-        return this.actionType;
+    public ActState getActionState() {
+        return this.actionState;
     }
-    public void setActionType(GtdActionType actionType) {
-        this.actionType = actionType;
+    public void setActionState(ActState actionState) {
+        this.actionState = actionState;
     }
     public W5h2When getW5h2When() {
         return this.w5h2When;
@@ -113,8 +113,8 @@ public class ActionEntityGdBean {
     @NotNull
     private String detail;
     private String attachFileRPath;
-    @Convert(converter = GtdActionTypeConverter.class, columnType = Integer.class)
-    private GtdActionType actionType;
+    @Convert(converter = GtdActStateConverter.class, columnType = Integer.class)
+    private ActState actionState;
     @Property(nameInDb = "WHEN")
     @Convert(converter = W5h2WhenConverter.class, columnType = String.class)
     private W5h2When w5h2When;
@@ -125,17 +125,16 @@ public class ActionEntityGdBean {
     @Convert(converter = W5h2HowMuchConverter.class, columnType = String.class)
     private W5h2HowMuch w5h2HowMuch;
 
-    @Generated(hash = 2129590227)
+    @Generated(hash = 118950285)
     public ActionEntityGdBean(Long id, @NotNull String uuid, @NotNull String title,
-            @NotNull String detail, String attachFileRPath,
-            GtdActionType actionType, W5h2When w5h2When, W5h2What w5h2What,
-            W5h2HowMuch w5h2HowMuch) {
+            @NotNull String detail, String attachFileRPath, ActState actionState,
+            W5h2When w5h2When, W5h2What w5h2What, W5h2HowMuch w5h2HowMuch) {
         this.id = id;
         this.uuid = uuid;
         this.title = title;
         this.detail = detail;
         this.attachFileRPath = attachFileRPath;
-        this.actionType = actionType;
+        this.actionState = actionState;
         this.w5h2When = w5h2When;
         this.w5h2What = w5h2What;
         this.w5h2HowMuch = w5h2HowMuch;
@@ -143,4 +142,5 @@ public class ActionEntityGdBean {
     @Generated(hash = 1154478005)
     public ActionEntityGdBean() {
     }
+
 }

@@ -20,24 +20,24 @@ import ahtewlg7.utimer.entity.w5h2.BaseW5h2Entity;
 import ahtewlg7.utimer.entity.w5h2.W5h2HowMuch;
 import ahtewlg7.utimer.entity.w5h2.W5h2What;
 import ahtewlg7.utimer.entity.w5h2.W5h2When;
-import ahtewlg7.utimer.enumtype.GtdActionType;
+import ahtewlg7.utimer.enumtype.ActState;
 import ahtewlg7.utimer.enumtype.GtdType;
 import ahtewlg7.utimer.util.DateTimeAction;
 
 
 public class GtdActionEntity extends AGtdUtimerEntity<GtdActionBuilder> implements Serializable {
-    private GtdActionType actionType;
+    private ActState actionState;
 
     protected GtdActionEntity(@Nonnull GtdActionBuilder builder) {
         super(builder);
         if(builder.gdBean != null)
             initByGbBean(builder.gdBean);
-        toMakeUuidOk();
+        toMakeEntityOk();
     }
 
     @Override
     public boolean ifValid() {
-        return super.ifValid() && !toTips().isPresent()
+        return super.ifValid() && actionState != null
                 && !TextUtils.isEmpty(uuid) && !TextUtils.isEmpty(detail);
     }
 
@@ -56,19 +56,26 @@ public class GtdActionEntity extends AGtdUtimerEntity<GtdActionBuilder> implemen
         return TextUtils.isEmpty(detail) ? Optional.<String>absent() : Optional.of(detail);
     }
 
-    public GtdActionType getActionType() {
-        return actionType;
+    @Override
+    protected void toMakeEntityOk() {
+        super.toMakeEntityOk();
+        if(actionState == null)
+            actionState = ActState.MAYBE;
     }
 
-    public void setActionType(GtdActionType actionType) {
-        this.actionType = actionType;
+    public ActState getActionState() {
+        return actionState;
+    }
+
+    public void setActionState(ActState actionState) {
+        this.actionState = actionState;
     }
 
     //todo
     @Override
     public void update(IMergerEntity entity) {
-        BaseW5h2Entity baseW5h2Entity = ((GtdActionEntity)entity).getW5h2Entity();
         super.update(entity);
+        BaseW5h2Entity baseW5h2Entity = ((GtdActionEntity)entity).getW5h2Entity();
         updateWhen(baseW5h2Entity.getWhen());
         updateWhat(baseW5h2Entity.getWhat());
         updateHowMuch(baseW5h2Entity.getHowMuch());
@@ -86,8 +93,8 @@ public class GtdActionEntity extends AGtdUtimerEntity<GtdActionBuilder> implemen
 
     @Override
     public String toString() {
-        if(actionType != null)
-            return new StringBuilder(super.toString()).append(actionType.name()).toString();
+        if(actionState != null)
+            return new StringBuilder(super.toString()).append(actionState.name()).toString();
          return super.toString();
     }
 

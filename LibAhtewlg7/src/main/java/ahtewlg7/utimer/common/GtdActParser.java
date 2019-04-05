@@ -12,7 +12,7 @@ import ahtewlg7.utimer.entity.gtd.GtdActionBuilder;
 import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
 import ahtewlg7.utimer.entity.w5h2.BaseW5h2Entity;
 import ahtewlg7.utimer.entity.w5h2.W5h2When;
-import ahtewlg7.utimer.enumtype.GtdActionType;
+import ahtewlg7.utimer.enumtype.ActState;
 import ahtewlg7.utimer.nlp.NlpAction;
 
 /**
@@ -43,7 +43,7 @@ public class GtdActParser {
         if(keyWords.isPresent())
             builder.setTitle(keyWords.get());
         GtdActionEntity gtdActionEntity = builder.build();
-        gtdActionEntity.setActionType(GtdActionType.MAYBE);
+        gtdActionEntity.setActionState(ActState.MAYBE);
         gtdActionEntity.setLastModifyTime(DateTime.now());
         gtdActionEntity.setLastAccessTime(DateTime.now());
         return Optional.of(gtdActionEntity);

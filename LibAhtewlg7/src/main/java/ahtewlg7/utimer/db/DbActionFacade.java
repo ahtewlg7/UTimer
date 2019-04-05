@@ -296,7 +296,7 @@ public class DbActionFacade {
             bean.setId(entity.getId());
         bean.setUuid(entity.getUuid());
         bean.setTitle(entity.getTitle());
-        bean.setActionType(entity.getActionType());
+        bean.setActionState(entity.getActionState());
         if(entity.getDetail().isPresent())
             bean.setDetail(entity.getDetail().get());
         if(entity.getW5h2Entity().getWhat() != null)

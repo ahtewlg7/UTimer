@@ -70,7 +70,7 @@ public class ActionEntityDaoAction extends AGreenDaoAction<ActionEntityGdBean, S
             return null;
         return query(new WarningTimeQueryFilter(dateTime));
     }*/
-    /*public List<ActionEntityGdBean> queryByState(GtdActionType gtdActionType){
+    /*public List<ActionEntityGdBean> queryByState(ActState gtdActionType){
         if(gtdActionType == null)
             return null;
         return query(new GtdStateQueryFilter(gtdActionType));
@@ -91,9 +91,9 @@ public class ActionEntityDaoAction extends AGreenDaoAction<ActionEntityGdBean, S
         }
     }
     class GtdStateQueryFilter implements  IGreenDaoQueryFiltVisitor<ActionEntityGdBean> {
-        private GtdActionType gtdType;
+        private ActState gtdType;
 
-        GtdStateQueryFilter(GtdActionType actState) {
+        GtdStateQueryFilter(ActState actState) {
             this.gtdType = actState;
         }
 
