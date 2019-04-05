@@ -74,18 +74,26 @@ public class GtdFragment extends AToolbarBkFragment {
     private void initFuncList(){
         funcViewEntityList = Lists.newArrayList();
 
-        Drawable actionDrawable = TextImageFactory.getInstance().getGtdMaybeActionImage();
-        String actionTitle      = getResources().getString(R.string.title_action_maybe);
-        UtimerFuncRecyclerView.FuncViewEntity actionViewEntity = new UtimerFuncRecyclerView.FuncViewEntity(actionDrawable, actionTitle);
+        Drawable maybeDrawable = TextImageFactory.getInstance().getGtdMaybeActionImage();
+        String maybeTitle      = getResources().getString(R.string.title_action_maybe);
+        UtimerFuncRecyclerView.FuncViewEntity maybeViewEntity = new UtimerFuncRecyclerView.FuncViewEntity(maybeDrawable, maybeTitle);
 
-        funcViewEntityList.add(actionViewEntity);
+        Drawable todoDrawable = TextImageFactory.getInstance().getGtdTodoActionImage();
+        String todoTitle      = getResources().getString(R.string.title_action_todo);
+        UtimerFuncRecyclerView.FuncViewEntity todoViewEntity = new UtimerFuncRecyclerView.FuncViewEntity(todoDrawable, todoTitle);
+
+        funcViewEntityList.add(maybeViewEntity);
+        funcViewEntityList.add(todoViewEntity);
 ;    }
     class MyClickListener implements BaseQuickAdapter.OnItemClickListener{
         @Override
         public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
             switch (position){
                 case 0:
-                    ((MainFragment)getParentFragment()).start(GtdActionListFragment.newInstance());
+                    ((MainFragment)getParentFragment()).start(ActionMaybeListFragment.newInstance());
+                    break;
+                case 1:
+                    ((MainFragment)getParentFragment()).start(ActionTodoListFragment.newInstance());
                     break;
             }
         }

@@ -35,6 +35,7 @@
     <string name="title_project_list">ProjectList</string>
     <string name="title_action">Action</string>
     <string name="title_action_maybe">Maybe</string>
+    <string name="title_action_todo">ToDo</string>
     <string name="title_action_all">All</string>
     <string name="title_action_undo">Undo</string>
     <string name="title_action_list">ActionList</string>

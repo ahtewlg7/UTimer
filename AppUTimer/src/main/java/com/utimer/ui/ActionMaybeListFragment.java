@@ -23,12 +23,12 @@ import java.util.List;
 import ahtewlg7.utimer.entity.busevent.ActionBusEvent;
 import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
 import ahtewlg7.utimer.factory.EventBusFatory;
-import ahtewlg7.utimer.mvp.GtdActionListMvpP;
+import ahtewlg7.utimer.mvp.ActionMaybeListMvpP;
 import ahtewlg7.utimer.util.MyRInfo;
 import butterknife.BindView;
 import io.reactivex.Flowable;
 
-public class GtdActionListFragment extends AToolbarBkFragment implements GtdActionListMvpP.IGtdActionListMvpV {
+public class ActionMaybeListFragment extends AToolbarBkFragment implements ActionMaybeListMvpP.IGtdActionListMvpV {
     public static final int INIT_POSITION = -1;
 
     public static final int REQ_NEW_FRAGMENT = 100;
@@ -40,13 +40,13 @@ public class GtdActionListFragment extends AToolbarBkFragment implements GtdActi
     GtdActionRecyclerView recyclerView;
 
     private int editIndex = -1;
-    private GtdActionListMvpP listMvpP;
+    private ActionMaybeListMvpP listMvpP;
     private MyClickListener myClickListener;
 
-    public static GtdActionListFragment newInstance() {
+    public static ActionMaybeListFragment newInstance() {
         Bundle args = new Bundle();
 
-        GtdActionListFragment fragment = new GtdActionListFragment();
+        ActionMaybeListFragment fragment = new ActionMaybeListFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -58,7 +58,7 @@ public class GtdActionListFragment extends AToolbarBkFragment implements GtdActi
         myClickListener = new MyClickListener();
 
         recyclerView.init(getContext(), null, myClickListener, null,myClickListener,null,null,null);
-        listMvpP = new GtdActionListMvpP(this);
+        listMvpP = new ActionMaybeListMvpP(this);
 
         EventBusFatory.getInstance().getDefaultEventBus().register(this);
     }

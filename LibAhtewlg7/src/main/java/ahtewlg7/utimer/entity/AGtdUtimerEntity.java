@@ -1,8 +1,15 @@
 package ahtewlg7.utimer.entity;
 
+import com.google.common.base.Optional;
+
+import org.joda.time.DateTime;
+
 import javax.annotation.Nonnull;
 
 import ahtewlg7.utimer.entity.w5h2.BaseW5h2Entity;
+import ahtewlg7.utimer.entity.w5h2.W5h2HowMuch;
+import ahtewlg7.utimer.entity.w5h2.W5h2What;
+import ahtewlg7.utimer.entity.w5h2.W5h2When;
 
 
 public abstract class AGtdUtimerEntity<T extends AGtdUtimerBuilder> extends AUtimerEntity<T>  {
@@ -16,6 +23,20 @@ public abstract class AGtdUtimerEntity<T extends AGtdUtimerBuilder> extends AUti
 
     public BaseW5h2Entity getW5h2Entity(){
         return w5h2Entity;
+    }
+
+    public Optional<W5h2When> getWhen(){
+        return w5h2Entity == null ? Optional.<W5h2When>absent() : Optional.fromNullable(w5h2Entity.getWhen());
+    }
+    public Optional<W5h2What> getWhat(){
+        return w5h2Entity == null ? Optional.<W5h2What>absent() : Optional.fromNullable(w5h2Entity.getWhat());
+    }
+    public Optional<W5h2HowMuch> getWhy(){
+        return w5h2Entity == null ? Optional.<W5h2HowMuch>absent() : Optional.fromNullable(w5h2Entity.getHowMuch());
+    }
+
+    public Optional<DateTime> getFirstWorkTime() {
+        return getWhen().isPresent() ? getWhen().get().getFirstWorkTime():Optional.<DateTime>absent();
     }
 
     @Override

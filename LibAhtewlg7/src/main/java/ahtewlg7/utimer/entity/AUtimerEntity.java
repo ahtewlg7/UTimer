@@ -131,7 +131,7 @@ public abstract class AUtimerEntity<T extends AUtimerBuilder> implements ITipsEn
             lastModifyTime = attachFile.getLassModifyTime();
         }
     }
-    protected void toMakeUuidOk(){
+    protected void toMakeEntityOk(){
         if(TextUtils.isEmpty(uuid))
             uuid = new IdAction().getUUId();
     }

@@ -1,6 +1,7 @@
 package ahtewlg7.utimer.entity.w5h2;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.google.common.base.Optional;
 
 import org.joda.time.DateTime;
 
@@ -47,6 +48,11 @@ public class W5h2When {
         this.nextWarningTime = nextWarningTime;
     }
 
+    public Optional<DateTime> getFirstWorkTime() {
+        if(workTime != null && !workTime.isEmpty())
+            return Optional.of(workTime.get(0));
+        return Optional.absent();
+    }
     public List<DateTime> getWorkTime() {
         return workTime;
     }

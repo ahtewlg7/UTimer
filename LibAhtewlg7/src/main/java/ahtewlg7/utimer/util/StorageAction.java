@@ -14,8 +14,6 @@ import java.io.File;
  * Created by lw on 2016/4/28.
  */
 public class StorageAction {
-    public static final String TAG = StorageAction.class.getSimpleName();
-
     protected Storage storage;
     protected static StorageAction fileSystemAction;
 
@@ -45,7 +43,6 @@ public class StorageAction {
     //must use the absFilePath
     public boolean createExRelDir(String relPath){
         if(!ifStorageReady() || TextUtils.isEmpty(relPath)){
-            Logcat.d(TAG,"createDir cancel");
             return false;
         }
         return FileUtils.createOrExistsDir(relPath);

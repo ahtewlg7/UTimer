@@ -61,7 +61,22 @@ public class DateTimeAction {
         return DateTime.parse(dateTime, format);
     }
 
-    public boolean isToday(DateTime dateTime){
+    public boolean isInToday(DateTime dateTime){
         return dateTime != null && dateTime.isAfter(DateTime.now().withTimeAtStartOfDay());
+    }
+    public boolean isInTomorrow(DateTime dateTime){
+        return dateTime != null && dateTime.isAfter(DateTime.now().plusDays(1).withTimeAtStartOfDay());
+    }
+    public boolean isInWeek(DateTime dateTime){
+        return dateTime != null && dateTime.isBefore(DateTime.now().dayOfWeek().withMaximumValue());
+    }
+    public boolean isInMonth(DateTime dateTime){
+        return dateTime != null && dateTime.isBefore(DateTime.now().dayOfMonth().withMaximumValue());
+    }
+    public boolean isInQuarter(DateTime dateTime){
+        return dateTime != null && dateTime.isBefore(DateTime.now().plusMonths(3).dayOfMonth().withMaximumValue());
+    }
+    public boolean isInYear(DateTime dateTime){
+        return dateTime != null && dateTime.isBefore(DateTime.now().dayOfYear().withMaximumValue());
     }
 }

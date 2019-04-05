@@ -11,8 +11,6 @@ import io.reactivex.Flowable;
  * Created by lw on 2018/10/25.
  */
 public class StringAction {
-    public static final String TAG = StringAction.class.getSimpleName();
-
     public Flowable<String> readLines(String src){
         if(TextUtils.isEmpty(src))
             return Flowable.empty();
