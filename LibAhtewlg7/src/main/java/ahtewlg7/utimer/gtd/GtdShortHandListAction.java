@@ -58,7 +58,7 @@ public class GtdShortHandListAction {
         return loadAllEntity().filter(new Predicate<ShortHandEntity>() {
             @Override
             public boolean test(ShortHandEntity entity) throws Exception {
-                return new DateTimeAction().isToday(entity.getCreateTime());
+                return new DateTimeAction().isInToday(entity.getCreateTime());
             }
         });
     }
