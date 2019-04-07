@@ -2,6 +2,7 @@ package ahtewlg7.utimer.mvp;
 
 import android.support.annotation.NonNull;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.trello.rxlifecycle2.android.FragmentEvent;
 import com.trello.rxlifecycle2.components.support.RxFragment;
@@ -14,11 +15,12 @@ import ahtewlg7.utimer.entity.busevent.ActionBusEvent;
 import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
 import ahtewlg7.utimer.enumtype.ActState;
 import ahtewlg7.utimer.enumtype.GtdBusEventType;
-import ahtewlg7.utimer.factory.EventBusFatory;
 import ahtewlg7.utimer.factory.GtdActionByUuidFactory;
+import ahtewlg7.utimer.state.GtdMachine;
 import ahtewlg7.utimer.util.MySafeSubscriber;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Function;
 
 import static ahtewlg7.utimer.mvp.IAllItemListMvpV.INVALID_INDEX;
 
@@ -78,17 +80,21 @@ public class ActionMaybeListMvpP {
     }
 
     public void toDeleteItem(@NonNull Flowable<GtdActionEntity>  entityRx) {
-        entityRx.subscribe(new MySafeSubscriber<GtdActionEntity>() {
+        entityRx.map(new Function<GtdActionEntity, Optional<ActionBusEvent>>() {
+            @Override
+            public Optional<ActionBusEvent> apply(GtdActionEntity entity) throws Exception {
+                return GtdMachine.getInstance().getCurrState(entity).toTrash(entity);
+            }
+        }).subscribe(new MySafeSubscriber<Optional<ActionBusEvent>>() {
                     @Override
-                    public void onNext(GtdActionEntity entity) {
+                    public void onNext(Optional<ActionBusEvent> entity) {
                         super.onNext(entity);
-                        EventBusFatory.getInstance().getDefaultEventBus().postSticky(new ActionBusEvent(GtdBusEventType.DELETE, entity));
-
-                        boolean delSucc = entity.ifValid() && GtdActionByUuidFactory.getInstance().remove(entity.getUuid()) != null;
-                        if(mvpV != null && delSucc)
-                            mvpV.onDeleteSucc(INVALID_INDEX, entity);
-                        else if (mvpV != null)
-                            mvpV.onDeleteFail(entity);
+                        if(mvpV != null && entity.isPresent()){
+                            if(entity.get().isPerform())
+                                mvpV.onDeleteSucc(INVALID_INDEX, entity.get().getActionEntity());
+                            else
+                                mvpV.onDeleteFail(entity.get().getActionEntity());
+                        }
                     }
 
                     @Override

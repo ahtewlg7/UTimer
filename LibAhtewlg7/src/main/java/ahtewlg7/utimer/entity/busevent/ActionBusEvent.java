@@ -1,6 +1,6 @@
 package ahtewlg7.utimer.entity.busevent;
 
-import ahtewlg7.utimer.entity.IEventBusBean;
+import ahtewlg7.utimer.entity.BaseEventBusBean;
 import ahtewlg7.utimer.entity.IValidEntity;
 import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
 import ahtewlg7.utimer.enumtype.GtdBusEventType;
@@ -8,7 +8,8 @@ import ahtewlg7.utimer.enumtype.GtdBusEventType;
 /**
  * Created by lw on 2019/3/13.
  */
-public class ActionBusEvent implements IEventBusBean , IValidEntity {
+public class ActionBusEvent extends BaseEventBusBean implements IValidEntity {
+
     private GtdBusEventType eventType;
     private GtdActionEntity actionEntity;
 

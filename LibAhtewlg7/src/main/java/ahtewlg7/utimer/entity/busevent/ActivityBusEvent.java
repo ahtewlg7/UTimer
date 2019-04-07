@@ -2,13 +2,13 @@ package ahtewlg7.utimer.entity.busevent;
 
 import com.trello.rxlifecycle2.android.ActivityEvent;
 
-import ahtewlg7.utimer.entity.IEventBusBean;
+import ahtewlg7.utimer.entity.BaseEventBusBean;
 import ahtewlg7.utimer.entity.IValidEntity;
 
 /**
  * Created by lw on 2019/3/13.
  */
-public class ActivityBusEvent implements IEventBusBean , IValidEntity {
+public class ActivityBusEvent extends BaseEventBusBean implements IValidEntity {
     private ActivityEvent event;
 
     public ActivityBusEvent(ActivityEvent event) {

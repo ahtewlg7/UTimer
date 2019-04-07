@@ -1,25 +1,20 @@
 package ahtewlg7.utimer.state;
 
 
-import com.google.common.base.Optional;
-
 import ahtewlg7.utimer.entity.AUtimerEntity;
-import ahtewlg7.utimer.state.un.BaseGtdState;
-import io.reactivex.Flowable;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.Function;
+import ahtewlg7.utimer.enumtype.GtdType;
 
 public class GtdMachine {
     public static final String TAG = GtdMachine.class.getSimpleName();
 
     private static GtdMachine instance;
 
-    private BaseGtdState inboxState;
-    private BaseGtdState actionState;
-    private BaseGtdState projectState;
-    private BaseGtdState dailyState;
+    private BaseGtdState baseState;
+    private GtdActState actState;
 
     private GtdMachine(){
+        baseState   = new BaseGtdState();
+        actState    = new GtdActState();
     }
 
     public static GtdMachine getInstance(){
@@ -28,50 +23,15 @@ public class GtdMachine {
         return instance;
     }
 
-    public Flowable<Optional<ABaseGtdState>> getCurrState(@NonNull Flowable<AUtimerEntity> entityFlowable){
-        return entityFlowable.map(new Function<AUtimerEntity, Optional<ABaseGtdState>>() {
-            @Override
-            public Optional<ABaseGtdState> apply(AUtimerEntity aUtimerEntity) throws Exception {
-                return getCurrState(aUtimerEntity);
-            }
-        });
-    }
-
-
-    /*public Flowable<Optional<AUtimerEntity>> toDailyCheck(@NonNull Flowable<AUtimerEntity> entityFlowable){
-        return entityFlowable.map(new Function<AUtimerEntity, Optional<AUtimerEntity>>() {
-            @Override
-            public Optional<AUtimerEntity> apply(AUtimerEntity t) throws Exception {
-                Optional<ABaseGtdState> currState = getCurrState(t);
-                if(!currState.isPresent())
-                    return Optional.of(t);
-                return currState.get().toDailyCheck(t);
-            }
-        });
-    }*/
-
-
-
-    protected Optional<ABaseGtdState> getCurrState(AUtimerEntity utimerEntity){
-        if(utimerEntity == null)
-            return Optional.absent();
-
-        ABaseGtdState currGtdSate = null;
-        switch (utimerEntity.getGtdType()){
-            case SHORTHAND:
-                currGtdSate = new ShortHandGtdState(utimerEntity);
-                break;
-            /*case ACTION:
-                currGtdSate = getActionState();
-                break;
-            case PROJECT:
-                currGtdSate = getProjectState();
-                break;
-            case DAILY:
-                currGtdSate = getDailyState();
-                break;*/
+    public BaseGtdState getCurrState(AUtimerEntity entity){
+        BaseGtdState state = baseState;
+        if(entity.getGtdType() == GtdType.ACTION){
+            state = actState;
         }
-        return Optional.fromNullable(currGtdSate);
+        return state;
     }
 
+    GtdActState getActState() {
+        return actState;
+    }
 }

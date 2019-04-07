@@ -8,7 +8,7 @@ import android.os.IBinder;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import ahtewlg7.utimer.entity.IEventBusBean;
+import ahtewlg7.utimer.entity.BaseEventBusBean;
 import ahtewlg7.utimer.entity.busevent.ActionBusEvent;
 import ahtewlg7.utimer.entity.busevent.ActivityBusEvent;
 import ahtewlg7.utimer.enumtype.GtdBusEventType;
@@ -29,7 +29,7 @@ public class BinderService extends Service{
 
     private TableNextIdMvpP tableNextIdMvpP;
     private TableActionMvpP tableActionMvpP;
-    private PublishSubject<IEventBusBean> eventBusRx;
+    private PublishSubject<BaseEventBusBean> eventBusRx;
 
     @Override
     public void onCreate() {
@@ -80,10 +80,9 @@ public class BinderService extends Service{
 
     private void toListenEventBus(){
         eventBusRx/*.observeOn(AndroidSchedulers.mainThread())*/
-            .subscribe(new MySimpleObserver<IEventBusBean>(){
+            .subscribe(new MySimpleObserver<BaseEventBusBean>(){
                 @Override
-                public void onNext(IEventBusBean iEventBusBean) {
-                    super.onNext(iEventBusBean);
+                public void onNext(BaseEventBusBean iEventBusBean) {
                     if(iEventBusBean instanceof ActionBusEvent)
                         tableActionMvpP.toHandleActionEvent((ActionBusEvent)iEventBusBean);
                 }
