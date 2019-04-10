@@ -17,23 +17,25 @@ import com.utimer.common.TextImageFactory;
 import java.util.List;
 
 import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
-import ahtewlg7.utimer.enumtype.ActLife;
-import ahtewlg7.utimer.util.MyRInfo;
+import ahtewlg7.utimer.gtd.GtdActLifeCycleAction;
 import ahtewlg7.utimer.view.ABaseLinearRecyclerView;
 
 public class GtdActionRecyclerView extends ABaseLinearRecyclerView<GtdActionEntity> {
-    public static final String TAG = GtdActionRecyclerView.class.getSimpleName();
+    private GtdActLifeCycleAction gtdActLifeCycleAction;
 
     public GtdActionRecyclerView(Context context) {
         super(context);
+        gtdActLifeCycleAction = new GtdActLifeCycleAction();
     }
 
     public GtdActionRecyclerView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        gtdActLifeCycleAction = new GtdActLifeCycleAction();
     }
 
     public GtdActionRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        gtdActLifeCycleAction = new GtdActLifeCycleAction();
     }
 
     @Override
@@ -72,28 +74,12 @@ public class GtdActionRecyclerView extends ABaseLinearRecyclerView<GtdActionEnti
             if(item.getDetail().isPresent() && !TextUtils.isEmpty(item.getDetail().get()))
                 detailBuilder.append(item.getDetail().get());
             if(item.getActLife() != null)
-                titleBuilder.append("\n").append(getActLifeDetail(item.getActLife()));
+                titleBuilder.append("\n").append(gtdActLifeCycleAction.getActLifeDetail(item.getActLife()));
             if(item.getWorkTimeInfo().isPresent())
                 titleBuilder.append("\nat:").append(item.getWorkTimeInfo().get());
             helper.setText(R.id.view_shorthand_list_item_title, titleBuilder.toString())
                 .setText(R.id.view_shorthand_list_item_detail, detailBuilder.toString())
                 .setImageDrawable(R.id.view_shorthand_list_item_image, TextImageFactory.getInstance().getGtdActionImage());
         }
-    }
-
-    private String getActLifeDetail(ActLife actLife){
-        String detail = null;
-        switch (actLife){
-            case TODAY:
-                detail = MyRInfo.getStringByID(R.string.prompt_action_life_today);
-                break;
-            case TOMORROW:
-                detail = MyRInfo.getStringByID(R.string.prompt_action_life_tomorrow);
-                break;
-            case WEEK:
-                detail = MyRInfo.getStringByID(R.string.prompt_action_life_week);
-                break;
-        }
-        return detail;
     }
 }

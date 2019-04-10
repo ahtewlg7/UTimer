@@ -55,12 +55,5 @@
     <string name="prompt_new_project_name">please input the project name</string>
     <string name="prompt_not_ready">"No, Not Yet! I'm Not Ready, Please Wait!" </string>
 
-    <string name="prompt_action_life_today">Today Job</string>
-    <string name="prompt_action_life_tomorrow">Tomorrow Job</string>
-    <string name="prompt_action_life_week">Week Job</string>
-    <string name="prompt_action_life_month">Month Job</string>
-    <string name="prompt_action_life_quarter">Quarter Job</string>
-    <string name="prompt_action_life_year">Year Job</string>
-
     <string name="entity_invalid">the env is not ready , so pop it</string>
 </resources>

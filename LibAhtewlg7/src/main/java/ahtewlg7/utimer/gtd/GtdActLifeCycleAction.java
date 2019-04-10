@@ -1,8 +1,10 @@
 package ahtewlg7.utimer.gtd;
 
+import ahtewlg7.utimer.R;
 import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
 import ahtewlg7.utimer.enumtype.ActLife;
 import ahtewlg7.utimer.util.DateTimeAction;
+import ahtewlg7.utimer.util.MyRInfo;
 
 /**
  * Created by lw on 2019/3/31.
@@ -63,5 +65,21 @@ public class GtdActLifeCycleAction{
         if (entity == null || !entity.ifValid() || !entity.getFirstWorkTime().isPresent())
             return false;
         return dateTimeAction.isInYear(entity.getFirstWorkTime().get());
+    }
+
+    public String getActLifeDetail(ActLife actLife){
+        String detail = null;
+        switch (actLife){
+            case TODAY:
+                detail = MyRInfo.getStringByID(R.string.prompt_action_life_today);
+                break;
+            case TOMORROW:
+                detail = MyRInfo.getStringByID(R.string.prompt_action_life_tomorrow);
+                break;
+            case WEEK:
+                detail = MyRInfo.getStringByID(R.string.prompt_action_life_week);
+                break;
+        }
+        return detail;
     }
 }
