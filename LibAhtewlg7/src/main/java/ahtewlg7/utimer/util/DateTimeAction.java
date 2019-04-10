@@ -1,5 +1,7 @@
 package ahtewlg7.utimer.util;
 
+import android.support.annotation.NonNull;
+
 import com.google.common.base.Optional;
 
 import org.joda.time.DateTime;
@@ -26,6 +28,16 @@ public class DateTimeAction {
 
     public DateTime toNow(){
         return DateTime.now();
+    }
+
+    public boolean isBefore(@NonNull DateTime dateTime1, @NonNull DateTime dateTime2){
+        return dateTime1.isBefore(dateTime2.getMillis());
+    }
+    public boolean isAfter(@NonNull DateTime dateTime1, @NonNull DateTime dateTime2){
+        return dateTime1.isAfter(dateTime2.getMillis());
+    }
+    public boolean isEqual(@NonNull DateTime dateTime1, @NonNull DateTime dateTime2){
+        return dateTime1.isEqual(dateTime2.getMillis());
     }
 
     public String getDefaultFormat(){
@@ -62,21 +74,21 @@ public class DateTimeAction {
     }
 
     public boolean isInToday(DateTime dateTime){
-        return dateTime != null && dateTime.isAfter(DateTime.now().withTimeAtStartOfDay());
+        return dateTime != null && dateTime.isBefore(DateTime.now().plusDays(1).withTimeAtStartOfDay());
     }
     public boolean isInTomorrow(DateTime dateTime){
-        return dateTime != null && dateTime.isAfter(DateTime.now().plusDays(1).withTimeAtStartOfDay());
+        return dateTime != null && !isInToday(dateTime) && dateTime.isBefore(DateTime.now().plusDays(2).withTimeAtStartOfDay());
     }
     public boolean isInWeek(DateTime dateTime){
-        return dateTime != null && dateTime.isBefore(DateTime.now().dayOfWeek().withMaximumValue());
+        return dateTime != null && !isInTomorrow(dateTime) && dateTime.isBefore(DateTime.now().plusWeeks(1).dayOfWeek().withMinimumValue().withTimeAtStartOfDay());
     }
     public boolean isInMonth(DateTime dateTime){
-        return dateTime != null && dateTime.isBefore(DateTime.now().dayOfMonth().withMaximumValue());
+        return dateTime != null && !isInWeek(dateTime) && dateTime.isBefore(DateTime.now().plusMonths(1).dayOfMonth().withMinimumValue().withTimeAtStartOfDay());
     }
     public boolean isInQuarter(DateTime dateTime){
-        return dateTime != null && dateTime.isBefore(DateTime.now().plusMonths(3).dayOfMonth().withMaximumValue());
+        return dateTime != null && !isInMonth(dateTime) && dateTime.isBefore(DateTime.now().plusMonths(3).dayOfMonth().withMinimumValue().withTimeAtStartOfDay());
     }
     public boolean isInYear(DateTime dateTime){
-        return dateTime != null && dateTime.isBefore(DateTime.now().dayOfYear().withMaximumValue());
+        return dateTime != null && !isInQuarter(dateTime)  && dateTime.isBefore(DateTime.now().plusYears(1).dayOfYear().withMinimumValue().withTimeAtStartOfDay());
     }
 }

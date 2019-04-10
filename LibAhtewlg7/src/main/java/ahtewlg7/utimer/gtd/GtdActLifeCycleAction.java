@@ -16,8 +16,10 @@ public class GtdActLifeCycleAction{
     }
 
     public ActLife getLife(GtdActionEntity entity){
-        ActLife actDateTime = ActLife.TODAY;
-        if(isTomorrowWork(entity))
+        ActLife actDateTime = null;
+        if(isTodayWork(entity))
+            actDateTime = ActLife.TODAY;
+        else if(isTomorrowWork(entity))
             actDateTime = ActLife.TOMORROW;
         else if(ifWeekWork(entity))
             actDateTime = ActLife.WEEK;
@@ -27,6 +29,8 @@ public class GtdActLifeCycleAction{
             actDateTime = ActLife.QUARTER;
         else if(ifYearWork(entity))
             actDateTime = ActLife.YEAR;
+        else
+            actDateTime = ActLife.TODAY;
         return actDateTime;
     }
 

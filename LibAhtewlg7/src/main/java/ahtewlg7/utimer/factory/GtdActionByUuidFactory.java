@@ -7,16 +7,30 @@ import com.google.common.base.Optional;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 
 import org.reactivestreams.Publisher;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import ahtewlg7.utimer.comparator.GtdTimeComparator;
 import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
 import ahtewlg7.utimer.enumtype.ActLife;
 import ahtewlg7.utimer.enumtype.ActState;
 import ahtewlg7.utimer.gtd.GtdActLifeCycleAction;
 import io.reactivex.Flowable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
+
+import static ahtewlg7.utimer.enumtype.ActLife.MONTH;
+import static ahtewlg7.utimer.enumtype.ActLife.QUARTER;
+import static ahtewlg7.utimer.enumtype.ActLife.TODAY;
+import static ahtewlg7.utimer.enumtype.ActLife.TOMORROW;
+import static ahtewlg7.utimer.enumtype.ActLife.WEEK;
+import static ahtewlg7.utimer.enumtype.ActLife.YEAR;
 
 /**
  * Created by lw on 2019/3/13.
@@ -96,7 +110,8 @@ public class GtdActionByUuidFactory extends ABaseLruCacheFactory<String, GtdActi
     }
 
     public Flowable<GtdActionEntity> getEntityByState(@NonNull ActState actState){
-        return getEntityByUuid(Flowable.fromIterable(stateUuidMultiMap.get(actState)));
+        return Flowable.fromIterable(getEntityByUuid(new ArrayList<String>(stateUuidMultiMap.get(actState))))
+                ;
     }
     public Flowable<GtdActionEntity> getEntityByState(){
         return Flowable.fromIterable(ActState.getActiveAll()).flatMap(new Function<ActState, Publisher<GtdActionEntity>>() {
@@ -107,11 +122,17 @@ public class GtdActionByUuidFactory extends ABaseLruCacheFactory<String, GtdActi
         });
     }
 
-    public Flowable<GtdActionEntity> getEntityByLife(@NonNull ActLife actLife){
-        return getEntityByUuid(Flowable.fromIterable(lifeUuidMultiMap.get(actLife)));
+    public Flowable<GtdActionEntity> getEntityByLife(@NonNull final ActLife actLife){
+        return Flowable.fromIterable(getEntityByUuid(new ArrayList<String>(lifeUuidMultiMap.get(actLife))))
+                .doOnNext(new Consumer<GtdActionEntity>() {
+                    @Override
+                    public void accept(GtdActionEntity entity) throws Exception {
+                        entity.setActLife(actLife);
+                    }
+                });
     }
     public Flowable<GtdActionEntity> getEntityByLife(){
-        return Flowable.fromIterable(ActLife.getAll()).flatMap(new Function<ActLife, Publisher<GtdActionEntity>>() {
+        return Flowable.fromArray(TODAY,TOMORROW,WEEK,MONTH,QUARTER,YEAR).flatMap(new Function<ActLife, Publisher<GtdActionEntity>>() {
             @Override
             public Publisher<GtdActionEntity> apply(ActLife actLife) throws Exception {
                 return getEntityByLife(actLife);
@@ -119,13 +140,17 @@ public class GtdActionByUuidFactory extends ABaseLruCacheFactory<String, GtdActi
         });
     }
 
-    private Flowable<GtdActionEntity> getEntityByUuid(@NonNull Flowable<String> uuidRx){
-        return uuidRx.map(new Function<String, GtdActionEntity>() {
-            @Override
-            public GtdActionEntity apply(String uuid) throws Exception {
-                return get(uuid);
-            }
-        });
+    private List<GtdActionEntity> getEntityByUuid(@NonNull List<String> uuidList){
+        List<GtdActionEntity> entityList = Lists.newArrayList();
+        for(String uuid : uuidList){
+            if(TextUtils.isEmpty(uuid))
+                continue;
+            GtdActionEntity entity = get(uuid);
+            if(entity != null)
+                entityList.add(entity);
+        }
+        Collections.sort(entityList, new GtdTimeComparator<GtdActionEntity>());
+        return entityList;
     }
 
     public Optional<GtdActionEntity> getActionByTips(String tip){

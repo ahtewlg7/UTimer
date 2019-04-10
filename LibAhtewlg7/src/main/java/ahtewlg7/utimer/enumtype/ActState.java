@@ -7,20 +7,20 @@ import java.util.List;
 public enum ActState {
     MAYBE,
     ELIMINATE,//means trash
-    JUSTDOIT,
+    DO_NOW,
     TODO,
     NEXT,
-    WAITFOR,
+    WAIT_FOR,
     DATEBOOK,
     DELEGATE,
     DONE;
 
     public static List<ActState> getActiveAll(){
         List<ActState> list = Lists.newArrayList();
-        list.add(JUSTDOIT);
+        list.add(DO_NOW);
         list.add(TODO);
         list.add(NEXT);
-        list.add(WAITFOR);
+        list.add(WAIT_FOR);
         list.add(DATEBOOK);
         list.add(DELEGATE);
         list.add(DONE);

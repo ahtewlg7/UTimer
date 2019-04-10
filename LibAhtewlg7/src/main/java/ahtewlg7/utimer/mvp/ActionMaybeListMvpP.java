@@ -40,11 +40,11 @@ public class ActionMaybeListMvpP {
         if(actionBusEvent == null || !actionBusEvent.ifValid())
             return;
         if(actionBusEvent.getEventType() == GtdBusEventType.LOAD)
-            toLoadAllItem();
+            toLoadAllMaybe();
     }
 
-    public void toLoadAllItem() {
-        mvpM.loadAllEntity()
+    public void toLoadAllMaybe() {
+        mvpM.loadMaybe()
             .compose(((RxFragment)mvpV.getRxLifeCycleBindView()).<GtdActionEntity>bindUntilEvent(FragmentEvent.DESTROY))
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(new MySafeSubscriber<GtdActionEntity>() {
@@ -126,7 +126,7 @@ public class ActionMaybeListMvpP {
     }
 
     class MaybeActListMvpM {
-        Flowable<GtdActionEntity> loadAllEntity() {
+        Flowable<GtdActionEntity> loadMaybe() {
             return GtdActionByUuidFactory.getInstance().getEntityByState(ActState.MAYBE);
         }
     }

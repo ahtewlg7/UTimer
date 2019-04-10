@@ -22,6 +22,7 @@ import java.util.List;
 
 import ahtewlg7.utimer.entity.busevent.ActionBusEvent;
 import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
+import ahtewlg7.utimer.enumtype.ActState;
 import ahtewlg7.utimer.factory.EventBusFatory;
 import ahtewlg7.utimer.mvp.ActionMaybeListMvpP;
 import ahtewlg7.utimer.util.MyRInfo;
@@ -62,6 +63,12 @@ public class ActionMaybeListFragment extends AToolbarBkFragment implements Actio
 
         EventBusFatory.getInstance().getDefaultEventBus().register(this);
     }
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        /*false means menu off; true means menu on*/
+        setHasOptionsMenu(false);
+    }
 
     @Override
     public void onStop() {
@@ -72,7 +79,7 @@ public class ActionMaybeListFragment extends AToolbarBkFragment implements Actio
     @Override
     public void onLazyInitView(@Nullable Bundle savedInstanceState) {
         super.onLazyInitView(savedInstanceState);
-        listMvpP.toLoadAllItem();
+        listMvpP.toLoadAllMaybe();
     }
 
     @Override
@@ -97,7 +104,7 @@ public class ActionMaybeListFragment extends AToolbarBkFragment implements Actio
 
     @Override
     protected String getTitle() {
-        return MyRInfo.getStringByID(R.string.title_action_list);
+        return MyRInfo.getStringByID(R.string.title_action_maybe_list);
     }
 
     @Override
@@ -214,6 +221,8 @@ public class ActionMaybeListFragment extends AToolbarBkFragment implements Actio
         @Override
         public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
             editIndex = position;
+            GtdActionEntity viewEntity = (GtdActionEntity)adapter.getItem(position);
+            viewEntity.setActionState(ActState.NEXT);
 //            startForResult(ShortHandEditFragment.newInstance((GtdActionEntity) adapter.getData().get(position)), REQ_EDIT_FRAGMENT);
         }
 

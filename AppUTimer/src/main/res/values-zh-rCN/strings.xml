@@ -16,6 +16,7 @@
     <string name="title_project">工程</string>
     <string name="title_project_list">工程清单</string>
     <string name="title_action">任务</string>
+    <string name="title_action_maybe">新增</string>
     <string name="title_action_list">任务清单</string>
     <string name="title_action_all">所有</string>
     <string name="title_action_undo">未完成</string>

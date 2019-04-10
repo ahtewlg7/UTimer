@@ -17,6 +17,8 @@ import com.utimer.common.TextImageFactory;
 import java.util.List;
 
 import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
+import ahtewlg7.utimer.enumtype.ActLife;
+import ahtewlg7.utimer.util.MyRInfo;
 import ahtewlg7.utimer.view.ABaseLinearRecyclerView;
 
 public class GtdActionRecyclerView extends ABaseLinearRecyclerView<GtdActionEntity> {
@@ -69,11 +71,29 @@ public class GtdActionRecyclerView extends ABaseLinearRecyclerView<GtdActionEnti
                 titleBuilder.append("\n").append(item.getLastAccessTime().toDateTime());*/
             if(item.getDetail().isPresent() && !TextUtils.isEmpty(item.getDetail().get()))
                 detailBuilder.append(item.getDetail().get());
+            if(item.getActLife() != null)
+                titleBuilder.append("\n").append(getActLifeDetail(item.getActLife()));
             if(item.getWorkTimeInfo().isPresent())
                 titleBuilder.append("\nat:").append(item.getWorkTimeInfo().get());
             helper.setText(R.id.view_shorthand_list_item_title, titleBuilder.toString())
                 .setText(R.id.view_shorthand_list_item_detail, detailBuilder.toString())
                 .setImageDrawable(R.id.view_shorthand_list_item_image, TextImageFactory.getInstance().getGtdActionImage());
         }
+    }
+
+    private String getActLifeDetail(ActLife actLife){
+        String detail = null;
+        switch (actLife){
+            case TODAY:
+                detail = MyRInfo.getStringByID(R.string.prompt_action_life_today);
+                break;
+            case TOMORROW:
+                detail = MyRInfo.getStringByID(R.string.prompt_action_life_tomorrow);
+                break;
+            case WEEK:
+                detail = MyRInfo.getStringByID(R.string.prompt_action_life_week);
+                break;
+        }
+        return detail;
     }
 }

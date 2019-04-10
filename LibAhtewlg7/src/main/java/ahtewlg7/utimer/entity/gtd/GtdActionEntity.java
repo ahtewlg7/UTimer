@@ -20,6 +20,7 @@ import ahtewlg7.utimer.entity.w5h2.BaseW5h2Entity;
 import ahtewlg7.utimer.entity.w5h2.W5h2HowMuch;
 import ahtewlg7.utimer.entity.w5h2.W5h2What;
 import ahtewlg7.utimer.entity.w5h2.W5h2When;
+import ahtewlg7.utimer.enumtype.ActLife;
 import ahtewlg7.utimer.enumtype.ActState;
 import ahtewlg7.utimer.enumtype.GtdType;
 import ahtewlg7.utimer.util.DateTimeAction;
@@ -27,6 +28,7 @@ import ahtewlg7.utimer.util.DateTimeAction;
 
 public class GtdActionEntity extends AGtdUtimerEntity<GtdActionBuilder> implements Serializable {
     private ActState actionState;
+    private ActLife actLife;
 
     protected GtdActionEntity(@Nonnull GtdActionBuilder builder) {
         super(builder);
@@ -61,6 +63,8 @@ public class GtdActionEntity extends AGtdUtimerEntity<GtdActionBuilder> implemen
         super.toMakeEntityOk();
         if(actionState == null)
             actionState = ActState.MAYBE;
+        if(actLife == null)
+            actLife = ActLife.TODAY;
     }
 
     public ActState getActionState() {
@@ -69,6 +73,14 @@ public class GtdActionEntity extends AGtdUtimerEntity<GtdActionBuilder> implemen
 
     public void setActionState(ActState actionState) {
         this.actionState = actionState;
+    }
+
+    public ActLife getActLife() {
+        return actLife;
+    }
+
+    public void setActLife(ActLife actLife) {
+        this.actLife = actLife;
     }
 
     //todo

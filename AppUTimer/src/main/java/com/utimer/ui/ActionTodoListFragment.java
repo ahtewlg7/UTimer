@@ -23,13 +23,12 @@ import java.util.List;
 import ahtewlg7.utimer.entity.busevent.ActionBusEvent;
 import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
 import ahtewlg7.utimer.factory.EventBusFatory;
-import ahtewlg7.utimer.mvp.ActionMaybeListMvpP;
 import ahtewlg7.utimer.mvp.ActionTodoListMvpP;
 import ahtewlg7.utimer.util.MyRInfo;
 import butterknife.BindView;
 import io.reactivex.Flowable;
 
-public class ActionTodoListFragment extends AToolbarBkFragment implements ActionMaybeListMvpP.IGtdActionListMvpV {
+public class ActionTodoListFragment extends AToolbarBkFragment implements ActionTodoListMvpP.IGtdTodoActionListMvpV {
     public static final int INIT_POSITION = -1;
 
     public static final int REQ_NEW_FRAGMENT = 100;
@@ -59,9 +58,15 @@ public class ActionTodoListFragment extends AToolbarBkFragment implements Action
         myClickListener = new MyClickListener();
 
         recyclerView.init(getContext(), null, myClickListener, null,myClickListener,null,null,null);
-        listMvpP = new ActionTodoListMvpP(null);
+        listMvpP = new ActionTodoListMvpP(this);
 
         EventBusFatory.getInstance().getDefaultEventBus().register(this);
+    }
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        /*false means menu off; true means menu on*/
+        setHasOptionsMenu(false);
     }
 
     @Override
@@ -207,7 +212,6 @@ public class ActionTodoListFragment extends AToolbarBkFragment implements Action
     /**********************************************EventBus**********************************************/
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onActionBusEvent(ActionBusEvent eventBus) {
-        listMvpP.toHandleActionEvent(eventBus);
     }
     /**********************************************IGtdActionListMvpV**********************************************/
 

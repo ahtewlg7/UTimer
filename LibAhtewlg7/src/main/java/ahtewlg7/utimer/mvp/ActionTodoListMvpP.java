@@ -2,6 +2,7 @@ package ahtewlg7.utimer.mvp;
 
 import android.support.annotation.NonNull;
 
+import com.google.common.collect.Lists;
 import com.trello.rxlifecycle2.android.FragmentEvent;
 import com.trello.rxlifecycle2.components.support.RxFragment;
 
@@ -24,38 +25,34 @@ import static ahtewlg7.utimer.mvp.IAllItemListMvpV.INVALID_INDEX;
  * Created by lw on 2018/12/9.
  */
 public class ActionTodoListMvpP {
-    private IGtdActionListMvpV mvpV;
+    private IGtdTodoActionListMvpV mvpV;
     private EntityListMvpM mvpM;
 
-    public ActionTodoListMvpP(IGtdActionListMvpV mvpV) {
-        this.mvpV  = mvpV;
-        mvpM = new EntityListMvpM();
-    }
+    private List<GtdActionEntity> entityList;
 
-    public void toHandleActionEvent(ActionBusEvent actionBusEvent){
-        if(actionBusEvent == null || !actionBusEvent.ifValid())
-            return;
-        if(actionBusEvent.getEventType() == GtdBusEventType.LOAD)
-            toLoadAllItem();
+    public ActionTodoListMvpP(IGtdTodoActionListMvpV mvpV) {
+        this.mvpV   = mvpV;
+        mvpM        = new EntityListMvpM();
+        entityList  = Lists.newArrayList();
     }
 
     public void toLoadAllItem() {
         mvpM.loadAllEntity()
-            .compose(((RxFragment)mvpV.getRxLifeCycleBindView()).<List<GtdActionEntity>>bindUntilEvent(FragmentEvent.DESTROY))
+            .compose(((RxFragment)mvpV.getRxLifeCycleBindView()).<GtdActionEntity>bindUntilEvent(FragmentEvent.DESTROY))
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(new MySafeSubscriber<List<GtdActionEntity>>() {
+            .subscribe(new MySafeSubscriber<GtdActionEntity>() {
                 @Override
                 public void onSubscribe(Subscription s) {
                     super.onSubscribe(s);
+                    entityList.clear();
                     if(mvpV != null)
                         mvpV.onItemLoadStart();
                 }
 
                 @Override
-                public void onNext(List<GtdActionEntity> entityList) {
-                    super.onNext(entityList);
-                    if(mvpV != null)
-                        mvpV.onItemLoadEnd(entityList);
+                public void onNext(GtdActionEntity entity) {
+                    super.onNext(entity);
+                    entityList.add(entity);
                 }
 
                 @Override
@@ -63,6 +60,14 @@ public class ActionTodoListMvpP {
                     super.onError(t);
                     if(mvpV != null)
                         mvpV.onItemLoadErr(t);
+                }
+
+                @Override
+                public void onComplete() {
+                    super.onComplete();
+
+                    if(mvpV != null)
+                        mvpV.onItemLoadEnd(entityList);
                 }
             });
     }
@@ -110,11 +115,11 @@ public class ActionTodoListMvpP {
     }
 
     class EntityListMvpM{
-        public Flowable<List<GtdActionEntity>> loadAllEntity() {
-            return Flowable.just(GtdActionByUuidFactory.getInstance().getAll());
+        public Flowable<GtdActionEntity> loadAllEntity() {
+            return GtdActionByUuidFactory.getInstance().getEntityByLife();
         }
     }
 
-    public interface IGtdActionListMvpV extends IAllItemListMvpV<GtdActionEntity> {
+    public interface IGtdTodoActionListMvpV extends IAllItemListMvpV<GtdActionEntity> {
     }
 }
