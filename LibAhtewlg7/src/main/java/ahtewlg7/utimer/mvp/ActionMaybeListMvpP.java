@@ -81,11 +81,12 @@ public class ActionMaybeListMvpP {
 
     public void toDeleteItem(@NonNull Flowable<GtdActionEntity>  entityRx) {
         entityRx.map(new Function<GtdActionEntity, Optional<ActionBusEvent>>() {
-            @Override
-            public Optional<ActionBusEvent> apply(GtdActionEntity entity) throws Exception {
-                return GtdMachine.getInstance().getCurrState(entity).toTrash(entity);
-            }
-        }).subscribe(new MySafeSubscriber<Optional<ActionBusEvent>>() {
+                    @Override
+                    public Optional<ActionBusEvent> apply(GtdActionEntity entity) throws Exception {
+                        return GtdMachine.getInstance().getCurrState(entity).toTrash(entity);
+                    }
+                })
+                .subscribe(new MySafeSubscriber<Optional<ActionBusEvent>>() {
                     @Override
                     public void onNext(Optional<ActionBusEvent> entity) {
                         super.onNext(entity);

@@ -15,6 +15,7 @@ import ahtewlg7.utimer.common.FileSystemAction;
 import ahtewlg7.utimer.db.entity.ActionEntityGdBean;
 import ahtewlg7.utimer.entity.AGtdUtimerEntity;
 import ahtewlg7.utimer.entity.IMergerEntity;
+import ahtewlg7.utimer.entity.context.Contact;
 import ahtewlg7.utimer.entity.material.DirAttachFile;
 import ahtewlg7.utimer.entity.w5h2.BaseW5h2Entity;
 import ahtewlg7.utimer.entity.w5h2.W5h2HowMuch;
@@ -117,6 +118,16 @@ public class GtdActionEntity extends AGtdUtimerEntity<GtdActionBuilder> implemen
         List<DateTime> workTime = getW5h2Entity().getWhen().getWorkTime();
         for(DateTime dateTime : workTime)
             builder.append(new DateTimeAction().toFormat(dateTime)).append(",");
+        return Optional.of(builder.toString());
+    }
+
+    public Optional<String> getWhoInfo(){
+        if(getW5h2Entity().getWho() == null || getW5h2Entity().getWho().getContactList() == null )
+            return Optional.absent();
+        StringBuilder builder   = new StringBuilder();
+        List<Contact> contactList = getW5h2Entity().getWho().getContactList();
+        for(Contact contact : contactList)
+            builder.append(contact.getName()).append(",");
         return Optional.of(builder.toString());
     }
 

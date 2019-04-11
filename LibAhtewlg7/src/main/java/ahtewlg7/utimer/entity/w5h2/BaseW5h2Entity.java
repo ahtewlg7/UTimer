@@ -1,16 +1,23 @@
 package ahtewlg7.utimer.entity.w5h2;
 
+import ahtewlg7.utimer.entity.IValidEntity;
+
 /**
  * Created by lw on 2019/1/16.
  */
-public class BaseW5h2Entity {
+public class BaseW5h2Entity implements IValidEntity {
     private W5h2What what;
     private W5h2When when;
     private AW5h2Why why;
-    private AW5h2Who who;
+    private W5h2Who who;
     private AW5h2Where where;
     private AW5h2How how;
     private W5h2HowMuch howMuch;
+
+    @Override
+    public boolean ifValid() {
+        return when != null && when.ifValid();
+    }
 
     public W5h2What getWhat() {
         return what;
@@ -28,11 +35,11 @@ public class BaseW5h2Entity {
         this.why = why;
     }
 
-    public AW5h2Who getWho() {
+    public W5h2Who getWho() {
         return who;
     }
 
-    public void setWho(AW5h2Who who) {
+    public void setWho(W5h2Who who) {
         this.who = who;
     }
 

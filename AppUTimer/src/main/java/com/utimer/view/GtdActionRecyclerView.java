@@ -73,6 +73,8 @@ public class GtdActionRecyclerView extends ABaseLinearRecyclerView<GtdActionEnti
                 titleBuilder.append("\n").append(item.getLastAccessTime().toDateTime());*/
             if(item.getDetail().isPresent() && !TextUtils.isEmpty(item.getDetail().get()))
                 detailBuilder.append(item.getDetail().get());
+            if(item.getWho().isPresent())
+                detailBuilder.append(item.getWhoInfo());
             if(item.getActLife() != null)
                 titleBuilder.append("\n").append(gtdActLifeCycleAction.getActLifeDetail(item.getActLife()));
             if(item.getWorkTimeInfo().isPresent())

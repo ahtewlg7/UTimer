@@ -10,6 +10,7 @@ import ahtewlg7.utimer.entity.w5h2.BaseW5h2Entity;
 import ahtewlg7.utimer.entity.w5h2.W5h2HowMuch;
 import ahtewlg7.utimer.entity.w5h2.W5h2What;
 import ahtewlg7.utimer.entity.w5h2.W5h2When;
+import ahtewlg7.utimer.entity.w5h2.W5h2Who;
 
 
 public abstract class AGtdUtimerEntity<T extends AGtdUtimerBuilder> extends AUtimerEntity<T>  {
@@ -33,6 +34,9 @@ public abstract class AGtdUtimerEntity<T extends AGtdUtimerBuilder> extends AUti
     }
     public Optional<W5h2HowMuch> getWhy(){
         return w5h2Entity == null ? Optional.<W5h2HowMuch>absent() : Optional.fromNullable(w5h2Entity.getHowMuch());
+    }
+    public Optional<W5h2Who> getWho(){
+        return w5h2Entity == null ? Optional.<W5h2Who>absent() : Optional.fromNullable(w5h2Entity.getWho());
     }
 
     public Optional<DateTime> getFirstWorkTime() {
