@@ -116,8 +116,9 @@ public class GtdActionEntity extends AGtdUtimerEntity<GtdActionBuilder> implemen
             return Optional.absent();
         StringBuilder builder   = new StringBuilder();
         List<DateTime> workTime = getW5h2Entity().getWhen().getWorkTime();
+        DateTimeAction dateTimeAction = new DateTimeAction();
         for(DateTime dateTime : workTime)
-            builder.append(new DateTimeAction().toFormat(dateTime)).append(",");
+            builder.append(dateTimeAction.toFormat(dateTime)).append("\t");
         return Optional.of(builder.toString());
     }
 

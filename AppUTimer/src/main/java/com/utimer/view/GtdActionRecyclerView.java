@@ -65,20 +65,14 @@ public class GtdActionRecyclerView extends ABaseLinearRecyclerView<GtdActionEnti
             StringBuilder titleBuilder = new StringBuilder();
             StringBuilder detailBuilder = new StringBuilder();
 
-            if(!TextUtils.isEmpty(item.getTitle()))
-                titleBuilder.append(item.getTitle());
-            /*if(item.getRPath().isPresent() && !TextUtils.isEmpty(item.getRPath().get()))
-                builder.append(item.getRPath().get());*/
-            /*if(item.getLastAccessTime() != null)
-                titleBuilder.append("\n").append(item.getLastAccessTime().toDateTime());*/
+            /*if(!TextUtils.isEmpty(item.getTitle()))
+                titleBuilder.append(item.getTitle());*/
             if(item.getDetail().isPresent() && !TextUtils.isEmpty(item.getDetail().get()))
                 detailBuilder.append(item.getDetail().get());
-            if(item.getWho().isPresent())
-                detailBuilder.append(item.getWhoInfo());
             if(item.getActLife() != null)
-                titleBuilder.append("\n").append(gtdActLifeCycleAction.getActLifeDetail(item.getActLife()));
+                titleBuilder.append(gtdActLifeCycleAction.getActLifeDetail(item.getActLife())).append("\n");
             if(item.getWorkTimeInfo().isPresent())
-                titleBuilder.append("\nat:").append(item.getWorkTimeInfo().get());
+                titleBuilder.append("at:").append(item.getWorkTimeInfo().get());
             helper.setText(R.id.view_shorthand_list_item_title, titleBuilder.toString())
                 .setText(R.id.view_shorthand_list_item_detail, detailBuilder.toString())
                 .setImageDrawable(R.id.view_shorthand_list_item_image, TextImageFactory.getInstance().getGtdActionImage());

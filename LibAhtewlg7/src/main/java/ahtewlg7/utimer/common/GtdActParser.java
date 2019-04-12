@@ -41,28 +41,34 @@ public class GtdActParser {
                                     .setW5h2Entity(w5h2Entity)
                                     .setCreateTime(DateTime.now())
                                     .setDetail(raw)
+                                    .setTitle(raw)
                                     .setUuid(new IdAction().getUUId());
-        Optional<String> keyWords = getTitle(raw);
-        if(keyWords.isPresent())
-            builder.setTitle(keyWords.get());
         GtdActionEntity gtdActionEntity = builder.build();
         gtdActionEntity.setActionState(ActState.MAYBE);
         gtdActionEntity.setLastModifyTime(DateTime.now());
         gtdActionEntity.setLastAccessTime(DateTime.now());
         return Optional.of(gtdActionEntity);
     }
-    private BaseW5h2Entity getW5h2Entity(String raw){
-        BaseW5h2Entity w5h2Entity = new BaseW5h2Entity();
-        Optional<W5h2When> whenOptional = getWhen(raw);
-        if(!whenOptional.isPresent())
-            return w5h2Entity;
-        w5h2Entity.setWhen(whenOptional.get());
+
+    public void updateActEntity(GtdActionEntity entity, String raw){
+        if(entity == null || entity.getW5h2Entity() == null || TextUtils.isEmpty(raw))
+            return;
+        Optional<String> keyWords = getTitle(raw);
+        if(keyWords.isPresent())
+            entity.setTitle(keyWords.get());
 
         List<Term> termList = nlpAction.toSegAllTerm(raw);
 
         Optional<W5h2Who> whoOptional = getWho(termList);
         if(whoOptional.isPresent())
-            w5h2Entity.setWho(whoOptional.get());
+            entity.getW5h2Entity().setWho(whoOptional.get());
+    }
+
+    private BaseW5h2Entity getW5h2Entity(String raw){
+        BaseW5h2Entity w5h2Entity = new BaseW5h2Entity();
+        Optional<W5h2When> whenOptional = getWhen(raw);
+        if(whenOptional.isPresent())
+            w5h2Entity.setWhen(whenOptional.get());
         return w5h2Entity;
     }
 
@@ -95,9 +101,8 @@ public class GtdActParser {
         if(keyWords == null || keyWords.size() == 0)
             return Optional.absent();
         StringBuilder title = new StringBuilder();
-        for(String keyword : keyWords){
+        for(String keyword : keyWords)
             title.append(keyword).append(",");
-        }
         return Optional.of(title.toString());
     }
 }
