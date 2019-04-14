@@ -3,6 +3,7 @@ package ahtewlg7.utimer.mvp.db;
 import org.reactivestreams.Subscription;
 
 import ahtewlg7.utimer.db.entity.NextIdGdBean;
+import ahtewlg7.utimer.entity.busevent.UTimerBusEvent;
 import ahtewlg7.utimer.enumtype.GtdType;
 import ahtewlg7.utimer.factory.DbNextIdFactory;
 import ahtewlg7.utimer.mvp.ADbMvpP;
@@ -16,6 +17,10 @@ class TableShortHandMvpP extends ADbMvpP<NextIdGdBean, TableNextIdMvpM> {
 
     public TableShortHandMvpP(IDbMvpV mvpV){
         super(mvpV);
+    }
+
+    public void toHandleBusEvent(UTimerBusEvent busEvent){
+
     }
 
     public void toSaveAll(){

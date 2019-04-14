@@ -2,13 +2,12 @@ package ahtewlg7.utimer.entity.busevent;
 
 import ahtewlg7.utimer.entity.AUtimerEntity;
 import ahtewlg7.utimer.entity.BaseEventBusBean;
-import ahtewlg7.utimer.entity.IValidEntity;
 import ahtewlg7.utimer.enumtype.GtdBusEventType;
 
 /**
  * Created by lw on 2019/3/13.
  */
-public class UTimerBusEvent extends BaseEventBusBean implements IValidEntity {
+public class UTimerBusEvent extends BaseEventBusBean{
 
     private GtdBusEventType eventType;
     private AUtimerEntity entity;

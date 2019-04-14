@@ -12,9 +12,7 @@ import ahtewlg7.utimer.entity.BaseEventBusBean;
 import ahtewlg7.utimer.entity.busevent.ActionBusEvent;
 import ahtewlg7.utimer.entity.busevent.ActivityBusEvent;
 import ahtewlg7.utimer.entity.busevent.UTimerBusEvent;
-import ahtewlg7.utimer.enumtype.GtdBusEventType;
 import ahtewlg7.utimer.factory.EventBusFatory;
-import ahtewlg7.utimer.mvp.ADbMvpP;
 import ahtewlg7.utimer.mvp.db.TableMvpP;
 import ahtewlg7.utimer.util.MySimpleObserver;
 import io.reactivex.subjects.PublishSubject;
@@ -25,9 +23,6 @@ import io.reactivex.subjects.PublishSubject;
  */
 
 public class BinderService extends Service{
-    private MyTableActioMvpV myTableGtdMvpV;
-    private MyTableNextIdMvpV myTableNextIdMvpV;
-
     private TableMvpP tableMvpP;
     private PublishSubject<BaseEventBusBean> eventBusRx;
 
@@ -35,10 +30,8 @@ public class BinderService extends Service{
     public void onCreate() {
         super.onCreate();
 
-        myTableGtdMvpV      = new MyTableActioMvpV();
-        myTableNextIdMvpV   = new MyTableNextIdMvpV();
-        tableMvpP           = new TableMvpP(myTableGtdMvpV, myTableNextIdMvpV);
         eventBusRx          = PublishSubject.create();
+        tableMvpP           = new TableMvpP(null, null,null);
 
         EventBusFatory.getInstance().getDefaultEventBus().register(this);
         toListenEventBus();
@@ -64,15 +57,13 @@ public class BinderService extends Service{
         }
     }
     //+++++++++++++++++++++++++++++++++++++++++++EventBus+++++++++++++++++++++++++++++++++++++++++++++++++++
-
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void onActionBusEvent(ActionBusEvent actionBusEvent) {
         eventBusRx.onNext(actionBusEvent);
     }
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onActivityBusEvent(ActivityBusEvent actionBusEvent) {
-        if(actionBusEvent.ifOnBackground())
-            tableMvpP.toSaveNextIdTable();
+        eventBusRx.onNext(actionBusEvent);
     }
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onUTimerBusEvent(UTimerBusEvent utimerBusEvent) {
@@ -83,36 +74,9 @@ public class BinderService extends Service{
         eventBusRx/*.observeOn(AndroidSchedulers.mainThread())*/
             .subscribe(new MySimpleObserver<BaseEventBusBean>(){
                 @Override
-                public void onNext(BaseEventBusBean iEventBusBean) {
-                    if(iEventBusBean instanceof ActionBusEvent)
-                        tableMvpP.toHandleBusEvent((ActionBusEvent)iEventBusBean);
+                public void onNext(BaseEventBusBean eventBusBean) {
+                    tableMvpP.toHandleBusEvent(eventBusBean);
                 }
             });
-    }
-
-    //+++++++++++++++++++++++++++++++++++++++++++GtdMpvV+++++++++++++++++++++++++++++++++++++++++++++++++++
-    class MyTableActioMvpV implements ADbMvpP.IDbMvpV {
-        @Override
-        public void onAllLoadStarted() {
-
-        }
-
-        @Override
-        public void onAllLoadEnd() {
-            ActionBusEvent actionBusEvent = new ActionBusEvent(GtdBusEventType.LOAD);
-            EventBusFatory.getInstance().getDefaultEventBus().post(actionBusEvent);
-        }
-    }
-    //+++++++++++++++++++++++++++++++++++++++++++IDbActionMvpV+++++++++++++++++++++++++++++++++++++++++++++++
-    class MyTableNextIdMvpV implements ADbMvpP.IDbMvpV {
-        @Override
-        public void onAllLoadStarted() {
-            //do nothing
-        }
-
-        @Override
-        public void onAllLoadEnd() {
-            //do nothing
-        }
     }
 }

@@ -4,6 +4,8 @@ import org.reactivestreams.Subscription;
 
 import ahtewlg7.utimer.entity.busevent.ActionBusEvent;
 import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
+import ahtewlg7.utimer.enumtype.GtdBusEventType;
+import ahtewlg7.utimer.factory.EventBusFatory;
 import ahtewlg7.utimer.factory.GtdActionByUuidFactory;
 import ahtewlg7.utimer.mvp.ADbMvpP;
 import ahtewlg7.utimer.util.MySafeSubscriber;
@@ -18,7 +20,7 @@ class TableActionMvpP extends ADbMvpP<GtdActionEntity, TableActionMvpM> {
         super(mvpV);
     }
 
-    public void toHandleActionEvent(ActionBusEvent actionBusEvent){
+    public void toHandleBusEvent(ActionBusEvent actionBusEvent){
         if(actionBusEvent == null || !actionBusEvent.ifValid())
             return;
         switch (actionBusEvent.getEventType()){
@@ -66,17 +68,18 @@ class TableActionMvpP extends ADbMvpP<GtdActionEntity, TableActionMvpM> {
             }
 
             @Override
-            public void onError(Throwable t) {
-                super.onError(t);
-            }
-
-            @Override
             public void onComplete() {
                 super.onComplete();
                 isLoaded = true;
+                toPostEndEvent();
                 if(mvpV != null)
                     mvpV.onAllLoadEnd();
             }
         };
+    }
+
+    private void toPostEndEvent(){
+        ActionBusEvent actionBusEvent = new ActionBusEvent(GtdBusEventType.LOAD);
+        EventBusFatory.getInstance().getDefaultEventBus().post(actionBusEvent);
     }
 }
