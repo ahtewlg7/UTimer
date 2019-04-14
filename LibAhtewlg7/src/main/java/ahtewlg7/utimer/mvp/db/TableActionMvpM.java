@@ -27,6 +27,6 @@ class TableActionMvpM extends ADbMvpM<GtdActionEntity> {
 
     @Override
     public Flowable<GtdActionEntity> loadAll() {
-        return dbActionFacade.loadAllUndoActionEntity();
+        return dbActionFacade.loadAllActionEntity();
     }
 }

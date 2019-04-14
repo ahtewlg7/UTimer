@@ -14,6 +14,7 @@ import java.util.Map;
 import ahtewlg7.utimer.common.GtdActParser;
 import ahtewlg7.utimer.entity.AUtimerEntity;
 import ahtewlg7.utimer.entity.busevent.ActionBusEvent;
+import ahtewlg7.utimer.entity.busevent.UTimerBusEvent;
 import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
 import ahtewlg7.utimer.entity.md.EditElement;
 import ahtewlg7.utimer.entity.md.EditMementoBean;
@@ -79,7 +80,7 @@ public abstract class AUtimerTxtEditMvpP<T extends AUtimerEntity> implements IUt
     }
 
     public void toFinishEdit(@NonNull Flowable<EditElement> editElementRx){
-        editMvpM.toSave(editElementRx)
+        editMvpM.toSaveElement(editElementRx)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new MySafeSubscriber<Boolean>() {
                     @Override
@@ -98,6 +99,8 @@ public abstract class AUtimerTxtEditMvpP<T extends AUtimerEntity> implements IUt
                     public void onComplete() {
                         super.onComplete();
                         editMvpV.onSaveEnd();
+                        UTimerBusEvent busEvent = new UTimerBusEvent(GtdBusEventType.SAVE, t);
+                        EventBusFatory.getInstance().getDefaultEventBus().postSticky(busEvent);
 //                        isChangeSaved = true;
                     }
                 });
@@ -181,7 +184,7 @@ public abstract class AUtimerTxtEditMvpP<T extends AUtimerEntity> implements IUt
     }
 
     public interface IUtimerEditMvpM{
-        public Flowable<Boolean> toSave(@NonNull Flowable<EditElement> elementObservable);
+        public Flowable<Boolean> toSaveElement(@NonNull Flowable<EditElement> elementObservable);
     }
 
     public interface IUtimerEditMvpV{

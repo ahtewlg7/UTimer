@@ -37,7 +37,7 @@ public class ShorthandEditMvpP extends AUtimerTxtEditMvpP<ShortHandEntity> {
         }
 
         @Override
-        public Flowable<Boolean> toSave(@NonNull Flowable<EditElement> elementObservable) {
+        public Flowable<Boolean> toSaveElement(@NonNull Flowable<EditElement> elementObservable) {
             return elementObservable.doOnSubscribe(new Consumer<Subscription>() {
                             @Override
                             public void accept(Subscription subscription) throws Exception {

@@ -12,9 +12,9 @@ import io.reactivex.Flowable;
 /**
  * Created by lw on 2019/3/7.
  */
-public class TableActionMvpP extends ADbMvpP<GtdActionEntity, TableActionMvpM> {
+class TableActionMvpP extends ADbMvpP<GtdActionEntity, TableActionMvpM> {
 
-    public TableActionMvpP(ITableActionMvpV mvpV){
+    public TableActionMvpP(IDbMvpV mvpV){
         super(mvpV);
     }
 
@@ -78,8 +78,5 @@ public class TableActionMvpP extends ADbMvpP<GtdActionEntity, TableActionMvpM> {
                     mvpV.onAllLoadEnd();
             }
         };
-    }
-
-    public interface ITableActionMvpV extends IDbMvpV{
     }
 }

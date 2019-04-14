@@ -12,9 +12,9 @@ import io.reactivex.Flowable;
 /**
  * Created by lw on 2019/3/7.
  */
-class TableNextIdMvpP extends ADbMvpP<NextIdGdBean, TableNextIdMvpM> {
+class TableShortHandMvpP extends ADbMvpP<NextIdGdBean, TableNextIdMvpM> {
 
-    public TableNextIdMvpP(IDbMvpV mvpV){
+    public TableShortHandMvpP(IDbMvpV mvpV){
         super(mvpV);
     }
 

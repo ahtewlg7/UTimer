@@ -20,7 +20,7 @@ public class ActivityBusEvent extends BaseEventBusBean implements IValidEntity {
         return event != null;
     }
 
-    public boolean ifBackground(){
+    public boolean ifOnBackground(){
         return ifValid() && (event == ActivityEvent.PAUSE || event == ActivityEvent.STOP);
     }
 

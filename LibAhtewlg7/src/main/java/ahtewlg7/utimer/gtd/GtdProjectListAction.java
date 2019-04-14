@@ -44,7 +44,7 @@ public class GtdProjectListAction {
         return filterInvalidEntity(getFsProject(getProjectDirs()));
     }
 
-    public Flowable<Boolean> saveEntity(Flowable<Optional<ShortHandEntity>> flowable) {
+    public Flowable<Boolean> saveEntity(Flowable<ShortHandEntity> flowable) {
         return dbActionFacade.saveShortHandEntity(flowable);
     }
 
@@ -91,11 +91,12 @@ public class GtdProjectListAction {
         });
     }
     private Flowable<Optional<ShortHandEntity>> getDbShortHand(Flowable<File> shortHandRx){
-        return dbActionFacade.getShortHandEntityByTitle(shortHandRx.map(new Function<File, String>() {
+        /*return dbActionFacade.getShortHandEntityByTitle(shortHandRx.map(new Function<File, String>() {
                     @Override
                     public String apply(File file) throws Exception {
                         return file.getName();
                     }
-                }));
+                }));*/
+        return null;
     }
 }

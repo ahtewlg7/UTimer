@@ -11,10 +11,11 @@ import org.greenrobot.eventbus.ThreadMode;
 import ahtewlg7.utimer.entity.BaseEventBusBean;
 import ahtewlg7.utimer.entity.busevent.ActionBusEvent;
 import ahtewlg7.utimer.entity.busevent.ActivityBusEvent;
+import ahtewlg7.utimer.entity.busevent.UTimerBusEvent;
 import ahtewlg7.utimer.enumtype.GtdBusEventType;
 import ahtewlg7.utimer.factory.EventBusFatory;
-import ahtewlg7.utimer.mvp.db.TableActionMvpP;
-import ahtewlg7.utimer.mvp.db.TableNextIdMvpP;
+import ahtewlg7.utimer.mvp.ADbMvpP;
+import ahtewlg7.utimer.mvp.db.TableMvpP;
 import ahtewlg7.utimer.util.MySimpleObserver;
 import io.reactivex.subjects.PublishSubject;
 
@@ -27,8 +28,7 @@ public class BinderService extends Service{
     private MyTableActioMvpV myTableGtdMvpV;
     private MyTableNextIdMvpV myTableNextIdMvpV;
 
-    private TableNextIdMvpP tableNextIdMvpP;
-    private TableActionMvpP tableActionMvpP;
+    private TableMvpP tableMvpP;
     private PublishSubject<BaseEventBusBean> eventBusRx;
 
     @Override
@@ -37,16 +37,13 @@ public class BinderService extends Service{
 
         myTableGtdMvpV      = new MyTableActioMvpV();
         myTableNextIdMvpV   = new MyTableNextIdMvpV();
-        tableNextIdMvpP     = new TableNextIdMvpP(myTableNextIdMvpV);
-        tableActionMvpP     = new TableActionMvpP(myTableGtdMvpV);
-
+        tableMvpP           = new TableMvpP(myTableGtdMvpV, myTableNextIdMvpV);
         eventBusRx          = PublishSubject.create();
 
         EventBusFatory.getInstance().getDefaultEventBus().register(this);
         toListenEventBus();
 
-        tableNextIdMvpP.toLoadAll();
-        tableActionMvpP.toLoadAll();
+        tableMvpP.toLoadAllTable();
     }
 
     @Override
@@ -74,8 +71,12 @@ public class BinderService extends Service{
     }
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onActivityBusEvent(ActivityBusEvent actionBusEvent) {
-        if(actionBusEvent.ifBackground())
-            tableNextIdMvpP.toSaveAll();
+        if(actionBusEvent.ifOnBackground())
+            tableMvpP.toSaveNextIdTable();
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onUTimerBusEvent(UTimerBusEvent utimerBusEvent) {
+        eventBusRx.onNext(utimerBusEvent);
     }
 
     private void toListenEventBus(){
@@ -84,13 +85,13 @@ public class BinderService extends Service{
                 @Override
                 public void onNext(BaseEventBusBean iEventBusBean) {
                     if(iEventBusBean instanceof ActionBusEvent)
-                        tableActionMvpP.toHandleActionEvent((ActionBusEvent)iEventBusBean);
+                        tableMvpP.toHandleBusEvent((ActionBusEvent)iEventBusBean);
                 }
             });
     }
 
     //+++++++++++++++++++++++++++++++++++++++++++GtdMpvV+++++++++++++++++++++++++++++++++++++++++++++++++++
-    class MyTableActioMvpV implements TableActionMvpP.ITableActionMvpV {
+    class MyTableActioMvpV implements ADbMvpP.IDbMvpV {
         @Override
         public void onAllLoadStarted() {
 
@@ -103,13 +104,15 @@ public class BinderService extends Service{
         }
     }
     //+++++++++++++++++++++++++++++++++++++++++++IDbActionMvpV+++++++++++++++++++++++++++++++++++++++++++++++
-    class MyTableNextIdMvpV implements TableNextIdMvpP.IGtdIdKeyMvpV {
+    class MyTableNextIdMvpV implements ADbMvpP.IDbMvpV {
         @Override
         public void onAllLoadStarted() {
+            //do nothing
         }
 
         @Override
         public void onAllLoadEnd() {
+            //do nothing
         }
     }
 }

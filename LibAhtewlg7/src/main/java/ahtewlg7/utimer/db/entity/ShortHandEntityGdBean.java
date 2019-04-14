@@ -7,6 +7,7 @@ import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Index;
+import org.greenrobot.greendao.annotation.NotNull;
 import org.joda.time.DateTime;
 
 import ahtewlg7.utimer.db.converter.DateTimeTypeConverter;
@@ -24,27 +25,28 @@ public class ShortHandEntityGdBean {
 
     @Id
     private Long id;
-    private int accessTimes;
+    @NotNull
     @Index(unique = true)
-    private String title;
     private String uuid;
+    private int accessTimes;
+    private String title;
     private String value;
+    private String attachFileRPath;
     @Convert(converter = DateTimeTypeConverter.class, columnType = Long.class)
     private DateTime createTime;
     @Convert(converter = DateTimeTypeConverter.class, columnType = Long.class)
     private DateTime lastAccessTime;
 
-
-
-    @Generated(hash = 339200117)
-    public ShortHandEntityGdBean(Long id, int accessTimes, String title,
-            String uuid, String value, DateTime createTime,
+    @Generated(hash = 607606515)
+    public ShortHandEntityGdBean(Long id, @NotNull String uuid, int accessTimes,
+            String title, String value, String attachFileRPath, DateTime createTime,
             DateTime lastAccessTime) {
         this.id = id;
+        this.uuid = uuid;
         this.accessTimes = accessTimes;
         this.title = title;
-        this.uuid = uuid;
         this.value = value;
+        this.attachFileRPath = attachFileRPath;
         this.createTime = createTime;
         this.lastAccessTime = lastAccessTime;
     }
@@ -122,6 +124,14 @@ public class ShortHandEntityGdBean {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getAttachFileRPath() {
+        return this.attachFileRPath;
+    }
+
+    public void setAttachFileRPath(String attachFileRPath) {
+        this.attachFileRPath = attachFileRPath;
     }
 
 }
