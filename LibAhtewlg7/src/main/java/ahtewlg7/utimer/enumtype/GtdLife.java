@@ -1,6 +1,6 @@
 package ahtewlg7.utimer.enumtype;
 
-public enum ActLife {
+public enum GtdLife {
     TODAY,
     TOMORROW,
     WEEK,

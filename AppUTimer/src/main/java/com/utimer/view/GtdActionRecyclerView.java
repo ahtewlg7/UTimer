@@ -17,25 +17,25 @@ import com.utimer.common.TextImageFactory;
 import java.util.List;
 
 import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
-import ahtewlg7.utimer.gtd.GtdActLifeCycleAction;
+import ahtewlg7.utimer.gtd.GtdLifeCycleAction;
 import ahtewlg7.utimer.view.ABaseLinearRecyclerView;
 
 public class GtdActionRecyclerView extends ABaseLinearRecyclerView<GtdActionEntity> {
-    private GtdActLifeCycleAction gtdActLifeCycleAction;
+    private GtdLifeCycleAction gtdActLifeCycleAction;
 
     public GtdActionRecyclerView(Context context) {
         super(context);
-        gtdActLifeCycleAction = new GtdActLifeCycleAction();
+        gtdActLifeCycleAction = new GtdLifeCycleAction();
     }
 
     public GtdActionRecyclerView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        gtdActLifeCycleAction = new GtdActLifeCycleAction();
+        gtdActLifeCycleAction = new GtdLifeCycleAction();
     }
 
     public GtdActionRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        gtdActLifeCycleAction = new GtdActLifeCycleAction();
+        gtdActLifeCycleAction = new GtdLifeCycleAction();
     }
 
     @Override
@@ -69,8 +69,8 @@ public class GtdActionRecyclerView extends ABaseLinearRecyclerView<GtdActionEnti
                 titleBuilder.append(item.getTitle());*/
             if(item.getDetail().isPresent() && !TextUtils.isEmpty(item.getDetail().get()))
                 detailBuilder.append(item.getDetail().get());
-            if(item.getActLife() != null)
-                titleBuilder.append(gtdActLifeCycleAction.getActLifeDetail(item.getActLife())).append("\n");
+            if(item.getGtdLife() != null)
+                titleBuilder.append(gtdActLifeCycleAction.getActLifeDetail(item.getGtdLife())).append("\n");
             if(item.getWorkTimeInfo().isPresent())
                 titleBuilder.append("at:").append(item.getWorkTimeInfo().get());
             helper.setText(R.id.view_shorthand_list_item_title, titleBuilder.toString())

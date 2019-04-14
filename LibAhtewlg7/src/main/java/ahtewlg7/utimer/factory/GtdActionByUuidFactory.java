@@ -18,19 +18,19 @@ import java.util.List;
 
 import ahtewlg7.utimer.comparator.GtdTimeComparator;
 import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
-import ahtewlg7.utimer.enumtype.ActLife;
+import ahtewlg7.utimer.enumtype.GtdLife;
 import ahtewlg7.utimer.enumtype.ActState;
-import ahtewlg7.utimer.gtd.GtdActLifeCycleAction;
+import ahtewlg7.utimer.gtd.GtdLifeCycleAction;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 
-import static ahtewlg7.utimer.enumtype.ActLife.MONTH;
-import static ahtewlg7.utimer.enumtype.ActLife.QUARTER;
-import static ahtewlg7.utimer.enumtype.ActLife.TODAY;
-import static ahtewlg7.utimer.enumtype.ActLife.TOMORROW;
-import static ahtewlg7.utimer.enumtype.ActLife.WEEK;
-import static ahtewlg7.utimer.enumtype.ActLife.YEAR;
+import static ahtewlg7.utimer.enumtype.GtdLife.MONTH;
+import static ahtewlg7.utimer.enumtype.GtdLife.QUARTER;
+import static ahtewlg7.utimer.enumtype.GtdLife.TODAY;
+import static ahtewlg7.utimer.enumtype.GtdLife.TOMORROW;
+import static ahtewlg7.utimer.enumtype.GtdLife.WEEK;
+import static ahtewlg7.utimer.enumtype.GtdLife.YEAR;
 
 /**
  * Created by lw on 2019/3/13.
@@ -40,10 +40,10 @@ public class GtdActionByUuidFactory extends ABaseLruCacheFactory<String, GtdActi
 
     private BiMap<String, String> tipsUuidMap;
     private BiMap<String, String> detailUuidMap;
-    private Multimap<ActLife, String> lifeUuidMultiMap;
+    private Multimap<GtdLife, String> lifeUuidMultiMap;
     private Multimap<ActState, String> stateUuidMultiMap;
 
-    private GtdActLifeCycleAction lifeCycleAction;
+    private GtdLifeCycleAction lifeCycleAction;
 
     protected GtdActionByUuidFactory(){
         super();
@@ -51,7 +51,7 @@ public class GtdActionByUuidFactory extends ABaseLruCacheFactory<String, GtdActi
         detailUuidMap       = HashBiMap.create();
         lifeUuidMultiMap    = HashMultimap.create();
         stateUuidMultiMap   = HashMultimap.create();
-        lifeCycleAction     = new GtdActLifeCycleAction();
+        lifeCycleAction     = new GtdLifeCycleAction();
     }
 
     public static GtdActionByUuidFactory getInstance() {
@@ -110,8 +110,7 @@ public class GtdActionByUuidFactory extends ABaseLruCacheFactory<String, GtdActi
     }
 
     public Flowable<GtdActionEntity> getEntityByState(@NonNull ActState actState){
-        return Flowable.fromIterable(getEntityByUuid(new ArrayList<String>(stateUuidMultiMap.get(actState))))
-                ;
+        return Flowable.fromIterable(getEntityByUuid(new ArrayList<String>(stateUuidMultiMap.get(actState))));
     }
     public Flowable<GtdActionEntity> getEntityByState(){
         return Flowable.fromIterable(ActState.getActiveAll()).flatMap(new Function<ActState, Publisher<GtdActionEntity>>() {
@@ -122,19 +121,19 @@ public class GtdActionByUuidFactory extends ABaseLruCacheFactory<String, GtdActi
         });
     }
 
-    public Flowable<GtdActionEntity> getEntityByLife(@NonNull final ActLife actLife){
+    public Flowable<GtdActionEntity> getEntityByLife(@NonNull final GtdLife actLife){
         return Flowable.fromIterable(getEntityByUuid(new ArrayList<String>(lifeUuidMultiMap.get(actLife))))
                 .doOnNext(new Consumer<GtdActionEntity>() {
                     @Override
                     public void accept(GtdActionEntity entity) throws Exception {
-                        entity.setActLife(actLife);
+                        entity.setGtdLife(actLife);
                     }
                 });
     }
     public Flowable<GtdActionEntity> getEntityByLife(){
-        return Flowable.fromArray(TODAY,TOMORROW,WEEK,MONTH,QUARTER,YEAR).flatMap(new Function<ActLife, Publisher<GtdActionEntity>>() {
+        return Flowable.fromArray(TODAY,TOMORROW,WEEK,MONTH,QUARTER,YEAR).flatMap(new Function<GtdLife, Publisher<GtdActionEntity>>() {
             @Override
-            public Publisher<GtdActionEntity> apply(ActLife actLife) throws Exception {
+            public Publisher<GtdActionEntity> apply(GtdLife actLife) throws Exception {
                 return getEntityByLife(actLife);
             }
         });

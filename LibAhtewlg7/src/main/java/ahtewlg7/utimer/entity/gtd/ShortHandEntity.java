@@ -13,6 +13,7 @@ import java.io.Serializable;
 import javax.annotation.Nonnull;
 
 import ahtewlg7.utimer.common.FileSystemAction;
+import ahtewlg7.utimer.comparator.ITimeComparator;
 import ahtewlg7.utimer.db.entity.ShortHandEntityGdBean;
 import ahtewlg7.utimer.entity.AUtimerEntity;
 import ahtewlg7.utimer.entity.IMergerEntity;
@@ -21,7 +22,8 @@ import ahtewlg7.utimer.entity.md.EditElement;
 import ahtewlg7.utimer.enumtype.GtdType;
 import ahtewlg7.utimer.util.DateTimeAction;
 
-public class ShortHandEntity extends AUtimerEntity<ShortHandBuilder> implements Serializable {
+public class ShortHandEntity extends AUtimerEntity<ShortHandBuilder>
+        implements ITimeComparator,Serializable {
     private EditElement lastModifyElement;
 
     protected ShortHandEntity(@Nonnull ShortHandBuilder builder) {
@@ -37,6 +39,12 @@ public class ShortHandEntity extends AUtimerEntity<ShortHandBuilder> implements 
     @Override
     public Optional<String> getDetail() {
         return TextUtils.isEmpty(detail)? Optional.<String>absent() : Optional.of(detail);
+    }
+
+    //++++++++++++++++++++++++++++++++++++++ITimeComparator++++++++++++++++++++++++++++++++++++
+    @Override
+    public Optional<DateTime> getComparatorTime() {
+        return Optional.of(lastAccessTime);
     }
 
     public EditElement getLastModifyElement() {

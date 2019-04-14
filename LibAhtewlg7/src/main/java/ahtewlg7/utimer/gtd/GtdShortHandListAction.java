@@ -11,7 +11,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 import ahtewlg7.utimer.common.FileSystemAction;
-import ahtewlg7.utimer.db.DbActionFacade;
 import ahtewlg7.utimer.entity.gtd.ShortHandBuilder;
 import ahtewlg7.utimer.entity.gtd.ShortHandEntity;
 import ahtewlg7.utimer.entity.material.MdAttachFile;
@@ -21,11 +20,11 @@ import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 
 public class GtdShortHandListAction {
-    protected DbActionFacade dbActionFacade;
+//    protected DbActionFacade dbActionFacade;
     protected FileSystemAction fileSystemAction;
 
     public GtdShortHandListAction(){
-        dbActionFacade   = new DbActionFacade();
+//        dbActionFacade   = new DbActionFacade();
         fileSystemAction = new FileSystemAction();
     }
 
@@ -46,13 +45,13 @@ public class GtdShortHandListAction {
         return null;
     }
 
-    public Flowable<Boolean> saveEntity(Flowable<Optional<ShortHandEntity>> flowable) {
+    /*public Flowable<Boolean> saveEntity(Flowable<Optional<ShortHandEntity>> flowable) {
         return dbActionFacade.saveShortHandEntity(flowable);
     }
 
     public Flowable<Boolean> deleteEntity(@NonNull Flowable<Optional<ShortHandEntity>> flowable) {
         return dbActionFacade.deleteShortHandEntity(flowable);
-    }
+    }*/
 
     public Flowable<ShortHandEntity> getTodayShortHandList(){
         return loadAllEntity().filter(new Predicate<ShortHandEntity>() {
@@ -100,12 +99,12 @@ public class GtdShortHandListAction {
             }
         });
     }
-    private Flowable<Optional<ShortHandEntity>> getDbShortHand(Flowable<File> shortHandRx){
+    /*private Flowable<Optional<ShortHandEntity>> getDbShortHand(Flowable<File> shortHandRx){
         return dbActionFacade.getShortHandEntityByTitle(shortHandRx.map(new Function<File, String>() {
                     @Override
                     public String apply(File file) throws Exception {
                         return file.getName();
                     }
                 }));
-    }
+    }*/
 }

@@ -12,6 +12,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import ahtewlg7.utimer.common.FileSystemAction;
+import ahtewlg7.utimer.comparator.ITimeComparator;
 import ahtewlg7.utimer.db.entity.ActionEntityGdBean;
 import ahtewlg7.utimer.entity.AGtdUtimerEntity;
 import ahtewlg7.utimer.entity.IMergerEntity;
@@ -21,15 +22,15 @@ import ahtewlg7.utimer.entity.w5h2.BaseW5h2Entity;
 import ahtewlg7.utimer.entity.w5h2.W5h2HowMuch;
 import ahtewlg7.utimer.entity.w5h2.W5h2What;
 import ahtewlg7.utimer.entity.w5h2.W5h2When;
-import ahtewlg7.utimer.enumtype.ActLife;
+import ahtewlg7.utimer.enumtype.GtdLife;
 import ahtewlg7.utimer.enumtype.ActState;
 import ahtewlg7.utimer.enumtype.GtdType;
 import ahtewlg7.utimer.util.DateTimeAction;
 
 
-public class GtdActionEntity extends AGtdUtimerEntity<GtdActionBuilder> implements Serializable {
+public class GtdActionEntity extends AGtdUtimerEntity<GtdActionBuilder>
+        implements ITimeComparator, Serializable {
     private ActState actionState;
-    private ActLife actLife;
 
     protected GtdActionEntity(@Nonnull GtdActionBuilder builder) {
         super(builder);
@@ -64,8 +65,14 @@ public class GtdActionEntity extends AGtdUtimerEntity<GtdActionBuilder> implemen
         super.toMakeEntityOk();
         if(actionState == null)
             actionState = ActState.MAYBE;
-        if(actLife == null)
-            actLife = ActLife.TODAY;
+        if(gtdLife == null)
+            gtdLife = GtdLife.TODAY;
+    }
+
+    //++++++++++++++++++++++++++++++++++++++ITimeComparator++++++++++++++++++++++++++++++++++++
+    @Override
+    public Optional<DateTime> getComparatorTime() {
+        return getFirstWorkTime();
     }
 
     public ActState getActionState() {
@@ -74,14 +81,6 @@ public class GtdActionEntity extends AGtdUtimerEntity<GtdActionBuilder> implemen
 
     public void setActionState(ActState actionState) {
         this.actionState = actionState;
-    }
-
-    public ActLife getActLife() {
-        return actLife;
-    }
-
-    public void setActLife(ActLife actLife) {
-        this.actLife = actLife;
     }
 
     //todo

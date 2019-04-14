@@ -2,37 +2,37 @@ package ahtewlg7.utimer.gtd;
 
 import ahtewlg7.utimer.R;
 import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
-import ahtewlg7.utimer.enumtype.ActLife;
+import ahtewlg7.utimer.enumtype.GtdLife;
 import ahtewlg7.utimer.util.DateTimeAction;
 import ahtewlg7.utimer.util.MyRInfo;
 
 /**
  * Created by lw on 2019/3/31.
  */
-public class GtdActLifeCycleAction{
+public class GtdLifeCycleAction {
 
     private DateTimeAction dateTimeAction;
 
-    public GtdActLifeCycleAction() {
+    public GtdLifeCycleAction() {
         dateTimeAction = new DateTimeAction();
     }
 
-    public ActLife getLife(GtdActionEntity entity){
-        ActLife actDateTime = null;
+    public GtdLife getLife(GtdActionEntity entity){
+        GtdLife actDateTime = null;
         if(isTodayWork(entity))
-            actDateTime = ActLife.TODAY;
+            actDateTime = GtdLife.TODAY;
         else if(isTomorrowWork(entity))
-            actDateTime = ActLife.TOMORROW;
+            actDateTime = GtdLife.TOMORROW;
         else if(ifWeekWork(entity))
-            actDateTime = ActLife.WEEK;
+            actDateTime = GtdLife.WEEK;
         else if(ifMonthWork(entity))
-            actDateTime = ActLife.MONTH;
+            actDateTime = GtdLife.MONTH;
         else if(ifQuarterWork(entity))
-            actDateTime = ActLife.QUARTER;
+            actDateTime = GtdLife.QUARTER;
         else if(ifYearWork(entity))
-            actDateTime = ActLife.YEAR;
+            actDateTime = GtdLife.YEAR;
         else
-            actDateTime = ActLife.TODAY;
+            actDateTime = GtdLife.TODAY;
         return actDateTime;
     }
 
@@ -67,7 +67,7 @@ public class GtdActLifeCycleAction{
         return dateTimeAction.isInYear(entity.getFirstWorkTime().get());
     }
 
-    public String getActLifeDetail(ActLife actLife){
+    public String getActLifeDetail(GtdLife actLife){
         String detail = null;
         switch (actLife){
             case TODAY:
@@ -78,6 +78,15 @@ public class GtdActLifeCycleAction{
                 break;
             case WEEK:
                 detail = MyRInfo.getStringByID(R.string.prompt_action_life_week);
+                break;
+            case MONTH:
+                detail = MyRInfo.getStringByID(R.string.prompt_action_life_month);
+                break;
+            case QUARTER:
+                detail = MyRInfo.getStringByID(R.string.prompt_action_life_quarter);
+                break;
+            case YEAR:
+                detail = MyRInfo.getStringByID(R.string.prompt_action_life_year);
                 break;
         }
         return detail;

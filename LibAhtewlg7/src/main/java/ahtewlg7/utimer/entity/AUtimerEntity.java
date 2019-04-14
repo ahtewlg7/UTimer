@@ -11,6 +11,7 @@ import javax.annotation.Nonnull;
 
 import ahtewlg7.utimer.common.IdAction;
 import ahtewlg7.utimer.entity.material.AAttachFile;
+import ahtewlg7.utimer.enumtype.GtdLife;
 import ahtewlg7.utimer.enumtype.GtdType;
 
 import static ahtewlg7.utimer.common.Constants.INVALID_NEXT_ID_INDEX;
@@ -28,6 +29,7 @@ public abstract class AUtimerEntity<T extends AUtimerBuilder> implements ITipsEn
     protected String uuid;
     protected String title;
     protected String detail;
+    protected GtdLife gtdLife;
     protected DateTime createTime;
     protected DateTime lastAccessTime;
     protected DateTime lastModifyTime;
@@ -105,6 +107,14 @@ public abstract class AUtimerEntity<T extends AUtimerBuilder> implements ITipsEn
         this.detail = detail;
     }
 
+    public GtdLife getGtdLife() {
+        return gtdLife;
+    }
+
+    public void setGtdLife(GtdLife gtdLife) {
+        this.gtdLife = gtdLife;
+    }
+
     public DateTime getLastAccessTime() {
         return lastAccessTime;
     }
@@ -147,6 +157,8 @@ public abstract class AUtimerEntity<T extends AUtimerBuilder> implements ITipsEn
             builder.append(",title=").append(title);
         if(getDetail().isPresent() && !TextUtils.isEmpty(getDetail().get()))
             builder.append(",detail=").append(getDetail().get());
+        if(gtdLife != null)
+            builder.append(",gtdLife=").append(gtdLife.name());
         if(createTime != null)
             builder.append(",createTime=").append(createTime.toString());
         if(lastAccessTime != null)
