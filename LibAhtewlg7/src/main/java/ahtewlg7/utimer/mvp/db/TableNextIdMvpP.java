@@ -5,14 +5,14 @@ import org.reactivestreams.Subscription;
 import ahtewlg7.utimer.db.entity.NextIdGdBean;
 import ahtewlg7.utimer.enumtype.GtdType;
 import ahtewlg7.utimer.factory.DbNextIdFactory;
-import ahtewlg7.utimer.mvp.ADbMvpP;
+import ahtewlg7.utimer.mvp.AUtimerRwMvpP;
 import ahtewlg7.utimer.util.MySafeSubscriber;
 import io.reactivex.Flowable;
 
 /**
  * Created by lw on 2019/3/7.
  */
-class TableNextIdMvpP extends ADbMvpP<NextIdGdBean, TableNextIdMvpM> {
+class TableNextIdMvpP extends AUtimerRwMvpP<NextIdGdBean, TableNextIdMvpM> {
 
     public TableNextIdMvpP(IDbMvpV mvpV){
         super(mvpV);
@@ -43,6 +43,7 @@ class TableNextIdMvpP extends ADbMvpP<NextIdGdBean, TableNextIdMvpM> {
             @Override
             public void onSubscribe(Subscription s) {
                 super.onSubscribe(s);
+                DbNextIdFactory.getInstance().clearAll();
                 if(mvpV != null)
                     mvpV.onAllLoadStarted();
             }

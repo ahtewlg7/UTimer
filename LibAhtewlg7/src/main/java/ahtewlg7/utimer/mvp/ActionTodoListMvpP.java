@@ -15,16 +15,18 @@ import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
 import ahtewlg7.utimer.enumtype.GtdBusEventType;
 import ahtewlg7.utimer.factory.EventBusFatory;
 import ahtewlg7.utimer.factory.GtdActionByUuidFactory;
+import ahtewlg7.utimer.mvp.un.IAllItemListMvpP;
+import ahtewlg7.utimer.mvp.un.IAllItemListMvpV;
 import ahtewlg7.utimer.util.MySafeSubscriber;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
-import static ahtewlg7.utimer.mvp.IAllItemListMvpV.INVALID_INDEX;
+import static ahtewlg7.utimer.mvp.un.IAllItemListMvpV.INVALID_INDEX;
 
 /**
  * Created by lw on 2018/12/9.
  */
-public class ActionTodoListMvpP {
+public class ActionTodoListMvpP implements IAllItemListMvpP<GtdActionEntity> {
     private IGtdTodoActionListMvpV mvpV;
     private EntityListMvpM mvpM;
 
@@ -36,6 +38,7 @@ public class ActionTodoListMvpP {
         entityList  = Lists.newArrayList();
     }
 
+    @Override
     public void toLoadAllItem() {
         mvpM.loadAllEntity()
             .compose(((RxFragment)mvpV.getRxLifeCycleBindView()).<GtdActionEntity>bindUntilEvent(FragmentEvent.DESTROY))
@@ -71,7 +74,7 @@ public class ActionTodoListMvpP {
                 }
             });
     }
-
+    @Override
     public void toDeleteItem(@NonNull Flowable<GtdActionEntity>  entityRx) {
         entityRx.subscribe(new MySafeSubscriber<GtdActionEntity>() {
                     @Override
@@ -101,13 +104,13 @@ public class ActionTodoListMvpP {
                     }
                 });
     }
-
+    @Override
     public void onItemCreated(GtdActionEntity entity) {
         /*entityList.add(entity);
         if(mvpV != null)
             mvpV.resetView(entityList);*/
     }
-
+    @Override
     public void onItemEdited(int index, GtdActionEntity entity) {
         /*entityList.set(index, entity);
         if(mvpV != null)

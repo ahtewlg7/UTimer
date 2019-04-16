@@ -8,10 +8,10 @@ import io.reactivex.Flowable;
 /**
  * Created by lw on 2019/3/26.
  */
-public abstract class ADbMvpM<E> {
+public abstract class AUtimerRwMvpM<E> {
     protected DbActionFacade dbActionFacade;
 
-    public ADbMvpM(){
+    public AUtimerRwMvpM(){
         dbActionFacade = new DbActionFacade();
     }
 

@@ -13,6 +13,8 @@ import java.util.List;
 
 import ahtewlg7.utimer.entity.gtd.GtdProjectEntity;
 import ahtewlg7.utimer.gtd.GtdProjectListAction;
+import ahtewlg7.utimer.mvp.un.IAllItemListMvpM;
+import ahtewlg7.utimer.mvp.un.IAllItemListMvpV;
 import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MySafeSubscriber;
 import io.reactivex.Flowable;
@@ -21,7 +23,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 /**
  * Created by lw on 2018/12/9.
  */
-public class ProjectListMvpP implements IAllItemListMvpP<GtdProjectEntity>{
+public class ProjectListMvpP{
     public static final String TAG = ProjectListMvpP.class.getSimpleName();
 
     private List<GtdProjectEntity> projectList;
@@ -35,7 +37,6 @@ public class ProjectListMvpP implements IAllItemListMvpP<GtdProjectEntity>{
         projectList     = Lists.newArrayList();
     }
 
-    @Override
     public void toLoadAllItem() {
         Logcat.i(TAG,"toLoadAllItem");
         mvpM.loadAllEntity()
@@ -75,7 +76,6 @@ public class ProjectListMvpP implements IAllItemListMvpP<GtdProjectEntity>{
                 });
     }
 
-    @Override
     public void toDeleteItem(@NonNull Flowable<GtdProjectEntity>  entityRx) {
         /*entityRx.subscribeOn(Schedulers.io())
                 .doOnNext(new Consumer<ShortHandEntity>() {
@@ -116,21 +116,19 @@ public class ProjectListMvpP implements IAllItemListMvpP<GtdProjectEntity>{
                 });*/
     }
 
-    @Override
     public void onItemCreated(GtdProjectEntity entity) {
         projectList.add(entity);
         if(mvpV != null)
             mvpV.resetView(projectList);
     }
 
-    @Override
     public void onItemEdited(int index, GtdProjectEntity entity) {
         projectList.set(index, entity);
         if(mvpV != null)
             mvpV.resetView(index, entity);
     }
 
-    class ProjectListMvpM implements IAllItemListMvpM<GtdProjectEntity>{
+    class ProjectListMvpM implements IAllItemListMvpM<GtdProjectEntity> {
         private GtdProjectListAction projectListAction;
 
         ProjectListMvpM(){

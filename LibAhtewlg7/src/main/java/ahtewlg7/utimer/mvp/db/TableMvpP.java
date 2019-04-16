@@ -5,7 +5,7 @@ import ahtewlg7.utimer.entity.busevent.ActionBusEvent;
 import ahtewlg7.utimer.entity.busevent.ActivityBusEvent;
 import ahtewlg7.utimer.entity.busevent.UTimerBusEvent;
 import ahtewlg7.utimer.enumtype.GtdType;
-import ahtewlg7.utimer.mvp.ADbMvpP;
+import ahtewlg7.utimer.mvp.AUtimerRwMvpP;
 
 /**
  * Created by lw on 2019/4/13.
@@ -15,8 +15,8 @@ public class TableMvpP {
     private TableActionMvpP tableActionMvpP;
     private TableShortHandMvpP tableShortHandMvpP;
 
-    public TableMvpP(ADbMvpP.IDbMvpV actionMvpV, ADbMvpP.IDbMvpV shortHandMvpV,
-                     ADbMvpP.IDbMvpV nextIdMvpV){
+    public TableMvpP(AUtimerRwMvpP.IDbMvpV actionMvpV, AUtimerRwMvpP.IDbMvpV shortHandMvpV,
+                     AUtimerRwMvpP.IDbMvpV nextIdMvpV){
         tableNextIdMvpP     = new TableNextIdMvpP(nextIdMvpV);
         tableActionMvpP     = new TableActionMvpP(actionMvpV);
         tableShortHandMvpP  = new TableShortHandMvpP(shortHandMvpV);
@@ -25,6 +25,7 @@ public class TableMvpP {
     public void toLoadAllTable(){
         tableNextIdMvpP.toLoadAll();
         tableActionMvpP.toLoadAll();
+        tableShortHandMvpP.toLoadAll();
     }
 
     public void toHandleBusEvent(BaseEventBusBean eventBusBean){

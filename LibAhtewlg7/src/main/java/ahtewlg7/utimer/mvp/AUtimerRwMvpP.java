@@ -8,7 +8,7 @@ import io.reactivex.Flowable;
 /**
  * Created by lw on 2019/3/7.
  */
-public abstract class ADbMvpP<V, M extends ADbMvpM<V>> {
+public abstract class AUtimerRwMvpP<V, M extends AUtimerRwMvpM<V>> {
     protected boolean isLoaded = false;
     protected IDbMvpV mvpV;
     protected M mvpM;
@@ -18,7 +18,7 @@ public abstract class ADbMvpP<V, M extends ADbMvpM<V>> {
     protected abstract MySafeSubscriber<Boolean> getDelSubscriber();
     protected abstract MySafeSubscriber<V> getLoadAllSubscriber();
 
-    public ADbMvpP(IDbMvpV mvpV){
+    public AUtimerRwMvpP(IDbMvpV mvpV){
         this.mvpV = mvpV;
         mvpM = getMvpM();
     }

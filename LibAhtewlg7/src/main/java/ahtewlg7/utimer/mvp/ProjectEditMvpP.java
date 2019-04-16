@@ -11,6 +11,7 @@ import java.util.List;
 import ahtewlg7.utimer.entity.gtd.GtdProjectEntity;
 import ahtewlg7.utimer.entity.gtd.NoteEntity;
 import ahtewlg7.utimer.gtd.GtdProjectAction;
+import ahtewlg7.utimer.mvp.un.IAllItemListMvpV;
 import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MySafeSubscriber;
 import io.reactivex.Flowable;
@@ -99,6 +100,6 @@ public class ProjectEditMvpP implements IUtimerEditMvpP{
         }
     }
 
-    public interface IProjectEditMvpV extends IAllItemListMvpV<NoteEntity>{
+    public interface IProjectEditMvpV extends IAllItemListMvpV<NoteEntity> {
     }
 }

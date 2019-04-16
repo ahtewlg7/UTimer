@@ -3,13 +3,13 @@ package ahtewlg7.utimer.mvp.db;
 import android.support.annotation.NonNull;
 
 import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
-import ahtewlg7.utimer.mvp.ADbMvpM;
+import ahtewlg7.utimer.mvp.AUtimerRwMvpM;
 import io.reactivex.Flowable;
 
 /**
  * Created by lw on 2019/3/27.
  */
-class TableActionMvpM extends ADbMvpM<GtdActionEntity> {
+class TableActionMvpM extends AUtimerRwMvpM<GtdActionEntity> {
 
     public TableActionMvpM() {
         super();

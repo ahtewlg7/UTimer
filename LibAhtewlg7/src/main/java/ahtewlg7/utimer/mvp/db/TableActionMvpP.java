@@ -7,14 +7,14 @@ import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
 import ahtewlg7.utimer.enumtype.GtdBusEventType;
 import ahtewlg7.utimer.factory.EventBusFatory;
 import ahtewlg7.utimer.factory.GtdActionByUuidFactory;
-import ahtewlg7.utimer.mvp.ADbMvpP;
+import ahtewlg7.utimer.mvp.AUtimerRwMvpP;
 import ahtewlg7.utimer.util.MySafeSubscriber;
 import io.reactivex.Flowable;
 
 /**
  * Created by lw on 2019/3/7.
  */
-class TableActionMvpP extends ADbMvpP<GtdActionEntity, TableActionMvpM> {
+class TableActionMvpP extends AUtimerRwMvpP<GtdActionEntity, TableActionMvpM> {
 
     public TableActionMvpP(IDbMvpV mvpV){
         super(mvpV);

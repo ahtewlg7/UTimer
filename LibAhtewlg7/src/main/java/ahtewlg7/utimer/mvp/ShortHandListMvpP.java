@@ -12,7 +12,11 @@ import org.reactivestreams.Subscription;
 import java.util.List;
 
 import ahtewlg7.utimer.entity.gtd.ShortHandEntity;
+import ahtewlg7.utimer.factory.ShortHandByUuidFactory;
 import ahtewlg7.utimer.gtd.GtdShortHandListAction;
+import ahtewlg7.utimer.mvp.un.IAllItemListMvpM;
+import ahtewlg7.utimer.mvp.un.IAllItemListMvpP;
+import ahtewlg7.utimer.mvp.un.IAllItemListMvpV;
 import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MySafeSubscriber;
 import io.reactivex.Flowable;
@@ -23,7 +27,7 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * Created by lw on 2018/12/9.
  */
-public class ShortHandListMvpP implements IAllItemListMvpP<ShortHandEntity>{
+public class ShortHandListMvpP implements IAllItemListMvpP<ShortHandEntity> {
     public static final String TAG = ShortHandListMvpP.class.getSimpleName();
 
     private List<ShortHandEntity> shortHandList;
@@ -39,7 +43,6 @@ public class ShortHandListMvpP implements IAllItemListMvpP<ShortHandEntity>{
 
     @Override
     public void toLoadAllItem() {
-        Logcat.i(TAG,"toLoadAllItem");
         shorthandListMvpM.loadAllEntity()
                 .compose(((RxFragment)shorthandListMvpV.getRxLifeCycleBindView()).<ShortHandEntity>bindUntilEvent(FragmentEvent.DESTROY))
                 .observeOn(AndroidSchedulers.mainThread())
@@ -132,7 +135,7 @@ public class ShortHandListMvpP implements IAllItemListMvpP<ShortHandEntity>{
             shorthandListMvpV.resetView(index, entity);
     }
 
-    class ShorthandListMvpM implements IAllItemListMvpM<ShortHandEntity>{
+    class ShorthandListMvpM implements IAllItemListMvpM<ShortHandEntity> {
         private GtdShortHandListAction shortHandAction;
 
         ShorthandListMvpM(){
@@ -141,7 +144,7 @@ public class ShortHandListMvpP implements IAllItemListMvpP<ShortHandEntity>{
 
         @Override
         public Flowable<ShortHandEntity> loadAllEntity() {
-            return shortHandAction.loadAllEntity();
+            return ShortHandByUuidFactory.getInstance().getEntityByLife();
         }
 
         @Override

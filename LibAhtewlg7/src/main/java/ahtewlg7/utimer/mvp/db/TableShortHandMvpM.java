@@ -3,13 +3,13 @@ package ahtewlg7.utimer.mvp.db;
 import android.support.annotation.NonNull;
 
 import ahtewlg7.utimer.entity.gtd.ShortHandEntity;
-import ahtewlg7.utimer.mvp.ADbMvpM;
+import ahtewlg7.utimer.mvp.AUtimerRwMvpM;
 import io.reactivex.Flowable;
 
 /**
  * Created by lw on 2019/3/27.
  */
-class TableShortHandMvpM extends ADbMvpM<ShortHandEntity> {
+class TableShortHandMvpM extends AUtimerRwMvpM<ShortHandEntity> {
 
     public TableShortHandMvpM() {
         super();
