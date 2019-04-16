@@ -1,7 +1,8 @@
 package ahtewlg7.utimer.gtd;
 
+import org.joda.time.DateTime;
+
 import ahtewlg7.utimer.R;
-import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
 import ahtewlg7.utimer.enumtype.GtdLife;
 import ahtewlg7.utimer.util.DateTimeAction;
 import ahtewlg7.utimer.util.MyRInfo;
@@ -17,54 +18,54 @@ public class GtdLifeCycleAction {
         dateTimeAction = new DateTimeAction();
     }
 
-    public GtdLife getLife(GtdActionEntity entity){
+    public GtdLife getLife(DateTime dateTime){
         GtdLife actDateTime = null;
-        if(isTodayWork(entity))
+        if(isTodayWork(dateTime))
             actDateTime = GtdLife.TODAY;
-        else if(isTomorrowWork(entity))
+        else if(isTomorrowWork(dateTime))
             actDateTime = GtdLife.TOMORROW;
-        else if(ifWeekWork(entity))
+        else if(ifWeekWork(dateTime))
             actDateTime = GtdLife.WEEK;
-        else if(ifMonthWork(entity))
+        else if(ifMonthWork(dateTime))
             actDateTime = GtdLife.MONTH;
-        else if(ifQuarterWork(entity))
+        else if(ifQuarterWork(dateTime))
             actDateTime = GtdLife.QUARTER;
-        else if(ifYearWork(entity))
+        else if(ifYearWork(dateTime))
             actDateTime = GtdLife.YEAR;
         else
             actDateTime = GtdLife.TODAY;
         return actDateTime;
     }
 
-    public boolean isTodayWork(GtdActionEntity entity){
-        if(entity == null || !entity.ifValid() || !entity.getFirstWorkTime().isPresent())
+    public boolean isTodayWork(DateTime dateTime){
+        if(dateTime == null)
             return false;
-        return dateTimeAction.isInToday(entity.getFirstWorkTime().get());
+        return dateTimeAction.isInToday(dateTime);
     }
-    public boolean isTomorrowWork(GtdActionEntity entity){
-        if(entity == null || !entity.ifValid() || !entity.getFirstWorkTime().isPresent())
+    public boolean isTomorrowWork(DateTime dateTime){
+        if(dateTime == null)
             return false;
-        return dateTimeAction.isInTomorrow(entity.getFirstWorkTime().get());
+        return dateTimeAction.isInTomorrow(dateTime);
     }
-    public boolean ifWeekWork(GtdActionEntity entity) {
-        if (entity == null || !entity.ifValid() || !entity.getFirstWorkTime().isPresent())
+    public boolean ifWeekWork(DateTime dateTime) {
+        if (dateTime == null)
             return false;
-        return dateTimeAction.isInWeek(entity.getFirstWorkTime().get());
+        return dateTimeAction.isInWeek(dateTime);
     }
-    public boolean ifMonthWork(GtdActionEntity entity) {
-        if (entity == null || !entity.ifValid() || !entity.getFirstWorkTime().isPresent())
+    public boolean ifMonthWork(DateTime dateTime) {
+        if (dateTime == null)
             return false;
-        return dateTimeAction.isInMonth(entity.getFirstWorkTime().get());
+        return dateTimeAction.isInMonth(dateTime);
     }
-    public boolean ifQuarterWork(GtdActionEntity entity) {
-        if (entity == null || !entity.ifValid() || !entity.getFirstWorkTime().isPresent())
+    public boolean ifQuarterWork(DateTime dateTime) {
+        if (dateTime == null)
             return false;
-        return dateTimeAction.isInQuarter(entity.getFirstWorkTime().get());
+        return dateTimeAction.isInQuarter(dateTime);
     }
-    public boolean ifYearWork(GtdActionEntity entity) {
-        if (entity == null || !entity.ifValid() || !entity.getFirstWorkTime().isPresent())
+    public boolean ifYearWork(DateTime dateTime) {
+        if (dateTime == null)
             return false;
-        return dateTimeAction.isInYear(entity.getFirstWorkTime().get());
+        return dateTimeAction.isInYear(dateTime);
     }
 
     public String getActLifeDetail(GtdLife actLife){

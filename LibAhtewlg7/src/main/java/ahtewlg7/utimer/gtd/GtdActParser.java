@@ -1,4 +1,4 @@
-package ahtewlg7.utimer.common;
+package ahtewlg7.utimer.gtd;
 
 import android.text.TextUtils;
 
@@ -11,6 +11,7 @@ import org.joda.time.DateTime;
 
 import java.util.List;
 
+import ahtewlg7.utimer.common.IdAction;
 import ahtewlg7.utimer.entity.context.Contact;
 import ahtewlg7.utimer.entity.gtd.GtdActionBuilder;
 import ahtewlg7.utimer.entity.gtd.GtdActionEntity;

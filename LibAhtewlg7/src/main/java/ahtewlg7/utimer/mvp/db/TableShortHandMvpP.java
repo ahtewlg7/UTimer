@@ -2,34 +2,40 @@ package ahtewlg7.utimer.mvp.db;
 
 import org.reactivestreams.Subscription;
 
-import ahtewlg7.utimer.db.entity.NextIdGdBean;
 import ahtewlg7.utimer.entity.busevent.UTimerBusEvent;
-import ahtewlg7.utimer.enumtype.GtdType;
-import ahtewlg7.utimer.factory.DbNextIdFactory;
-import ahtewlg7.utimer.mvp.ADbMvpP;
+import ahtewlg7.utimer.entity.gtd.ShortHandEntity;
+import ahtewlg7.utimer.factory.ShortHandByUuidFactory;
+import ahtewlg7.utimer.mvp.AUtimerRwMvpP;
 import ahtewlg7.utimer.util.MySafeSubscriber;
 import io.reactivex.Flowable;
 
 /**
  * Created by lw on 2019/3/7.
  */
-class TableShortHandMvpP extends ADbMvpP<NextIdGdBean, TableNextIdMvpM> {
+class TableShortHandMvpP extends AUtimerRwMvpP<ShortHandEntity, TableShortHandMvpM> {
 
     public TableShortHandMvpP(IDbMvpV mvpV){
         super(mvpV);
     }
 
     public void toHandleBusEvent(UTimerBusEvent busEvent){
-
-    }
-
-    public void toSaveAll(){
-        toSave(getNextIdBeanRx());
+        if(busEvent == null || !busEvent.ifValid())
+            return;
+        switch (busEvent.getEventType()){
+            case LOAD:
+                break;
+            case SAVE:
+                toSave(Flowable.just((ShortHandEntity)busEvent.getEntity()));
+                break;
+            case DELETE:
+                toDel(Flowable.just((ShortHandEntity)busEvent.getEntity()));
+                break;
+        }
     }
 
     @Override
-    protected TableNextIdMvpM getMvpM() {
-        return new TableNextIdMvpM();
+    protected TableShortHandMvpM getMvpM() {
+        return new TableShortHandMvpM();
     }
 
     @Override
@@ -43,19 +49,20 @@ class TableShortHandMvpP extends ADbMvpP<NextIdGdBean, TableNextIdMvpM> {
     }
 
     @Override
-    protected MySafeSubscriber<NextIdGdBean> getLoadAllSubscriber() {
-        return new MySafeSubscriber<NextIdGdBean>() {
+    protected MySafeSubscriber<ShortHandEntity> getLoadAllSubscriber() {
+        return new MySafeSubscriber<ShortHandEntity>() {
             @Override
             public void onSubscribe(Subscription s) {
                 super.onSubscribe(s);
+                ShortHandByUuidFactory.getInstance().clearAll();
                 if(mvpV != null)
                     mvpV.onAllLoadStarted();
             }
 
             @Override
-            public void onNext(NextIdGdBean idKeyGdBean) {
-                super.onNext(idKeyGdBean);
-                DbNextIdFactory.getInstance().put(idKeyGdBean.getGtdType(), idKeyGdBean.getNextId());
+            public void onNext(ShortHandEntity entity) {
+                super.onNext(entity);
+                ShortHandByUuidFactory.getInstance().add(entity.getUuid(), entity);
             }
 
             @Override
@@ -66,15 +73,5 @@ class TableShortHandMvpP extends ADbMvpP<NextIdGdBean, TableNextIdMvpM> {
                     mvpV.onAllLoadEnd();
             }
         };
-    }
-
-    private Flowable<NextIdGdBean> getNextIdBeanRx(){
-        return Flowable.just(getActionNextIdBean());
-    }
-    private NextIdGdBean getActionNextIdBean(){
-        NextIdGdBean gdBean = new NextIdGdBean();
-        gdBean.setGtdType(GtdType.ACTION);
-        gdBean.setNextId(DbNextIdFactory.getInstance().getValue(GtdType.ACTION));
-        return gdBean;
     }
 }
