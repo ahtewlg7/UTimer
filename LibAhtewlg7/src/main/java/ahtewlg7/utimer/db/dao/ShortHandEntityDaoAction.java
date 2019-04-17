@@ -39,10 +39,10 @@ public class ShortHandEntityDaoAction extends AGreenDaoAction<ShortHandEntityGdB
     }
 
     @Override
-    public Optional<ShortHandEntityGdBean> queryByKey(String title){
-        if(TextUtils.isEmpty(title))
+    public Optional<ShortHandEntityGdBean> queryByKey(String rPath){
+        if(TextUtils.isEmpty(rPath))
             return Optional.absent();
-        List<ShortHandEntityGdBean> inboxEntityGdBeanList = query(new KeyQueryFilter(title));
+        List<ShortHandEntityGdBean> inboxEntityGdBeanList = query(new RPathQueryFilter(rPath));
         if(inboxEntityGdBeanList == null || inboxEntityGdBeanList.isEmpty())
             return Optional.absent();
         return Optional.of(inboxEntityGdBeanList.get(0));
@@ -59,16 +59,16 @@ public class ShortHandEntityDaoAction extends AGreenDaoAction<ShortHandEntityGdB
         return query(new LastAccessTimeQueryFileter(dateTime));
     }
 
-    class KeyQueryFilter implements IGreenDaoQueryFiltVisitor<ShortHandEntityGdBean>{
-        private String key;
+    class RPathQueryFilter implements IGreenDaoQueryFiltVisitor<ShortHandEntityGdBean>{
+        private String rPath;
 
-        KeyQueryFilter(String key){
-            this.key = key;
+        RPathQueryFilter(String rPath){
+            this.rPath = rPath;
         }
 
         @Override
         public QueryBuilder<ShortHandEntityGdBean> toFilt(QueryBuilder<ShortHandEntityGdBean> queryBuilder) {
-            return queryBuilder.where(ShortHandEntityGdBeanDao.Properties.Title.eq(key));
+            return queryBuilder.where(ShortHandEntityGdBeanDao.Properties.AttachFileRPath.eq(rPath));
         }
     }
     class CreateTimeQueryFileter implements  IGreenDaoQueryFiltVisitor<ShortHandEntityGdBean>{

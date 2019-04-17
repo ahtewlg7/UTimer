@@ -24,6 +24,7 @@ import ahtewlg7.utimer.util.DateTimeAction;
 
 public class ShortHandEntity extends AUtimerEntity<ShortHandBuilder>
         implements ITimeComparator,Serializable {
+    private String rPath;
     private EditElement lastModifyElement;
 
     protected ShortHandEntity(@Nonnull ShortHandBuilder builder) {
@@ -83,9 +84,15 @@ public class ShortHandEntity extends AUtimerEntity<ShortHandBuilder>
     @Override
     public boolean ensureAttachFileExist() {
         if(attachFile == null){
-            String fileName = !TextUtils.isEmpty(getTitle()) ? getTitle() : new DateTimeAction().toFormatNow().toString();
-            String filePath = new FileSystemAction().getInboxGtdAbsPath();
-            attachFile = new MdAttachFile(filePath, fileName);
+            FileSystemAction fileSystemAction = new FileSystemAction();
+            Optional<String> absPath = fileSystemAction.getAbsPath(rPath);
+            if(!TextUtils.isEmpty(rPath) && absPath.isPresent())
+                attachFile = new MdAttachFile(absPath.get());
+            else{
+                String fileName = !TextUtils.isEmpty(getTitle()) ? getTitle() : new DateTimeAction().toFormatNow().toString();
+                String filePath = fileSystemAction.getInboxGtdAbsPath();
+                attachFile = new MdAttachFile(filePath, fileName);
+            }
         }
         return attachFile.createOrExist();
     }
@@ -94,8 +101,10 @@ public class ShortHandEntity extends AUtimerEntity<ShortHandBuilder>
         id              = inboxEntityGdBean.getId();
         uuid            = inboxEntityGdBean.getUuid();
         title           = inboxEntityGdBean.getTitle();
+        detail          = inboxEntityGdBean.getDetail();
         accessTimes     = inboxEntityGdBean.getAccessTimes();
         createTime      = inboxEntityGdBean.getCreateTime();
         lastAccessTime  = inboxEntityGdBean.getLastAccessTime();
+        rPath           = inboxEntityGdBean.getAttachFileRPath();
     }
 }

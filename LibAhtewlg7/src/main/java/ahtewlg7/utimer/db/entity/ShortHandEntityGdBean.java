@@ -30,32 +30,30 @@ public class ShortHandEntityGdBean {
     private String uuid;
     private int accessTimes;
     private String title;
-    private String value;
+    private String detail;
     private String attachFileRPath;
     @Convert(converter = DateTimeTypeConverter.class, columnType = Long.class)
     private DateTime createTime;
     @Convert(converter = DateTimeTypeConverter.class, columnType = Long.class)
     private DateTime lastAccessTime;
 
-    @Generated(hash = 607606515)
-    public ShortHandEntityGdBean(Long id, @NotNull String uuid, int accessTimes,
-            String title, String value, String attachFileRPath, DateTime createTime,
-            DateTime lastAccessTime) {
-        this.id = id;
-        this.uuid = uuid;
-        this.accessTimes = accessTimes;
-        this.title = title;
-        this.value = value;
-        this.attachFileRPath = attachFileRPath;
-        this.createTime = createTime;
-        this.lastAccessTime = lastAccessTime;
-    }
-
     @Generated(hash = 283632925)
     public ShortHandEntityGdBean() {
     }
 
-
+    @Generated(hash = 1563219067)
+    public ShortHandEntityGdBean(Long id, @NotNull String uuid, int accessTimes,
+            String title, String detail, String attachFileRPath,
+            DateTime createTime, DateTime lastAccessTime) {
+        this.id = id;
+        this.uuid = uuid;
+        this.accessTimes = accessTimes;
+        this.title = title;
+        this.detail = detail;
+        this.attachFileRPath = attachFileRPath;
+        this.createTime = createTime;
+        this.lastAccessTime = lastAccessTime;
+    }
 
     // KEEP METHODS - put your custom methods here
     @Override
@@ -93,15 +91,6 @@ public class ShortHandEntityGdBean {
         this.uuid = uuid;
     }
 
-    public String getValue() {
-        return this.value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-
     public DateTime getCreateTime() {
         return this.createTime;
     }
@@ -132,6 +121,15 @@ public class ShortHandEntityGdBean {
 
     public void setAttachFileRPath(String attachFileRPath) {
         this.attachFileRPath = attachFileRPath;
+    }
+
+
+    public String getDetail() {
+        return this.detail;
+    }
+
+    public void setDetail(String detail) {
+        this.detail = detail;
     }
 
 }

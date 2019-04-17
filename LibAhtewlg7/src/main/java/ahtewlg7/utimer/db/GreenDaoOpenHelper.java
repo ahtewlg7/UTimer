@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteDatabase;
 import org.greenrobot.greendao.database.Database;
 
 import ahtewlg7.utimer.db.autogen.DaoMaster;
-import ahtewlg7.utimer.db.autogen.ShortHandEntityGdBeanDao;
 
 
 /**
@@ -29,10 +28,10 @@ class GreenDaoOpenHelper extends DaoMaster.DevOpenHelper {
         if(oldVersion >= newVersion){
             return;
         }
-        if( oldVersion == DBV_0_0_1){
+        /*if( oldVersion == DBV_0_0_1){
             db.execSQL("ALTER TABLE " + ShortHandEntityGdBeanDao.TABLENAME + " ADD COLUMN "
                     + ShortHandEntityGdBeanDao.Properties.AttachFileRPath.columnName + " INTEGER");
             oldVersion = DBV_0_0_9;
-        }
+        }*/
     }
 }

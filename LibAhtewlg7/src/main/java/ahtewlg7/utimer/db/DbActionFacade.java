@@ -235,18 +235,15 @@ public class DbActionFacade {
                 })
                 .subscribeOn(Schedulers.io());
     }
-    /*public Flowable<Optional<ShortHandEntity>> getShortHandEntityByTitle(@NonNull final Flowable<String> nameFlowable) {
-        return nameFlowable.map(new Function<String, Optional<ShortHandEntity>>() {
+    public Flowable<Optional<ShortHandEntity>> getShortHandEntityByRPath(@NonNull final Flowable<String> rPathRx) {
+        return rPathRx.map(new Function<String, Optional<ShortHandEntity>>() {
             @Override
-            public Optional<ShortHandEntity> apply(String name) throws Exception {
-                if(TextUtils.isEmpty(name))
-                    return Optional.absent();
-
+            public Optional<ShortHandEntity> apply(String rPath) throws Exception {
                 Optional<ShortHandEntityGdBean> beanOptional = null;
                 try{
-                    beanOptional = ShortHandEntityDaoAction.getInstance().queryByKey(name);
+                    beanOptional = ShortHandEntityDaoAction.getInstance().queryByKey(rPath);
                 }catch (Exception e){
-                    Logcat.i(TAG,"getShortHandEntityByTitle err : " + e.getMessage());
+                    e.printStackTrace();
                 }
                 if(beanOptional == null || !beanOptional.isPresent())
                     return Optional.absent();
@@ -254,17 +251,29 @@ public class DbActionFacade {
                 return Optional.of(e);
             }
         }).subscribeOn(Schedulers.io());
-    }*/
+    }
+    public Optional<ShortHandEntity> getShortHandEntityByRPath(@NonNull final String rPath) {
+        Optional<ShortHandEntityGdBean> beanOptional = null;
+        try{
+            beanOptional = ShortHandEntityDaoAction.getInstance().queryByKey(rPath);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        if(beanOptional == null || !beanOptional.isPresent())
+            return Optional.absent();
+        ShortHandEntity e = (ShortHandEntity)new ShortHandBuilder().setGbBean(beanOptional.get()).build();
+        return Optional.of(e);
+    }
 
     public Flowable<Boolean> deleteShortHandEntity(@NonNull Flowable<ShortHandEntity> eventFlowable){
         return eventFlowable.map(new Function<ShortHandEntity, Boolean>() {
-            @Override
-            public Boolean apply(ShortHandEntity entityOptional) throws Exception {
-                ShortHandEntityGdBean bean = mapShorthandToGdBean(entityOptional);
-                ShortHandEntityDaoAction.getInstance().delete(bean);
-                return true;
-            }
-        });
+                    @Override
+                    public Boolean apply(ShortHandEntity entityOptional) throws Exception {
+                        ShortHandEntityGdBean bean = mapShorthandToGdBean(entityOptional);
+                        ShortHandEntityDaoAction.getInstance().delete(bean);
+                        return true;
+                    }
+                });
     }
 
     public Flowable<Boolean> saveShortHandEntity(Flowable<ShortHandEntity> eventFlowable) {
@@ -300,11 +309,18 @@ public class DbActionFacade {
     }
     private ShortHandEntityGdBean mapShorthandToGdBean(@NonNull ShortHandEntity entity){
         ShortHandEntityGdBean bean = new ShortHandEntityGdBean();
+        if(entity.getId() == INVALID_NEXT_ID_INDEX)
+            bean.setId(DbNextIdFactory.getInstance().getValue(GtdType.SHORTHAND));
+        else
+            bean.setId(entity.getId());
+        bean.setUuid(entity.getUuid());
         bean.setTitle(entity.getTitle());
-//        bean.setIsActived(entity.isActived());
+        if(entity.getDetail().isPresent())
+            bean.setDetail(entity.getDetail().get());
         bean.setCreateTime(entity.getCreateTime());
         bean.setLastAccessTime(entity.getLastAccessTime());
-//        bean.setLastModifyTime(entity.getLastModifyTime());
+        if(entity.getAttachFileRPath().isPresent())
+            bean.setAttachFileRPath(entity.getAttachFileRPath().get());
         return bean;
     }
     /*private NoteEntityGdBean mapNoteToGdBean(@NonNull NoteEntity entity){
