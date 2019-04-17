@@ -13,7 +13,7 @@ import ahtewlg7.utimer.entity.busevent.ActionBusEvent;
 import ahtewlg7.utimer.entity.busevent.ActivityBusEvent;
 import ahtewlg7.utimer.entity.busevent.UTimerBusEvent;
 import ahtewlg7.utimer.factory.EventBusFatory;
-import ahtewlg7.utimer.mvp.db.TableMvpP;
+import ahtewlg7.utimer.mvp.rw.EntityRwMvpP;
 import ahtewlg7.utimer.util.MySimpleObserver;
 import io.reactivex.subjects.PublishSubject;
 
@@ -23,7 +23,7 @@ import io.reactivex.subjects.PublishSubject;
  */
 
 public class BinderService extends Service{
-    private TableMvpP tableMvpP;
+    private EntityRwMvpP entityRwMvpP;
     private PublishSubject<BaseEventBusBean> eventBusRx;
 
     @Override
@@ -31,12 +31,12 @@ public class BinderService extends Service{
         super.onCreate();
 
         eventBusRx          = PublishSubject.create();
-        tableMvpP           = new TableMvpP(null, null,null);
+        entityRwMvpP = new EntityRwMvpP(null, null,null);
 
         EventBusFatory.getInstance().getDefaultEventBus().register(this);
         toListenEventBus();
 
-        tableMvpP.toLoadAllTable();
+        entityRwMvpP.toLoadAll();
     }
 
     @Override
@@ -75,7 +75,7 @@ public class BinderService extends Service{
             .subscribe(new MySimpleObserver<BaseEventBusBean>(){
                 @Override
                 public void onNext(BaseEventBusBean eventBusBean) {
-                    tableMvpP.toHandleBusEvent(eventBusBean);
+                    entityRwMvpP.toHandleBusEvent(eventBusBean);
                 }
             });
     }

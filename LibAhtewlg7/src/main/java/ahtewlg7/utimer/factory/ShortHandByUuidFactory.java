@@ -3,25 +3,25 @@ package ahtewlg7.utimer.factory;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
+import com.blankj.utilcode.util.FileUtils;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Multimap;
 
 import org.reactivestreams.Publisher;
 
-import java.util.ArrayList;
+import java.io.File;
 import java.util.Collections;
 import java.util.List;
 
+import ahtewlg7.utimer.common.FileSystemAction;
 import ahtewlg7.utimer.comparator.GtdTimeComparator;
 import ahtewlg7.utimer.entity.gtd.ShortHandEntity;
 import ahtewlg7.utimer.enumtype.GtdLife;
 import ahtewlg7.utimer.gtd.GtdLifeCycleAction;
 import io.reactivex.Flowable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
 
 import static ahtewlg7.utimer.enumtype.GtdLife.MONTH;
 import static ahtewlg7.utimer.enumtype.GtdLife.QUARTER;
@@ -36,16 +36,18 @@ import static ahtewlg7.utimer.enumtype.GtdLife.YEAR;
 public class ShortHandByUuidFactory extends ABaseLruCacheFactory<String, ShortHandEntity> {
     private static ShortHandByUuidFactory instance;
 
-    private BiMap<String, String> titleUuidMap;
-    private Multimap<GtdLife, String> lifeUuidMultiMap;
+    private List<String> shorHandFileList;
+    private BiMap<String, String> pathUuidMap;
 
     private GtdLifeCycleAction lifeCycleAction;
 
     protected ShortHandByUuidFactory(){
         super();
-        titleUuidMap        = HashBiMap.create();
-        lifeUuidMultiMap    = HashMultimap.create();
+        shorHandFileList    = Lists.newArrayList();
+        pathUuidMap         = HashBiMap.create();
         lifeCycleAction     = new GtdLifeCycleAction();
+
+        toUpdatePathList();
     }
 
     public static ShortHandByUuidFactory getInstance() {
@@ -65,35 +67,44 @@ public class ShortHandByUuidFactory extends ABaseLruCacheFactory<String, ShortHa
     }
 
     @Override
-    public boolean add(String s, ShortHandEntity entity) {
-        boolean result = super.add(s, entity);
-        if(result && entity.getAttachFile().getRPath().isPresent())
-            titleUuidMap.put(entity.getAttachFile().getRPath().get(), entity.getUuid());
+    public boolean add(String s, ShortHandEntity shortHandEntity) {
+        boolean result = false;
+        if(shortHandEntity != null && shortHandEntity.ifValid()
+                && shortHandEntity.getAttachFileRPath().isPresent()
+                && !pathUuidMap.containsKey(shortHandEntity.getAttachFileRPath().get())) {
+            result = super.add(s, shortHandEntity);
+            if (result)
+                pathUuidMap.put(shortHandEntity.getAttachFileRPath().get(), shortHandEntity.getUuid());
+        }
         return result;
     }
 
     @Override
     public ShortHandEntity remove(String s) {
         ShortHandEntity entity = super.remove(s);
-        if(entity != null && entity.ifValid() && titleUuidMap.containsValue(entity.getUuid()))
-            titleUuidMap.inverse().remove(entity.getUuid());
+        if(entity != null)
+            pathUuidMap.inverse().remove(entity.getUuid());
         return entity;
     }
 
     @Override
     public void clearAll() {
         super.clearAll();
-        titleUuidMap.clear();
+        pathUuidMap.clear();
     }
 
     public Flowable<ShortHandEntity> getEntityByLife(@NonNull final GtdLife actLife){
-        return Flowable.fromIterable(getEntityByUuid(new ArrayList<String>(lifeUuidMultiMap.get(actLife))))
-                .doOnNext(new Consumer<ShortHandEntity>() {
+        return Flowable.fromIterable(getAll())
+                .filter(new Predicate<ShortHandEntity>() {
                     @Override
-                    public void accept(ShortHandEntity entity) throws Exception {
-                        entity.setGtdLife(actLife);
+                    public boolean test(ShortHandEntity entity) throws Exception {
+                        GtdLife life = lifeCycleAction.getLife(entity.getCreateTime());
+                        entity.setGtdLife(life);
+                        return life == actLife && entity.getAttachFileRPath().isPresent()
+                                && shorHandFileList.contains(entity.getAttachFileRPath().get());
                     }
-                });
+                })
+                .sorted(new GtdTimeComparator<ShortHandEntity>());
     }
     public Flowable<ShortHandEntity> getEntityByLife(){
         return Flowable.fromArray(TODAY,TOMORROW,WEEK,MONTH,QUARTER,YEAR).flatMap(new Function<GtdLife, Publisher<ShortHandEntity>>() {
@@ -104,7 +115,7 @@ public class ShortHandByUuidFactory extends ABaseLruCacheFactory<String, ShortHa
         });
     }
 
-    private List<ShortHandEntity> getEntityByUuid(@NonNull List<String> uuidList){
+    public List<ShortHandEntity> getEntityByUuid(@NonNull List<String> uuidList){
         List<ShortHandEntity> entityList = Lists.newArrayList();
         for(String uuid : uuidList){
             if(TextUtils.isEmpty(uuid))
@@ -115,5 +126,23 @@ public class ShortHandByUuidFactory extends ABaseLruCacheFactory<String, ShortHa
         }
         Collections.sort(entityList, new GtdTimeComparator<ShortHandEntity>());
         return entityList;
+    }
+
+    public void toUpdatePathList(){
+        try{
+            FileSystemAction fileSystemAction = new FileSystemAction();
+            String path         = fileSystemAction.getInboxGtdAbsPath();
+            File shortHandDir   = FileUtils.getFileByPath(path);
+            if(!shortHandDir.exists())
+                return;
+            shorHandFileList.clear();
+            for(File file : shortHandDir.listFiles()){
+                String tmp = fileSystemAction.getRPath(file);
+                if(!TextUtils.isEmpty(tmp))
+                    shorHandFileList.add(tmp);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }

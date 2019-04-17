@@ -13,7 +13,6 @@ import java.util.List;
 
 import ahtewlg7.utimer.entity.gtd.ShortHandEntity;
 import ahtewlg7.utimer.factory.ShortHandByUuidFactory;
-import ahtewlg7.utimer.gtd.GtdShortHandListAction;
 import ahtewlg7.utimer.mvp.un.IAllItemListMvpM;
 import ahtewlg7.utimer.mvp.un.IAllItemListMvpP;
 import ahtewlg7.utimer.mvp.un.IAllItemListMvpV;
@@ -136,10 +135,7 @@ public class ShortHandListMvpP implements IAllItemListMvpP<ShortHandEntity> {
     }
 
     class ShorthandListMvpM implements IAllItemListMvpM<ShortHandEntity> {
-        private GtdShortHandListAction shortHandAction;
-
         ShorthandListMvpM(){
-            shortHandAction = new GtdShortHandListAction();
         }
 
         @Override
