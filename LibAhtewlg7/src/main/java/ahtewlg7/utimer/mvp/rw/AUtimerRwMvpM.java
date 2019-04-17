@@ -1,4 +1,4 @@
-package ahtewlg7.utimer.mvp;
+package ahtewlg7.utimer.mvp.rw;
 
 import android.support.annotation.NonNull;
 
@@ -8,7 +8,7 @@ import io.reactivex.Flowable;
 /**
  * Created by lw on 2019/3/26.
  */
-public abstract class AUtimerRwMvpM<E> {
+abstract class AUtimerRwMvpM<E> {
     protected DbActionFacade dbActionFacade;
 
     public AUtimerRwMvpM(){

@@ -1,4 +1,4 @@
-package ahtewlg7.utimer.mvp.db;
+package ahtewlg7.utimer.mvp.rw;
 
 import org.reactivestreams.Subscription;
 
@@ -7,16 +7,15 @@ import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
 import ahtewlg7.utimer.enumtype.GtdBusEventType;
 import ahtewlg7.utimer.factory.EventBusFatory;
 import ahtewlg7.utimer.factory.GtdActionByUuidFactory;
-import ahtewlg7.utimer.mvp.AUtimerRwMvpP;
 import ahtewlg7.utimer.util.MySafeSubscriber;
 import io.reactivex.Flowable;
 
 /**
  * Created by lw on 2019/3/7.
  */
-class TableActionMvpP extends AUtimerRwMvpP<GtdActionEntity, TableActionMvpM> {
+class TableActionRwMvpP extends AUtimerRwMvpP<GtdActionEntity, TableActionRwMvpM> {
 
-    public TableActionMvpP(IDbMvpV mvpV){
+    public TableActionRwMvpP(IDbMvpV mvpV){
         super(mvpV);
     }
 
@@ -36,8 +35,8 @@ class TableActionMvpP extends AUtimerRwMvpP<GtdActionEntity, TableActionMvpM> {
     }
 
     @Override
-    protected TableActionMvpM getMvpM() {
-        return new TableActionMvpM();
+    protected TableActionRwMvpM getMvpM() {
+        return new TableActionRwMvpM();
     }
 
     @Override

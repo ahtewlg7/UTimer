@@ -1,20 +1,19 @@
-package ahtewlg7.utimer.mvp.db;
+package ahtewlg7.utimer.mvp.rw;
 
 import org.reactivestreams.Subscription;
 
 import ahtewlg7.utimer.entity.busevent.UTimerBusEvent;
 import ahtewlg7.utimer.entity.gtd.ShortHandEntity;
 import ahtewlg7.utimer.factory.ShortHandByUuidFactory;
-import ahtewlg7.utimer.mvp.AUtimerRwMvpP;
 import ahtewlg7.utimer.util.MySafeSubscriber;
 import io.reactivex.Flowable;
 
 /**
  * Created by lw on 2019/3/7.
  */
-class TableShortHandMvpP extends AUtimerRwMvpP<ShortHandEntity, TableShortHandMvpM> {
+class ShortHandRwMvpP extends AUtimerRwMvpP<ShortHandEntity, ShortHandRwMvpM> {
 
-    public TableShortHandMvpP(IDbMvpV mvpV){
+    public ShortHandRwMvpP(IDbMvpV mvpV){
         super(mvpV);
     }
 
@@ -34,8 +33,8 @@ class TableShortHandMvpP extends AUtimerRwMvpP<ShortHandEntity, TableShortHandMv
     }
 
     @Override
-    protected TableShortHandMvpM getMvpM() {
-        return new TableShortHandMvpM();
+    protected ShortHandRwMvpM getMvpM() {
+        return new ShortHandRwMvpM();
     }
 
     @Override
@@ -74,4 +73,30 @@ class TableShortHandMvpP extends AUtimerRwMvpP<ShortHandEntity, TableShortHandMv
             }
         };
     }
+
+    /*@Override
+    protected MySafeSubscriber<ShortHandEntity> getLoadAllSubscriber() {
+        return new MySafeSubscriber<ShortHandEntity>(){
+            @Override
+            public void onSubscribe(Subscription s) {
+                super.onSubscribe(s);
+                ShortHandByUuidFactory.getInstance().clearAll();
+                if(mvpV != null)
+                    mvpV.onAllLoadStarted();
+            }
+
+            @Override
+            public void onNext(ShortHandEntity entity) {
+                super.onNext(entity);
+                ShortHandByUuidFactory.getInstance().add(entity.getUuid(), entity);
+            }
+
+            @Override
+            public void onComplete() {
+                super.onComplete();
+                isLoaded = true;
+                if(mvpV != null)
+                    mvpV.onAllLoadEnd();
+            }
+        };*/
 }

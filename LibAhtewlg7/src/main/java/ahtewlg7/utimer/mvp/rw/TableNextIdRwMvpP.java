@@ -1,20 +1,19 @@
-package ahtewlg7.utimer.mvp.db;
+package ahtewlg7.utimer.mvp.rw;
 
 import org.reactivestreams.Subscription;
 
 import ahtewlg7.utimer.db.entity.NextIdGdBean;
 import ahtewlg7.utimer.enumtype.GtdType;
 import ahtewlg7.utimer.factory.DbNextIdFactory;
-import ahtewlg7.utimer.mvp.AUtimerRwMvpP;
 import ahtewlg7.utimer.util.MySafeSubscriber;
 import io.reactivex.Flowable;
 
 /**
  * Created by lw on 2019/3/7.
  */
-class TableNextIdMvpP extends AUtimerRwMvpP<NextIdGdBean, TableNextIdMvpM> {
+class TableNextIdRwMvpP extends AUtimerRwMvpP<NextIdGdBean, TableNextIdRwMvpM> {
 
-    public TableNextIdMvpP(IDbMvpV mvpV){
+    public TableNextIdRwMvpP(IDbMvpV mvpV){
         super(mvpV);
     }
 
@@ -23,8 +22,8 @@ class TableNextIdMvpP extends AUtimerRwMvpP<NextIdGdBean, TableNextIdMvpM> {
     }
 
     @Override
-    protected TableNextIdMvpM getMvpM() {
-        return new TableNextIdMvpM();
+    protected TableNextIdRwMvpM getMvpM() {
+        return new TableNextIdRwMvpM();
     }
 
     @Override

@@ -1,31 +1,30 @@
-package ahtewlg7.utimer.mvp.db;
+package ahtewlg7.utimer.mvp.rw;
 
 import ahtewlg7.utimer.entity.BaseEventBusBean;
 import ahtewlg7.utimer.entity.busevent.ActionBusEvent;
 import ahtewlg7.utimer.entity.busevent.ActivityBusEvent;
 import ahtewlg7.utimer.entity.busevent.UTimerBusEvent;
 import ahtewlg7.utimer.enumtype.GtdType;
-import ahtewlg7.utimer.mvp.AUtimerRwMvpP;
 
 /**
  * Created by lw on 2019/4/13.
  */
-public class TableMvpP {
-    private TableNextIdMvpP tableNextIdMvpP;
-    private TableActionMvpP tableActionMvpP;
-    private TableShortHandMvpP tableShortHandMvpP;
+public class EntityRwMvpP {
+    private TableNextIdRwMvpP nextIdMvpP;
+    private TableActionRwMvpP actionMvpP;
+    private ShortHandRwMvpP shortHandMvpP;
 
-    public TableMvpP(AUtimerRwMvpP.IDbMvpV actionMvpV, AUtimerRwMvpP.IDbMvpV shortHandMvpV,
-                     AUtimerRwMvpP.IDbMvpV nextIdMvpV){
-        tableNextIdMvpP     = new TableNextIdMvpP(nextIdMvpV);
-        tableActionMvpP     = new TableActionMvpP(actionMvpV);
-        tableShortHandMvpP  = new TableShortHandMvpP(shortHandMvpV);
+    public EntityRwMvpP(AUtimerRwMvpP.IDbMvpV actionMvpV, AUtimerRwMvpP.IDbMvpV shortHandMvpV,
+                        AUtimerRwMvpP.IDbMvpV nextIdMvpV){
+        nextIdMvpP      = new TableNextIdRwMvpP(nextIdMvpV);
+        actionMvpP      = new TableActionRwMvpP(actionMvpV);
+        shortHandMvpP   = new ShortHandRwMvpP(shortHandMvpV);
     }
 
-    public void toLoadAllTable(){
-        tableNextIdMvpP.toLoadAll();
-        tableActionMvpP.toLoadAll();
-        tableShortHandMvpP.toLoadAll();
+    public void toLoadAll(){
+        nextIdMvpP.toLoadAll();
+        actionMvpP.toLoadAll();
+        shortHandMvpP.toLoadAll();
     }
 
     public void toHandleBusEvent(BaseEventBusBean eventBusBean){
@@ -40,13 +39,13 @@ public class TableMvpP {
     }
     private void toHandleBusEvent(ActivityBusEvent busEvent){
         if(busEvent.ifOnBackground())
-            tableNextIdMvpP.toSaveAll();
+            nextIdMvpP.toSaveAll();
     }
     private void toHandleBusEvent(ActionBusEvent busEvent){
-        tableActionMvpP.toHandleBusEvent(busEvent);
+        actionMvpP.toHandleBusEvent(busEvent);
     }
     private void toHandleBusEvent(UTimerBusEvent busEvent){
         if(busEvent.getEntity().getGtdType() == GtdType.SHORTHAND)
-            tableShortHandMvpP.toHandleBusEvent(busEvent);
+            shortHandMvpP.toHandleBusEvent(busEvent);
     }
 }
