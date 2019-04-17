@@ -33,6 +33,11 @@ public abstract class AAttachFile {
         this.file = file;
         fileAttrAction = new FileAttrAction(file);
     }
+    protected AAttachFile(String fileAbsPath){
+        if(!TextUtils.isEmpty(fileAbsPath))
+            file = new File(fileAbsPath);
+        fileAttrAction = new FileAttrAction(file);
+    }
 
     protected AAttachFile(String filePath, String fileName){
         if(!TextUtils.isEmpty(filePath) && !TextUtils.isEmpty(fileName))

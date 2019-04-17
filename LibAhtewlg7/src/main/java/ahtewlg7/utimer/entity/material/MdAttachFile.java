@@ -18,6 +18,9 @@ public class MdAttachFile extends AAttachFile {
         super(file);
     }
 
+    public MdAttachFile(String fileAbsPath) {
+        super(fileAbsPath);
+    }
     public MdAttachFile(String filePath, String fileName) {
         super(filePath, fileName);
     }

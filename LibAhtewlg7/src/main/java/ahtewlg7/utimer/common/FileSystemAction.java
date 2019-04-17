@@ -2,6 +2,7 @@ package ahtewlg7.utimer.common;
 
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.google.common.base.Optional;
 
@@ -37,14 +38,20 @@ public class FileSystemAction {
         initAppWorkingFsDir();
     }
     public String getRPath(@NonNull File file){
-        String rPath   = file.getAbsolutePath();
+        String path   = file.getAbsolutePath();
         try{
-            if(rPath.contains(getAppWorkingAbsPath()))
-                rPath =  baseConfig.getSimpleAppName() + File.separator + rPath.split(getAppWorkingAbsPath())[1];
+            if(path.contains(getAppWorkingAbsPath()))
+                path =  baseConfig.getSimpleAppName() + File.separator + path.split(getAppWorkingAbsPath())[1];
         }catch (Exception e){
             e.printStackTrace();
         }
-        return rPath;
+        return path;
+    }
+    public Optional<String> getAbsPath(String rPath){
+        if(TextUtils.isEmpty(rPath))
+            return Optional.absent();
+        String absPath = getAppWorkingAbsPath() + rPath;
+        return Optional.of(absPath);
     }
     //========================================SDcard==============================================
     public String getSdcardPath(){
