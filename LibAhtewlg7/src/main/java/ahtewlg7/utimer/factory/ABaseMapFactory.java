@@ -1,17 +1,18 @@
 package ahtewlg7.utimer.factory;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
+import com.google.common.collect.Maps;
+
+import java.util.Map;
 
 
 public abstract class ABaseMapFactory<K, V> {
-    protected BiMap<K, V> baseMap;
+    protected Map<K, V> baseMap;
 
     public abstract boolean ifKeyValid(K k);
     public abstract boolean ifValueValid(V v);
 
     protected ABaseMapFactory(){
-        baseMap = HashBiMap.create();
+        baseMap = Maps.newHashMap();
     }
 
     public int getSize(){
@@ -19,7 +20,7 @@ public abstract class ABaseMapFactory<K, V> {
     }
 
     public void put(K k, V v){
-        if(ifKeyValid(k) && ifValueValid(v))
+        if(ifKeyValid(k) && ifValueValid(v) && !containsKey(k))
             baseMap.put(k, v);
     }
 
@@ -33,15 +34,9 @@ public abstract class ABaseMapFactory<K, V> {
     public V getValue(K k){
         return baseMap.get(k);
     }
-    public K getKey(V v){
-        return baseMap.inverse().get(v);
-    }
 
-    public void removeByKey(K k){
+    public void remove(K k){
         baseMap.remove(k);
-    }
-    public void removeByValue(V v){
-        baseMap.inverse().remove(v);
     }
 
     public void clearAll(){

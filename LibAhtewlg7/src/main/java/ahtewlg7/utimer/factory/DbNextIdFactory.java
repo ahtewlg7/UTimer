@@ -29,5 +29,6 @@ public class DbNextIdFactory extends ABaseMapFactory<GtdType, Long> {
 
     private void initMap(){
         put(GtdType.ACTION,0L);
+        put(GtdType.SHORTHAND,0L);
     }
 }
