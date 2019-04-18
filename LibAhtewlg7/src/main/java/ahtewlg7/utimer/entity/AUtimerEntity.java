@@ -46,7 +46,7 @@ public abstract class AUtimerEntity<T extends AUtimerBuilder> implements ITipsEn
         createTime = t.createTime;
         if(t.attachFile != null){
             attachFile = t.attachFile;
-            initByAttachFile(attachFile);
+            updateAttachFileInfo(attachFile);
         }
     }
 
@@ -131,10 +131,10 @@ public abstract class AUtimerEntity<T extends AUtimerBuilder> implements ITipsEn
         this.lastModifyTime = lastModifyTime;
     }
 
-    protected void initByAttachFile(AAttachFile attachFile){
-        Optional<String> title = attachFile.getTitle();
-        if(title.isPresent())
-            setTitle(title.get());
+    public void updateAttachFileInfo(AAttachFile attachFile){
+        Optional<String> titleOptional = attachFile.getTitle();
+        if(titleOptional.isPresent() && TextUtils.isEmpty(title))
+            setTitle(titleOptional.get());
         if(attachFile.ifValid()) {
             createTime     = attachFile.getCreateTime();
             lastAccessTime = attachFile.getLassAccessTime();

@@ -45,7 +45,7 @@ public class ShortHandEntity extends AUtimerEntity<ShortHandBuilder>
     //++++++++++++++++++++++++++++++++++++++ITimeComparator++++++++++++++++++++++++++++++++++++
     @Override
     public Optional<DateTime> getComparatorTime() {
-        return Optional.of(lastAccessTime);
+        return Optional.fromNullable(lastAccessTime);
     }
 
     public EditElement getLastModifyElement() {

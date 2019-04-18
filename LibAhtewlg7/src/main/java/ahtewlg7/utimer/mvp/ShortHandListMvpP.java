@@ -27,8 +27,6 @@ import io.reactivex.schedulers.Schedulers;
  * Created by lw on 2018/12/9.
  */
 public class ShortHandListMvpP implements IAllItemListMvpP<ShortHandEntity> {
-    public static final String TAG = ShortHandListMvpP.class.getSimpleName();
-
     private List<ShortHandEntity> shortHandList;
 
     private IShorthandListMvpV shorthandListMvpV;
@@ -86,7 +84,6 @@ public class ShortHandListMvpP implements IAllItemListMvpP<ShortHandEntity> {
                     @Override
                     public void accept(ShortHandEntity entity) throws Exception {
                         boolean result = shorthandListMvpM.toDelEntity(entity);
-                        Logcat.i(TAG,"toDeleteItem " + entity.getTitle() + " : " + result);
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())

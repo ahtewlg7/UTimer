@@ -17,6 +17,7 @@ import ahtewlg7.utimer.entity.material.MdAttachFile;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by lw on 2019/3/27.
@@ -69,15 +70,16 @@ public class ShortHandRwMvpM extends AUtimerRwMvpM<ShortHandEntity> {
     }
 
     private Flowable<File> getShortHandFiles(){
-        return Flowable.just(getInboxAbsDir()).flatMap(new Function<String, Publisher<File>>() {
+        return Flowable.just(getInboxAbsDir()).subscribeOn(Schedulers.io())
+                .flatMap(new Function<String, Publisher<File>>() {
             @Override
             public Publisher<File> apply(String path) throws Exception {
-                File shortHandDir = FileUtils.getFileByPath(path);
-                if(!shortHandDir.exists())
-                    throw new FileNotFoundException("ShortHand file is missing");
-                return Flowable.fromArray(shortHandDir.listFiles());
-            }
-        });
+                    File shortHandDir = FileUtils.getFileByPath(path);
+                    if(!shortHandDir.exists())
+                        throw new FileNotFoundException("ShortHand file is missing");
+                    return Flowable.fromArray(shortHandDir.listFiles());
+                }
+            });
     }
 
     private Flowable<Optional<ShortHandEntity>> getShortHand(final Flowable<File> fileRx){
@@ -86,13 +88,17 @@ public class ShortHandRwMvpM extends AUtimerRwMvpM<ShortHandEntity> {
                 public Optional<ShortHandEntity> apply(File file) throws Exception {
                     Optional<ShortHandEntity> shortHandEntityOptional =
                             dbActionFacade.getShortHandEntityByRPath(fileSystemAction.getRPath(file));
-                    if(shortHandEntityOptional.isPresent())
-                        return shortHandEntityOptional;
                     MdAttachFile attachFile = new MdAttachFile(file);
-                    if(!attachFile.ifValid())
-                        return Optional.absent();
-                    ShortHandEntity entity = new ShortHandBuilder().setAttachFile(attachFile).build();
-                    return Optional.of(entity);
+                    if(shortHandEntityOptional.isPresent()){
+                        if(attachFile.ifValid())
+                            shortHandEntityOptional.get().updateAttachFileInfo(attachFile);
+                        return shortHandEntityOptional;
+                    }
+                    if(attachFile.ifValid()) {
+                        ShortHandEntity entity = new ShortHandBuilder().setAttachFile(attachFile).build();
+                        return Optional.of(entity);
+                    }
+                    return Optional.absent();
                 }
             });
     }
