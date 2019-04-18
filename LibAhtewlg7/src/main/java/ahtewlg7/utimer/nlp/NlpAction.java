@@ -12,13 +12,20 @@ import java.util.List;
 public class NlpAction {
     private HanlpAction hanlpAction;
     private TimeNlpAction timeNlpAction;
+    private static NlpAction instance;
 
-    public NlpAction(){
+    private NlpAction(){
         hanlpAction   = new HanlpAction();
         timeNlpAction = new TimeNlpAction();
 
         hanlpAction.initNLP();
         timeNlpAction.initNLP();
+    }
+
+    public static NlpAction getInstance(){
+        if(instance == null)
+            instance = new NlpAction();
+        return instance;
     }
 
     public List<DateTime> toSegTimes(String raw){

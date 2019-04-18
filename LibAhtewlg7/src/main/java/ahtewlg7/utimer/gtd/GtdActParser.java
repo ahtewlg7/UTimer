@@ -25,10 +25,8 @@ import ahtewlg7.utimer.nlp.NlpAction;
  * Created by lw on 2019/3/14.
  */
 public class GtdActParser {
-    protected NlpAction nlpAction;
 
     public GtdActParser(){
-        nlpAction     = new NlpAction();
     }
 
     public Optional<GtdActionEntity> toParseAction(String raw){
@@ -58,7 +56,7 @@ public class GtdActParser {
         if(keyWords.isPresent())
             entity.setTitle(keyWords.get());
 
-        List<Term> termList = nlpAction.toSegAllTerm(raw);
+        List<Term> termList = NlpAction.getInstance().toSegAllTerm(raw);
 
         Optional<W5h2Who> whoOptional = getWho(termList);
         if(whoOptional.isPresent())
@@ -88,7 +86,7 @@ public class GtdActParser {
 
 
     private Optional<W5h2When> getWhen(String raw){
-        List<DateTime> timeList = nlpAction.toSegTimes(raw);
+        List<DateTime> timeList = NlpAction.getInstance().toSegTimes(raw);
         if(timeList == null || timeList.size() == 0)
             return Optional.absent();
         W5h2When when = new W5h2When();
@@ -98,7 +96,7 @@ public class GtdActParser {
     }
 
     private Optional<String> getTitle(String raw){
-        List<String> keyWords = nlpAction.getKeyWords(raw);
+        List<String> keyWords = NlpAction.getInstance().getKeyWords(raw);
         if(keyWords == null || keyWords.size() == 0)
             return Optional.absent();
         StringBuilder title = new StringBuilder();
