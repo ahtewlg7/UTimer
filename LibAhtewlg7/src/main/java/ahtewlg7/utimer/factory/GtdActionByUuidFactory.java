@@ -10,6 +10,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 
+import org.joda.time.DateTime;
 import org.reactivestreams.Publisher;
 
 import java.util.ArrayList;
@@ -26,6 +27,8 @@ import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 
 import static ahtewlg7.utimer.enumtype.GtdLife.MONTH;
+import static ahtewlg7.utimer.enumtype.GtdLife.NEXT_MONTH;
+import static ahtewlg7.utimer.enumtype.GtdLife.NEXT_WEEK;
 import static ahtewlg7.utimer.enumtype.GtdLife.QUARTER;
 import static ahtewlg7.utimer.enumtype.GtdLife.TODAY;
 import static ahtewlg7.utimer.enumtype.GtdLife.TOMORROW;
@@ -110,15 +113,14 @@ public class GtdActionByUuidFactory extends ABaseLruCacheFactory<String, GtdActi
                 .filter(new Predicate<GtdActionEntity>() {
                     @Override
                     public boolean test(GtdActionEntity entity) throws Exception {
-                        GtdLife life = lifeCycleAction.getLife(entity.getCreateTime());
-                        entity.setGtdLife(life);
-                        return life == actLife;
+                        updateLife(entity);
+                        return entity.getGtdLife() == actLife;
                     }
                 })
                 .sorted(new GtdTimeComparator<GtdActionEntity>());
     }
     public Flowable<GtdActionEntity> getEntityByLife(){
-        return Flowable.fromArray(TODAY,TOMORROW,WEEK,MONTH,QUARTER,YEAR).flatMap(new Function<GtdLife, Publisher<GtdActionEntity>>() {
+        return Flowable.fromArray(TODAY,TOMORROW,WEEK,NEXT_WEEK,MONTH,NEXT_MONTH,QUARTER,YEAR).flatMap(new Function<GtdLife, Publisher<GtdActionEntity>>() {
             @Override
             public Publisher<GtdActionEntity> apply(GtdLife actLife) throws Exception {
                 return getEntityByLife(actLife);
@@ -132,8 +134,10 @@ public class GtdActionByUuidFactory extends ABaseLruCacheFactory<String, GtdActi
             if(TextUtils.isEmpty(uuid))
                 continue;
             GtdActionEntity entity = get(uuid);
-            if(entity != null)
+            if(entity != null){
+                updateLife(entity);
                 entityList.add(entity);
+            }
         }
         Collections.sort(entityList, new GtdTimeComparator<GtdActionEntity>());
         return entityList;
@@ -143,5 +147,12 @@ public class GtdActionByUuidFactory extends ABaseLruCacheFactory<String, GtdActi
         if(!TextUtils.isEmpty(detail) && detailUuidMap.containsKey(detail))
             return Optional.fromNullable(get(detailUuidMap.get(detail)));
         return Optional.absent();
+    }
+    private void updateLife(@NonNull GtdActionEntity entity){
+        DateTime tmp = entity.getCreateTime();
+        if(entity.getFirstWorkTime().isPresent())
+            tmp = entity.getFirstWorkTime().get();
+        GtdLife life =lifeCycleAction.getLife(tmp);
+        entity.setGtdLife(life);
     }
 }

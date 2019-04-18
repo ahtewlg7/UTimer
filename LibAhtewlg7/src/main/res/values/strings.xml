@@ -17,7 +17,9 @@
     <string name="prompt_action_life_today">Today Job</string>
     <string name="prompt_action_life_tomorrow">Tomorrow Job</string>
     <string name="prompt_action_life_week">Week Job</string>
+    <string name="prompt_action_life_next_week">Next Week Job</string>
     <string name="prompt_action_life_month">Month Job</string>
+    <string name="prompt_action_life_next_month">Next Month Job</string>
     <string name="prompt_action_life_quarter">Quarter Job</string>
     <string name="prompt_action_life_year">Year Job</string>
 </resources>
