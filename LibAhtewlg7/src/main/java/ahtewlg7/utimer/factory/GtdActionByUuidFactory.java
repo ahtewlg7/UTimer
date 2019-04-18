@@ -23,17 +23,9 @@ import ahtewlg7.utimer.enumtype.ActState;
 import ahtewlg7.utimer.enumtype.GtdLife;
 import ahtewlg7.utimer.gtd.GtdLifeCycleAction;
 import io.reactivex.Flowable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
-
-import static ahtewlg7.utimer.enumtype.GtdLife.MONTH;
-import static ahtewlg7.utimer.enumtype.GtdLife.NEXT_MONTH;
-import static ahtewlg7.utimer.enumtype.GtdLife.NEXT_WEEK;
-import static ahtewlg7.utimer.enumtype.GtdLife.QUARTER;
-import static ahtewlg7.utimer.enumtype.GtdLife.TODAY;
-import static ahtewlg7.utimer.enumtype.GtdLife.TOMORROW;
-import static ahtewlg7.utimer.enumtype.GtdLife.WEEK;
-import static ahtewlg7.utimer.enumtype.GtdLife.YEAR;
 
 /**
  * Created by lw on 2019/3/13.
@@ -108,24 +100,23 @@ public class GtdActionByUuidFactory extends ABaseLruCacheFactory<String, GtdActi
         });
     }
 
-    public Flowable<GtdActionEntity> getEntityByLife(@NonNull final GtdLife actLife){
+    public Flowable<GtdActionEntity> getAllLifeEntity(){
         return Flowable.fromIterable(getAll())
-                .filter(new Predicate<GtdActionEntity>() {
+                .doOnNext(new Consumer<GtdActionEntity>() {
+                    @Override
+                    public void accept(GtdActionEntity entity) throws Exception {
+                        updateLife(entity);
+                    }
+                }).sorted(new GtdTimeComparator<GtdActionEntity>());
+        }
+
+    public Flowable<GtdActionEntity> getEntityByLife(@NonNull final GtdLife actLife){
+        return getAllLifeEntity().filter(new Predicate<GtdActionEntity>() {
                     @Override
                     public boolean test(GtdActionEntity entity) throws Exception {
-                        updateLife(entity);
                         return entity.getGtdLife() == actLife;
                     }
-                })
-                .sorted(new GtdTimeComparator<GtdActionEntity>());
-    }
-    public Flowable<GtdActionEntity> getEntityByLife(){
-        return Flowable.fromArray(TODAY,TOMORROW,WEEK,NEXT_WEEK,MONTH,NEXT_MONTH,QUARTER,YEAR).flatMap(new Function<GtdLife, Publisher<GtdActionEntity>>() {
-            @Override
-            public Publisher<GtdActionEntity> apply(GtdLife actLife) throws Exception {
-                return getEntityByLife(actLife);
-            }
-        });
+                });
     }
 
     private List<GtdActionEntity> getEntityByUuid(@NonNull List<String> uuidList){

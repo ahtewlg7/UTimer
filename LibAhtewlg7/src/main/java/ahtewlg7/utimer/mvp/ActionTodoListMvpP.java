@@ -119,7 +119,7 @@ public class ActionTodoListMvpP implements IAllItemListMvpP<GtdActionEntity> {
 
     class EntityListMvpM{
         public Flowable<GtdActionEntity> loadAllEntity() {
-            return GtdActionByUuidFactory.getInstance().getEntityByLife();
+            return GtdActionByUuidFactory.getInstance().getAllLifeEntity();
         }
     }
 

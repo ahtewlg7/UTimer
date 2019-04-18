@@ -137,7 +137,7 @@ public class ShortHandListMvpP implements IAllItemListMvpP<ShortHandEntity> {
 
         @Override
         public Flowable<ShortHandEntity> loadAllEntity() {
-            return ShortHandByUuidFactory.getInstance().getEntityByLife();
+            return ShortHandByUuidFactory.getInstance().getAllLifeEntity();
         }
 
         @Override
