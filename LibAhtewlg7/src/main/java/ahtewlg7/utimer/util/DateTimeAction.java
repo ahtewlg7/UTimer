@@ -82,11 +82,17 @@ public class DateTimeAction {
     public boolean isInWeek(DateTime dateTime){
         return dateTime != null && !isInTomorrow(dateTime) && dateTime.isBefore(DateTime.now().plusWeeks(1).dayOfWeek().withMinimumValue().withTimeAtStartOfDay());
     }
+    public boolean isInNextWeek(DateTime dateTime){
+        return dateTime != null && !isInWeek(dateTime) && dateTime.isBefore(DateTime.now().plusWeeks(2).dayOfWeek().withMinimumValue().withTimeAtStartOfDay());
+    }
     public boolean isInMonth(DateTime dateTime){
-        return dateTime != null && !isInWeek(dateTime) && dateTime.isBefore(DateTime.now().plusMonths(1).dayOfMonth().withMinimumValue().withTimeAtStartOfDay());
+        return dateTime != null && !isInNextWeek(dateTime) && dateTime.isBefore(DateTime.now().plusMonths(1).dayOfMonth().withMinimumValue().withTimeAtStartOfDay());
+    }
+    public boolean isInNextMonth(DateTime dateTime){
+        return dateTime != null && !isInMonth(dateTime) && dateTime.isBefore(DateTime.now().plusMonths(2).dayOfMonth().withMinimumValue().withTimeAtStartOfDay());
     }
     public boolean isInQuarter(DateTime dateTime){
-        return dateTime != null && !isInMonth(dateTime) && dateTime.isBefore(DateTime.now().plusMonths(3).dayOfMonth().withMinimumValue().withTimeAtStartOfDay());
+        return dateTime != null && !isInNextMonth(dateTime) && dateTime.isBefore(DateTime.now().plusMonths(3).dayOfMonth().withMinimumValue().withTimeAtStartOfDay());
     }
     public boolean isInYear(DateTime dateTime){
         return dateTime != null && !isInQuarter(dateTime)  && dateTime.isBefore(DateTime.now().plusYears(1).dayOfYear().withMinimumValue().withTimeAtStartOfDay());

@@ -26,8 +26,12 @@ public class GtdLifeCycleAction {
             actDateTime = GtdLife.TOMORROW;
         else if(ifWeekWork(dateTime))
             actDateTime = GtdLife.WEEK;
+        else if(ifNextWeekWork(dateTime))
+            actDateTime = GtdLife.NEXT_WEEK;
         else if(ifMonthWork(dateTime))
             actDateTime = GtdLife.MONTH;
+        else if(ifNextMonthWork(dateTime))
+            actDateTime = GtdLife.NEXT_MONTH;
         else if(ifQuarterWork(dateTime))
             actDateTime = GtdLife.QUARTER;
         else if(ifYearWork(dateTime))
@@ -52,10 +56,20 @@ public class GtdLifeCycleAction {
             return false;
         return dateTimeAction.isInWeek(dateTime);
     }
+    public boolean ifNextWeekWork(DateTime dateTime) {
+        if (dateTime == null)
+            return false;
+        return dateTimeAction.isInNextWeek(dateTime);
+    }
     public boolean ifMonthWork(DateTime dateTime) {
         if (dateTime == null)
             return false;
         return dateTimeAction.isInMonth(dateTime);
+    }
+    public boolean ifNextMonthWork(DateTime dateTime) {
+        if (dateTime == null)
+            return false;
+        return dateTimeAction.isInNextMonth(dateTime);
     }
     public boolean ifQuarterWork(DateTime dateTime) {
         if (dateTime == null)
@@ -80,8 +94,14 @@ public class GtdLifeCycleAction {
             case WEEK:
                 detail = MyRInfo.getStringByID(R.string.prompt_action_life_week);
                 break;
+            case NEXT_WEEK:
+                detail = MyRInfo.getStringByID(R.string.prompt_action_life_next_week);
+                break;
             case MONTH:
                 detail = MyRInfo.getStringByID(R.string.prompt_action_life_month);
+                break;
+            case NEXT_MONTH:
+                detail = MyRInfo.getStringByID(R.string.prompt_action_life_next_month);
                 break;
             case QUARTER:
                 detail = MyRInfo.getStringByID(R.string.prompt_action_life_quarter);

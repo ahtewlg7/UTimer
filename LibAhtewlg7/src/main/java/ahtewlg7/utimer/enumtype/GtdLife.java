@@ -4,7 +4,9 @@ public enum GtdLife {
     TODAY,
     TOMORROW,
     WEEK,
+    NEXT_WEEK,
     MONTH,
+    NEXT_MONTH,
     QUARTER,
     YEAR;
 }
