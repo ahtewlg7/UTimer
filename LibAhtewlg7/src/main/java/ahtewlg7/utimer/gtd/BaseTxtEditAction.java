@@ -1,5 +1,7 @@
 package ahtewlg7.utimer.gtd;
 
+import android.text.TextUtils;
+
 import com.google.common.io.CharSink;
 
 import ahtewlg7.utimer.entity.AUtimerEntity;
@@ -42,7 +44,10 @@ public class BaseTxtEditAction<T extends AUtimerEntity>  extends AEditAction<T> 
             CharSink writer = fileIOAction.getCharWriter();
             if(append)
                 writer = fileIOAction.getAppendCharWriter();
-            writer.write(rawTxt + System.getProperty("line.separator"));
+            String tmp = rawTxt;
+            if(!TextUtils.isEmpty(rawTxt))
+                tmp = rawTxt + System.getProperty("line.separator");
+            writer.write(tmp);
             result = true;
         }catch (Exception e){
             e.printStackTrace();
