@@ -11,6 +11,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chad.library.adapter.base.listener.OnItemDragListener;
 import com.chad.library.adapter.base.listener.OnItemSwipeListener;
+import com.google.common.base.Optional;
 import com.utimer.R;
 import com.utimer.common.TextImageFactory;
 
@@ -71,8 +72,9 @@ public class GtdActionRecyclerView extends ABaseLinearRecyclerView<GtdActionEnti
                 detailBuilder.append(item.getDetail().get());
             if(item.getGtdLife() != null)
                 titleBuilder.append(gtdActLifeCycleAction.getActLifeDetail(item.getGtdLife())).append("\n");
-            if(item.getWorkTimeInfo().isPresent())
-                titleBuilder.append("at:").append(item.getWorkTimeInfo().get());
+            Optional<String> workTime = item.getWorkTimeInfo();
+            if(workTime.isPresent())
+                titleBuilder.append("at:").append(workTime.get());
             helper.setText(R.id.view_shorthand_list_item_title, titleBuilder.toString())
                 .setText(R.id.view_shorthand_list_item_detail, detailBuilder.toString())
                 .setImageDrawable(R.id.view_shorthand_list_item_image, TextImageFactory.getInstance().getGtdActionImage());

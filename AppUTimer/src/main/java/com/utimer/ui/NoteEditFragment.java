@@ -3,9 +3,11 @@ package com.utimer.ui;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.blankj.utilcode.util.ToastUtils;
+import com.google.common.collect.Table;
 import com.trello.rxlifecycle2.LifecycleProvider;
 import com.utimer.R;
 
@@ -106,14 +108,14 @@ public class NoteEditFragment extends ATxtEditFragment
         mdEditView.toEndEdit();
         int resultCode = RESULT_CANCELED;
         List<EditElement> elementList = mdEditView.getEditElementList();
+        Table<Integer, Integer, EditElement> editElementTable = mdEditView.getEditElementTable();
         if(elementList.size() > 0){//maybe the entity is not loaded
             resultCode = RESULT_OK;
-            editMvpP.toFinishEdit(Flowable.fromIterable(elementList)
-//                    .compose(((RxFragment) getRxLifeCycleBindView()).<EditElement>bindUntilEvent(FragmentEvent.DESTROY))
-            );
-        ((NoteEntity)getArguments().getSerializable(KEY_NOTE)).appendDetail(elementList.get(0).getMdCharSequence().toString());
+            editMvpP.toPostAction(editElementTable);
+            editMvpP.toFinishEdit(Flowable.fromIterable(elementList));
+            if(!TextUtils.isEmpty(mdEditView.getLastAccessEditElement().getMdCharSequence()))
+                ((NoteEntity)getArguments().getSerializable(KEY_NOTE)).setDetail(mdEditView.getLastAccessEditElement().getMdCharSequence().toString());
         }
-        setFragmentResult(resultCode, getArguments());
     }
     /**********************************************IShorthandEditMvpV**********************************************/
     @Override

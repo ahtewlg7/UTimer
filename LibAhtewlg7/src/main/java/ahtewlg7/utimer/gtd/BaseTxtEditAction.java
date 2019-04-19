@@ -42,7 +42,7 @@ public class BaseTxtEditAction<T extends AUtimerEntity>  extends AEditAction<T> 
             CharSink writer = fileIOAction.getCharWriter();
             if(append)
                 writer = fileIOAction.getAppendCharWriter();
-            writer.write(rawTxt);
+            writer.write(rawTxt + System.getProperty("line.separator"));
             result = true;
         }catch (Exception e){
             e.printStackTrace();
