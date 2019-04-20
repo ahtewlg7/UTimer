@@ -98,7 +98,6 @@ public class ShortHandEntity extends AUtimerEntity<ShortHandBuilder>
     }
 
     private void  initByGbBean(ShortHandEntityGdBean inboxEntityGdBean){
-        id              = inboxEntityGdBean.getId();
         uuid            = inboxEntityGdBean.getUuid();
         title           = inboxEntityGdBean.getTitle();
         detail          = inboxEntityGdBean.getDetail();

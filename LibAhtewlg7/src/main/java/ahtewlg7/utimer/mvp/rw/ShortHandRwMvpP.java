@@ -73,30 +73,4 @@ class ShortHandRwMvpP extends AUtimerRwMvpP<ShortHandEntity, ShortHandRwMvpM> {
             }
         };
     }
-
-    /*@Override
-    protected MySafeSubscriber<ShortHandEntity> getLoadAllSubscriber() {
-        return new MySafeSubscriber<ShortHandEntity>(){
-            @Override
-            public void onSubscribe(Subscription s) {
-                super.onSubscribe(s);
-                ShortHandByUuidFactory.getInstance().clearAll();
-                if(mvpV != null)
-                    mvpV.onAllLoadStarted();
-            }
-
-            @Override
-            public void onNext(ShortHandEntity entity) {
-                super.onNext(entity);
-                ShortHandByUuidFactory.getInstance().add(entity.getUuid(), entity);
-            }
-
-            @Override
-            public void onComplete() {
-                super.onComplete();
-                isLoaded = true;
-                if(mvpV != null)
-                    mvpV.onAllLoadEnd();
-            }
-        };*/
 }

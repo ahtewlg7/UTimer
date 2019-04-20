@@ -5,28 +5,33 @@ import android.text.TextUtils;
 
 import com.google.common.base.Optional;
 
+import org.joda.time.DateTime;
+
 import java.io.Serializable;
 
 import javax.annotation.Nonnull;
 
 import ahtewlg7.utimer.common.FileSystemAction;
+import ahtewlg7.utimer.comparator.ITimeComparator;
+import ahtewlg7.utimer.db.entity.NoteEntityGdBean;
 import ahtewlg7.utimer.entity.AUtimerEntity;
 import ahtewlg7.utimer.entity.IMergerEntity;
 import ahtewlg7.utimer.entity.material.MdAttachFile;
 import ahtewlg7.utimer.enumtype.GtdType;
 import ahtewlg7.utimer.util.DateTimeAction;
-import ahtewlg7.utimer.util.Logcat;
 
 /**
  * Created by lw on 2019/1/23.
  */
-public class NoteEntity extends AUtimerEntity<NoteBuilder> implements Serializable {
-    public static final String TAG = NoteEntity.class.getSimpleName();
-
+public class NoteEntity extends AUtimerEntity<NoteBuilder>
+        implements Serializable , ITimeComparator {
+    private String rPath;
     private StringBuilder detailBuilder;
 
     protected NoteEntity(@Nonnull NoteBuilder builder) {
         super(builder);
+        if(builder.gdBean != null)
+            initByGbBean(builder.gdBean);
         if(builder.projectEntity != null)
             initByProjectEntity(builder.projectEntity);
         if(!TextUtils.isEmpty(title) && attachFile == null){
@@ -58,13 +63,17 @@ public class NoteEntity extends AUtimerEntity<NoteBuilder> implements Serializab
     @Override
     public boolean ensureAttachFileExist() {
         boolean result = attachFile.createOrExist();
-        Logcat.i(TAG,"ensureAttachFileExist result = " + result);
         return result;
+    }
+
+    //++++++++++++++++++++++++++++++++++++++ITimeComparator++++++++++++++++++++++++++++++++++++
+    @Override
+    public Optional<DateTime> getComparatorTime() {
+        return Optional.fromNullable(lastAccessTime);
     }
 
     public void appendDetail(String append){
         if(TextUtils.isEmpty(append)){
-            Logcat.i(TAG,"append String empty");
             return;
         }
         if(detailBuilder == null)
@@ -75,7 +84,6 @@ public class NoteEntity extends AUtimerEntity<NoteBuilder> implements Serializab
 
     private void initByProjectEntity(GtdProjectEntity projectEntity){
         if(projectEntity == null || !projectEntity.ifValid()){
-            Logcat.i(TAG,"initByProjectEntity cancel");
             return;
         }
         if(TextUtils.isEmpty(title))
@@ -87,4 +95,13 @@ public class NoteEntity extends AUtimerEntity<NoteBuilder> implements Serializab
         }
     }
 
+    private void  initByGbBean(NoteEntityGdBean gdBean){
+        uuid            = gdBean.getUuid();
+        title           = gdBean.getTitle();
+        detail          = gdBean.getDetail();
+        accessTimes     = gdBean.getAccessTimes();
+        createTime      = gdBean.getCreateTime();
+        lastAccessTime  = gdBean.getLastAccessTime();
+        rPath           = gdBean.getAttachFileRPath();
+    }
 }

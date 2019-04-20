@@ -23,7 +23,7 @@ public class ShortHandEntityGdBean {
     // KEEP FIELDS - put your custom fields here
     //KEEP FIELDS END
 
-    @Id
+    @Id(autoincrement = true)
     private Long id;
     @NotNull
     @Index(unique = true)

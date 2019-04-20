@@ -6,14 +6,11 @@ import org.joda.time.DateTime;
 
 import ahtewlg7.utimer.entity.material.AAttachFile;
 
-import static ahtewlg7.utimer.common.Constants.INVALID_NEXT_ID_INDEX;
-
 /**
  * Created by lw on 2018/10/26.
  */
 public abstract class AUtimerBuilder<E extends AUtimerEntity, K extends AUtimerBuilder> {
 
-    protected long id = INVALID_NEXT_ID_INDEX;
     protected String uuid;
     protected String title;
     protected String detail;
@@ -23,11 +20,6 @@ public abstract class AUtimerBuilder<E extends AUtimerEntity, K extends AUtimerB
 
     @NonNull
     public abstract E build();
-
-    public K setId(long id){
-        this.id = id;
-        return (K)this;
-    }
 
     public K setUuid(String uuid) {
         this.uuid = uuid;

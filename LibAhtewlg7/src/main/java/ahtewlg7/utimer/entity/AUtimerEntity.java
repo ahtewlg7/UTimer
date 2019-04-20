@@ -14,8 +14,6 @@ import ahtewlg7.utimer.entity.material.AAttachFile;
 import ahtewlg7.utimer.enumtype.GtdLife;
 import ahtewlg7.utimer.enumtype.GtdType;
 
-import static ahtewlg7.utimer.common.Constants.INVALID_NEXT_ID_INDEX;
-
 public abstract class AUtimerEntity<T extends AUtimerBuilder> implements ITipsEntity, IMergerEntity{
     @NonNull
     public abstract GtdType getGtdType();
@@ -23,7 +21,6 @@ public abstract class AUtimerEntity<T extends AUtimerBuilder> implements ITipsEn
     public abstract boolean ensureAttachFileExist();
 
     protected int accessTimes;
-    protected long id = INVALID_NEXT_ID_INDEX;
     protected boolean isGtdActived;
 
     protected String uuid;
@@ -39,7 +36,6 @@ public abstract class AUtimerEntity<T extends AUtimerBuilder> implements ITipsEn
         //update first
         if(t.entity != null)
             update(t.entity);
-        id         = t.id;
         title      = t.title;
         detail     = t.detail;
         uuid       = TextUtils.isEmpty(t.uuid) ? new IdAction().getUUId() : t.uuid;
@@ -57,10 +53,6 @@ public abstract class AUtimerEntity<T extends AUtimerBuilder> implements ITipsEn
     public void destory(){
         if(attachFile != null && attachFile.ifValid())
             attachFile.deleteOnExit();
-    }
-
-    public long getId() {
-        return id;
     }
 
     public String getUuid() {
@@ -149,7 +141,6 @@ public abstract class AUtimerEntity<T extends AUtimerBuilder> implements ITipsEn
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("id=").append(id);
         builder.append(",uuid=").append(uuid);
         builder.append(",ifValid=").append(ifValid());
         builder.append(",accessTimes=").append(accessTimes);

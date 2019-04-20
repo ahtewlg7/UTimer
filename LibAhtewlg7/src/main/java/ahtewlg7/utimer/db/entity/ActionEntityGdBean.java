@@ -103,7 +103,7 @@ public class ActionEntityGdBean {
     }
 
 
-    @Id
+    @Id(autoincrement = true)
     private Long id;
     @NotNull
     @Index(unique = true)

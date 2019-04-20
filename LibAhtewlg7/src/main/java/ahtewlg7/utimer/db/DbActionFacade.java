@@ -5,116 +5,79 @@ import android.support.annotation.NonNull;
 import com.google.common.base.Optional;
 
 import ahtewlg7.utimer.db.dao.ActionEntityDaoAction;
-import ahtewlg7.utimer.db.dao.DbNextIdEntityDaoAction;
+import ahtewlg7.utimer.db.dao.NoteEntityDaoAction;
 import ahtewlg7.utimer.db.dao.ShortHandEntityDaoAction;
 import ahtewlg7.utimer.db.entity.ActionEntityGdBean;
-import ahtewlg7.utimer.db.entity.NextIdGdBean;
+import ahtewlg7.utimer.db.entity.NoteEntityGdBean;
 import ahtewlg7.utimer.db.entity.ShortHandEntityGdBean;
 import ahtewlg7.utimer.entity.gtd.GtdActionBuilder;
 import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
+import ahtewlg7.utimer.entity.gtd.NoteBuilder;
+import ahtewlg7.utimer.entity.gtd.NoteEntity;
 import ahtewlg7.utimer.entity.gtd.ShortHandBuilder;
 import ahtewlg7.utimer.entity.gtd.ShortHandEntity;
 import ahtewlg7.utimer.entity.gtd.un.GtdTaskEntity;
-import ahtewlg7.utimer.entity.gtd.un.NoteEntity;
-import ahtewlg7.utimer.enumtype.GtdType;
-import ahtewlg7.utimer.factory.DbNextIdFactory;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
-
-import static ahtewlg7.utimer.common.Constants.INVALID_NEXT_ID_INDEX;
 
 /**
  * Created by lw on 2018/1/8.
  */
 
 public class DbActionFacade {
-    /*******************************************id**************************************************/
-    public Flowable<NextIdGdBean> loadAllNextIdBean() {
-        return Flowable.fromIterable(DbNextIdEntityDaoAction.getInstance().loadAll())
+    /*******************************************note**************************************************/
+    public Flowable<NoteEntity> loadAllNoteEntity() {
+        return Flowable.fromIterable(NoteEntityDaoAction.getInstance().loadAll())
+                .map(new Function<NoteEntityGdBean, NoteEntity>() {
+                    @Override
+                    public NoteEntity apply(NoteEntityGdBean entityGdBean) throws Exception {
+                        return new NoteBuilder().setGbBean(entityGdBean).build();
+                    }
+                })
                 .subscribeOn(Schedulers.io());
     }
-    public Flowable<Boolean> saveNextIdBean(@NonNull Flowable<NextIdGdBean> entityRx) {
-        return entityRx.map(new Function<NextIdGdBean, Boolean>() {
-                        @Override
-                        public Boolean apply(NextIdGdBean idKeyGdBean) throws Exception {
-                            long index = DbNextIdEntityDaoAction.getInstance().insert(idKeyGdBean);
-                            return index >= 0;
-                        }
-                    });
-    }
-    public Flowable<Boolean> delNextIdBean(@NonNull Flowable<NextIdGdBean> entityRx){
-        return entityRx.map(new Function<NextIdGdBean, Boolean>() {
+    public Flowable<Optional<NoteEntity>> getNoteEntityByRPath(@NonNull final Flowable<String> rPathRx) {
+        return rPathRx.map(new Function<String, Optional<NoteEntity>>() {
             @Override
-            public Boolean apply(NextIdGdBean idKeyGdBean) throws Exception {
-                boolean result = false;
-                try{
-                    DbNextIdEntityDaoAction.getInstance().delete(idKeyGdBean);
-                    result = true;
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-                return result;
+            public Optional<NoteEntity> apply(String rPath) throws Exception {
+                return getNoteEntityByRPath(rPath);
+            }
+        }).subscribeOn(Schedulers.io());
+    }
+    public Optional<NoteEntity> getNoteEntityByRPath(@NonNull final String rPath) {
+        Optional<NoteEntityGdBean> beanOptional = null;
+        try{
+            beanOptional = NoteEntityDaoAction.getInstance().queryByKey(rPath);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        if(beanOptional == null || !beanOptional.isPresent())
+            return Optional.absent();
+        NoteEntity e = (NoteEntity)new NoteBuilder().setGbBean(beanOptional.get()).build();
+        return Optional.of(e);
+    }
+
+    public Flowable<Boolean> deleteNoteEntity(@NonNull Flowable<NoteEntity> eventFlowable){
+        return eventFlowable.map(new Function<NoteEntity, Boolean>() {
+            @Override
+            public Boolean apply(NoteEntity entityOptional) throws Exception {
+                NoteEntityGdBean bean = mapNoteToGdBean(entityOptional);
+                NoteEntityDaoAction.getInstance().delete(bean);
+                return true;
             }
         });
     }
-    /*******************************************note**************************************************/
-    public Flowable<Optional<NoteEntity>> loadAllNoteEntity() {
-        /*return Flowable.fromIterable(NoteEntityDaoAction.getInstance().loadAll())
-                .map(new Function<NoteEntityGdBean, Optional<NoteEntity>>() {
-                    @Override
-                    public Optional<NoteEntity> apply(NoteEntityGdBean noteEntityGdBean) throws Exception {
-                        NoteEntity noteEntity = JSON.parseObject(noteEntityGdBean.getValue(),NoteEntity.class);
-                        return Optional.fromNullable(noteEntity);
-                    }
-                })
-                .subscribeOn(Schedulers.io());*/
-        return Flowable.empty();
-    }
 
-    public Flowable<Optional<NoteEntity>> getNoteEntity(@NonNull Flowable<Optional<String>> idFlowable) {
-        /*return idFlowable.map(new Function<Optional<String>, Optional<NoteEntity>>() {
+    public Flowable<Boolean> saveNoteEntity(Flowable<NoteEntity> eventFlowable) {
+        return eventFlowable.map(new Function<NoteEntity, Boolean>() {
             @Override
-            public Optional<NoteEntity> apply(Optional<String> idOptional) throws Exception {
-                if(!idOptional.isPresent() || TextUtils.isEmpty(idOptional.get()))
-                    return Optional.absent();
-                Optional<NoteEntityGdBean> noteEntityGdBean = NoteEntityDaoAction.getInstance().queryByKey(idOptional.get());
-                if(!noteEntityGdBean.isPresent())
-                    return Optional.absent();
-                NoteEntity noteEntity = JSON.parseObject(noteEntityGdBean.get().getValue(),NoteEntity.class);
-                Logcat.i(TAG,"getNoteEntity : "+ noteEntity.toString());
-                return Optional.fromNullable(noteEntity);
-            }
-        });*/
-        return Flowable.empty();
-    }
-    public Flowable<Boolean> deleteNoteEntity(@NonNull Flowable<Optional<NoteEntity>> noteFlowable){
-        /*return noteFlowable.map(new Function<Optional<NoteEntity>, Boolean>() {
-            @Override
-            public Boolean apply(Optional<NoteEntity> noteEntityOptional) throws Exception {
-                if(noteEntityOptional.isPresent()){
-                    NoteEntityGdBean noteEntityGdBean = mapNoteToGdBean(noteEntityOptional.get());
-                    Logcat.i(TAG,"deleteNoteEntity ： noteEntityGdBean = " + noteEntityGdBean.toString());
-                    NoteEntityDaoAction.getInstance().delete(noteEntityGdBean);
-                    return true;
-                }
-                return false;
-            }
-        });*/
-        return Flowable.empty();
-    }
-
-    public Flowable<Boolean> saveNoteEntity(Flowable<NoteEntity> noteEntityFlowable) {
-        /*return noteEntityFlowable.map(new Function<NoteEntity, Boolean>() {
-            @Override
-            public Boolean apply(NoteEntity noteEntity) throws Exception {
-                NoteEntityGdBean noteEntityGdBean = mapNoteToGdBean(noteEntity);
-                Logcat.i(TAG,"saveEntity : " + noteEntityGdBean.toString());
-                long index = NoteEntityDaoAction.getInstance().insert(noteEntityGdBean);
+            public Boolean apply(NoteEntity entityOptional) throws Exception {
+                NoteEntityGdBean bean = mapNoteToGdBean(entityOptional);
+                long index = NoteEntityDaoAction.getInstance().insert(bean);
                 return index >= 0;
             }
-        });*/
-        return Flowable.empty();
+        });
     }
 
     /*******************************************Task**************************************************/
@@ -216,11 +179,8 @@ public class DbActionFacade {
             @Override
             public Boolean apply(GtdActionEntity eventEntity) throws Exception {
                 ActionEntityGdBean bean = mapActionToGdBean(eventEntity);
-                long index     = ActionEntityDaoAction.getInstance().insert(bean);
-                boolean result = index >= 0;
-                if(result)
-                    DbNextIdFactory.getInstance().put(GtdType.ACTION, bean.getId() + 1);
-                return result;
+                long index = ActionEntityDaoAction.getInstance().insert(bean);
+                return index >= 0;
             }
         });
     }
@@ -239,16 +199,7 @@ public class DbActionFacade {
         return rPathRx.map(new Function<String, Optional<ShortHandEntity>>() {
             @Override
             public Optional<ShortHandEntity> apply(String rPath) throws Exception {
-                Optional<ShortHandEntityGdBean> beanOptional = null;
-                try{
-                    beanOptional = ShortHandEntityDaoAction.getInstance().queryByKey(rPath);
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-                if(beanOptional == null || !beanOptional.isPresent())
-                    return Optional.absent();
-                ShortHandEntity e = (ShortHandEntity)new ShortHandBuilder().setGbBean(beanOptional.get()).build();
-                return Optional.of(e);
+                return getShortHandEntityByRPath(rPath);
             }
         }).subscribeOn(Schedulers.io());
     }
@@ -290,10 +241,6 @@ public class DbActionFacade {
     /***********************************************************************************************/
     private ActionEntityGdBean mapActionToGdBean(@NonNull GtdActionEntity entity){
         ActionEntityGdBean bean = new ActionEntityGdBean();
-        if(entity.getId() == INVALID_NEXT_ID_INDEX)
-            bean.setId(DbNextIdFactory.getInstance().getValue(GtdType.ACTION));
-        else
-            bean.setId(entity.getId());
         bean.setUuid(entity.getUuid());
         bean.setTitle(entity.getTitle());
         bean.setActionState(entity.getActionState());
@@ -309,10 +256,6 @@ public class DbActionFacade {
     }
     private ShortHandEntityGdBean mapShorthandToGdBean(@NonNull ShortHandEntity entity){
         ShortHandEntityGdBean bean = new ShortHandEntityGdBean();
-        if(entity.getId() == INVALID_NEXT_ID_INDEX)
-            bean.setId(DbNextIdFactory.getInstance().getValue(GtdType.SHORTHAND));
-        else
-            bean.setId(entity.getId());
         bean.setUuid(entity.getUuid());
         bean.setTitle(entity.getTitle());
         if(entity.getDetail().isPresent())
@@ -323,14 +266,20 @@ public class DbActionFacade {
             bean.setAttachFileRPath(entity.getAttachFileRPath().get());
         return bean;
     }
-    /*private NoteEntityGdBean mapNoteToGdBean(@NonNull NoteEntity entity){
-        NoteEntityGdBean noteEntityGdBean = new NoteEntityGdBean();
-        noteEntityGdBean.setKey(entity.getId());
-        noteEntityGdBean.setValue(JSON.toJSONString(entity));
-        return noteEntityGdBean;
+    private NoteEntityGdBean mapNoteToGdBean(@NonNull NoteEntity entity){
+        NoteEntityGdBean bean = new NoteEntityGdBean();
+        bean.setUuid(entity.getUuid());
+        bean.setTitle(entity.getTitle());
+        if(entity.getDetail().isPresent())
+            bean.setDetail(entity.getDetail().get());
+        bean.setCreateTime(entity.getCreateTime());
+        bean.setLastAccessTime(entity.getLastAccessTime());
+        if(entity.getAttachFileRPath().isPresent())
+            bean.setAttachFileRPath(entity.getAttachFileRPath().get());
+        return bean;
     }
 
-    private TaskEntityGdBean mapTaskToGdBean(@NonNull GtdTaskEntity entity){
+    /*private TaskEntityGdBean mapTaskToGdBean(@NonNull GtdTaskEntity entity){
         TaskEntityGdBean gtdEventEntityGdBean = new TaskEntityGdBean();
         gtdEventEntityGdBean.setTitle(entity.getTitle());
         gtdEventEntityGdBean.setActive(entity.isActive());
