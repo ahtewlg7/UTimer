@@ -1,8 +1,6 @@
 package ahtewlg7.utimer.comparator;
 
 
-import org.joda.time.DateTime;
-
 import java.util.Comparator;
 
 import ahtewlg7.utimer.enumtype.ComparatorType;
@@ -20,20 +18,20 @@ public class GtdTimeComparator<T extends ITimeComparator> implements Comparator<
     public GtdTimeComparator() {
         dateTimeAction = new DateTimeAction();
     }
-
+    //who close who first
     @Override
     public int compare(T o1, T o2) {
         int result = ComparatorType.GREATER.value();
-        if(!o1.getComparatorTime().isPresent() && o2.getComparatorTime().isPresent())
+        if(!o2.getComparatorTime().isPresent() && o1.getComparatorTime().isPresent())
             result = ComparatorType.LESS.value();
-        else if(o1.getComparatorTime().isPresent() && !o2.getComparatorTime().isPresent())
+        else if(o2.getComparatorTime().isPresent() && !o1.getComparatorTime().isPresent())
             result = ComparatorType.GREATER.value();
-        else if(!o1.getComparatorTime().isPresent() && !o2.getComparatorTime().isPresent())
+        else if(!o2.getComparatorTime().isPresent() && !o1.getComparatorTime().isPresent())
             result = ComparatorType.EQUAL.value();
         else{
-            if(((DateTime)o1.getComparatorTime().get()).isBefore((DateTime)o2.getComparatorTime().get()))
+            if((o2.getComparatorTime().get()).isBefore(o1.getComparatorTime().get()))
                 result = ComparatorType.GREATER.value();
-            else if(((DateTime)o1.getComparatorTime().get()).isEqual((DateTime)o2.getComparatorTime().get()))
+            else if((o2.getComparatorTime().get()).isEqual(o1.getComparatorTime().get()))
                 result = ComparatorType.EQUAL.value();
             else
                 result = ComparatorType.LESS.value();
