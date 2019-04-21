@@ -61,9 +61,8 @@ public abstract class AAttachFile {
         return Optional.absent();
     }
 
-    public void deleteOnExit(){
-        if(ifValid())
-            file.deleteOnExit();
+    public boolean delete(){
+        return ifValid() && file.delete();
     }
 
     public Optional<String> getMimeType(){

@@ -50,9 +50,13 @@ public abstract class AUtimerEntity<T extends AUtimerBuilder> implements ITipsEn
         return !TextUtils.isEmpty(title);
     }
 
+    public boolean ifAttachFileValid(){
+        return attachFile != null && attachFile.ifValid();
+    }
+
     public void destory(){
         if(attachFile != null && attachFile.ifValid())
-            attachFile.deleteOnExit();
+            attachFile.delete();
     }
 
     public String getUuid() {

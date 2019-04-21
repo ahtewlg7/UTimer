@@ -7,6 +7,7 @@ package ahtewlg7.utimer.enumtype.errcode;
 public enum NoteEditErrCode {
     ERR_EDIT_ENTITY_NOT_READY,
     ERR_EDIT_ATTACH_VIEW_NOT_READY,
+    ERR_EDIT_ATTACH_FILE_NOT_READY,
     ERR_EDIT_ALL_READY_GO,
 
 

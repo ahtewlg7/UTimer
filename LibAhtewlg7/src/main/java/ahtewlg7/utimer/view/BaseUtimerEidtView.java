@@ -52,6 +52,7 @@ import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
 
 import static ahtewlg7.utimer.enumtype.errcode.NoteEditErrCode.ERR_EDIT_ALL_READY_GO;
+import static ahtewlg7.utimer.enumtype.errcode.NoteEditErrCode.ERR_EDIT_ATTACH_FILE_NOT_READY;
 import static ahtewlg7.utimer.enumtype.errcode.NoteEditErrCode.ERR_EDIT_ATTACH_VIEW_NOT_READY;
 import static ahtewlg7.utimer.enumtype.errcode.NoteEditErrCode.ERR_EDIT_ENTITY_NOT_READY;
 
@@ -155,8 +156,12 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
     public boolean ifTxtChanged(){
         return isTxtChanged;
     }
+
     public boolean ifEntityReady(){
-        return utimerEntity != null && utimerEntity.ifValid() && utimerEntity.ensureAttachFileExist();
+        return utimerEntity != null && utimerEntity.ifValid();
+    }
+    public boolean ifAttachFileReady(){
+        return ifEntityReady() && utimerEntity.ensureAttachFileExist();
     }
 
     public boolean ifAttachViewReady(){
@@ -176,6 +181,11 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
         if(!ifEntityReady()){
             Logcat.i(TAG,"toLoad : uTimerEnity is not valid , so cancel");
             attachEditView.onLoadErr(new UtimerEditException(ERR_EDIT_ENTITY_NOT_READY));
+            return;
+        }
+        if(!ifAttachFileReady()){
+            Logcat.i(TAG,"toLoad : uTimerEnity attach file is not valid , so cancel");
+            attachEditView.onLoadErr(new UtimerEditException(ERR_EDIT_ATTACH_FILE_NOT_READY));
             return;
         }
         if(loadSubscription != null){
@@ -238,6 +248,8 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
     }
 
     public void toEndEdit(){
+        if(!ifTxtChanged() && editElementList.size() == 1)
+            utimerEntity.destory();
         Optional<MdEditText> lastAccessEditText       = getEditTextItem(preEditPosition);
         if(lastAccessEditText.isPresent()){
             String lassAccessTxt    = lastAccessEditText.get().getText().toString();

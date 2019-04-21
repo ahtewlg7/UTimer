@@ -7,12 +7,19 @@ import ahtewlg7.utimer.enumtype.errcode.NoteEditErrCode;
  */
 
 public class UtimerEditException extends RuntimeException {
+    private NoteEditErrCode errCode;
+
     public UtimerEditException(NoteEditErrCode errCode){
         this(getMessage(errCode));
+        this.errCode = errCode;
     }
 
     public UtimerEditException(String message){
         super(message);
+    }
+
+    public NoteEditErrCode getErrCode(){
+        return errCode;
     }
 
     private static String getMessage(NoteEditErrCode code){

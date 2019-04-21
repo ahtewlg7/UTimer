@@ -66,6 +66,10 @@ public class MdEditView extends FrameLayout {
         this.utimerEntity = utimerEntity;
     }
 
+    public boolean ifTxtChanged(){
+        return editRecyclerView.ifTxtChanged();
+    }
+
     public boolean ifEditing(){
         return editRecyclerView.ifEditing();
     }
