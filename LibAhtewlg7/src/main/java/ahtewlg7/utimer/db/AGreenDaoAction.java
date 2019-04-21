@@ -23,10 +23,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Created by lw on 2016/9/6.
+ * the key is "UUID"
  */
 public abstract class AGreenDaoAction<T,K>{
-    public static final String TAG = AGreenDaoAction.class.getSimpleName();
-
     public abstract Optional<T> queryByKey(K key);
     protected abstract @NonNull AbstractDao<T,Long> getCustomDao();
 
@@ -76,6 +75,11 @@ public abstract class AGreenDaoAction<T,K>{
                 delete(t);
             }
         });
+    }
+    public void deleteByKey(K key){
+        Optional<T> entity = queryByKey(key);
+        if(entity.isPresent())
+            delete(entity.get());
     }
 
     public void update(@NonNull T entity) {
@@ -133,7 +137,6 @@ public abstract class AGreenDaoAction<T,K>{
             }
         });
     }
-
     public interface IGreenDaoQueryFiltVisitor<K> {
         public QueryBuilder<K> toFilt(QueryBuilder<K> queryBuilder);
     }

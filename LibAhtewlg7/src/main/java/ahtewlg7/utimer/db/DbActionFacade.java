@@ -161,10 +161,9 @@ public class DbActionFacade {
         return eventFlowable.map(new Function<GtdActionEntity, Boolean>() {
             @Override
             public Boolean apply(GtdActionEntity eventEntity) throws Exception {
-                ActionEntityGdBean bean = mapActionToGdBean(eventEntity);
                 boolean result = false;
                 try{
-                    ActionEntityDaoAction.getInstance().delete(bean);
+                    ActionEntityDaoAction.getInstance().deleteByKey(eventEntity.getUuid());
                     result = true;
                 }catch (Exception e){
                     e.printStackTrace();
@@ -206,7 +205,7 @@ public class DbActionFacade {
     public Optional<ShortHandEntity> getShortHandEntityByRPath(@NonNull final String rPath) {
         Optional<ShortHandEntityGdBean> beanOptional = null;
         try{
-            beanOptional = ShortHandEntityDaoAction.getInstance().queryByKey(rPath);
+            beanOptional = ShortHandEntityDaoAction.getInstance().queryByRPath(rPath);
         }catch (Exception e){
             e.printStackTrace();
         }
