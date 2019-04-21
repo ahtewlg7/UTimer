@@ -163,6 +163,10 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
     public boolean ifAttachFileReady(){
         return ifEntityReady() && utimerEntity.ensureAttachFileExist();
     }
+    public boolean ifEmpty(){
+        return editElementList == null || editElementList.isEmpty()
+                ||(editElementList.size() == 1 && TextUtils.isEmpty(editElementList.get(0).getMdCharSequence().toString()));
+    }
 
     public boolean ifAttachViewReady(){
         return attachEditView != null;
@@ -248,8 +252,9 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
     }
 
     public void toEndEdit(){
-        if(!ifTxtChanged() && editElementList.size() == 1)
-            utimerEntity.destory();
+        //todo: if empty doc ,to del it
+        /*if(!ifTxtChanged() && ifEmpty())
+            utimerEntity.destory();*/
         Optional<MdEditText> lastAccessEditText       = getEditTextItem(preEditPosition);
         if(lastAccessEditText.isPresent()){
             String lassAccessTxt    = lastAccessEditText.get().getText().toString();
@@ -313,8 +318,8 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
 
     protected void init(){
         setDescendantFocusability(FOCUS_BEFORE_DESCENDANTS);
-        editElementList  = Lists.newArrayList();
         myBypass         = new MyBypass();
+        editElementList  = Lists.newArrayList();
         editElementTable = HashBasedTable.create();
     }
     protected void initEditView(){

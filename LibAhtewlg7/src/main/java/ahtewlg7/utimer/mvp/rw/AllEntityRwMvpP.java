@@ -9,20 +9,19 @@ import ahtewlg7.utimer.enumtype.GtdType;
 /**
  * Created by lw on 2019/4/13.
  */
-public class EntityRwMvpP {
-    private TableNextIdRwMvpP nextIdMvpP;
+public class AllEntityRwMvpP {
     private TableActionRwMvpP actionMvpP;
+    private NoteRwMvpP noteRwMvpP;
     private ShortHandRwMvpP shortHandMvpP;
 
-    public EntityRwMvpP(AUtimerRwMvpP.IDbMvpV actionMvpV, AUtimerRwMvpP.IDbMvpV shortHandMvpV,
-                        AUtimerRwMvpP.IDbMvpV nextIdMvpV){
-        nextIdMvpP      = new TableNextIdRwMvpP(nextIdMvpV);
+    public AllEntityRwMvpP(AUtimerRwMvpP.IDbMvpV actionMvpV, AUtimerRwMvpP.IDbMvpV shortHandMvpV,
+                           AUtimerRwMvpP.IDbMvpV noteMvpV){
         actionMvpP      = new TableActionRwMvpP(actionMvpV);
         shortHandMvpP   = new ShortHandRwMvpP(shortHandMvpV);
+        noteRwMvpP      = new NoteRwMvpP(noteMvpV);
     }
 
     public void toLoadAll(){
-        nextIdMvpP.toLoadAll();
         actionMvpP.toLoadAll();
         shortHandMvpP.toLoadAll();
     }
@@ -38,14 +37,18 @@ public class EntityRwMvpP {
             toHandleBusEvent((UTimerBusEvent)eventBusBean);
     }
     private void toHandleBusEvent(ActivityBusEvent busEvent){
-        if(busEvent.ifOnBackground())
-            nextIdMvpP.toSaveAll();
+//        if(busEvent.ifOnBackground())
+//            nextIdMvpP.toSaveAll();
     }
     private void toHandleBusEvent(ActionBusEvent busEvent){
         actionMvpP.toHandleBusEvent(busEvent);
     }
     private void toHandleBusEvent(UTimerBusEvent busEvent){
+        if(busEvent.getEntity() == null)//todo
+            return;
         if(busEvent.getEntity().getGtdType() == GtdType.SHORTHAND)
             shortHandMvpP.toHandleBusEvent(busEvent);
+        else if(busEvent.getEntity().getGtdType() == GtdType.PROJECT)
+            noteRwMvpP.toHandleBusEvent(busEvent);
     }
 }

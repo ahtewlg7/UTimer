@@ -8,9 +8,12 @@ import org.reactivestreams.Subscription;
 
 import java.util.List;
 
+import ahtewlg7.utimer.entity.busevent.UTimerBusEvent;
 import ahtewlg7.utimer.entity.gtd.GtdProjectEntity;
 import ahtewlg7.utimer.entity.gtd.NoteEntity;
-import ahtewlg7.utimer.gtd.GtdProjectAction;
+import ahtewlg7.utimer.enumtype.GtdBusEventType;
+import ahtewlg7.utimer.factory.EventBusFatory;
+import ahtewlg7.utimer.factory.NoteByUuidFactory;
 import ahtewlg7.utimer.mvp.un.IAllItemListMvpV;
 import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MySafeSubscriber;
@@ -33,11 +36,15 @@ public class ProjectEditMvpP implements IUtimerEditMvpP{
     public ProjectEditMvpP(IProjectEditMvpV mvpV, GtdProjectEntity entity) {
         this.mvpV       = mvpV;
         this.entity     = entity;
-        mvpM            = new ProjectEditMvpM(entity);
+        mvpM            = new ProjectEditMvpM();
         noteEntityList  = Lists.newArrayList();
     }
 
     public void toLoadNote(){
+        UTimerBusEvent busEvent = new UTimerBusEvent(GtdBusEventType.LOAD, entity);
+        EventBusFatory.getInstance().getDefaultEventBus().post(busEvent);
+    }
+    public void onNoteLoaded(){
         mvpM.loadAllNote()
             .compose(((RxFragment)mvpV.getRxLifeCycleBindView()).<NoteEntity>bindUntilEvent(FragmentEvent.DESTROY))
             .observeOn(AndroidSchedulers.mainThread())
@@ -89,14 +96,8 @@ public class ProjectEditMvpP implements IUtimerEditMvpP{
     }
 
     class ProjectEditMvpM{
-        private GtdProjectAction projectAction;
-
-        ProjectEditMvpM(GtdProjectEntity entity){
-            projectAction = new GtdProjectAction(entity);
-        }
-
         public Flowable<NoteEntity> loadAllNote() {
-            return projectAction.loadAllNote();
+            return  NoteByUuidFactory.getInstance().getAllLifeEntity();
         }
     }
 

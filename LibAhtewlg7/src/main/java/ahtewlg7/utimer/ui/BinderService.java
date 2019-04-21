@@ -13,7 +13,7 @@ import ahtewlg7.utimer.entity.busevent.ActionBusEvent;
 import ahtewlg7.utimer.entity.busevent.ActivityBusEvent;
 import ahtewlg7.utimer.entity.busevent.UTimerBusEvent;
 import ahtewlg7.utimer.factory.EventBusFatory;
-import ahtewlg7.utimer.mvp.rw.EntityRwMvpP;
+import ahtewlg7.utimer.mvp.rw.AllEntityRwMvpP;
 import ahtewlg7.utimer.util.MySimpleObserver;
 import io.reactivex.subjects.PublishSubject;
 
@@ -23,15 +23,15 @@ import io.reactivex.subjects.PublishSubject;
  */
 
 public class BinderService extends Service{
-    private EntityRwMvpP entityRwMvpP;
+    private AllEntityRwMvpP entityRwMvpP;
     private PublishSubject<BaseEventBusBean> eventBusRx;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        eventBusRx          = PublishSubject.create();
-        entityRwMvpP = new EntityRwMvpP(null, null,null);
+        eventBusRx      = PublishSubject.create();
+        entityRwMvpP    = new AllEntityRwMvpP(null, null,null);
 
         EventBusFatory.getInstance().getDefaultEventBus().register(this);
         toListenEventBus();

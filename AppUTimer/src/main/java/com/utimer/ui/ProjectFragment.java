@@ -2,6 +2,7 @@ package com.utimer.ui;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -14,11 +15,18 @@ import com.utimer.R;
 import com.utimer.entity.ProjectInfoSectionViewEntity;
 import com.utimer.view.ProjectInfoSectionRecyclerView;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.List;
 
+import ahtewlg7.utimer.entity.busevent.UTimerBusEvent;
 import ahtewlg7.utimer.entity.gtd.GtdProjectEntity;
 import ahtewlg7.utimer.entity.gtd.NoteBuilder;
 import ahtewlg7.utimer.entity.gtd.NoteEntity;
+import ahtewlg7.utimer.enumtype.GtdBusEventType;
+import ahtewlg7.utimer.enumtype.GtdType;
+import ahtewlg7.utimer.factory.EventBusFatory;
 import ahtewlg7.utimer.mvp.ProjectEditMvpP;
 import ahtewlg7.utimer.util.DateTimeAction;
 import ahtewlg7.utimer.util.Logcat;
@@ -68,6 +76,12 @@ public class ProjectFragment extends AEditFragment
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBusFatory.getInstance().getDefaultEventBus().register(this);
+    }
+
+    @Override
     public void onStop() {
         super.onStop();
         if(ifEnvReady){
@@ -75,6 +89,7 @@ public class ProjectFragment extends AEditFragment
             resultCode = RESULT_OK;
             setFragmentResult(resultCode, getArguments());
         }
+        EventBusFatory.getInstance().getDefaultEventBus().unregister(this);
     }
 
     @Override
@@ -90,6 +105,14 @@ public class ProjectFragment extends AEditFragment
     @Override
     protected String getTitle() {
         return MyRInfo.getStringByID(R.string.title_project);
+    }
+    //+++++++++++++++++++++++++++++++++++++++++++EventBus+++++++++++++++++++++++++++++++++++++++++++++++++++
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onUTimerBusEvent(UTimerBusEvent utimerBusEvent) {
+        if(utimerBusEvent.getEventType() == GtdBusEventType.ON_LOAD
+                && utimerBusEvent.getEntity() != null
+                && utimerBusEvent.getEntity().getGtdType() == GtdType.PROJECT)
+            projectEditMvpP.onNoteLoaded();
     }
 
     /*++++++++++++++++++++++++++++++++++++++++++AEditFragment++++++++++++++++++++++++++++++++++++++++*/

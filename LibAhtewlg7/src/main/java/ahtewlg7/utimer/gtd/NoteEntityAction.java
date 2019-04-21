@@ -1,7 +1,6 @@
 package ahtewlg7.utimer.gtd;
 
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 
 import com.blankj.utilcode.util.FileUtils;
 import com.google.common.base.Optional;
@@ -17,7 +16,6 @@ import ahtewlg7.utimer.util.DateTimeAction;
 import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MyRInfo;
 import io.reactivex.Flowable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 
 /**
@@ -53,15 +51,18 @@ public class NoteEntityAction{
 
     //=====================================IBaseRecyclerViewMvpM========================================
     public Flowable<Optional<NoteEntity>> loadAllEntity() {
-        return dbAction.loadAllNoteEntity();
+//        return dbAction.loadAllNoteEntity();
+        return null;
     }
 
     public Flowable<Optional<NoteEntity>> loadEntity(@NonNull Flowable<Optional<String>> idObservable) {
-        return dbAction.getNoteEntity(idObservable);
+//        return dbAction.getNoteEntity(idObservable);
+        return null;
     }
 
     public Flowable<Boolean> deleteEntity(@NonNull Flowable<Optional<NoteEntity>> flowable) {
-        return dbAction.deleteNoteEntity(flowable);
+//        return dbAction.deleteNoteEntity(flowable);
+        return null;
     }
 
     //=====================================INoteEditMvpM========================================
@@ -90,7 +91,7 @@ public class NoteEntityAction{
     }
 
     public Flowable<Boolean> toSaveNote(NoteEntity noteEntity) {
-        return dbAction.saveNoteEntity(Flowable.just(noteEntity).doOnNext(new Consumer<NoteEntity>() {
+        /*return dbAction.saveNoteEntity(Flowable.just(noteEntity).doOnNext(new Consumer<NoteEntity>() {
             @Override
             public void accept(NoteEntity noteEntity) throws Exception {
                 DateTime now    = DateTime.now();
@@ -105,6 +106,7 @@ public class NoteEntityAction{
                 noteEntity.setFileAbsPath(getMdFileAbsPath(noteEntity));
                 Logcat.i(TAG,"toSaveNote, doOnNext: " + noteEntity.toString());
             }
-        }));
+        }));*/
+        return null;
     }
 }
