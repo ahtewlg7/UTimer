@@ -16,10 +16,9 @@ import ahtewlg7.utimer.db.entity.ActionEntityGdBean;
 
 /**
  * Created by lw on 2016/9/6.
+ * the detail is "detail"
  */
 public class ActionEntityDaoAction extends AGreenDaoAction<ActionEntityGdBean, String> {
-    public static final String TAG = ActionEntityDaoAction.class.getSimpleName();
-
     private static ActionEntityDaoAction gtdEventEntityDaoAction;
 
     private ActionEntityDaoAction(){
@@ -38,18 +37,22 @@ public class ActionEntityDaoAction extends AGreenDaoAction<ActionEntityGdBean, S
     }
 
     @Override
-    @Deprecated
-    public Optional<ActionEntityGdBean> queryByKey(String title){
-        if(TextUtils.isEmpty(title))
+    public Optional<ActionEntityGdBean> queryByKey(String uuid){
+        if(TextUtils.isEmpty(uuid))
             return Optional.absent();
-        List<ActionEntityGdBean> actEntityGdBeanList = query(new KeyQueryFilter(title));
+        List<ActionEntityGdBean> actEntityGdBeanList = query(new KeyQueryFilter(uuid));
         if(actEntityGdBeanList == null || actEntityGdBeanList.isEmpty())
             return Optional.absent();
         return Optional.of(actEntityGdBeanList.get(0));
     }
 
-    public Optional<ActionEntityGdBean> queryByTitle(String title){
-        return queryByKey(title);
+    public Optional<ActionEntityGdBean> queryByDetail(String detail){
+        if(TextUtils.isEmpty(detail))
+            return Optional.absent();
+        List<ActionEntityGdBean> actEntityGdBeanList = query(new DetailQueryFilter(detail));
+        if(actEntityGdBeanList == null || actEntityGdBeanList.isEmpty())
+            return Optional.absent();
+        return Optional.of(actEntityGdBeanList.get(0));
     }
 
     class KeyQueryFilter implements IGreenDaoQueryFiltVisitor<ActionEntityGdBean>{
@@ -61,7 +64,19 @@ public class ActionEntityDaoAction extends AGreenDaoAction<ActionEntityGdBean, S
 
         @Override
         public QueryBuilder<ActionEntityGdBean> toFilt(QueryBuilder<ActionEntityGdBean> queryBuilder) {
-            return queryBuilder.where(ActionEntityGdBeanDao.Properties.Title.eq(key));
+            return queryBuilder.where(ActionEntityGdBeanDao.Properties.Uuid.eq(key));
+        }
+    }
+    class DetailQueryFilter implements IGreenDaoQueryFiltVisitor<ActionEntityGdBean>{
+        private String detail;
+
+        DetailQueryFilter(String detail){
+            this.detail = detail;
+        }
+
+        @Override
+        public QueryBuilder<ActionEntityGdBean> toFilt(QueryBuilder<ActionEntityGdBean> queryBuilder) {
+            return queryBuilder.where(ActionEntityGdBeanDao.Properties.Detail.eq(detail));
         }
     }
 
