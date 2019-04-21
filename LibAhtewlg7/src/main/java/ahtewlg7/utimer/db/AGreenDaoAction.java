@@ -76,10 +76,18 @@ public abstract class AGreenDaoAction<T,K>{
             }
         });
     }
-    public void deleteByKey(K key){
-        Optional<T> entity = queryByKey(key);
-        if(entity.isPresent())
-            delete(entity.get());
+    public boolean deleteByKey(K key){
+        boolean result = false;
+        try{
+            Optional<T> entity = queryByKey(key);
+            if(entity.isPresent()) {
+                delete(entity.get());
+                result = true;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return result;
     }
 
     public void update(@NonNull T entity) {

@@ -11,7 +11,10 @@ import org.reactivestreams.Subscription;
 
 import java.util.List;
 
+import ahtewlg7.utimer.entity.busevent.UTimerBusEvent;
 import ahtewlg7.utimer.entity.gtd.ShortHandEntity;
+import ahtewlg7.utimer.enumtype.GtdBusEventType;
+import ahtewlg7.utimer.factory.EventBusFatory;
 import ahtewlg7.utimer.factory.ShortHandByUuidFactory;
 import ahtewlg7.utimer.mvp.un.IAllItemListMvpM;
 import ahtewlg7.utimer.mvp.un.IAllItemListMvpP;
@@ -84,6 +87,10 @@ public class ShortHandListMvpP implements IAllItemListMvpP<ShortHandEntity> {
                     @Override
                     public void accept(ShortHandEntity entity) throws Exception {
                         boolean result = shorthandListMvpM.toDelEntity(entity);
+                        if(result){
+                            UTimerBusEvent delBusEvent = new UTimerBusEvent(GtdBusEventType.DELETE,entity);
+                            EventBusFatory.getInstance().getDefaultEventBus().postSticky(delBusEvent);
+                        }
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
@@ -142,11 +149,6 @@ public class ShortHandListMvpP implements IAllItemListMvpP<ShortHandEntity> {
 
         @Override
         public boolean toDelEntity(ShortHandEntity entity) {
-            /*if(entity != null){
-                DelBusEvent delBusEvent = new DelBusEvent(entity.getId(),entity.getAttachFile().getAbsPath().get());
-                EventBusFatory.getInstance().getDefaultEventBus().postSticky(delBusEvent);
-            }*/
-
             boolean result = false;
             try{
                 if(entity != null && entity.getAttachFile().ifValid())

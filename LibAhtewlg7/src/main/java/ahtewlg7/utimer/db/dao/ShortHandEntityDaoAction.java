@@ -19,8 +19,6 @@ import ahtewlg7.utimer.db.entity.ShortHandEntityGdBean;
  * Created by lw on 2016/9/6.
  */
 public class ShortHandEntityDaoAction extends AGreenDaoAction<ShortHandEntityGdBean, String> {
-    public static final String TAG = ShortHandEntityDaoAction.class.getSimpleName();
-
     private static ShortHandEntityDaoAction gtdEventEntityDaoAction;
 
     private ShortHandEntityDaoAction(){
@@ -39,7 +37,15 @@ public class ShortHandEntityDaoAction extends AGreenDaoAction<ShortHandEntityGdB
     }
 
     @Override
-    public Optional<ShortHandEntityGdBean> queryByKey(String rPath){
+    public Optional<ShortHandEntityGdBean> queryByKey(String uuid){
+        if(TextUtils.isEmpty(uuid))
+            return Optional.absent();
+        List<ShortHandEntityGdBean> inboxEntityGdBeanList = query(new UuidQueryFilter(uuid));
+        if(inboxEntityGdBeanList == null || inboxEntityGdBeanList.isEmpty())
+            return Optional.absent();
+        return Optional.of(inboxEntityGdBeanList.get(0));
+    }
+    public Optional<ShortHandEntityGdBean> queryByRPath(String rPath){
         if(TextUtils.isEmpty(rPath))
             return Optional.absent();
         List<ShortHandEntityGdBean> inboxEntityGdBeanList = query(new RPathQueryFilter(rPath));
@@ -47,7 +53,6 @@ public class ShortHandEntityDaoAction extends AGreenDaoAction<ShortHandEntityGdB
             return Optional.absent();
         return Optional.of(inboxEntityGdBeanList.get(0));
     }
-
     public List<ShortHandEntityGdBean> queryByCreateTime(DateTime dateTime){
         if(dateTime == null)
             return null;
@@ -69,6 +74,18 @@ public class ShortHandEntityDaoAction extends AGreenDaoAction<ShortHandEntityGdB
         @Override
         public QueryBuilder<ShortHandEntityGdBean> toFilt(QueryBuilder<ShortHandEntityGdBean> queryBuilder) {
             return queryBuilder.where(ShortHandEntityGdBeanDao.Properties.AttachFileRPath.eq(rPath));
+        }
+    }
+    class UuidQueryFilter implements IGreenDaoQueryFiltVisitor<ShortHandEntityGdBean>{
+        private String rPath;
+
+        UuidQueryFilter(String rPath){
+            this.rPath = rPath;
+        }
+
+        @Override
+        public QueryBuilder<ShortHandEntityGdBean> toFilt(QueryBuilder<ShortHandEntityGdBean> queryBuilder) {
+            return queryBuilder.where(ShortHandEntityGdBeanDao.Properties.Uuid.eq(rPath));
         }
     }
     class CreateTimeQueryFileter implements  IGreenDaoQueryFiltVisitor<ShortHandEntityGdBean>{

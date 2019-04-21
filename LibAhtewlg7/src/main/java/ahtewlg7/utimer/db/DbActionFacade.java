@@ -161,14 +161,7 @@ public class DbActionFacade {
         return eventFlowable.map(new Function<GtdActionEntity, Boolean>() {
             @Override
             public Boolean apply(GtdActionEntity eventEntity) throws Exception {
-                boolean result = false;
-                try{
-                    ActionEntityDaoAction.getInstance().deleteByKey(eventEntity.getUuid());
-                    result = true;
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-                return result;
+                return ActionEntityDaoAction.getInstance().deleteByKey(eventEntity.getUuid());
             }
         });
     }
@@ -218,10 +211,8 @@ public class DbActionFacade {
     public Flowable<Boolean> deleteShortHandEntity(@NonNull Flowable<ShortHandEntity> eventFlowable){
         return eventFlowable.map(new Function<ShortHandEntity, Boolean>() {
                     @Override
-                    public Boolean apply(ShortHandEntity entityOptional) throws Exception {
-                        ShortHandEntityGdBean bean = mapShorthandToGdBean(entityOptional);
-                        ShortHandEntityDaoAction.getInstance().delete(bean);
-                        return true;
+                    public Boolean apply(ShortHandEntity entity) throws Exception {
+                        return ShortHandEntityDaoAction.getInstance().deleteByKey(entity.getUuid());
                     }
                 });
     }
