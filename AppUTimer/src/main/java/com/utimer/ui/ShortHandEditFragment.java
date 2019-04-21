@@ -18,6 +18,7 @@ import java.util.List;
 import ahtewlg7.utimer.entity.gtd.ShortHandBuilder;
 import ahtewlg7.utimer.entity.gtd.ShortHandEntity;
 import ahtewlg7.utimer.entity.md.EditElement;
+import ahtewlg7.utimer.exception.UtimerEditException;
 import ahtewlg7.utimer.mvp.AUtimerTxtEditMvpP;
 import ahtewlg7.utimer.mvp.ShorthandEditMvpP;
 import ahtewlg7.utimer.util.DateTimeAction;
@@ -27,6 +28,8 @@ import ahtewlg7.utimer.view.BaseUtimerEidtView;
 import ahtewlg7.utimer.view.md.MdEditView;
 import butterknife.BindView;
 import io.reactivex.Flowable;
+
+import static ahtewlg7.utimer.enumtype.errcode.NoteEditErrCode.ERR_EDIT_ATTACH_FILE_NOT_READY;
 
 public class ShortHandEditFragment extends ATxtEditFragment
         implements BaseUtimerEidtView.IUtimerAttachEditView, AUtimerTxtEditMvpP.IUtimerEditMvpV {
@@ -118,6 +121,8 @@ public class ShortHandEditFragment extends ATxtEditFragment
 
     @Override
     public void onLoadErr(Throwable e) {
+        if(e instanceof UtimerEditException && ((UtimerEditException)e).getErrCode() == ERR_EDIT_ATTACH_FILE_NOT_READY)
+            return;
         ToastUtils.showShort("onLoadErr : " + e.getMessage());
     }
 
@@ -141,7 +146,7 @@ public class ShortHandEditFragment extends ATxtEditFragment
 
     @Override
     protected boolean ifTxtEditing() {
-        return mdEditView.ifEditing();
+        return mdEditView != null && mdEditView.ifEditing();
     }
 
     @Override
@@ -162,7 +167,7 @@ public class ShortHandEditFragment extends ATxtEditFragment
         int resultCode = RESULT_CANCELED;
         List<EditElement> elementList = mdEditView.getEditElementList();
         Table<Integer, Integer, EditElement> editElementTable = mdEditView.getEditElementTable();
-        if(elementList.size() > 0){//maybe the entity is not loaded
+        if(elementList.size() > 0 && mdEditView.ifTxtChanged()){//maybe the entity is not loaded
             resultCode = RESULT_OK;
             editMvpP.toPostAction(editElementTable);
             editMvpP.toFinishEdit(Flowable.fromIterable(elementList));
