@@ -64,8 +64,9 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
 
     public static final int INIT_POSITION = -1;
 
-    protected int preEditPosition  = INIT_POSITION;
-    protected boolean isTxtChanged = false;
+    protected int lastAccessPosition    = INIT_POSITION;
+    protected int preEditPosition       = INIT_POSITION;
+    protected boolean isTxtChanged      = false;
 
     protected AUtimerEntity utimerEntity;
     protected List<EditElement> editElementList;
@@ -141,7 +142,7 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
     }
 
     public EditElement getLastAccessEditElement(){
-        return preEditPosition != INIT_POSITION ? editElementList.get(preEditPosition) : editElementList.get(0);
+        return lastAccessPosition != INIT_POSITION ? editElementList.get(lastAccessPosition) : editElementList.get(0);
     }
 
     public List<EditElement> getEditElementList(){
@@ -449,7 +450,9 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
                             onEditMode(preEditPosition, EditMode.OFF, getEditElement(preEditPosition));
                             onEditMode(position, EditMode.ON, getEditElement(position));
                         }
-                        preEditPosition = position;
+                        if(position != INIT_POSITION)
+                            lastAccessPosition = position;
+                        preEditPosition     = position;
                     }
                 });
     }
