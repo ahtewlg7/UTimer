@@ -167,16 +167,21 @@ public class ShortHandEditFragment extends ATxtEditFragment
         int resultCode = RESULT_CANCELED;
         List<EditElement> elementList = mdEditView.getEditElementList();
         Table<Integer, Integer, EditElement> editElementTable = mdEditView.getEditElementTable();
-        if(elementList.size() > 0 && mdEditView.ifTxtChanged()){//maybe the entity is not loaded
+        if(elementList.size() > 0){//maybe the entity is not loaded
             resultCode = RESULT_OK;
-            editMvpP.toPostAction(editElementTable);
-            editMvpP.toFinishEdit(Flowable.fromIterable(elementList));
             if(!TextUtils.isEmpty(mdEditView.getLastAccessEditElement().getMdCharSequence()))
                 ((ShortHandEntity)getArguments().getSerializable(KEY_SHORTHAND)).setDetail(mdEditView.getLastAccessEditElement().getMdCharSequence().toString());
+            editMvpP.toPostAction(editElementTable);
+            editMvpP.toFinishEdit(Flowable.fromIterable(elementList));
         }
         setFragmentResult(resultCode, getArguments());
     }
+
     /**********************************************IUtimerEditMvpV**********************************************/
+    @Override
+    public boolean ifTxtChanged() {
+        return mdEditView.ifTxtChanged();
+    }
     @Override
     public void onSaveStart() {
         Logcat.i(TAG, "onSaveStart");

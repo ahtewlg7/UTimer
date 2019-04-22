@@ -86,19 +86,22 @@ public abstract class AUtimerTxtEditMvpP<T extends AUtimerEntity> implements IUt
                     @Override
                     public void onSubscribe(Subscription s) {
                         super.onSubscribe(s);
-                        editMvpV.onSaveStart();
+                        if(editMvpV != null)
+                            editMvpV.onSaveStart();
                     }
 
                     @Override
                     public void onError(Throwable t) {
                         super.onError(t);
-                        editMvpV.onSaveErr(t);
+                        if(editMvpV != null)
+                            editMvpV.onSaveErr(t);
                     }
 
                     @Override
                     public void onComplete() {
                         super.onComplete();
-                        editMvpV.onSaveEnd();
+                        if(editMvpV != null)
+                            editMvpV.onSaveEnd();
                         UTimerBusEvent busEvent = new UTimerBusEvent(GtdBusEventType.SAVE, t);
                         EventBusFatory.getInstance().getDefaultEventBus().postSticky(busEvent);
 //                        isChangeSaved = true;
@@ -188,6 +191,7 @@ public abstract class AUtimerTxtEditMvpP<T extends AUtimerEntity> implements IUt
     }
 
     public interface IUtimerEditMvpV{
+        public boolean ifTxtChanged();
         public void onSaveStart();
         public void onSaveErr(Throwable e);
         public void onSaveEnd();
