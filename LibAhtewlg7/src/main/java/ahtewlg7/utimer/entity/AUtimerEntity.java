@@ -128,6 +128,7 @@ public abstract class AUtimerEntity<T extends AUtimerBuilder> implements ITipsEn
     }
 
     public void updateAttachFileInfo(AAttachFile attachFile){
+        this.attachFile = attachFile;
         Optional<String> titleOptional = attachFile.getTitle();
         if(titleOptional.isPresent() && TextUtils.isEmpty(title))
             setTitle(titleOptional.get());

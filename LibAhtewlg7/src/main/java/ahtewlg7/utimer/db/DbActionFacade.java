@@ -48,7 +48,7 @@ public class DbActionFacade {
     public Optional<NoteEntity> getNoteEntityByRPath(@NonNull final String rPath) {
         Optional<NoteEntityGdBean> beanOptional = null;
         try{
-            beanOptional = NoteEntityDaoAction.getInstance().queryByKey(rPath);
+            beanOptional = NoteEntityDaoAction.getInstance().queryByRPath(rPath);
         }catch (Exception e){
             e.printStackTrace();
         }

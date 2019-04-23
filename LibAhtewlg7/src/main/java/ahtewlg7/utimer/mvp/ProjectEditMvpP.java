@@ -14,8 +14,6 @@ import ahtewlg7.utimer.entity.gtd.NoteEntity;
 import ahtewlg7.utimer.enumtype.GtdBusEventType;
 import ahtewlg7.utimer.factory.EventBusFatory;
 import ahtewlg7.utimer.factory.NoteByUuidFactory;
-import ahtewlg7.utimer.mvp.un.IAllItemListMvpV;
-import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MySafeSubscriber;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -25,8 +23,6 @@ import io.reactivex.disposables.Disposable;
  * Created by lw on 2018/10/18.
  */
 public class ProjectEditMvpP implements IUtimerEditMvpP{
-    public static final String TAG = ProjectEditMvpP.class.getSimpleName();
-
     protected IProjectEditMvpV mvpV;
     protected ProjectEditMvpM mvpM;
     protected GtdProjectEntity entity;
@@ -42,6 +38,10 @@ public class ProjectEditMvpP implements IUtimerEditMvpP{
 
     public void toLoadNote(){
         UTimerBusEvent busEvent = new UTimerBusEvent(GtdBusEventType.LOAD, entity);
+        EventBusFatory.getInstance().getDefaultEventBus().post(busEvent);
+    }
+    public void toDelNote(NoteEntity entity){
+        UTimerBusEvent busEvent = new UTimerBusEvent(GtdBusEventType.DELETE, entity);
         EventBusFatory.getInstance().getDefaultEventBus().post(busEvent);
     }
     public void onNoteLoaded(){
@@ -60,7 +60,6 @@ public class ProjectEditMvpP implements IUtimerEditMvpP{
                 @Override
                 public void onNext(NoteEntity entity) {
                     super.onNext(entity);
-                    Logcat.i(TAG,"toLoadAllItem onNext : " + entity.toString());
                     noteEntityList.add(entity);
                     if(mvpV != null)
                         mvpV.onItemLoad(entity);
@@ -101,6 +100,16 @@ public class ProjectEditMvpP implements IUtimerEditMvpP{
         }
     }
 
-    public interface IProjectEditMvpV extends IAllItemListMvpV<NoteEntity> {
+    public interface IProjectEditMvpV extends IRxLifeCycleBindView {
+        public void resetView(List<NoteEntity> dataList);
+        public void resetView(int index , NoteEntity t);
+
+        public void onItemLoadStart();
+        public void onItemLoad(NoteEntity data);
+        public void onItemLoadErr(Throwable t);
+        public void onItemLoadEnd(List<NoteEntity> alldata);
+
+        public void onItemCreate(NoteEntity data);
+        public void onItemEdit(NoteEntity data);
     }
 }

@@ -26,7 +26,6 @@ import ahtewlg7.utimer.util.DateTimeAction;
 public class NoteEntity extends AUtimerEntity<NoteBuilder>
         implements Serializable , ITimeComparator {
     private String rPath;
-    private StringBuilder detailBuilder;
 
     protected NoteEntity(@Nonnull NoteBuilder builder) {
         super(builder);
@@ -48,7 +47,7 @@ public class NoteEntity extends AUtimerEntity<NoteBuilder>
 
     @Override
     public Optional<String> getDetail() {
-        return detailBuilder == null ? Optional.<String>absent() : Optional.of(detailBuilder.toString());
+        return TextUtils.isEmpty(detail)? Optional.<String>absent() : Optional.of(detail);
     }
 
     @Override
@@ -70,16 +69,6 @@ public class NoteEntity extends AUtimerEntity<NoteBuilder>
     @Override
     public Optional<DateTime> getComparatorTime() {
         return Optional.fromNullable(lastAccessTime);
-    }
-
-    public void appendDetail(String append){
-        if(TextUtils.isEmpty(append)){
-            return;
-        }
-        if(detailBuilder == null)
-            detailBuilder = new StringBuilder(append);
-        else
-            detailBuilder.append(append);
     }
 
     private void initByProjectEntity(GtdProjectEntity projectEntity){

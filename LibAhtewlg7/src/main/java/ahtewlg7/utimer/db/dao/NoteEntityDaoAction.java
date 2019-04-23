@@ -39,7 +39,15 @@ public class NoteEntityDaoAction extends AGreenDaoAction<NoteEntityGdBean, Strin
     }
 
     @Override
-    public Optional<NoteEntityGdBean> queryByKey(String rPath){
+    public Optional<NoteEntityGdBean> queryByKey(String uuid){
+        if(TextUtils.isEmpty(uuid))
+            return Optional.absent();
+        List<NoteEntityGdBean> inboxEntityGdBeanList = query(new UuidQueryFilter(uuid));
+        if(inboxEntityGdBeanList == null || inboxEntityGdBeanList.isEmpty())
+            return Optional.absent();
+        return Optional.of(inboxEntityGdBeanList.get(0));
+    }
+    public Optional<NoteEntityGdBean> queryByRPath(String rPath){
         if(TextUtils.isEmpty(rPath))
             return Optional.absent();
         List<NoteEntityGdBean> inboxEntityGdBeanList = query(new RPathQueryFilter(rPath));
@@ -47,7 +55,6 @@ public class NoteEntityDaoAction extends AGreenDaoAction<NoteEntityGdBean, Strin
             return Optional.absent();
         return Optional.of(inboxEntityGdBeanList.get(0));
     }
-
     public List<NoteEntityGdBean> queryByCreateTime(DateTime dateTime){
         if(dateTime == null)
             return null;
@@ -59,6 +66,18 @@ public class NoteEntityDaoAction extends AGreenDaoAction<NoteEntityGdBean, Strin
         return query(new LastAccessTimeQueryFileter(dateTime));
     }
 
+    class UuidQueryFilter implements IGreenDaoQueryFiltVisitor<NoteEntityGdBean>{
+        private String rPath;
+
+        UuidQueryFilter(String rPath){
+            this.rPath = rPath;
+        }
+
+        @Override
+        public QueryBuilder<NoteEntityGdBean> toFilt(QueryBuilder<NoteEntityGdBean> queryBuilder) {
+            return queryBuilder.where(NoteEntityGdBeanDao.Properties.Uuid.eq(rPath));
+        }
+    }
     class RPathQueryFilter implements IGreenDaoQueryFiltVisitor<NoteEntityGdBean>{
         private String rPath;
 

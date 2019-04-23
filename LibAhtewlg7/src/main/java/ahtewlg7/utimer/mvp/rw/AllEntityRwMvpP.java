@@ -50,5 +50,7 @@ public class AllEntityRwMvpP {
             shortHandMvpP.toHandleBusEvent(busEvent);
         else if(busEvent.getEntity().getGtdType() == GtdType.PROJECT)
             noteRwMvpP.toHandleBusEvent(busEvent);
+        else if(busEvent.getEntity().getGtdType() == GtdType.NOTE)
+            noteRwMvpP.toHandleBusEvent(busEvent);
     }
 }

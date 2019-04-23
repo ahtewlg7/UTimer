@@ -76,6 +76,7 @@ public class HanlpAction implements INlp {
                     .append("data").append(File.separator)
                     .append("dictionary").append(File.separator);
             File file = new File(nlpAbsPath.toString());
+            //todo
             FluentIterable<File> fileList = Files.fileTreeTraverser().preOrderTraversal(file).filter(new Predicate<File>() {
                 @Override
                 public boolean apply(@Nullable File input) {

@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.common.collect.Lists;
 import com.trello.rxlifecycle2.LifecycleProvider;
@@ -198,26 +200,6 @@ public class ProjectFragment extends AEditFragment
     }
 
     @Override
-    public void onDeleteSucc(int index, NoteEntity noteEntity) {
-
-    }
-
-    @Override
-    public void onDeleteFail(NoteEntity noteEntity) {
-
-    }
-
-    @Override
-    public void onDeleteErr(Throwable throwable) {
-
-    }
-
-    @Override
-    public void onDeleteEnd() {
-
-    }
-
-    @Override
     public LifecycleProvider getRxLifeCycleBindView() {
         return this;
     }
@@ -273,10 +255,33 @@ public class ProjectFragment extends AEditFragment
 
         @Override
         public boolean onItemLongClick(BaseQuickAdapter adapter, View view, int position) {
-            NoteEntity viewEntity = (NoteEntity)adapter.getItem(position);
-            /*if(viewEntity != null)
-                toCreateDelDialog(viewEntity);*/
+            ProjectInfoSectionViewEntity viewEntity = (ProjectInfoSectionViewEntity) adapter.getData().get(position);
+            editIndex = position;
+            if(!viewEntity.isHeader) {
+                NoteEntity noteEntity = (NoteEntity) viewEntity.t;
+                if(noteEntity != null)
+                    toCreateDelDialog(position, noteEntity);
+            }
             return false;
         }
+    }
+    private void toCreateDelDialog(final int index, final NoteEntity entity){
+        new MaterialDialog.Builder(getContext()).title(R.string.del)
+                .content(R.string.prompt_del)
+                .negativeText(R.string.no)
+                .positiveText(R.string.yes)
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
+                })
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        projectEditMvpP.toDelNote(entity);
+                        projectRecyclerView.removeData(index);
+                    }
+                }).show();
     }
 }

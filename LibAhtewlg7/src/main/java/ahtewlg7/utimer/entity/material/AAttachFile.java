@@ -19,8 +19,6 @@ import ahtewlg7.utimer.util.FileAttrAction;
  * Created by lw on 2018/10/29.
  */
 public abstract class AAttachFile {
-    public static final String TAG = AAttachFile.class.getSimpleName();
-
     public abstract StorageType getStorageType();
     public abstract @NonNull String getFileSuffix();
 

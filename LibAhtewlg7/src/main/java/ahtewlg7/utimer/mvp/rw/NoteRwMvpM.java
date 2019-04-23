@@ -2,6 +2,7 @@ package ahtewlg7.utimer.mvp.rw;
 
 import android.support.annotation.NonNull;
 
+import com.blankj.utilcode.util.FileUtils;
 import com.google.common.base.Optional;
 
 import org.reactivestreams.Publisher;
@@ -14,7 +15,9 @@ import ahtewlg7.utimer.entity.gtd.GtdProjectEntity;
 import ahtewlg7.utimer.entity.gtd.NoteBuilder;
 import ahtewlg7.utimer.entity.gtd.NoteEntity;
 import ahtewlg7.utimer.entity.material.MdAttachFile;
+import ahtewlg7.utimer.factory.NoteByUuidFactory;
 import io.reactivex.Flowable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 
@@ -36,7 +39,14 @@ public class NoteRwMvpM extends AUtimerRwMvpM<NoteEntity> {
 
     @Override
     public Flowable<Boolean> toDel(@NonNull Flowable<NoteEntity> entityRx) {
-        return dbActionFacade.deleteNoteEntity(entityRx);
+        return dbActionFacade.deleteNoteEntity(entityRx.doOnNext(new Consumer<NoteEntity>() {
+            @Override
+            public void accept(NoteEntity entity) throws Exception {
+                boolean result = toDelEntity(entity);
+                if(result)
+                    NoteByUuidFactory.getInstance().remove(entity.getUuid());
+            }
+        }));
     }
 
     @Deprecated
@@ -59,7 +69,10 @@ public class NoteRwMvpM extends AUtimerRwMvpM<NoteEntity> {
                 .map(new Function<Optional<NoteEntity>, NoteEntity>() {
                     @Override
                     public NoteEntity apply(Optional<NoteEntity> entityOptional) throws Exception {
-                        return entityOptional.get();
+                        NoteEntity entity = entityOptional.get();
+                        NoteByUuidFactory.getInstance().update(entity.getUuid(), entity);
+                        return entity;
+
                     }
                 });
     }
@@ -93,5 +106,15 @@ public class NoteRwMvpM extends AUtimerRwMvpM<NoteEntity> {
                 return Optional.absent();
             }
         });
+    }
+    private boolean toDelEntity(NoteEntity entity) {
+        boolean result = false;
+        try{
+            if(entity != null && entity.getAttachFile().ifValid())
+                result = FileUtils.deleteFile(entity.getAttachFile().getFile());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return result;
     }
 }

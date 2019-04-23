@@ -6,7 +6,6 @@ import ahtewlg7.utimer.entity.busevent.UTimerBusEvent;
 import ahtewlg7.utimer.entity.gtd.GtdProjectEntity;
 import ahtewlg7.utimer.entity.gtd.NoteEntity;
 import ahtewlg7.utimer.factory.EventBusFatory;
-import ahtewlg7.utimer.factory.NoteByUuidFactory;
 import ahtewlg7.utimer.util.MySafeSubscriber;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Action;
@@ -56,7 +55,12 @@ class NoteRwMvpP extends AUtimerRwMvpP<NoteEntity, NoteRwMvpM> {
 
     @Override
     protected MySafeSubscriber<Boolean> getDelSubscriber() {
-        return new MySafeSubscriber<Boolean>();
+        return new MySafeSubscriber<Boolean>(){
+            @Override
+            public void onNext(Boolean aBoolean) {
+                super.onNext(aBoolean);
+            }
+        };
     }
 
     @Override
@@ -67,12 +71,6 @@ class NoteRwMvpP extends AUtimerRwMvpP<NoteEntity, NoteRwMvpM> {
                 super.onSubscribe(s);
                 if(mvpV != null)
                     mvpV.onAllLoadStarted();
-            }
-
-            @Override
-            public void onNext(NoteEntity entity) {
-                super.onNext(entity);
-                NoteByUuidFactory.getInstance().update(entity.getUuid(), entity);
             }
 
             @Override

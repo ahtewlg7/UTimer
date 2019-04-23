@@ -88,7 +88,7 @@ public class NoteEditFragment extends ATxtEditFragment
 
     @Override
     protected boolean ifTxtEditing() {
-        return mdEditView.ifEditing();
+        return mdEditView != null && mdEditView.ifEditing();
     }
 
     @Override
@@ -116,6 +116,7 @@ public class NoteEditFragment extends ATxtEditFragment
             editMvpP.toPostAction(editElementTable);
             editMvpP.toFinishEdit(Flowable.fromIterable(elementList));
         }
+        setFragmentResult(resultCode, getArguments());
     }
     /**********************************************IShorthandEditMvpV**********************************************/
     @Override

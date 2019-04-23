@@ -17,6 +17,7 @@ import ahtewlg7.utimer.comparator.ITimeComparator;
 import ahtewlg7.utimer.db.entity.ShortHandEntityGdBean;
 import ahtewlg7.utimer.entity.AUtimerEntity;
 import ahtewlg7.utimer.entity.IMergerEntity;
+import ahtewlg7.utimer.entity.material.AAttachFile;
 import ahtewlg7.utimer.entity.material.MdAttachFile;
 import ahtewlg7.utimer.entity.md.EditElement;
 import ahtewlg7.utimer.enumtype.GtdType;
@@ -32,9 +33,10 @@ public class ShortHandEntity extends AUtimerEntity<ShortHandBuilder>
         if(builder.gdBean != null)
             initByGbBean(builder.gdBean);
         if(!TextUtils.isEmpty(title) && attachFile == null){
-            String filePath = new FileSystemAction().getInboxGtdAbsPath();
-            attachFile      = new MdAttachFile(filePath, title);
+            String filePath         = new FileSystemAction().getInboxGtdAbsPath();
+            attachFile              = new MdAttachFile(filePath, title);
         }
+        updateRPath(attachFile);
     }
 
     @Override
@@ -86,12 +88,13 @@ public class ShortHandEntity extends AUtimerEntity<ShortHandBuilder>
         if(attachFile == null){
             FileSystemAction fileSystemAction = new FileSystemAction();
             Optional<String> absPath = fileSystemAction.getAbsPath(rPath);
-            if(!TextUtils.isEmpty(rPath) && absPath.isPresent())
+            if(absPath.isPresent()) {
                 attachFile = new MdAttachFile(absPath.get());
-            else{
+            }else{
                 String fileName = !TextUtils.isEmpty(getTitle()) ? getTitle() : new DateTimeAction().toFormatNow().toString();
                 String filePath = fileSystemAction.getInboxGtdAbsPath();
                 attachFile = new MdAttachFile(filePath, fileName);
+                updateRPath(attachFile);
             }
         }
         return attachFile.createOrExist();
@@ -105,5 +108,12 @@ public class ShortHandEntity extends AUtimerEntity<ShortHandBuilder>
         createTime      = inboxEntityGdBean.getCreateTime();
         lastAccessTime  = inboxEntityGdBean.getLastAccessTime();
         rPath           = inboxEntityGdBean.getAttachFileRPath();
+    }
+    private void updateRPath(AAttachFile attachFile){
+        if(attachFile == null || !attachFile.ifValid())
+            return;
+        Optional<String> tmp = attachFile.getRPath();
+        if(tmp.isPresent())
+            rPath = tmp.get();
     }
 }
