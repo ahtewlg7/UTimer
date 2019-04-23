@@ -14,7 +14,9 @@ import ahtewlg7.utimer.common.FileSystemAction;
 import ahtewlg7.utimer.entity.gtd.ShortHandBuilder;
 import ahtewlg7.utimer.entity.gtd.ShortHandEntity;
 import ahtewlg7.utimer.entity.material.MdAttachFile;
+import ahtewlg7.utimer.factory.ShortHandByUuidFactory;
 import io.reactivex.Flowable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
@@ -46,7 +48,12 @@ public class ShortHandRwMvpM extends AUtimerRwMvpM<ShortHandEntity> {
 
     @Override
     public Flowable<Boolean> toDel(@NonNull Flowable<ShortHandEntity> entityRx) {
-        return dbActionFacade.deleteShortHandEntity(entityRx);
+        return dbActionFacade.deleteShortHandEntity(entityRx.doOnNext(new Consumer<ShortHandEntity>() {
+            @Override
+            public void accept(ShortHandEntity entity) throws Exception {
+                ShortHandByUuidFactory.getInstance().remove(entity.getUuid());
+            }
+        }));
     }
 
     @Override

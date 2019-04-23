@@ -19,7 +19,6 @@ import ahtewlg7.utimer.factory.ShortHandByUuidFactory;
 import ahtewlg7.utimer.mvp.un.IAllItemListMvpM;
 import ahtewlg7.utimer.mvp.un.IAllItemListMvpP;
 import ahtewlg7.utimer.mvp.un.IAllItemListMvpV;
-import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MySafeSubscriber;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -58,7 +57,6 @@ public class ShortHandListMvpP implements IAllItemListMvpP<ShortHandEntity> {
                     @Override
                     public void onNext(ShortHandEntity entity) {
                         super.onNext(entity);
-                        Logcat.i(TAG,"toLoadAllItem onNext : " + entity.toString());
                         shortHandList.add(entity);
                         if(shorthandListMvpV != null)
                             shorthandListMvpV.onItemLoad(entity);
@@ -102,7 +100,6 @@ public class ShortHandListMvpP implements IAllItemListMvpP<ShortHandEntity> {
                         boolean ifExited = entity.getAttachFile().ifValid();
                         if (shorthandListMvpV != null && !ifExited) {
                             int index  = shortHandList.indexOf(entity);
-//                            shortHandList.remove(entity);
                             shorthandListMvpV.onDeleteSucc(index, entity);
                         }else if (shorthandListMvpV != null)
                             shorthandListMvpV.onDeleteFail(entity);

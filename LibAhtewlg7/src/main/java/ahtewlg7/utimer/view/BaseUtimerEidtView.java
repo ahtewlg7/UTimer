@@ -387,13 +387,13 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
             if(editModeListener != null)
                 editModeListener.onEditModeOff();
 
-            String eidtTxt = optional.get().getText().toString();
+            String editTxt = optional.get().getText().toString();
             if(editElementOptional.isPresent() &&
-                (eidtTxt.equals(editElementOptional.get().getMdCharSequence().toString()) || eidtTxt.equals(editElementOptional.get().getRawText()))){
+                (editTxt.equals(editElementOptional.get().getMdCharSequence().toString()) || editTxt.equals(editElementOptional.get().getRawText()))){
                 resetData(position, editElementOptional.get());
             } else {
                 isTxtChanged = true;
-                toModify(position, Observable.just(eidtTxt));
+                toModify(position, Observable.just(editTxt));
             }
         }else if(editMode == EditMode.ON){
             optional.get().enableEdit(true);
