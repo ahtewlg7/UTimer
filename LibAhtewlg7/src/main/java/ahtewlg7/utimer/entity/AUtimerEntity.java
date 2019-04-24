@@ -13,6 +13,7 @@ import ahtewlg7.utimer.common.IdAction;
 import ahtewlg7.utimer.entity.material.AAttachFile;
 import ahtewlg7.utimer.enumtype.GtdLife;
 import ahtewlg7.utimer.enumtype.GtdType;
+import ahtewlg7.utimer.gtd.GtdLifeCycleAction;
 
 public abstract class AUtimerEntity<T extends AUtimerBuilder> implements ITipsEntity, IMergerEntity{
     @NonNull
@@ -26,11 +27,12 @@ public abstract class AUtimerEntity<T extends AUtimerBuilder> implements ITipsEn
     protected String uuid;
     protected String title;
     protected String detail;
-    protected GtdLife gtdLife;
     protected DateTime createTime;
     protected DateTime lastAccessTime;
     protected DateTime lastModifyTime;
     protected AAttachFile attachFile;
+
+    protected GtdLifeCycleAction lifeCycleAction;
 
     protected AUtimerEntity(@Nonnull T t){
         //update first
@@ -104,11 +106,9 @@ public abstract class AUtimerEntity<T extends AUtimerBuilder> implements ITipsEn
     }
 
     public GtdLife getGtdLife() {
-        return gtdLife;
-    }
-
-    public void setGtdLife(GtdLife gtdLife) {
-        this.gtdLife = gtdLife;
+        if(lifeCycleAction == null)
+            lifeCycleAction = new GtdLifeCycleAction();
+        return lifeCycleAction.getLife(getLifeCycleTime());
     }
 
     public DateTime getLastAccessTime() {
@@ -138,6 +138,11 @@ public abstract class AUtimerEntity<T extends AUtimerBuilder> implements ITipsEn
             lastModifyTime = attachFile.getLassModifyTime();
         }
     }
+
+    protected DateTime getLifeCycleTime(){
+        return createTime;
+    }
+
     protected void toMakeEntityOk(){
         if(TextUtils.isEmpty(uuid))
             uuid = new IdAction().getUUId();
@@ -153,8 +158,7 @@ public abstract class AUtimerEntity<T extends AUtimerBuilder> implements ITipsEn
             builder.append(",title=").append(title);
         if(getDetail().isPresent() && !TextUtils.isEmpty(getDetail().get()))
             builder.append(",detail=").append(getDetail().get());
-        if(gtdLife != null)
-            builder.append(",gtdLife=").append(gtdLife.name());
+        builder.append(",gtdLife=").append(getGtdLife().name());
         if(createTime != null)
             builder.append(",createTime=").append(createTime.toString());
         if(lastAccessTime != null)

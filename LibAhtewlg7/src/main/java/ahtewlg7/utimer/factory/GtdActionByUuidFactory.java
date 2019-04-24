@@ -10,7 +10,6 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 
-import org.joda.time.DateTime;
 import org.reactivestreams.Publisher;
 
 import java.util.ArrayList;
@@ -23,7 +22,6 @@ import ahtewlg7.utimer.enumtype.ActState;
 import ahtewlg7.utimer.enumtype.GtdLife;
 import ahtewlg7.utimer.gtd.GtdLifeCycleAction;
 import io.reactivex.Flowable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 
@@ -101,13 +99,7 @@ public class GtdActionByUuidFactory extends ABaseLruCacheFactory<String, GtdActi
     }
 
     public Flowable<GtdActionEntity> getAllLifeEntity(){
-        return Flowable.fromIterable(getAll())
-                .doOnNext(new Consumer<GtdActionEntity>() {
-                    @Override
-                    public void accept(GtdActionEntity entity) throws Exception {
-                        updateLife(entity);
-                    }
-                }).sorted(new GtdTimeComparator<GtdActionEntity>());
+        return Flowable.fromIterable(getAll()).sorted(new GtdTimeComparator<GtdActionEntity>());
         }
 
     public Flowable<GtdActionEntity> getEntityByLife(@NonNull final GtdLife actLife){
@@ -125,10 +117,8 @@ public class GtdActionByUuidFactory extends ABaseLruCacheFactory<String, GtdActi
             if(TextUtils.isEmpty(uuid))
                 continue;
             GtdActionEntity entity = get(uuid);
-            if(entity != null){
-                updateLife(entity);
+            if(entity != null)
                 entityList.add(entity);
-            }
         }
         Collections.sort(entityList, new GtdTimeComparator<GtdActionEntity>());
         return entityList;
@@ -138,12 +128,5 @@ public class GtdActionByUuidFactory extends ABaseLruCacheFactory<String, GtdActi
         if(!TextUtils.isEmpty(detail) && detailUuidMap.containsKey(detail))
             return Optional.fromNullable(get(detailUuidMap.get(detail)));
         return Optional.absent();
-    }
-    private void updateLife(@NonNull GtdActionEntity entity){
-        DateTime tmp = entity.getCreateTime();
-        if(entity.getFirstWorkTime().isPresent())
-            tmp = entity.getFirstWorkTime().get();
-        GtdLife life =lifeCycleAction.getLife(tmp);
-        entity.setGtdLife(life);
     }
 }

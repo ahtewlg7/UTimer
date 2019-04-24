@@ -14,11 +14,11 @@ import java.util.List;
 
 import ahtewlg7.utimer.common.FileSystemAction;
 import ahtewlg7.utimer.comparator.GtdTimeComparator;
+import ahtewlg7.utimer.entity.gtd.GtdProjectEntity;
 import ahtewlg7.utimer.entity.gtd.NoteEntity;
 import ahtewlg7.utimer.enumtype.GtdLife;
 import ahtewlg7.utimer.gtd.GtdLifeCycleAction;
 import io.reactivex.Flowable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Predicate;
 
 /**
@@ -83,14 +83,11 @@ public class NoteByUuidFactory extends ABaseLruCacheFactory<String, NoteEntity> 
         super.clearAll();
         pathUuidMap.clear();
     }
+    public Flowable<NoteEntity> getEntityByProject(GtdProjectEntity projectEntity){
+        return Flowable.fromIterable(getAll()).sorted(new GtdTimeComparator<NoteEntity>());
+    }
     public Flowable<NoteEntity> getAllLifeEntity(){
-        return Flowable.fromIterable(getAll()).doOnNext(new Consumer<NoteEntity>() {
-            @Override
-            public void accept(NoteEntity entity) throws Exception {
-                GtdLife life = lifeCycleAction.getLife(entity.getCreateTime());
-                entity.setGtdLife(life);
-            }
-        }).sorted(new GtdTimeComparator<NoteEntity>());
+        return Flowable.fromIterable(getAll()).sorted(new GtdTimeComparator<NoteEntity>());
     }
     public Flowable<NoteEntity> getEntityByLife(@NonNull final GtdLife actLife){
         return getAllLifeEntity().filter(new Predicate<NoteEntity>() {

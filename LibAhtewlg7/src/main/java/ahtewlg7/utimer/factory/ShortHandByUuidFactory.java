@@ -16,9 +16,7 @@ import ahtewlg7.utimer.common.FileSystemAction;
 import ahtewlg7.utimer.comparator.GtdTimeComparator;
 import ahtewlg7.utimer.entity.gtd.ShortHandEntity;
 import ahtewlg7.utimer.enumtype.GtdLife;
-import ahtewlg7.utimer.gtd.GtdLifeCycleAction;
 import io.reactivex.Flowable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Predicate;
 
 /**
@@ -30,13 +28,10 @@ public class ShortHandByUuidFactory extends ABaseLruCacheFactory<String, ShortHa
     private List<String> shorHandFileList;
     private BiMap<String, String> pathUuidMap;
 
-    private GtdLifeCycleAction lifeCycleAction;
-
     protected ShortHandByUuidFactory(){
         super();
         shorHandFileList    = Lists.newArrayList();
         pathUuidMap         = HashBiMap.create();
-        lifeCycleAction     = new GtdLifeCycleAction();
 
         toUpdatePathList();
     }
@@ -84,13 +79,7 @@ public class ShortHandByUuidFactory extends ABaseLruCacheFactory<String, ShortHa
         pathUuidMap.clear();
     }
     public Flowable<ShortHandEntity> getAllLifeEntity(){
-        return Flowable.fromIterable(getAll()).doOnNext(new Consumer<ShortHandEntity>() {
-            @Override
-            public void accept(ShortHandEntity entity) throws Exception {
-                GtdLife life = lifeCycleAction.getLife(entity.getCreateTime());
-                entity.setGtdLife(life);
-            }
-        }).sorted(new GtdTimeComparator<ShortHandEntity>());
+        return Flowable.fromIterable(getAll()).sorted(new GtdTimeComparator<ShortHandEntity>());
     }
     public Flowable<ShortHandEntity> getEntityByLife(@NonNull final GtdLife actLife){
         return getAllLifeEntity().filter(new Predicate<ShortHandEntity>() {

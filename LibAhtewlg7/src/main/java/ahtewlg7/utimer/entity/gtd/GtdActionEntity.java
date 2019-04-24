@@ -22,7 +22,6 @@ import ahtewlg7.utimer.entity.w5h2.BaseW5h2Entity;
 import ahtewlg7.utimer.entity.w5h2.W5h2HowMuch;
 import ahtewlg7.utimer.entity.w5h2.W5h2What;
 import ahtewlg7.utimer.entity.w5h2.W5h2When;
-import ahtewlg7.utimer.enumtype.GtdLife;
 import ahtewlg7.utimer.enumtype.ActState;
 import ahtewlg7.utimer.enumtype.GtdType;
 import ahtewlg7.utimer.util.DateTimeAction;
@@ -37,6 +36,13 @@ public class GtdActionEntity extends AGtdUtimerEntity<GtdActionBuilder>
         if(builder.gdBean != null)
             initByGbBean(builder.gdBean);
         toMakeEntityOk();
+    }
+
+    @Override
+    protected DateTime getLifeCycleTime() {
+        if(getFirstWorkTime().isPresent())
+            return getFirstWorkTime().get();
+        return super.getCreateTime();
     }
 
     @Override
@@ -65,8 +71,6 @@ public class GtdActionEntity extends AGtdUtimerEntity<GtdActionBuilder>
         super.toMakeEntityOk();
         if(actionState == null)
             actionState = ActState.MAYBE;
-        if(gtdLife == null)
-            gtdLife = GtdLife.TODAY;
     }
 
     //++++++++++++++++++++++++++++++++++++++ITimeComparator++++++++++++++++++++++++++++++++++++
