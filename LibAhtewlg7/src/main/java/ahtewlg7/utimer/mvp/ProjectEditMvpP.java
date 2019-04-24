@@ -45,7 +45,7 @@ public class ProjectEditMvpP implements IUtimerEditMvpP{
         EventBusFatory.getInstance().getDefaultEventBus().post(busEvent);
     }
     public void onNoteLoaded(){
-        mvpM.loadAllNote()
+        mvpM.loadAllNote(entity)
             .compose(((RxFragment)mvpV.getRxLifeCycleBindView()).<NoteEntity>bindUntilEvent(FragmentEvent.DESTROY))
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(new MySafeSubscriber<NoteEntity>() {
@@ -95,8 +95,8 @@ public class ProjectEditMvpP implements IUtimerEditMvpP{
     }
 
     class ProjectEditMvpM{
-        public Flowable<NoteEntity> loadAllNote() {
-            return  NoteByUuidFactory.getInstance().getAllLifeEntity();
+        public Flowable<NoteEntity> loadAllNote(GtdProjectEntity entity) {
+            return  NoteByUuidFactory.getInstance().getEntityByProject(entity);
         }
     }
 

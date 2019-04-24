@@ -3,21 +3,17 @@ package ahtewlg7.utimer.factory;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
-import com.blankj.utilcode.util.FileUtils;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Lists;
 
-import java.io.File;
 import java.util.Collections;
 import java.util.List;
 
-import ahtewlg7.utimer.common.FileSystemAction;
 import ahtewlg7.utimer.comparator.GtdTimeComparator;
 import ahtewlg7.utimer.entity.gtd.GtdProjectEntity;
 import ahtewlg7.utimer.entity.gtd.NoteEntity;
 import ahtewlg7.utimer.enumtype.GtdLife;
-import ahtewlg7.utimer.gtd.GtdLifeCycleAction;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Predicate;
 
@@ -27,18 +23,11 @@ import io.reactivex.functions.Predicate;
 public class NoteByUuidFactory extends ABaseLruCacheFactory<String, NoteEntity> {
     private static NoteByUuidFactory instance;
 
-    private List<String> shorHandFileList;
     private BiMap<String, String> pathUuidMap;
-
-    private GtdLifeCycleAction lifeCycleAction;
 
     protected NoteByUuidFactory(){
         super();
-        shorHandFileList    = Lists.newArrayList();
-        pathUuidMap         = HashBiMap.create();
-        lifeCycleAction     = new GtdLifeCycleAction();
-
-        toUpdatePathList();
+        pathUuidMap  = HashBiMap.create();
     }
 
     public static NoteByUuidFactory getInstance() {
@@ -83,8 +72,14 @@ public class NoteByUuidFactory extends ABaseLruCacheFactory<String, NoteEntity> 
         super.clearAll();
         pathUuidMap.clear();
     }
-    public Flowable<NoteEntity> getEntityByProject(GtdProjectEntity projectEntity){
-        return Flowable.fromIterable(getAll()).sorted(new GtdTimeComparator<NoteEntity>());
+    public Flowable<NoteEntity> getEntityByProject(final GtdProjectEntity projectEntity){
+        return getAllLifeEntity().filter(new Predicate<NoteEntity>() {
+            @Override
+            public boolean test(NoteEntity entity) throws Exception {
+                return entity.getAttachFileRPath().isPresent() && projectEntity.getAttachFileRPath().isPresent()
+                        && entity.getAttachFileRPath().get().startsWith(projectEntity.getAttachFileRPath().get());
+            }
+        });
     }
     public Flowable<NoteEntity> getAllLifeEntity(){
         return Flowable.fromIterable(getAll()).sorted(new GtdTimeComparator<NoteEntity>());
@@ -93,8 +88,7 @@ public class NoteByUuidFactory extends ABaseLruCacheFactory<String, NoteEntity> 
         return getAllLifeEntity().filter(new Predicate<NoteEntity>() {
                     @Override
                     public boolean test(NoteEntity entity) throws Exception {
-                        return entity.getGtdLife() == actLife && entity.getAttachFileRPath().isPresent()
-                                && shorHandFileList.contains(entity.getAttachFileRPath().get());
+                        return entity.getGtdLife() == actLife;
                     }
                 });
     }
@@ -110,23 +104,5 @@ public class NoteByUuidFactory extends ABaseLruCacheFactory<String, NoteEntity> 
         }
         Collections.sort(entityList, new GtdTimeComparator<NoteEntity>());
         return entityList;
-    }
-
-    public void toUpdatePathList(){
-        try{
-            FileSystemAction fileSystemAction = new FileSystemAction();
-            String path         = fileSystemAction.getInboxGtdAbsPath();
-            File shortHandDir   = FileUtils.getFileByPath(path);
-            if(!shortHandDir.exists())
-                return;
-            shorHandFileList.clear();
-            for(File file : shortHandDir.listFiles()){
-                String tmp = fileSystemAction.getRPath(file);
-                if(!TextUtils.isEmpty(tmp))
-                    shorHandFileList.add(tmp);
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
     }
 }
