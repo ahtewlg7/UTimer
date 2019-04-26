@@ -3,9 +3,13 @@ package com.utimer.ui;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.View;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.blankj.utilcode.util.ToastUtils;
 import com.google.common.collect.Table;
 import com.trello.rxlifecycle2.LifecycleProvider;
@@ -44,7 +48,7 @@ public class NoteEditFragment extends ATxtEditFragment
             args.putSerializable(KEY_NOTE, entity);
         else {
             String now = new DateTimeAction().toFormatNow().toString();
-            NoteEntity e = (NoteEntity)new NoteBuilder().setTitle(now).build();
+            NoteEntity e = new NoteBuilder().setTitle(now).build();
             args.putSerializable(KEY_NOTE, e);
         }
         NoteEditFragment fragment = new NoteEditFragment();
@@ -63,6 +67,11 @@ public class NoteEditFragment extends ATxtEditFragment
         return MyRInfo.getStringByID(R.string.title_note);
     }
 
+    @Override
+    protected int getMenuRid() {
+        return R.menu.note_menu;
+    }
+
     @NonNull
     @Override
     protected Toolbar getToolbar() {
@@ -72,6 +81,20 @@ public class NoteEditFragment extends ATxtEditFragment
     @Override
     protected void initToolbar() {
         toolbar.setTitle(getTitle());
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        boolean result = false;
+        switch (item.getItemId()) {
+            case R.id.note_menu_rename:
+                toCreateRenameDialog();
+                break;
+            default:
+                result = super.onOptionsItemSelected(item);
+                break;
+        }
+        return result;
     }
 
     @Override
@@ -112,7 +135,7 @@ public class NoteEditFragment extends ATxtEditFragment
         if(elementList.size() > 0){//maybe the entity is not loaded
             resultCode = RESULT_OK;
             if(!TextUtils.isEmpty(mdEditView.getLastAccessEditElement().getMdCharSequence()))
-                ((NoteEntity)getArguments().getSerializable(KEY_NOTE)).setDetail(mdEditView.getLastAccessEditElement().getMdCharSequence().toString());
+                getUTimerEntity().setDetail(mdEditView.getLastAccessEditElement().getMdCharSequence().toString());
             editMvpP.toPostAction(editElementTable);
             editMvpP.toFinishEdit(Flowable.fromIterable(elementList));
         }
@@ -160,5 +183,35 @@ public class NoteEditFragment extends ATxtEditFragment
     @Override
     public void onSaveEnd() {
         Logcat.i(TAG, "onSaveEnd");
+    }
+
+    private void toCreateRenameDialog(){
+        new MaterialDialog.Builder(getContext()).title(R.string.rename)
+                .inputType(InputType.TYPE_CLASS_TEXT)
+                .input(MyRInfo.getStringByID(R.string.prompt_new_note_name), "", false, new MaterialDialog.InputCallback() {
+                    @Override
+                    public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
+                        //do nothing
+                    }
+                })
+                .negativeText(R.string.no)
+                .positiveText(R.string.yes)
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
+                })
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        String name = dialog.getInputEditText().getText().toString();
+                        getUTimerEntity().setTitle(name);
+
+                        /*
+                        GtdProjectEntity entity = (GtdProjectEntity)new GtdProjectBuilder().setTitle(name).build();
+                        startForResult(ProjectFragment.newInstance(entity), REQ_NEW_FRAGMENT);*/
+                    }
+                }).show();
     }
 }
