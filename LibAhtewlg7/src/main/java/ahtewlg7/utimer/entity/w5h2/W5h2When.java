@@ -1,6 +1,5 @@
 package ahtewlg7.utimer.entity.w5h2;
 
-import com.alibaba.fastjson.annotation.JSONField;
 import com.google.common.base.Optional;
 
 import org.joda.time.DateTime;
@@ -8,21 +7,15 @@ import org.joda.time.DateTime;
 import java.util.List;
 
 import ahtewlg7.utimer.entity.IValidEntity;
-import ahtewlg7.utimer.json.DateTimeFastjson;
-import ahtewlg7.utimer.json.DateTimeListFastjson;
 import ahtewlg7.utimer.util.DateTimeAction;
 
 /**
  * Created by lw on 2019/3/20.
  */
 public class W5h2When implements IValidEntity {
-    @JSONField(serializeUsing = DateTimeFastjson.class, deserializeUsing = DateTimeFastjson.class)
     private DateTime createTime;
-    @JSONField(serializeUsing = DateTimeFastjson.class, deserializeUsing = DateTimeFastjson.class)
     private DateTime lastAccessTime;
-    @JSONField(serializeUsing = DateTimeFastjson.class, deserializeUsing = DateTimeFastjson.class)
     private DateTime nextWarningTime;
-    @JSONField(serializeUsing = DateTimeListFastjson.class, deserializeUsing = DateTimeListFastjson.class)
     private List<DateTime> workTime;
 
     @Override

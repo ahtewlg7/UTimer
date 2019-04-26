@@ -7,6 +7,7 @@ import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
 import ahtewlg7.utimer.enumtype.GtdBusEventType;
 import ahtewlg7.utimer.factory.EventBusFatory;
 import ahtewlg7.utimer.factory.GtdActionByUuidFactory;
+import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MySafeSubscriber;
 import io.reactivex.Flowable;
 
@@ -63,6 +64,7 @@ class TableActionRwMvpP extends AUtimerRwMvpP<GtdActionEntity, TableActionRwMvpM
             @Override
             public void onNext(GtdActionEntity entity) {
                 super.onNext(entity);
+                Logcat.i("TableActionRw", "onNext :" + entity.toString());
                 GtdActionByUuidFactory.getInstance().add(entity.getUuid(), entity);
             }
 

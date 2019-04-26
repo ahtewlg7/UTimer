@@ -1,7 +1,6 @@
 package ahtewlg7.utimer.json;
 
 import com.alibaba.fastjson.parser.DefaultJSONParser;
-import com.alibaba.fastjson.parser.JSONToken;
 import com.alibaba.fastjson.parser.deserializer.ObjectDeserializer;
 import com.alibaba.fastjson.serializer.JSONSerializer;
 import com.alibaba.fastjson.serializer.ObjectSerializer;
@@ -32,6 +31,15 @@ public class DateTimeListFastjson implements ObjectSerializer, ObjectDeserialize
     }
 
     @Override
+    public void write(JSONSerializer serializer, Object object, Object fieldName, Type fieldType) throws IOException {
+        StringBuilder builder = new StringBuilder();
+        List<DateTime> timeList = (List<DateTime>)object;
+        for(DateTime datTime :timeList)
+            builder.append(datTime.getMillis()).append(";");
+        serializer.out.writeString(builder.toString());
+    }
+
+    /*@Override
     public int getFastMatchToken() {
         return JSONToken.LITERAL_INT;
     }
@@ -43,5 +51,5 @@ public class DateTimeListFastjson implements ObjectSerializer, ObjectDeserialize
         for(DateTime datTime :timeList)
             builder.append(datTime.getMillis()).append(";");
         serializer.out.writeString(builder.toString());
-    }
+    }*/
 }

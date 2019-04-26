@@ -121,7 +121,7 @@ public class ActionEntityGdBean {
     @Property(nameInDb = "WHAT")
     @Convert(converter = W5h2WhatConverter.class, columnType = String.class)
     private W5h2What w5h2What;
-    @Property(nameInDb = "HOWMUCh")
+    @Property(nameInDb = "HOWMUCH")
     @Convert(converter = W5h2HowMuchConverter.class, columnType = String.class)
     private W5h2HowMuch w5h2HowMuch;
 

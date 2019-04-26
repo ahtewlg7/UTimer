@@ -259,3 +259,8 @@ public static java.lang.String TABLENAME;
 #
 -keep class in.uncod.android.bypass.Document { *; }
 -keep class in.uncod.android.bypass.Element { *; }
+
+
+# Configuration for bean
+#
+-keep class ahtewlg7.utimer.entity.w5h2.W5h2When {*;}
