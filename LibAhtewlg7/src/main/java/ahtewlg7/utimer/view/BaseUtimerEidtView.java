@@ -14,22 +14,20 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chad.library.adapter.base.listener.OnItemDragListener;
 import com.chad.library.adapter.base.listener.OnItemSwipeListener;
-import com.google.common.base.Charsets;
 import com.google.common.base.Optional;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Table;
-import com.google.common.io.Files;
 import com.trello.rxlifecycle2.android.FragmentEvent;
 import com.trello.rxlifecycle2.components.support.RxFragment;
 
-import org.reactivestreams.Publisher;
 import org.reactivestreams.Subscription;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import ahtewlg7.utimer.R;
+import ahtewlg7.utimer.common.UTimerRawReadAction;
 import ahtewlg7.utimer.entity.AUtimerEntity;
 import ahtewlg7.utimer.entity.md.EditElement;
 import ahtewlg7.utimer.enumtype.EditMode;
@@ -48,20 +46,15 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
-import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
 
 import static ahtewlg7.utimer.enumtype.errcode.NoteEditErrCode.ERR_EDIT_ALL_READY_GO;
-import static ahtewlg7.utimer.enumtype.errcode.NoteEditErrCode.ERR_EDIT_ATTACH_FILE_NOT_READY;
 import static ahtewlg7.utimer.enumtype.errcode.NoteEditErrCode.ERR_EDIT_ATTACH_VIEW_NOT_READY;
-import static ahtewlg7.utimer.enumtype.errcode.NoteEditErrCode.ERR_EDIT_ENTITY_NOT_READY;
 
 /**
  * Created by lw on 2019/2/3.
  */
 public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
-    public static final String TAG = BaseUtimerEidtView.class.getSimpleName();
-
     public static final int INIT_POSITION = -1;
 
     protected int lastAccessPosition    = INIT_POSITION;
@@ -158,12 +151,6 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
         return isTxtChanged;
     }
 
-    public boolean ifEntityReady(){
-        return utimerEntity != null && utimerEntity.ifValid();
-    }
-    public boolean ifAttachFileReady(){
-        return ifEntityReady() && utimerEntity.ensureAttachFileExist();
-    }
     public boolean ifEmpty(){
         return editElementList == null || editElementList.isEmpty()
                 ||(editElementList.size() == 1 && TextUtils.isEmpty(editElementList.get(0).getMdCharSequence().toString()));
@@ -179,34 +166,15 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
 
     public void toStartEdit() {
         if(!ifAttachViewReady()){
-            Logcat.i(TAG,"toLoad : attach view is not valid , so cancel");
             attachEditView.onLoadErr(new UtimerEditException(ERR_EDIT_ATTACH_VIEW_NOT_READY));
             return;
         }
-        if(!ifEntityReady()){
-            Logcat.i(TAG,"toLoad : uTimerEnity is not valid , so cancel");
-            attachEditView.onLoadErr(new UtimerEditException(ERR_EDIT_ENTITY_NOT_READY));
-            return;
-        }
-        if(!ifAttachFileReady()){
-            Logcat.i(TAG,"toLoad : uTimerEnity attach file is not valid , so cancel");
-            attachEditView.onLoadErr(new UtimerEditException(ERR_EDIT_ATTACH_FILE_NOT_READY));
-            return;
-        }
         if(loadSubscription != null){
-            Logcat.i(TAG,"toLoad : is allready editing, so cancel");
             attachEditView.onLoadErr(new UtimerEditException(ERR_EDIT_ALL_READY_GO));
             return;
         }
 
-        Flowable.just(utimerEntity)
-            .subscribeOn(Schedulers.io())
-            .flatMap(new Function<AUtimerEntity, Publisher<EditElement>>() {
-                @Override
-                public Publisher<EditElement> apply(AUtimerEntity entity) throws Exception {
-                    return toParseRawTxt(Flowable.fromIterable(Files.readLines(entity.getAttachFile().getFile(), Charsets.UTF_8)));
-                }
-            })
+        toParseRawTxt(new UTimerRawReadAction().toReadRawTxt(getUTimerEntity()))
             .compose(((RxFragment) attachEditView.getRxLifeCycleBindView()).<EditElement>bindUntilEvent(FragmentEvent.DESTROY_VIEW))
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(new MySafeSubscriber<EditElement>(){
@@ -232,7 +200,6 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
                 @Override
                 public void onError(Throwable t) {
                     super.onError(t);
-                    Logcat.i(TAG,"toLoadTxt err");
                     if(attachEditView != null)
                         attachEditView.onLoadErr(t);
                 }
@@ -240,7 +207,6 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
                 @Override
                 public void onComplete() {
                     super.onComplete();
-                    Logcat.i(TAG,"toLoadTxt succ");
                     initEditView();
                     if(attachEditView != null)
                         attachEditView.onLoadSucc();
@@ -377,11 +343,8 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
 
     protected void onEditMode(int position, @NonNull EditMode editMode, @NonNull Optional<EditElement> editElementOptional) {
         Optional<MdEditText> optional = getEditTextItem(position);
-        Logcat.i(TAG,"onEditMode isPresent = " + optional.isPresent() + ", position = " + position + ", editMode = " + editMode.name());
-        if(!optional.isPresent()){
-            Logcat.i(TAG,"onEditMode cancel");
+        if(!optional.isPresent())
             return;
-        }
         if(editMode == EditMode.OFF){
             optional.get().enableEdit(false);
             if(editModeListener != null)
@@ -421,7 +384,7 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
         try{
             editElement = editElementList.get(index);
         }catch (Exception e){
-            Logcat.i(TAG,"getEditElement err: " + e.getMessage());
+            e.printStackTrace();
         }
         return Optional.fromNullable(editElement);
     }
@@ -445,7 +408,6 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
                 .subscribe(new Consumer<Integer>() {
                     @Override
                     public void accept(Integer position) throws Exception {
-                        Logcat.i(TAG, "toListenEditClick position = " + position + ", preEditPosition = " + preEditPosition);
                         if(preEditPosition != position) {
                             onEditMode(preEditPosition, EditMode.OFF, getEditElement(preEditPosition));
                             onEditMode(position, EditMode.ON, getEditElement(position));

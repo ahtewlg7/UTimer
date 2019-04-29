@@ -9,16 +9,13 @@ public class MySimpleItemDragListener implements OnItemDragListener {
 
     @Override
     public void onItemDragStart(RecyclerView.ViewHolder viewHolder, int pos) {
-//        Logcat.i(TAG,"onItemDragStart");
     }
 
     @Override
     public void onItemDragMoving(RecyclerView.ViewHolder source, int from, RecyclerView.ViewHolder target, int to) {
-//        Logcat.i(TAG,"onItemDragMoving");
     }
 
     @Override
     public void onItemDragEnd(RecyclerView.ViewHolder viewHolder, int pos) {
-//        Logcat.i(TAG,"onItemDragEnd");
     }
 }

@@ -44,6 +44,11 @@ public class ShortHandEntity extends AUtimerEntity<ShortHandBuilder>
         return TextUtils.isEmpty(detail)? Optional.<String>absent() : Optional.of(detail);
     }
 
+    @Override
+    public boolean ifRawReadable() {
+        return super.ifRawReadable() && ensureAttachFileExist();
+    }
+
     //++++++++++++++++++++++++++++++++++++++ITimeComparator++++++++++++++++++++++++++++++++++++
     @Override
     public Optional<DateTime> getComparatorTime() {

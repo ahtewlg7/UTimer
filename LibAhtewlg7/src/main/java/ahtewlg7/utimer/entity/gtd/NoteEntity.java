@@ -51,8 +51,10 @@ public class NoteEntity extends AUtimerEntity<NoteBuilder>
     }
 
     @Override
-    public void update(IMergerEntity entity) {
+    public boolean ifRawReadable() {
+        return super.ifRawReadable() && ensureAttachFileExist();
     }
+
 
     @Override
     public Optional<String> toTips() {
@@ -61,8 +63,10 @@ public class NoteEntity extends AUtimerEntity<NoteBuilder>
 
     @Override
     public boolean ensureAttachFileExist() {
-        boolean result = attachFile.createOrExist();
-        return result;
+        return attachFile.createOrExist();
+    }
+    @Override
+    public void update(IMergerEntity entity) {
     }
 
     //++++++++++++++++++++++++++++++++++++++ITimeComparator++++++++++++++++++++++++++++++++++++
