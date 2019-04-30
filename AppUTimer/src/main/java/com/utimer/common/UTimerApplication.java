@@ -5,7 +5,9 @@ import android.support.annotation.NonNull;
 
 import com.utimer.verctrl.VersionControlFactory;
 
+import ahtewlg7.utimer.common.LibContextInit;
 import ahtewlg7.utimer.common.MyApplication;
+import ahtewlg7.utimer.db.GreenDaoAction;
 import ahtewlg7.utimer.verctrl.IBaseVersionControlFactory;
 
 /**
@@ -17,6 +19,9 @@ public class UTimerApplication extends MyApplication {
     public void onCreate() {
         super.onCreate();
         getFragmentationBuilder().install();
+
+        LibContextInit.initWorkingFileSystem();
+        GreenDaoAction.getInstance().init();
     }
     @NonNull
     @Override
