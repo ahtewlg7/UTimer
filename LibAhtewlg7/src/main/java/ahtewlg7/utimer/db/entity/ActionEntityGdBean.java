@@ -9,7 +9,11 @@ import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Index;
 import org.greenrobot.greendao.annotation.NotNull;
 import org.greenrobot.greendao.annotation.Property;
+import org.joda.time.DateTime;
 
+import java.util.List;
+
+import ahtewlg7.utimer.db.converter.DateTimeListTypeConverter;
 import ahtewlg7.utimer.db.converter.GtdActStateConverter;
 import ahtewlg7.utimer.db.converter.W5h2HowMuchConverter;
 import ahtewlg7.utimer.db.converter.W5h2WhatConverter;
@@ -101,6 +105,12 @@ public class ActionEntityGdBean {
     public void setId(Long id) {
         this.id = id;
     }
+    public List<DateTime> getWarningTimeList() {
+        return this.warningTimeList;
+    }
+    public void setWarningTimeList(List<DateTime> warningTimeList) {
+        this.warningTimeList = warningTimeList;
+    }
 
 
     @Id(autoincrement = true)
@@ -115,6 +125,9 @@ public class ActionEntityGdBean {
     private String attachFileRPath;
     @Convert(converter = GtdActStateConverter.class, columnType = Integer.class)
     private ActState actionState;
+    @Property(nameInDb = "WARNING_TIME")
+    @Convert(converter = DateTimeListTypeConverter.class, columnType = String.class)
+    private List<DateTime> warningTimeList;
     @Property(nameInDb = "WHEN")
     @Convert(converter = W5h2WhenConverter.class, columnType = String.class)
     private W5h2When w5h2When;
@@ -125,16 +138,18 @@ public class ActionEntityGdBean {
     @Convert(converter = W5h2HowMuchConverter.class, columnType = String.class)
     private W5h2HowMuch w5h2HowMuch;
 
-    @Generated(hash = 118950285)
+    @Generated(hash = 588770341)
     public ActionEntityGdBean(Long id, @NotNull String uuid, @NotNull String title,
             @NotNull String detail, String attachFileRPath, ActState actionState,
-            W5h2When w5h2When, W5h2What w5h2What, W5h2HowMuch w5h2HowMuch) {
+            List<DateTime> warningTimeList, W5h2When w5h2When, W5h2What w5h2What,
+            W5h2HowMuch w5h2HowMuch) {
         this.id = id;
         this.uuid = uuid;
         this.title = title;
         this.detail = detail;
         this.attachFileRPath = attachFileRPath;
         this.actionState = actionState;
+        this.warningTimeList = warningTimeList;
         this.w5h2When = w5h2When;
         this.w5h2What = w5h2What;
         this.w5h2HowMuch = w5h2HowMuch;
@@ -143,4 +158,5 @@ public class ActionEntityGdBean {
     public ActionEntityGdBean() {
     }
 
+    
 }

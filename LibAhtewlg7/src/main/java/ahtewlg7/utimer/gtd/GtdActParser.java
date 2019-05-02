@@ -8,7 +8,9 @@ import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.seg.common.Term;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeComparator;
 
+import java.util.Collections;
 import java.util.List;
 
 import ahtewlg7.utimer.common.IdAction;
@@ -32,13 +34,13 @@ public class GtdActParser {
     public Optional<GtdActionEntity> toParseAction(String raw){
         if(TextUtils.isEmpty(raw))
             return Optional.absent();
-        BaseW5h2Entity w5h2Entity = getW5h2Entity(raw);
-        if(!w5h2Entity.ifValid())
+        Optional<List<DateTime>> timeElementOptional = getTimeElement(raw);
+        if(!timeElementOptional.isPresent())
             return Optional.absent();
 
         GtdActionBuilder builder  = new GtdActionBuilder()
-                                    .setW5h2Entity(w5h2Entity)
                                     .setCreateTime(DateTime.now())
+                                    .setWarningTimeList(timeElementOptional.get())
                                     .setDetail(raw)
                                     .setTitle(raw)
                                     .setUuid(new IdAction().getUUId());
@@ -47,6 +49,14 @@ public class GtdActParser {
         gtdActionEntity.setLastModifyTime(DateTime.now());
         gtdActionEntity.setLastAccessTime(DateTime.now());
         return Optional.of(gtdActionEntity);
+    }
+
+    private Optional<List<DateTime>> getTimeElement(String raw){
+        List<DateTime> timeList = NlpAction.getInstance().toSegTimes(raw);
+        if(timeList == null || timeList.isEmpty())
+            return Optional.absent();
+        Collections.sort(timeList,DateTimeComparator.getInstance());
+        return Optional.of(timeList);
     }
 
     public void updateActEntity(GtdActionEntity entity, String raw){

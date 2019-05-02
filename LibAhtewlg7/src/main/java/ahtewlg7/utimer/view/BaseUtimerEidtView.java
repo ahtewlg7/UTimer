@@ -174,7 +174,7 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
             return;
         }
 
-        toParseRawTxt(new UTimerRawReadAction().toReadRawTxt(getUTimerEntity()))
+        toParseRawTxt(new UTimerRawReadAction().toReadRaw(getUTimerEntity()))
             .compose(((RxFragment) attachEditView.getRxLifeCycleBindView()).<EditElement>bindUntilEvent(FragmentEvent.DESTROY_VIEW))
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(new MySafeSubscriber<EditElement>(){

@@ -30,12 +30,17 @@ import ahtewlg7.utimer.util.DateTimeAction;
 public class GtdActionEntity extends AGtdUtimerEntity<GtdActionBuilder>
         implements ITimeComparator, Serializable {
     private ActState actionState;
+    private List<DateTime> warningTimeList;
+    private DateTimeAction dateTimeAction;
 
     protected GtdActionEntity(@Nonnull GtdActionBuilder builder) {
         super(builder);
+        if(builder.warningTimeList != null)
+            setWarningTimeList(builder.warningTimeList);
         if(builder.gdBean != null)
             initByGbBean(builder.gdBean);
         toMakeEntityOk();
+        dateTimeAction = new DateTimeAction();
     }
 
     @Override
@@ -73,6 +78,13 @@ public class GtdActionEntity extends AGtdUtimerEntity<GtdActionBuilder>
             actionState = ActState.MAYBE;
     }
 
+    @Override
+    public Optional<DateTime> getFirstWorkTime() {
+        if(warningTimeList != null && !warningTimeList.isEmpty())
+            return Optional.of(warningTimeList.get(0));
+        return super.getFirstWorkTime();
+    }
+
     //++++++++++++++++++++++++++++++++++++++ITimeComparator++++++++++++++++++++++++++++++++++++
     @Override
     public Optional<DateTime> getComparatorTime() {
@@ -85,6 +97,14 @@ public class GtdActionEntity extends AGtdUtimerEntity<GtdActionBuilder>
 
     public void setActionState(ActState actionState) {
         this.actionState = actionState;
+    }
+
+    public List<DateTime> getWarningTimeList() {
+        return warningTimeList;
+    }
+
+    public void setWarningTimeList(List<DateTime> warningTimeList) {
+        this.warningTimeList = warningTimeList;
     }
 
     //todo
@@ -114,6 +134,14 @@ public class GtdActionEntity extends AGtdUtimerEntity<GtdActionBuilder>
          return super.toString();
     }
 
+    public Optional<String> getWarningTimeInfo(){
+        if(warningTimeList == null || warningTimeList.isEmpty())
+            return Optional.absent();
+        StringBuilder builder = new StringBuilder();
+        for(DateTime dateTime : warningTimeList)
+            builder.append(dateTimeAction.toFormat(dateTime)).append(";\t");
+        return Optional.of(builder.toString());
+    }
     public Optional<String> getWorkTimeInfo(){
         if(getW5h2Entity().getWhen() == null || getW5h2Entity().getWhen().getWorkTime() == null )
             return Optional.absent();
@@ -139,6 +167,7 @@ public class GtdActionEntity extends AGtdUtimerEntity<GtdActionBuilder>
         uuid            = gdBean.getUuid();
         title           = gdBean.getTitle();
         detail          = gdBean.getDetail();
+        warningTimeList = gdBean.getWarningTimeList();
 
         if(w5h2Entity  == null)
             w5h2Entity  = new BaseW5h2Entity();

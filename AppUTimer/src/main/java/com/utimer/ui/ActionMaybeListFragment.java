@@ -58,7 +58,10 @@ public class ActionMaybeListFragment extends AToolbarBkFragment implements Actio
 
         myClickListener = new MyClickListener();
 
-        recyclerView.init(getContext(), null, myClickListener, null,myClickListener,null,null,null);
+        recyclerView.init(getContext(), null,
+                myClickListener, null,
+                myClickListener,null,
+                null,null);
         listMvpP = new ActionMaybeListMvpP(this);
 
         EventBusFatory.getInstance().getDefaultEventBus().register(this);
@@ -217,15 +220,18 @@ public class ActionMaybeListFragment extends AToolbarBkFragment implements Actio
     }
     /**********************************************IGtdActionListMvpV**********************************************/
 
-    class MyClickListener implements BaseQuickAdapter.OnItemClickListener, BaseQuickAdapter.OnItemLongClickListener {
+    class MyClickListener implements BaseQuickAdapter.OnItemClickListener,
+            BaseQuickAdapter.OnItemLongClickListener{
+        //+++++++++++++++++++++++++++++++++++OnItemClickListener+++++++++++++++++++++++++++++++
         @Override
         public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
             editIndex = position;
-            GtdActionEntity viewEntity = (GtdActionEntity)adapter.getItem(position);
-            viewEntity.setActionState(ActState.NEXT);
-//            startForResult(ShortHandEditFragment.newInstance((GtdActionEntity) adapter.getData().get(position)), REQ_EDIT_FRAGMENT);
-        }
+            GtdActionEntity item = (GtdActionEntity)adapter.getItem(position);
+            item.setActionState(ActState.MAYBE);
+            startForResult(ActionEditFragment.newInstance(item), REQ_EDIT_FRAGMENT);
 
+        }
+        //+++++++++++++++++++++++++++++++++++OnItemLongClickListener+++++++++++++++++++++++++++++++
         @Override
         public boolean onItemLongClick(BaseQuickAdapter adapter, View view, int position) {
             GtdActionEntity viewEntity = (GtdActionEntity)adapter.getItem(position);

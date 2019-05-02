@@ -157,6 +157,7 @@ public abstract class AUtimerTxtEditMvpP<T extends AUtimerEntity> implements IUt
             }
         });
     }
+
     public void cancelInsert(){
         if(insertDisplose != null && !insertDisplose.isDisposed())
             insertDisplose.dispose();

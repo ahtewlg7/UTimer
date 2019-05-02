@@ -72,9 +72,9 @@ public class GtdActionRecyclerView extends ABaseLinearRecyclerView<GtdActionEnti
                 detailBuilder.append(item.getDetail().get());
             if(item.getGtdLife() != null)
                 titleBuilder.append(gtdActLifeCycleAction.getActLifeDetail(item.getGtdLife())).append("\n");
-            Optional<String> workTime = item.getWorkTimeInfo();
-            if(workTime.isPresent())
-                titleBuilder.append("at:").append(workTime.get());
+            Optional<String> warningTime = item.getWarningTimeInfo();
+            if(warningTime.isPresent())
+                titleBuilder.append("at:").append(warningTime.get());
             helper.setText(R.id.view_shorthand_list_item_title, titleBuilder.toString())
                 .setText(R.id.view_shorthand_list_item_detail, detailBuilder.toString())
                 .setImageDrawable(R.id.view_shorthand_list_item_image, TextImageFactory.getInstance().getGtdActionImage());

@@ -22,12 +22,17 @@ import static ahtewlg7.utimer.enumtype.errcode.NoteEditErrCode.ERR_EDIT_ENTITY_N
  */
 public class UTimerRawReadAction {
 
-    public Flowable<String> toReadRawTxt(AUtimerEntity entity){
+    public Flowable<String> toReadRaw(AUtimerEntity entity){
         if(entity.getGtdType() == GtdType.SHORTHAND || entity.getGtdType() == GtdType.NOTE)
             return toReadTxt(entity);
         return Flowable.empty();
     }
 
+    private Flowable<String> toReadDb(final AUtimerEntity entity){
+        if(entity.getGtdType() != GtdType.ACTION)
+            return Flowable.empty();
+        return Flowable.empty();
+    }
     private Flowable<String> toReadTxt(final AUtimerEntity entity){
         if(entity.getGtdType() != GtdType.SHORTHAND && entity.getGtdType() != GtdType.NOTE)
             return Flowable.empty();

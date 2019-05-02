@@ -40,10 +40,9 @@ class GreenDaoOpenHelper extends DatabaseOpenHelper {
         if(oldVersion >= newVersion){
             return;
         }
-        if( oldVersion == DBV_0_0_12){
+        if(oldVersion == DBV_0_0_12){
             db.execSQL("ALTER TABLE " + ActionEntityGdBeanDao.TABLENAME + " ADD COLUMN "
                     + ActionEntityGdBeanDao.Properties.WarningTimeList.columnName + " TEXT");
-//                    + ActionEntityGdBeanDao.Properties.TimeElementList.columnName + " INTEGER");
             oldVersion = DBV_0_0_13;
         }
     }
