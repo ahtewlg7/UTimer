@@ -1,5 +1,8 @@
 package ahtewlg7.utimer.nlp;
 
+import android.support.annotation.NonNull;
+
+import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.seg.common.Term;
 
 import org.joda.time.DateTime;
@@ -17,15 +20,17 @@ public class NlpAction {
     private NlpAction(){
         hanlpAction   = new HanlpAction();
         timeNlpAction = new TimeNlpAction();
-
-        hanlpAction.initNLP();
-        timeNlpAction.initNLP();
     }
 
     public static NlpAction getInstance(){
         if(instance == null)
             instance = new NlpAction();
         return instance;
+    }
+
+    public void initNlp(){
+        hanlpAction.initNLP();
+        timeNlpAction.initNLP();
     }
 
     public List<DateTime> toSegTimes(String raw){
@@ -38,5 +43,13 @@ public class NlpAction {
 
     public List<String> getKeyWords(String raw){
         return hanlpAction.getKeyWords(raw);
+    }
+
+    public boolean isPerson(@NonNull Term term){
+        return term.nature.startsWith(Nature.nr.toString());
+    }
+    public boolean isPlace(@NonNull Term term){
+//        return term.nature.startsWith()
+        return false;//todo
     }
 }

@@ -13,8 +13,6 @@ import java.util.List;
 
 import ahtewlg7.utimer.entity.gtd.GtdProjectEntity;
 import ahtewlg7.utimer.gtd.GtdProjectListAction;
-import ahtewlg7.utimer.mvp.un.IAllItemListMvpM;
-import ahtewlg7.utimer.mvp.un.IAllItemListMvpV;
 import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MySafeSubscriber;
 import io.reactivex.Flowable;

@@ -1,21 +1,39 @@
 package ahtewlg7.utimer.entity.w5h2;
 
 
+import com.google.common.base.Optional;
+import com.google.common.collect.Lists;
+
 import java.util.List;
 
+import ahtewlg7.utimer.entity.ITipsEntity;
 import ahtewlg7.utimer.entity.context.Contact;
 
 /**
  * Created by lw on 2019/1/16.
  */
-public class W5h2Who {
+public class W5h2Who implements ITipsEntity {
     private List<Contact> contactList;
 
-    public List<Contact> getContactList() {
-        return contactList;
+    public W5h2Who(){
+        contactList = Lists.newArrayList();
     }
 
-    public void setContactList(List<Contact> contactList) {
-        this.contactList = contactList;
+    public void addContact(Contact contact){
+        contactList.add(contact);
+    }
+    public void removeContact(Contact contact){
+        contactList.remove(contact);
+    }
+    public void clearContact(){
+        contactList.clear();
+    }
+
+    @Override
+    public Optional<String> toTips() {
+        StringBuilder builder   = new StringBuilder();
+        for(Contact contact : contactList)
+            builder.append(contact.getName()).append(",");
+        return Optional.of(builder.toString());
     }
 }

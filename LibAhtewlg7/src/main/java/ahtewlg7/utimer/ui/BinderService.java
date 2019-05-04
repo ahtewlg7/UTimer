@@ -14,6 +14,7 @@ import ahtewlg7.utimer.entity.busevent.ActivityBusEvent;
 import ahtewlg7.utimer.entity.busevent.UTimerBusEvent;
 import ahtewlg7.utimer.factory.EventBusFatory;
 import ahtewlg7.utimer.mvp.rw.AllEntityRwMvpP;
+import ahtewlg7.utimer.nlp.NlpAction;
 import ahtewlg7.utimer.util.MySimpleObserver;
 import io.reactivex.subjects.PublishSubject;
 
@@ -37,6 +38,7 @@ public class BinderService extends Service{
         toListenEventBus();
 
         entityRwMvpP.toLoadAll();
+        NlpAction.getInstance().initNlp();
     }
 
     @Override

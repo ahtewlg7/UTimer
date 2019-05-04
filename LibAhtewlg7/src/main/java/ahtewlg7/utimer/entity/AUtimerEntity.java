@@ -49,7 +49,7 @@ public abstract class AUtimerEntity<T extends AUtimerBuilder> implements ITipsEn
     }
 
     public boolean ifValid() {
-        return !TextUtils.isEmpty(title);
+        return !TextUtils.isEmpty(title) && !TextUtils.isEmpty(uuid);
     }
 
     public boolean ifRawReadable(){
