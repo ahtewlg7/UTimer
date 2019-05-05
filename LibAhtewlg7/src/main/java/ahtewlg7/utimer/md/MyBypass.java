@@ -16,6 +16,7 @@ import android.util.Patterns;
 import android.view.View;
 
 import com.blankj.utilcode.util.Utils;
+import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 
 import java.util.List;
@@ -47,6 +48,19 @@ public class MyBypass extends Bypass{
 
     public void setSpanClickListener(SpanClickListener spanClickListener){
         this.spanClickListener = spanClickListener;
+    }
+
+    public CharSequence markdownToSpannable(String markdown, boolean byLine) {
+        return markdownToSpannable(markdown, null, byLine);
+    }
+    public CharSequence markdownToSpannable(String markdown, ImageGetter imageGetter, boolean byLine) {
+        if(!byLine)
+            return markdownToSpannable(markdown, imageGetter);
+        List<String> markdownList = Splitter.on(System.lineSeparator()).splitToList(markdown);
+        CharSequence[] charSequenceArray = new CharSequence[markdownList.size()];
+        for(int i = 0; i < markdownList.size(); i++)
+            charSequenceArray[i] = markdownToSpannable(markdownList.get(i)) + System.lineSeparator();
+        return TextUtils.concat(charSequenceArray);
     }
 
     public List<EditElement> toParseMd(String rawTxt) {

@@ -390,7 +390,7 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
     }
     protected EditElement toParseRawTxt(String rawTxt){
         EditElement editElement = new EditElement(rawTxt);
-        editElement.setMdCharSequence(myBypass.markdownToSpannable(rawTxt));
+        editElement.setMdCharSequence(myBypass.markdownToSpannable(rawTxt, true));
         return editElement;
     }
     protected Flowable<EditElement> toParseRawTxt(@NonNull Flowable<String> rawTxtRx) {
