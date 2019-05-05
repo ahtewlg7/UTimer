@@ -1,17 +1,19 @@
 package ahtewlg7.utimer.entity.context;
 
+import android.text.TextUtils;
+
 /**
  * Created by lw on 2019/4/11.
  */
-public class Contact {
+public class ContactContext implements IContext{
     private String name;
     private String alias;
 
-    public Contact(String name) {
+    public ContactContext(String name) {
         this.name = name;
     }
 
-    public Contact(String name, String alias) {
+    public ContactContext(String name, String alias) {
         this.name = name;
         this.alias = alias;
     }
@@ -22,5 +24,10 @@ public class Contact {
 
     public String getAlias() {
         return alias;
+    }
+
+    @Override
+    public boolean ifValid() {
+        return !TextUtils.isEmpty(name);
     }
 }

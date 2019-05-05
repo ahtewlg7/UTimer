@@ -22,19 +22,6 @@
     </android.support.design.widget.AppBarLayout>
 
     <EditText
-        android:id="@+id/fragment_action_edit_nlp"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="1dp"
-        android:background="@android:color/holo_blue_dark"
-        android:gravity="top"
-        android:minHeight="200dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fragment_action_edit_raw"
-        app:layout_constraintVertical_bias="0.415"
-        tools:layout_editor_absoluteX="-16dp" />
-
-    <EditText
         android:id="@+id/fragment_action_edit_raw"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -43,4 +30,28 @@
         android:minHeight="200dp"
         android:textColor="@android:color/white"
         app:layout_constraintTop_toBottomOf="@+id/fragment_action_appbarlayout" />
+
+    <EditText
+        android:id="@+id/fragment_action_edit_w5h2_hint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        android:background="@android:color/holo_blue_dark"
+        android:gravity="top"
+        android:text="@string/prompt_w5h2"
+        android:textColor="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@+id/fragment_action_edit_raw" />
+
+    <EditText
+        android:id="@+id/fragment_action_edit_nlp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@android:color/holo_blue_dark"
+        android:gravity="top"
+        android:minHeight="200dp"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fragment_action_edit_w5h2_hint"
+        app:layout_constraintVertical_bias="0.415"
+        tools:layout_editor_absoluteX="-16dp" />
 </android.support.constraint.ConstraintLayout>

@@ -10,7 +10,7 @@ public class BaseW5h2Entity implements IValidEntity {
     private W5h2When when;
     private AW5h2Why why;
     private W5h2Who who;
-    private AW5h2Where where;
+    private W5h2Where where;
     private AW5h2How how;
     private W5h2HowMuch howMuch;
 
@@ -51,11 +51,11 @@ public class BaseW5h2Entity implements IValidEntity {
         this.when = when;
     }
 
-    public AW5h2Where getWhere() {
+    public W5h2Where getWhere() {
         return where;
     }
 
-    public void setWhere(AW5h2Where where) {
+    public void setWhere(W5h2Where where) {
         this.where = where;
     }
 

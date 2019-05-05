@@ -140,16 +140,6 @@ public class GtdActionEntity extends AGtdUtimerEntity<GtdActionBuilder>
             builder.append(dateTimeAction.toFormat(dateTime)).append(";\t");
         return Optional.of(builder.toString());
     }
-    public Optional<String> getWorkTimeInfo(){
-        if(getW5h2Entity().getWhen() == null || getW5h2Entity().getWhen().getWorkTime() == null )
-            return Optional.absent();
-        StringBuilder builder   = new StringBuilder();
-        List<DateTime> workTime = getW5h2Entity().getWhen().getWorkTime();
-        DateTimeAction dateTimeAction = new DateTimeAction();
-        for(DateTime dateTime : workTime)
-            builder.append(dateTimeAction.toFormat(dateTime)).append("\t");
-        return Optional.of(builder.toString());
-    }
 
     private void  initByGbBean(ActionEntityGdBean gdBean){
         uuid            = gdBean.getUuid();
@@ -170,8 +160,8 @@ public class GtdActionEntity extends AGtdUtimerEntity<GtdActionBuilder>
     private void updateWhen(W5h2When when){
         if(when != null){
             w5h2Entity.setWhen(when);
-            createTime      = when.getCreateTime();
-            lastAccessTime  = when.getLastAccessTime();
+            createTime      = when.getCreateTime().getDateTime();
+            lastAccessTime  = when.getLastAccessTime().getDateTime();
         }
     }
     private void updateHowMuch(W5h2HowMuch howMuch){

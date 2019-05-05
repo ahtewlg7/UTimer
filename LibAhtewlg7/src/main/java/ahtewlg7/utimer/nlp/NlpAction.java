@@ -48,8 +48,16 @@ public class NlpAction {
     public boolean isPerson(@NonNull Term term){
         return term.nature.startsWith(Nature.nr.toString());
     }
+    public boolean isOrganization(@NonNull Term term){
+        return term.nature.startsWith(Nature.ni.toString());
+    }
     public boolean isPlace(@NonNull Term term){
-//        return term.nature.startsWith()
-        return false;//todo
+        return !isPerson(term) && term.nature.startsWith(Nature.n.toString());//todo
+    }
+    public boolean isTime(@NonNull Term term){
+        return term.nature.startsWith(Nature.t.toString());
+    }
+    public boolean isDeed(@NonNull Term term){
+        return term.nature.startsWith(Nature.v.toString());
     }
 }

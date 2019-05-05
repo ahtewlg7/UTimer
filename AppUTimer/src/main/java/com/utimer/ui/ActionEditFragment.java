@@ -2,13 +2,17 @@ package com.utimer.ui;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.widget.EditText;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.blankj.utilcode.util.ToastUtils;
+import com.google.common.base.Optional;
 import com.trello.rxlifecycle2.LifecycleProvider;
 import com.utimer.R;
 
@@ -17,6 +21,7 @@ import org.joda.time.DateTime;
 import ahtewlg7.utimer.common.IdAction;
 import ahtewlg7.utimer.entity.gtd.GtdActionBuilder;
 import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
+import ahtewlg7.utimer.entity.w5h2.BaseW5h2Entity;
 import ahtewlg7.utimer.enumtype.ActState;
 import ahtewlg7.utimer.mvp.ActionEditMvpP;
 import ahtewlg7.utimer.util.MyRInfo;
@@ -34,6 +39,8 @@ public class ActionEditFragment extends ATxtEditFragment
     EditText rawEditView;
     @BindView(R.id.fragment_action_edit_nlp)
     EditText nlpEditView;
+
+    private MaterialDialog nlpWaitDialog;
 
     private ActionEditMvpP editMvpP;
 
@@ -54,6 +61,13 @@ public class ActionEditFragment extends ATxtEditFragment
         ActionEditFragment fragment = new ActionEditFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        /*false means menu off; true means menu on*/
+        setHasOptionsMenu(false);
     }
 
     @Override
@@ -105,17 +119,20 @@ public class ActionEditFragment extends ATxtEditFragment
 
     @Override
     protected boolean ifTxtEditing() {
-//        return rawEditView != null && rawEditView.ifEditing();
-        return false;
+        if(rawEditView == null)
+            return false;
+        if(getUTimerEntity().getDetail().isPresent())
+            return !rawEditView.getText().toString().equals(getUTimerEntity().getDetail().get());
+        return !TextUtils.isEmpty(rawEditView.getText().toString());
     }
 
     @Override
     protected void toStartEdit() {
+        if(getUTimerEntity().getDetail().isPresent())
+            rawEditView.setText(getUTimerEntity().getDetail().get());
         if(editMvpP == null)
             editMvpP = new ActionEditMvpP(this,getUTimerEntity());
         editMvpP.toParseW5h2();
-        if(getUTimerEntity().getDetail().isPresent())
-            rawEditView.setText(getUTimerEntity().getDetail().get());
         /*rawEditView.toSetAttachEditView(this);
         rawEditView.setUTimerEntity(getUTimerEntity());
         rawEditView.toStartEdit();*/
@@ -147,17 +164,36 @@ public class ActionEditFragment extends ATxtEditFragment
 
     @Override
     public void onParseStart() {
-
+        toCreateAIWaitingDialog();
     }
 
     @Override
-    public void onParseEnd(String detail) {
-        nlpEditView.setText(detail);
+    public void onParseEnd(Optional<BaseW5h2Entity> w5h2EntityOptional) {
+        if(nlpWaitDialog != null)
+            nlpWaitDialog.dismiss();
+        StringBuilder builder = new StringBuilder();
+        if(w5h2EntityOptional.isPresent()){
+            BaseW5h2Entity w5h2Entity = w5h2EntityOptional.get();
+            if(w5h2Entity.getWhat() != null && w5h2Entity.getWhat().toTips().isPresent())
+                builder.append(w5h2Entity.getWhat().toTips().get()).append("\n");
+            if(w5h2Entity.getWhen() != null && w5h2Entity.getWhen().toTips().isPresent())
+                builder.append(w5h2Entity.getWhen().toTips().get()).append("\n");
+            if(w5h2Entity.getWhere() != null && w5h2Entity.getWhere().toTips().isPresent())
+                builder.append(w5h2Entity.getWhere().toTips().get()).append("\n");
+            if(w5h2Entity.getWho() != null && w5h2Entity.getWho().toTips().isPresent())
+                builder.append(w5h2Entity.getWho().toTips().get()).append("\n");
+        }else{
+            builder.append("Null");
+        }
+        nlpEditView.setText(builder.toString());
     }
 
     @Override
     public void onParseErr(Throwable t) {
+        if(nlpWaitDialog != null)
+            nlpWaitDialog.dismiss();
         t.printStackTrace();
+        ToastUtils.showShort(t.getMessage());
     }
     @Override
     public LifecycleProvider getRxLifeCycleBindView() {
@@ -194,5 +230,12 @@ public class ActionEditFragment extends ATxtEditFragment
                         startForResult(ProjectFragment.newInstance(entity), REQ_NEW_FRAGMENT);*/
                     }
                 }).show();
+    }
+
+    private void toCreateAIWaitingDialog(){
+        nlpWaitDialog = new MaterialDialog.Builder(getContext()).title(R.string.wait)
+                .content(R.string.prompt_nlp_wait)
+                .cancelable(false)
+                .show();
     }
 }

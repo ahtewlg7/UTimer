@@ -6,8 +6,6 @@ import com.google.common.base.Optional;
 
 import org.reactivestreams.Subscription;
 
-import java.util.List;
-
 import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
 import ahtewlg7.utimer.entity.w5h2.BaseW5h2Entity;
 import ahtewlg7.utimer.gtd.GtdActParser;
@@ -32,18 +30,14 @@ public class ActionEditMvpP {
     }
 
     public void toParseW5h2(){
-        mvpM.toParseSeg(Flowable.just(actionEntity))
+        mvpM.toParseW5h2(Flowable.just(actionEntity))
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(new MySafeSubscriber<Optional<List<String>>>(){
+            .subscribe(new MySafeSubscriber<Optional<BaseW5h2Entity>>(){
                 @Override
-                public void onNext(Optional<List<String>> segOptional) {
-                    super.onNext(segOptional);
-                    if(mvpV != null && segOptional.isPresent()){
-                        StringBuilder builder = new StringBuilder();
-                        for(String tmp : segOptional.get())
-                            builder.append(tmp).append("\n");
-                        mvpV.onParseEnd(builder.toString());
-                    }
+                public void onNext(Optional<BaseW5h2Entity> w5h2EntityOptional) {
+                    super.onNext(w5h2EntityOptional);
+                    if(mvpV != null)
+                        mvpV.onParseEnd(w5h2EntityOptional);
                 }
 
                 @Override
@@ -59,6 +53,11 @@ public class ActionEditMvpP {
                     if(mvpV != null)
                         mvpV.onParseStart();
                 }
+
+                @Override
+                public void onComplete() {
+                    super.onComplete();
+                }
             });
     }
 
@@ -69,16 +68,6 @@ public class ActionEditMvpP {
             gtdActParser        = new GtdActParser();
         }
 
-        public Flowable<Optional<List<String>>> toParseSeg(@NonNull Flowable<GtdActionEntity> actionEntityRx){
-            return actionEntityRx.map(new Function<GtdActionEntity, Optional<List<String>>>() {
-                @Override
-                public Optional<List<String>> apply(GtdActionEntity actionEntity) throws Exception {
-                    if(actionEntity == null || !actionEntity.ifValid())
-                        return Optional.absent();
-                    return Optional.of(gtdActParser.toSegTemp(actionEntity.getDetail().get()));
-                }
-            }).subscribeOn(Schedulers.computation());
-        }
         public Flowable<Optional<BaseW5h2Entity>> toParseW5h2(@NonNull Flowable<GtdActionEntity> actionEntityRx){
             return actionEntityRx.map(new Function<GtdActionEntity, Optional<BaseW5h2Entity>>() {
                 @Override
@@ -92,7 +81,7 @@ public class ActionEditMvpP {
     }
     public interface IActEditMvpV extends IRxLifeCycleBindView{
         public void onParseStart();
-        public void onParseEnd(String detail);
+        public void onParseEnd(Optional<BaseW5h2Entity> baseW5h2EntityOptional);
         public void onParseErr(Throwable t);
     }
 }
