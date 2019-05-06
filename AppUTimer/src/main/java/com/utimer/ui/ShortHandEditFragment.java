@@ -170,7 +170,7 @@ public class ShortHandEditFragment extends ATxtEditFragment
         if(elementList.size() > 0){//maybe the entity is not loaded
             resultCode = RESULT_OK;
             if(!TextUtils.isEmpty(mdEditView.getLastAccessEditElement().getMdCharSequence()))
-                ((ShortHandEntity)getArguments().getSerializable(KEY_SHORTHAND)).setDetail(mdEditView.getLastAccessEditElement().getMdCharSequence().toString());
+                getUTimerEntity().setDetail(mdEditView.getLastAccessEditElement().getMdCharSequence().toString());
             editMvpP.toPostAction(editElementTable);
             editMvpP.toFinishEdit(Flowable.fromIterable(elementList));
         }

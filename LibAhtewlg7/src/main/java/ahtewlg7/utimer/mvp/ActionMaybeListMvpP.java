@@ -11,6 +11,7 @@ import org.reactivestreams.Subscription;
 
 import java.util.List;
 
+import ahtewlg7.utimer.entity.BaseEventBusBean;
 import ahtewlg7.utimer.entity.busevent.ActionBusEvent;
 import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
 import ahtewlg7.utimer.enumtype.ActState;
@@ -80,21 +81,21 @@ public class ActionMaybeListMvpP {
     }
 
     public void toDeleteItem(@NonNull Flowable<GtdActionEntity>  entityRx) {
-        entityRx.map(new Function<GtdActionEntity, Optional<ActionBusEvent>>() {
+        entityRx.map(new Function<GtdActionEntity, Optional<BaseEventBusBean>>() {
                     @Override
-                    public Optional<ActionBusEvent> apply(GtdActionEntity entity) throws Exception {
+                    public Optional<BaseEventBusBean> apply(GtdActionEntity entity) throws Exception {
                         return GtdMachine.getInstance().getCurrState(entity).toTrash(entity);
                     }
                 })
-                .subscribe(new MySafeSubscriber<Optional<ActionBusEvent>>() {
+                .subscribe(new MySafeSubscriber<Optional<BaseEventBusBean>>() {
                     @Override
-                    public void onNext(Optional<ActionBusEvent> entity) {
+                    public void onNext(Optional<BaseEventBusBean> entity) {
                         super.onNext(entity);
                         if(mvpV != null && entity.isPresent()){
                             if(entity.get().isPerform())
-                                mvpV.onDeleteSucc(INVALID_INDEX, entity.get().getActionEntity());
+                                mvpV.onDeleteSucc(INVALID_INDEX, ((ActionBusEvent)entity.get()).getActionEntity());
                             else
-                                mvpV.onDeleteFail(entity.get().getActionEntity());
+                                mvpV.onDeleteFail(((ActionBusEvent)entity.get()).getActionEntity());
                         }
                     }
 

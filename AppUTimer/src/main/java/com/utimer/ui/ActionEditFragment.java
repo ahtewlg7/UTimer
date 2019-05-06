@@ -133,30 +133,22 @@ public class ActionEditFragment extends ATxtEditFragment
         if(editMvpP == null)
             editMvpP = new ActionEditMvpP(this,getUTimerEntity());
         editMvpP.toParseW5h2();
-        /*rawEditView.toSetAttachEditView(this);
-        rawEditView.setUTimerEntity(getUTimerEntity());
-        rawEditView.toStartEdit();*/
     }
 
     @Override
     protected void toPauseEdit() {
-//        rawEditView.toPauseEdit();
     }
 
     @Override
     protected void toEndEdit() {
-        /*rawEditView.toEndEdit();
-        int resultCode = RESULT_CANCELED;
-        List<EditElement> elementList = rawEditView.getEditElementList();
-        Table<Integer, Integer, EditElement> editElementTable = rawEditView.getEditElementTable();
-        if(elementList.size() > 0){//maybe the entity is not loaded
-            resultCode = RESULT_OK;
-            if(!TextUtils.isEmpty(rawEditView.getLastAccessEditElement().getMdCharSequence()))
-                getUTimerEntity().setDetail(rawEditView.getLastAccessEditElement().getMdCharSequence().toString());
-            editMvpP.toPostAction(editElementTable);
-            editMvpP.toFinishEdit(Flowable.fromIterable(elementList));
-        }
-        setFragmentResult(resultCode, getArguments());*/
+        int resultCode = RESULT_OK;
+        if(ifTxtEditing())
+            getUTimerEntity().setDetail(rawEditView.getText().toString());
+        editMvpP.toFinishEdit();
+        /*else if(TextUtils.isEmpty(rawEditView.getText())){
+            GtdMachine.getInstance().getCurrState(getUTimerEntity()).toTrash(getUTimerEntity());
+        }*/
+        setFragmentResult(resultCode, getArguments());
     }
 
     /**********************************************IShorthandEditMvpV**********************************************/
@@ -164,24 +156,24 @@ public class ActionEditFragment extends ATxtEditFragment
 
     @Override
     public void onParseStart() {
-        toCreateAIWaitingDialog();
+        onNlpStart();
     }
 
     @Override
     public void onParseEnd(Optional<BaseW5h2Entity> w5h2EntityOptional) {
-        if(nlpWaitDialog != null)
-            nlpWaitDialog.dismiss();
+        onNlpEnd();
         StringBuilder builder = new StringBuilder();
         if(w5h2EntityOptional.isPresent()){
             BaseW5h2Entity w5h2Entity = w5h2EntityOptional.get();
+
+            if(w5h2Entity.getWho() != null && w5h2Entity.getWho().toTips().isPresent())
+                builder.append(w5h2Entity.getWho().toTips().get()).append("\n");
             if(w5h2Entity.getWhat() != null && w5h2Entity.getWhat().toTips().isPresent())
                 builder.append(w5h2Entity.getWhat().toTips().get()).append("\n");
             if(w5h2Entity.getWhen() != null && w5h2Entity.getWhen().toTips().isPresent())
                 builder.append(w5h2Entity.getWhen().toTips().get()).append("\n");
             if(w5h2Entity.getWhere() != null && w5h2Entity.getWhere().toTips().isPresent())
                 builder.append(w5h2Entity.getWhere().toTips().get()).append("\n");
-            if(w5h2Entity.getWho() != null && w5h2Entity.getWho().toTips().isPresent())
-                builder.append(w5h2Entity.getWho().toTips().get()).append("\n");
         }else{
             builder.append("Null");
         }
@@ -190,8 +182,7 @@ public class ActionEditFragment extends ATxtEditFragment
 
     @Override
     public void onParseErr(Throwable t) {
-        if(nlpWaitDialog != null)
-            nlpWaitDialog.dismiss();
+        onNlpEnd();
         t.printStackTrace();
         ToastUtils.showShort(t.getMessage());
     }
@@ -202,6 +193,18 @@ public class ActionEditFragment extends ATxtEditFragment
 
 
     /******************************************INoteEditMvpV**********************************************/
+    private void onNlpStart(){
+        if(nlpWaitDialog == null )
+            toCreateAIWaitingDialog();
+        if(!nlpWaitDialog.isShowing())
+            nlpWaitDialog.show();
+        nlpEditView.setHint(R.string.prompt_nlp_wait);
+    }
+    private void onNlpEnd(){
+        if(nlpWaitDialog != null)
+            nlpWaitDialog.dismiss();
+        nlpEditView.setHint(null);
+    }
     private void toCreateRenameDialog(){
         new MaterialDialog.Builder(getContext()).title(R.string.rename)
                 .inputType(InputType.TYPE_CLASS_TEXT)
@@ -235,7 +238,7 @@ public class ActionEditFragment extends ATxtEditFragment
     private void toCreateAIWaitingDialog(){
         nlpWaitDialog = new MaterialDialog.Builder(getContext()).title(R.string.wait)
                 .content(R.string.prompt_nlp_wait)
-                .cancelable(false)
+                .cancelable(true)
                 .show();
     }
 }

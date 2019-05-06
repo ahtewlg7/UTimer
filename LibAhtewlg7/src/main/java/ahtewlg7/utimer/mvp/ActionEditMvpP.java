@@ -6,9 +6,11 @@ import com.google.common.base.Optional;
 
 import org.reactivestreams.Subscription;
 
+import ahtewlg7.utimer.entity.BaseEventBusBean;
 import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
 import ahtewlg7.utimer.entity.w5h2.BaseW5h2Entity;
 import ahtewlg7.utimer.gtd.GtdActParser;
+import ahtewlg7.utimer.state.GtdMachine;
 import ahtewlg7.utimer.util.MySafeSubscriber;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -53,12 +55,13 @@ public class ActionEditMvpP {
                     if(mvpV != null)
                         mvpV.onParseStart();
                 }
-
-                @Override
-                public void onComplete() {
-                    super.onComplete();
-                }
             });
+    }
+
+    public void toFinishEdit(){
+        mvpM.toFinishEdit(Flowable.just(actionEntity))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new MySafeSubscriber<Optional<BaseEventBusBean>>());
     }
 
     class ActionMvpM{
@@ -68,7 +71,7 @@ public class ActionEditMvpP {
             gtdActParser        = new GtdActParser();
         }
 
-        public Flowable<Optional<BaseW5h2Entity>> toParseW5h2(@NonNull Flowable<GtdActionEntity> actionEntityRx){
+        Flowable<Optional<BaseW5h2Entity>> toParseW5h2(@NonNull Flowable<GtdActionEntity> actionEntityRx){
             return actionEntityRx.map(new Function<GtdActionEntity, Optional<BaseW5h2Entity>>() {
                 @Override
                 public Optional<BaseW5h2Entity> apply(GtdActionEntity actionEntity) throws Exception {
@@ -77,6 +80,15 @@ public class ActionEditMvpP {
                     return gtdActParser.toParseW5h2(actionEntity.getDetail().get());
                 }
             }).subscribeOn(Schedulers.computation());
+        }
+
+        Flowable<Optional<BaseEventBusBean>> toFinishEdit(@NonNull Flowable<GtdActionEntity> actionEntityRx){
+            return actionEntityRx.map(new Function<GtdActionEntity, Optional<BaseEventBusBean>>() {
+                @Override
+                public Optional<BaseEventBusBean> apply(GtdActionEntity actionEntity) throws Exception {
+                    return GtdMachine.getInstance().getCurrState(actionEntity).toGtd(actionEntity);
+                }
+            });
         }
     }
     public interface IActEditMvpV extends IRxLifeCycleBindView{

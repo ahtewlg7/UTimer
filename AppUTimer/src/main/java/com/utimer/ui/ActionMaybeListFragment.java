@@ -89,11 +89,11 @@ public class ActionMaybeListFragment extends AToolbarBkFragment implements Actio
     public void onFragmentResult(int requestCode, int resultCode, Bundle data) {
         super.onFragmentResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && data != null) {
-            GtdActionEntity shorthandEntity = (GtdActionEntity) data.getSerializable(ShortHandEditFragment.KEY_SHORTHAND);
-            if (shorthandEntity != null && requestCode == REQ_NEW_FRAGMENT)
-                onItemCreate(shorthandEntity);
-            else if (shorthandEntity != null && requestCode == REQ_EDIT_FRAGMENT) {
-                onItemEdit(shorthandEntity);
+            GtdActionEntity entity = (GtdActionEntity) data.getSerializable(ActionEditFragment.KEY_ACTION);
+            if (entity != null && requestCode == REQ_NEW_FRAGMENT)
+                onItemCreate(entity);
+            else if (entity != null && requestCode == REQ_EDIT_FRAGMENT) {
+                onItemEdit(entity);
             }
         }
     }
@@ -173,8 +173,7 @@ public class ActionMaybeListFragment extends AToolbarBkFragment implements Actio
 
     @Override
     public void onItemEdit(GtdActionEntity data) {
-        if (editIndex != INIT_POSITION)
-            listMvpP.onItemEdited(editIndex, data);
+        onDeleteSucc(INVALID_INDEX, data);
         editIndex = INIT_POSITION;
     }
 

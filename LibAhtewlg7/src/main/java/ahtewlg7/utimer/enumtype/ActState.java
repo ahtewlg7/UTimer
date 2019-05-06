@@ -6,7 +6,8 @@ import java.util.List;
 
 public enum ActState {
     MAYBE,
-    ELIMINATE,//means trash
+    TRASH,
+    GTD,
     DO_NOW,
     TODO,
     NEXT,
@@ -19,6 +20,7 @@ public enum ActState {
         List<ActState> list = Lists.newArrayList();
         list.add(DO_NOW);
         list.add(TODO);
+        list.add(GTD);
         list.add(NEXT);
         list.add(WAIT_FOR);
         list.add(DATEBOOK);

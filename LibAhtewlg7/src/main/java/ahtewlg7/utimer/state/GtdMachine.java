@@ -2,6 +2,8 @@ package ahtewlg7.utimer.state;
 
 
 import ahtewlg7.utimer.entity.AUtimerEntity;
+import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
+import ahtewlg7.utimer.enumtype.ActState;
 import ahtewlg7.utimer.enumtype.GtdType;
 
 public class GtdMachine {
@@ -10,11 +12,13 @@ public class GtdMachine {
     private static GtdMachine instance;
 
     private BaseGtdState baseState;
-    private GtdActState actState;
+    private ActMaybeState actMaybeState;
+    private ActGtdState actGtdState;
 
     private GtdMachine(){
-        baseState   = new BaseGtdState();
-        actState    = new GtdActState();
+        baseState       = new BaseGtdState(this);
+        actMaybeState   = new ActMaybeState(this);
+        actGtdState     = new ActGtdState(this);
     }
 
     public static GtdMachine getInstance(){
@@ -24,14 +28,21 @@ public class GtdMachine {
     }
 
     public BaseGtdState getCurrState(AUtimerEntity entity){
-        BaseGtdState state = baseState;
-        if(entity.getGtdType() == GtdType.ACTION){
-            state = actState;
-        }
-        return state;
+        if(entity.getGtdType() == GtdType.ACTION
+                && ((GtdActionEntity)entity).getActionState() == ActState.MAYBE){
+            return actMaybeState;
+        }else if(entity.getGtdType() == GtdType.ACTION
+                && ((GtdActionEntity)entity).getActionState() == ActState.GTD){
+            return actGtdState;
+        }else
+            return baseState;
     }
 
-    GtdActState getActState() {
-        return actState;
+    ActMaybeState getActMaybeState() {
+        return actMaybeState;
+    }
+
+    ActGtdState getActGtdState() {
+        return actGtdState;
     }
 }
