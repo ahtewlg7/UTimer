@@ -3,6 +3,8 @@ package ahtewlg7.utimer.mvp;
 import android.support.annotation.NonNull;
 
 import com.google.common.base.Optional;
+import com.trello.rxlifecycle2.android.FragmentEvent;
+import com.trello.rxlifecycle2.components.support.RxFragment;
 
 import org.reactivestreams.Subscription;
 
@@ -33,6 +35,7 @@ public class ActionEditMvpP {
 
     public void toParseW5h2(){
         mvpM.toParseW5h2(Flowable.just(actionEntity))
+            .compose(((RxFragment) mvpV.getRxLifeCycleBindView()).<Optional<BaseW5h2Entity>>bindUntilEvent(FragmentEvent.DESTROY_VIEW))
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(new MySafeSubscriber<Optional<BaseW5h2Entity>>(){
                 @Override

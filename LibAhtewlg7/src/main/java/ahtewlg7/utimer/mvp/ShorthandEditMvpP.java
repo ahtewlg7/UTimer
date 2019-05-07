@@ -16,8 +16,6 @@ import io.reactivex.schedulers.Schedulers;
  * Created by lw on 2018/10/18.
  */
 public class ShorthandEditMvpP extends AUtimerTxtEditMvpP<ShortHandEntity> {
-    public static final String TAG = ShorthandEditMvpP.class.getSimpleName();
-
     public ShorthandEditMvpP(ShortHandEntity shortHandEntity , IUtimerEditMvpV shorthandEditMvpV) {
         super(shortHandEntity,shorthandEditMvpV);
     }
