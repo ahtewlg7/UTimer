@@ -10,6 +10,7 @@ import ahtewlg7.utimer.entity.busevent.ActionBusEvent;
 import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
 import ahtewlg7.utimer.enumtype.ActState;
 import ahtewlg7.utimer.enumtype.GtdBusEventType;
+import ahtewlg7.utimer.factory.GtdActionByUuidFactory;
 
 /**
  * Created by lw on 2019/4/6.
@@ -24,9 +25,13 @@ public class ActGtdState extends BaseActState{
     public Optional<BaseEventBusBean> toGtd(@NonNull AUtimerEntity entity) {
         if(!ifActHandlable(entity) || !toGtdable((GtdActionEntity)entity))
             return Optional.absent();
+        ActState preState =  ((GtdActionEntity) entity).getActionState();
         ((GtdActionEntity) entity).setActionState(ActState.GTD);
         ActionBusEvent busEvent = new ActionBusEvent(GtdBusEventType.SAVE, (GtdActionEntity) entity);
-        return toPostEvent(entity, busEvent);
+        Optional<BaseEventBusBean> eventOptional = toPostEvent(entity, busEvent);
+        if(eventOptional.isPresent())
+            GtdActionByUuidFactory.getInstance().updateState(preState, (GtdActionEntity)entity);
+        return eventOptional;
     }
 
     @Override

@@ -18,9 +18,9 @@ public enum ActState {
 
     public static List<ActState> getActiveAll(){
         List<ActState> list = Lists.newArrayList();
+        list.add(GTD);
         list.add(DO_NOW);
         list.add(TODO);
-        list.add(GTD);
         list.add(NEXT);
         list.add(WAIT_FOR);
         list.add(DATEBOOK);

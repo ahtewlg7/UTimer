@@ -20,7 +20,6 @@ import ahtewlg7.utimer.comparator.GtdTimeComparator;
 import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
 import ahtewlg7.utimer.enumtype.ActState;
 import ahtewlg7.utimer.enumtype.GtdLife;
-import ahtewlg7.utimer.gtd.GtdLifeCycleAction;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
@@ -34,13 +33,11 @@ public class GtdActionByUuidFactory extends ABaseLruCacheFactory<String, GtdActi
     private BiMap<String, String> detailUuidMap;
     private Multimap<ActState, String> stateUuidMultiMap;
 
-    private GtdLifeCycleAction lifeCycleAction;
 
     protected GtdActionByUuidFactory(){
         super();
         detailUuidMap       = HashBiMap.create();
         stateUuidMultiMap   = HashMultimap.create();
-        lifeCycleAction     = new GtdLifeCycleAction();
     }
 
     public static GtdActionByUuidFactory getInstance() {
@@ -61,6 +58,8 @@ public class GtdActionByUuidFactory extends ABaseLruCacheFactory<String, GtdActi
 
     @Override
     public boolean add(String key, GtdActionEntity actionEntity) {
+        if(detailUuidMap.containsKey(key))
+            return false;
         boolean result = super.add(key, actionEntity);
         if(result && actionEntity.getDetail().isPresent())
             detailUuidMap.put(actionEntity.getDetail().get(), actionEntity.getUuid());
@@ -85,6 +84,12 @@ public class GtdActionByUuidFactory extends ABaseLruCacheFactory<String, GtdActi
         detailUuidMap.clear();
         stateUuidMultiMap.clear();
     }
+    public void updateState(ActState preState, GtdActionEntity actionEntity){
+        if(preState != null && actionEntity != null && actionEntity.ifValid()) {
+            stateUuidMultiMap.remove(preState, actionEntity.getUuid());
+            stateUuidMultiMap.put(actionEntity.getActionState(), actionEntity.getUuid());
+        }
+    }
 
     public Flowable<GtdActionEntity> getEntityByState(@NonNull ActState actState){
         return Flowable.fromIterable(getEntityByUuid(new ArrayList<String>(stateUuidMultiMap.get(actState))));
@@ -98,12 +103,12 @@ public class GtdActionByUuidFactory extends ABaseLruCacheFactory<String, GtdActi
         });
     }
 
-    public Flowable<GtdActionEntity> getAllLifeEntity(){
+    public Flowable<GtdActionEntity> getEntityByLife(){
         return Flowable.fromIterable(getAll()).sorted(new GtdTimeComparator<GtdActionEntity>());
         }
 
     public Flowable<GtdActionEntity> getEntityByLife(@NonNull final GtdLife actLife){
-        return getAllLifeEntity().filter(new Predicate<GtdActionEntity>() {
+        return getEntityByLife().filter(new Predicate<GtdActionEntity>() {
                     @Override
                     public boolean test(GtdActionEntity entity) throws Exception {
                         return entity.getGtdLife() == actLife;
