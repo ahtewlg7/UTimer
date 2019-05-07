@@ -145,6 +145,7 @@ public class GtdActionEntity extends AGtdUtimerEntity<GtdActionBuilder>
         uuid            = gdBean.getUuid();
         title           = gdBean.getTitle();
         detail          = gdBean.getDetail();
+        actionState     = gdBean.getActionState();
         warningTimeList = gdBean.getWarningTimeList();
 
         if(w5h2Entity  == null)
