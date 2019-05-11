@@ -1,21 +1,21 @@
 package ahtewlg7.utimer.entity.busevent;
 
 import ahtewlg7.utimer.entity.BaseEventBusBean;
-import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
+import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
 import ahtewlg7.utimer.enumtype.GtdBusEventType;
 
 /**
  * Created by lw on 2019/3/13.
  */
-public class ActionBusEvent extends BaseEventBusBean {
+public class DeedBusEvent extends BaseEventBusBean {
 
     private GtdBusEventType eventType;
-    private GtdActionEntity actionEntity;
+    private GtdDeedEntity actionEntity;
 
-    public ActionBusEvent(GtdBusEventType eventType){
+    public DeedBusEvent(GtdBusEventType eventType){
         this.eventType      = eventType;
     }
-    public ActionBusEvent(GtdBusEventType eventType, GtdActionEntity actionEntity) {
+    public DeedBusEvent(GtdBusEventType eventType, GtdDeedEntity actionEntity) {
         this.eventType      = eventType;
         this.actionEntity   = actionEntity;
     }
@@ -24,7 +24,7 @@ public class ActionBusEvent extends BaseEventBusBean {
         return eventType;
     }
 
-    public GtdActionEntity getActionEntity() {
+    public GtdDeedEntity getActionEntity() {
         return actionEntity;
     }
 }

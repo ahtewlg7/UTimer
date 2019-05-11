@@ -12,11 +12,11 @@ import org.reactivestreams.Subscription;
 import java.util.List;
 
 import ahtewlg7.utimer.entity.BaseEventBusBean;
-import ahtewlg7.utimer.entity.busevent.ActionBusEvent;
-import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
+import ahtewlg7.utimer.entity.busevent.DeedBusEvent;
+import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
 import ahtewlg7.utimer.enumtype.ActState;
 import ahtewlg7.utimer.enumtype.GtdBusEventType;
-import ahtewlg7.utimer.factory.GtdActionByUuidFactory;
+import ahtewlg7.utimer.factory.GtdDeedByUuidFactory;
 import ahtewlg7.utimer.state.GtdMachine;
 import ahtewlg7.utimer.util.MySafeSubscriber;
 import io.reactivex.Flowable;
@@ -28,16 +28,16 @@ import static ahtewlg7.utimer.mvp.IAllItemListMvpV.INVALID_INDEX;
 /**
  * Created by lw on 2018/12/9.
  */
-public class ActionMaybeListMvpP {
+public class DeedMaybeListMvpP {
     private IGtdActionListMvpV mvpV;
     private MaybeActListMvpM mvpM;
 
-    public ActionMaybeListMvpP(IGtdActionListMvpV mvpV) {
+    public DeedMaybeListMvpP(IGtdActionListMvpV mvpV) {
         this.mvpV  = mvpV;
         mvpM       = new MaybeActListMvpM();
     }
 
-    public void toHandleActionEvent(ActionBusEvent actionBusEvent){
+    public void toHandleActionEvent(DeedBusEvent actionBusEvent){
         if(actionBusEvent == null || !actionBusEvent.ifValid())
             return;
         if(actionBusEvent.getEventType() == GtdBusEventType.LOAD)
@@ -46,10 +46,10 @@ public class ActionMaybeListMvpP {
 
     public void toLoadAllMaybe() {
         mvpM.loadMaybe()
-            .compose(((RxFragment)mvpV.getRxLifeCycleBindView()).<GtdActionEntity>bindUntilEvent(FragmentEvent.DESTROY))
+            .compose(((RxFragment)mvpV.getRxLifeCycleBindView()).<GtdDeedEntity>bindUntilEvent(FragmentEvent.DESTROY))
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(new MySafeSubscriber<GtdActionEntity>() {
-                List<GtdActionEntity> entityList = Lists.newArrayList();
+            .subscribe(new MySafeSubscriber<GtdDeedEntity>() {
+                List<GtdDeedEntity> entityList = Lists.newArrayList();
                 @Override
                 public void onSubscribe(Subscription s) {
                     super.onSubscribe(s);
@@ -59,7 +59,7 @@ public class ActionMaybeListMvpP {
                 }
 
                 @Override
-                public void onNext(GtdActionEntity entity) {
+                public void onNext(GtdDeedEntity entity) {
                     super.onNext(entity);
                     entityList.add(entity);
                 }
@@ -80,10 +80,10 @@ public class ActionMaybeListMvpP {
             });
     }
 
-    public void toDeleteItem(@NonNull Flowable<GtdActionEntity>  entityRx) {
-        entityRx.map(new Function<GtdActionEntity, Optional<BaseEventBusBean>>() {
+    public void toDeleteItem(@NonNull Flowable<GtdDeedEntity>  entityRx) {
+        entityRx.map(new Function<GtdDeedEntity, Optional<BaseEventBusBean>>() {
                     @Override
-                    public Optional<BaseEventBusBean> apply(GtdActionEntity entity) throws Exception {
+                    public Optional<BaseEventBusBean> apply(GtdDeedEntity entity) throws Exception {
                         return GtdMachine.getInstance().getCurrState(entity).toTrash(entity);
                     }
                 })
@@ -93,9 +93,9 @@ public class ActionMaybeListMvpP {
                         super.onNext(entity);
                         if(mvpV != null && entity.isPresent()){
                             if(entity.get().isPerform())
-                                mvpV.onDeleteSucc(INVALID_INDEX, ((ActionBusEvent)entity.get()).getActionEntity());
+                                mvpV.onDeleteSucc(INVALID_INDEX, ((DeedBusEvent)entity.get()).getActionEntity());
                             else
-                                mvpV.onDeleteFail(((ActionBusEvent)entity.get()).getActionEntity());
+                                mvpV.onDeleteFail(((DeedBusEvent)entity.get()).getActionEntity());
                         }
                     }
 
@@ -115,24 +115,24 @@ public class ActionMaybeListMvpP {
                 });
     }
 
-    public void onItemCreated(GtdActionEntity entity) {
+    public void onItemCreated(GtdDeedEntity entity) {
         /*entityList.add(entity);
         if(mvpV != null)
             mvpV.resetView(entityList);*/
     }
 
-    public void onItemEdited(int index, GtdActionEntity entity) {
+    public void onItemEdited(int index, GtdDeedEntity entity) {
         /*entityList.set(index, entity);
         if(mvpV != null)
             mvpV.resetView(index, entity);*/
     }
 
     class MaybeActListMvpM {
-        Flowable<GtdActionEntity> loadMaybe() {
-            return GtdActionByUuidFactory.getInstance().getEntityByState(ActState.MAYBE);
+        Flowable<GtdDeedEntity> loadMaybe() {
+            return GtdDeedByUuidFactory.getInstance().getEntityByState(ActState.MAYBE);
         }
     }
 
-    public interface IGtdActionListMvpV extends IAllItemListMvpV<GtdActionEntity> {
+    public interface IGtdActionListMvpV extends IAllItemListMvpV<GtdDeedEntity> {
     }
 }

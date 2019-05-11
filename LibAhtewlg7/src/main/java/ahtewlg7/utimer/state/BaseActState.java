@@ -4,7 +4,7 @@ import com.google.common.base.Optional;
 
 import ahtewlg7.utimer.entity.AUtimerEntity;
 import ahtewlg7.utimer.entity.BaseEventBusBean;
-import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
+import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
 import ahtewlg7.utimer.factory.EventBusFatory;
 
 /**
@@ -29,13 +29,13 @@ class BaseActState extends BaseGtdState {
     }
     protected boolean ifActHandlable(AUtimerEntity entity){
         return entity != null && entity.ifValid()
-                && entity.getClass().isAssignableFrom(GtdActionEntity.class) ;
+                && entity.getClass().isAssignableFrom(GtdDeedEntity.class) ;
     }
 
-    protected boolean toTrashable(GtdActionEntity entity){
+    protected boolean toTrashable(GtdDeedEntity entity){
         return false;
     }
-    protected boolean toGtdable(GtdActionEntity entity){
+    protected boolean toGtdable(GtdDeedEntity entity){
         return false;
     }
 }

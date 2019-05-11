@@ -2,11 +2,11 @@ package ahtewlg7.utimer.mvp.rw;
 
 import org.reactivestreams.Subscription;
 
-import ahtewlg7.utimer.entity.busevent.ActionBusEvent;
-import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
+import ahtewlg7.utimer.entity.busevent.DeedBusEvent;
+import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
 import ahtewlg7.utimer.enumtype.GtdBusEventType;
 import ahtewlg7.utimer.factory.EventBusFatory;
-import ahtewlg7.utimer.factory.GtdActionByUuidFactory;
+import ahtewlg7.utimer.factory.GtdDeedByUuidFactory;
 import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MySafeSubscriber;
 import io.reactivex.Flowable;
@@ -14,13 +14,13 @@ import io.reactivex.Flowable;
 /**
  * Created by lw on 2019/3/7.
  */
-class TableActionRwMvpP extends AUtimerRwMvpP<GtdActionEntity, TableActionRwMvpM> {
+class TableDeedRwMvpP extends AUtimerRwMvpP<GtdDeedEntity, TableDeedRwMvpM> {
 
-    public TableActionRwMvpP(IDbMvpV mvpV){
+    public TableDeedRwMvpP(IDbMvpV mvpV){
         super(mvpV);
     }
 
-    public void toHandleBusEvent(ActionBusEvent actionBusEvent){
+    public void toHandleBusEvent(DeedBusEvent actionBusEvent){
         if(actionBusEvent == null || !actionBusEvent.ifValid())
             return;
         switch (actionBusEvent.getEventType()){
@@ -36,8 +36,8 @@ class TableActionRwMvpP extends AUtimerRwMvpP<GtdActionEntity, TableActionRwMvpM
     }
 
     @Override
-    protected TableActionRwMvpM getMvpM() {
-        return new TableActionRwMvpM();
+    protected TableDeedRwMvpM getMvpM() {
+        return new TableDeedRwMvpM();
     }
 
     @Override
@@ -51,21 +51,21 @@ class TableActionRwMvpP extends AUtimerRwMvpP<GtdActionEntity, TableActionRwMvpM
     }
 
     @Override
-    protected MySafeSubscriber<GtdActionEntity> getLoadAllSubscriber() {
-        return new MySafeSubscriber<GtdActionEntity>() {
+    protected MySafeSubscriber<GtdDeedEntity> getLoadAllSubscriber() {
+        return new MySafeSubscriber<GtdDeedEntity>() {
             @Override
             public void onSubscribe(Subscription s) {
                 super.onSubscribe(s);
-                GtdActionByUuidFactory.getInstance().clearAll();
+                GtdDeedByUuidFactory.getInstance().clearAll();
                 if(mvpV != null)
                     mvpV.onAllLoadStarted();
             }
 
             @Override
-            public void onNext(GtdActionEntity entity) {
+            public void onNext(GtdDeedEntity entity) {
                 super.onNext(entity);
                 Logcat.i("TableActionRw", "onNext :" + entity.toString());
-                GtdActionByUuidFactory.getInstance().add(entity.getUuid(), entity);
+                GtdDeedByUuidFactory.getInstance().add(entity.getUuid(), entity);
             }
 
             @Override
@@ -80,7 +80,7 @@ class TableActionRwMvpP extends AUtimerRwMvpP<GtdActionEntity, TableActionRwMvpM
     }
 
     private void toPostEndEvent(){
-        ActionBusEvent actionBusEvent = new ActionBusEvent(GtdBusEventType.LOAD);
+        DeedBusEvent actionBusEvent = new DeedBusEvent(GtdBusEventType.LOAD);
         EventBusFatory.getInstance().getDefaultEventBus().post(actionBusEvent);
     }
 }

@@ -16,8 +16,8 @@ import ahtewlg7.utimer.entity.context.ContactContext;
 import ahtewlg7.utimer.entity.context.DeedContext;
 import ahtewlg7.utimer.entity.context.PlaceContext;
 import ahtewlg7.utimer.entity.context.TimeContext;
-import ahtewlg7.utimer.entity.gtd.GtdActionBuilder;
-import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
+import ahtewlg7.utimer.entity.gtd.GtdDeedBuilder;
+import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
 import ahtewlg7.utimer.entity.w5h2.BaseW5h2Entity;
 import ahtewlg7.utimer.entity.w5h2.W5h2What;
 import ahtewlg7.utimer.entity.w5h2.W5h2When;
@@ -29,25 +29,25 @@ import ahtewlg7.utimer.nlp.NlpAction;
 /**
  * Created by lw on 2019/3/14.
  */
-public class GtdActParser {
+public class GtdDeedParser {
 
-    public GtdActParser(){
+    public GtdDeedParser(){
     }
 
-    public Optional<GtdActionEntity> toParseAction(String raw){
+    public Optional<GtdDeedEntity> toParseAction(String raw){
         if(TextUtils.isEmpty(raw))
             return Optional.absent();
         Optional<List<DateTime>> timeElementOptional = getTimeElement(raw);
         if(!timeElementOptional.isPresent())
             return Optional.absent();
 
-        GtdActionBuilder builder  = new GtdActionBuilder()
+        GtdDeedBuilder builder  = new GtdDeedBuilder()
                                     .setCreateTime(DateTime.now())
                                     .setWarningTimeList(timeElementOptional.get())
                                     .setDetail(raw)
                                     .setTitle(raw)
                                     .setUuid(new IdAction().getUUId());
-        GtdActionEntity gtdActionEntity = builder.build();
+        GtdDeedEntity gtdActionEntity = builder.build();
         gtdActionEntity.setActionState(ActState.MAYBE);
         gtdActionEntity.setLastModifyTime(DateTime.now());
         gtdActionEntity.setLastAccessTime(DateTime.now());

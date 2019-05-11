@@ -10,11 +10,11 @@ import org.reactivestreams.Subscription;
 
 import java.util.List;
 
-import ahtewlg7.utimer.entity.busevent.ActionBusEvent;
-import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
+import ahtewlg7.utimer.entity.busevent.DeedBusEvent;
+import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
 import ahtewlg7.utimer.enumtype.GtdBusEventType;
 import ahtewlg7.utimer.factory.EventBusFatory;
-import ahtewlg7.utimer.factory.GtdActionByUuidFactory;
+import ahtewlg7.utimer.factory.GtdDeedByUuidFactory;
 import ahtewlg7.utimer.util.MySafeSubscriber;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -24,13 +24,13 @@ import static ahtewlg7.utimer.mvp.IAllItemListMvpV.INVALID_INDEX;
 /**
  * Created by lw on 2018/12/9.
  */
-public class ActionTodoListMvpP implements IAllItemListMvpP<GtdActionEntity> {
+public class DeedTodoListMvpP implements IAllItemListMvpP<GtdDeedEntity> {
     private IGtdTodoActionListMvpV mvpV;
     private EntityListMvpM mvpM;
 
-    private List<GtdActionEntity> entityList;
+    private List<GtdDeedEntity> entityList;
 
-    public ActionTodoListMvpP(IGtdTodoActionListMvpV mvpV) {
+    public DeedTodoListMvpP(IGtdTodoActionListMvpV mvpV) {
         this.mvpV   = mvpV;
         mvpM        = new EntityListMvpM();
         entityList  = Lists.newArrayList();
@@ -39,9 +39,9 @@ public class ActionTodoListMvpP implements IAllItemListMvpP<GtdActionEntity> {
     @Override
     public void toLoadAllItem() {
         mvpM.loadAllEntity()
-            .compose(((RxFragment)mvpV.getRxLifeCycleBindView()).<GtdActionEntity>bindUntilEvent(FragmentEvent.DESTROY))
+            .compose(((RxFragment)mvpV.getRxLifeCycleBindView()).<GtdDeedEntity>bindUntilEvent(FragmentEvent.DESTROY))
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(new MySafeSubscriber<GtdActionEntity>() {
+            .subscribe(new MySafeSubscriber<GtdDeedEntity>() {
                 @Override
                 public void onSubscribe(Subscription s) {
                     super.onSubscribe(s);
@@ -51,7 +51,7 @@ public class ActionTodoListMvpP implements IAllItemListMvpP<GtdActionEntity> {
                 }
 
                 @Override
-                public void onNext(GtdActionEntity entity) {
+                public void onNext(GtdDeedEntity entity) {
                     super.onNext(entity);
                     entityList.add(entity);
                 }
@@ -73,14 +73,14 @@ public class ActionTodoListMvpP implements IAllItemListMvpP<GtdActionEntity> {
             });
     }
     @Override
-    public void toDeleteItem(@NonNull Flowable<GtdActionEntity>  entityRx) {
-        entityRx.subscribe(new MySafeSubscriber<GtdActionEntity>() {
+    public void toDeleteItem(@NonNull Flowable<GtdDeedEntity>  entityRx) {
+        entityRx.subscribe(new MySafeSubscriber<GtdDeedEntity>() {
                     @Override
-                    public void onNext(GtdActionEntity entity) {
+                    public void onNext(GtdDeedEntity entity) {
                         super.onNext(entity);
-                        EventBusFatory.getInstance().getDefaultEventBus().postSticky(new ActionBusEvent(GtdBusEventType.DELETE, entity));
+                        EventBusFatory.getInstance().getDefaultEventBus().postSticky(new DeedBusEvent(GtdBusEventType.DELETE, entity));
 
-                        boolean delSucc = entity.ifValid() && GtdActionByUuidFactory.getInstance().remove(entity.getUuid()) != null;
+                        boolean delSucc = entity.ifValid() && GtdDeedByUuidFactory.getInstance().remove(entity.getUuid()) != null;
                         if(mvpV != null && delSucc)
                             mvpV.onDeleteSucc(INVALID_INDEX, entity);
                         else if (mvpV != null)
@@ -103,24 +103,24 @@ public class ActionTodoListMvpP implements IAllItemListMvpP<GtdActionEntity> {
                 });
     }
     @Override
-    public void onItemCreated(GtdActionEntity entity) {
+    public void onItemCreated(GtdDeedEntity entity) {
         /*entityList.add(entity);
         if(mvpV != null)
             mvpV.resetView(entityList);*/
     }
     @Override
-    public void onItemEdited(int index, GtdActionEntity entity) {
+    public void onItemEdited(int index, GtdDeedEntity entity) {
         /*entityList.set(index, entity);
         if(mvpV != null)
             mvpV.resetView(index, entity);*/
     }
 
     class EntityListMvpM{
-        public Flowable<GtdActionEntity> loadAllEntity() {
-            return GtdActionByUuidFactory.getInstance().getEntityByState();
+        public Flowable<GtdDeedEntity> loadAllEntity() {
+            return GtdDeedByUuidFactory.getInstance().getEntityByState();
         }
     }
 
-    public interface IGtdTodoActionListMvpV extends IAllItemListMvpV<GtdActionEntity> {
+    public interface IGtdTodoActionListMvpV extends IAllItemListMvpV<GtdDeedEntity> {
     }
 }

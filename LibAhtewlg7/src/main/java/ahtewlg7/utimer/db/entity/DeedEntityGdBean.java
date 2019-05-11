@@ -28,11 +28,11 @@ import ahtewlg7.utimer.enumtype.ActState;
  */
 
 @Entity(
-    nameInDb = "ACTION"
+    nameInDb = "DEED"
 )
-public class ActionEntityGdBean {
+public class DeedEntityGdBean {
     // KEEP FIELDS - put your custom fields here
-    public static final String TAG = ActionEntityGdBean.class.getSimpleName();
+    public static final String TAG = DeedEntityGdBean.class.getSimpleName();
     //KEEP FIELDS END
 
     // KEEP METHODS - put your custom methods here
@@ -138,8 +138,8 @@ public class ActionEntityGdBean {
     @Convert(converter = W5h2HowMuchConverter.class, columnType = String.class)
     private W5h2HowMuch w5h2HowMuch;
 
-    @Generated(hash = 588770341)
-    public ActionEntityGdBean(Long id, @NotNull String uuid, @NotNull String title,
+    @Generated(hash = 256283279)
+    public DeedEntityGdBean(Long id, @NotNull String uuid, @NotNull String title,
             @NotNull String detail, String attachFileRPath, ActState actionState,
             List<DateTime> warningTimeList, W5h2When w5h2When, W5h2What w5h2What,
             W5h2HowMuch w5h2HowMuch) {
@@ -154,8 +154,8 @@ public class ActionEntityGdBean {
         this.w5h2What = w5h2What;
         this.w5h2HowMuch = w5h2HowMuch;
     }
-    @Generated(hash = 1154478005)
-    public ActionEntityGdBean() {
+    @Generated(hash = 1274789254)
+    public DeedEntityGdBean() {
     }
 
 }

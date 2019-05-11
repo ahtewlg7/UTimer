@@ -29,7 +29,7 @@ public class UTimerRawReadAction {
     }
 
     private Flowable<String> toReadDb(final AUtimerEntity entity){
-        if(entity.getGtdType() != GtdType.ACTION)
+        if(entity.getGtdType() != GtdType.DEED)
             return Flowable.empty();
         return Flowable.empty();
     }

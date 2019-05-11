@@ -9,7 +9,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import ahtewlg7.utimer.entity.BaseEventBusBean;
-import ahtewlg7.utimer.entity.busevent.ActionBusEvent;
+import ahtewlg7.utimer.entity.busevent.DeedBusEvent;
 import ahtewlg7.utimer.entity.busevent.ActivityBusEvent;
 import ahtewlg7.utimer.entity.busevent.UTimerBusEvent;
 import ahtewlg7.utimer.factory.EventBusFatory;
@@ -60,7 +60,7 @@ public class BinderService extends Service{
     }
     //+++++++++++++++++++++++++++++++++++++++++++EventBus+++++++++++++++++++++++++++++++++++++++++++++++++++
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    public void onActionBusEvent(ActionBusEvent actionBusEvent) {
+    public void onActionBusEvent(DeedBusEvent actionBusEvent) {
         eventBusRx.onNext(actionBusEvent);
     }
     @Subscribe(threadMode = ThreadMode.MAIN)

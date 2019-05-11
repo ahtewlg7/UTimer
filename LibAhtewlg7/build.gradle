@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'org.greenrobot.greendao' // apply plugin
 
 greendao {
-    schemaVersion 4
+    schemaVersion 5
     daoPackage 'ahtewlg7.utimer.db.autogen'
     targetGenDir 'src/main/java'
 }

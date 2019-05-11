@@ -8,8 +8,8 @@ import ahtewlg7.utimer.enumtype.ActState;
 /**
  * Created by lw on 2016/9/6.
  */
-public class GtdActStateConverter implements PropertyConverter<ActState,Integer> {
-    public static final String TAG = GtdActStateConverter.class.getSimpleName();
+public class GtdDeedStateConverter implements PropertyConverter<ActState,Integer> {
+    public static final String TAG = GtdDeedStateConverter.class.getSimpleName();
 
     @Override
     public ActState convertToEntityProperty(Integer databaseValue) {

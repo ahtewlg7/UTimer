@@ -9,9 +9,9 @@ import com.trello.rxlifecycle2.components.support.RxFragment;
 import org.reactivestreams.Subscription;
 
 import ahtewlg7.utimer.entity.BaseEventBusBean;
-import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
+import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
 import ahtewlg7.utimer.entity.w5h2.BaseW5h2Entity;
-import ahtewlg7.utimer.gtd.GtdActParser;
+import ahtewlg7.utimer.gtd.GtdDeedParser;
 import ahtewlg7.utimer.state.GtdMachine;
 import ahtewlg7.utimer.util.MySafeSubscriber;
 import io.reactivex.Flowable;
@@ -22,12 +22,12 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * Created by lw on 2019/5/3.
  */
-public class ActionEditMvpP {
+public class DeedEditMvpP {
     private ActionMvpM mvpM;
     private IActEditMvpV mvpV;
-    private GtdActionEntity actionEntity;
+    private GtdDeedEntity actionEntity;
 
-    public ActionEditMvpP(IActEditMvpV mvpV, GtdActionEntity actionEntity){
+    public DeedEditMvpP(IActEditMvpV mvpV, GtdDeedEntity actionEntity){
         this.mvpV           = mvpV;
         this.actionEntity   = actionEntity;
         mvpM                = new ActionMvpM();
@@ -68,16 +68,16 @@ public class ActionEditMvpP {
     }
 
     class ActionMvpM{
-        private GtdActParser gtdActParser;
+        private GtdDeedParser gtdActParser;
 
         ActionMvpM(){
-            gtdActParser        = new GtdActParser();
+            gtdActParser        = new GtdDeedParser();
         }
 
-        Flowable<Optional<BaseW5h2Entity>> toParseW5h2(@NonNull Flowable<GtdActionEntity> actionEntityRx){
-            return actionEntityRx.map(new Function<GtdActionEntity, Optional<BaseW5h2Entity>>() {
+        Flowable<Optional<BaseW5h2Entity>> toParseW5h2(@NonNull Flowable<GtdDeedEntity> actionEntityRx){
+            return actionEntityRx.map(new Function<GtdDeedEntity, Optional<BaseW5h2Entity>>() {
                 @Override
-                public Optional<BaseW5h2Entity> apply(GtdActionEntity actionEntity) throws Exception {
+                public Optional<BaseW5h2Entity> apply(GtdDeedEntity actionEntity) throws Exception {
                     if(actionEntity == null || !actionEntity.ifValid())
                         return Optional.absent();
                     return gtdActParser.toParseW5h2(actionEntity.getDetail().get());
@@ -85,10 +85,10 @@ public class ActionEditMvpP {
             }).subscribeOn(Schedulers.computation());
         }
 
-        Flowable<Optional<BaseEventBusBean>> toFinishEdit(@NonNull Flowable<GtdActionEntity> actionEntityRx){
-            return actionEntityRx.map(new Function<GtdActionEntity, Optional<BaseEventBusBean>>() {
+        Flowable<Optional<BaseEventBusBean>> toFinishEdit(@NonNull Flowable<GtdDeedEntity> actionEntityRx){
+            return actionEntityRx.map(new Function<GtdDeedEntity, Optional<BaseEventBusBean>>() {
                 @Override
-                public Optional<BaseEventBusBean> apply(GtdActionEntity actionEntity) throws Exception {
+                public Optional<BaseEventBusBean> apply(GtdDeedEntity actionEntity) throws Exception {
                     return GtdMachine.getInstance().getCurrState(actionEntity).toGtd(actionEntity);
                 }
             });

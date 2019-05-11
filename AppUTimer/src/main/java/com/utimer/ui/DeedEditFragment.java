@@ -19,19 +19,19 @@ import com.utimer.R;
 import org.joda.time.DateTime;
 
 import ahtewlg7.utimer.common.IdAction;
-import ahtewlg7.utimer.entity.gtd.GtdActionBuilder;
-import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
+import ahtewlg7.utimer.entity.gtd.GtdDeedBuilder;
+import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
 import ahtewlg7.utimer.entity.w5h2.BaseW5h2Entity;
 import ahtewlg7.utimer.enumtype.ActState;
-import ahtewlg7.utimer.mvp.ActionEditMvpP;
+import ahtewlg7.utimer.mvp.DeedEditMvpP;
 import ahtewlg7.utimer.util.MyRInfo;
 import butterknife.BindView;
 
-public class ActionEditFragment extends ATxtEditFragment
-        implements ActionEditMvpP.IActEditMvpV{
-    public static final String TAG = ActionEditFragment.class.getSimpleName();
+public class DeedEditFragment extends ATxtEditFragment
+        implements DeedEditMvpP.IActEditMvpV{
+    public static final String TAG = DeedEditFragment.class.getSimpleName();
 
-    public static final String KEY_ACTION = "ACTION";
+    public static final String KEY_ACTION = "DEED";
 
     @BindView(R.id.fragment_action_toolbar)
     Toolbar toolbar;
@@ -42,23 +42,23 @@ public class ActionEditFragment extends ATxtEditFragment
 
     private MaterialDialog nlpWaitDialog;
 
-    private ActionEditMvpP editMvpP;
+    private DeedEditMvpP editMvpP;
 
-    public static ActionEditFragment newInstance(GtdActionEntity entity) {
+    public static DeedEditFragment newInstance(GtdDeedEntity entity) {
         Bundle args = new Bundle();
         if(entity != null)
             args.putSerializable(KEY_ACTION, entity);
         else {
-            GtdActionBuilder builder  = new GtdActionBuilder()
+            GtdDeedBuilder builder  = new GtdDeedBuilder()
                     .setCreateTime(DateTime.now())
                     .setUuid(new IdAction().getUUId());
-            GtdActionEntity e = builder.build();
+            GtdDeedEntity e = builder.build();
             e.setActionState(ActState.MAYBE);
             e.setLastModifyTime(DateTime.now());
             e.setLastAccessTime(DateTime.now());
             args.putSerializable(KEY_ACTION, e);
         }
-        ActionEditFragment fragment = new ActionEditFragment();
+        DeedEditFragment fragment = new DeedEditFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -72,7 +72,7 @@ public class ActionEditFragment extends ATxtEditFragment
 
     @Override
     public int getLayoutRid() {
-        return R.layout.fragment_action;
+        return R.layout.fragment_deed;
     }
 
 
@@ -113,8 +113,8 @@ public class ActionEditFragment extends ATxtEditFragment
 
     /**********************************************AEditFragment**********************************************/
     @Override
-    protected GtdActionEntity getUTimerEntity(){
-        return (GtdActionEntity) getArguments().getSerializable(KEY_ACTION);
+    protected GtdDeedEntity getUTimerEntity(){
+        return (GtdDeedEntity) getArguments().getSerializable(KEY_ACTION);
     }
 
     @Override
@@ -131,7 +131,7 @@ public class ActionEditFragment extends ATxtEditFragment
         if(getUTimerEntity().getDetail().isPresent())
             rawEditView.setText(getUTimerEntity().getDetail().get());
         if(editMvpP == null)
-            editMvpP = new ActionEditMvpP(this,getUTimerEntity());
+            editMvpP = new DeedEditMvpP(this,getUTimerEntity());
         editMvpP.toParseW5h2();
     }
 

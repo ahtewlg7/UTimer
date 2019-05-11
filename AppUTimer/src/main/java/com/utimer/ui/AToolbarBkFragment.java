@@ -35,12 +35,16 @@ public abstract class AToolbarBkFragment extends AButterKnifeFragment{
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         if (getChildFragmentManager().getBackStackEntryCount() == 0 && getMenuRid() != 0) {
             getToolbar().getMenu().clear();
-                getToolbar().inflateMenu(getMenuRid());
+            getToolbar().inflateMenu(getMenuRid());
         }
     }
 
     @MenuRes
     protected int getMenuRid(){
         return 0;
+    }
+
+    public UTimerActivity getAttachActivity(){
+        return (UTimerActivity)getActivity();
     }
 }

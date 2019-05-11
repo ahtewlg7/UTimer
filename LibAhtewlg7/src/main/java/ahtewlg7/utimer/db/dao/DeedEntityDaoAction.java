@@ -11,51 +11,51 @@ import org.greenrobot.greendao.query.QueryBuilder;
 import java.util.List;
 
 import ahtewlg7.utimer.db.AGreenDaoAction;
-import ahtewlg7.utimer.db.autogen.ActionEntityGdBeanDao;
-import ahtewlg7.utimer.db.entity.ActionEntityGdBean;
+import ahtewlg7.utimer.db.autogen.DeedEntityGdBeanDao;
+import ahtewlg7.utimer.db.entity.DeedEntityGdBean;
 
 /**
  * Created by lw on 2016/9/6.
  * the detail is "detail"
  */
-public class ActionEntityDaoAction extends AGreenDaoAction<ActionEntityGdBean, String> {
-    private static ActionEntityDaoAction gtdEventEntityDaoAction;
+public class DeedEntityDaoAction extends AGreenDaoAction<DeedEntityGdBean, String> {
+    private static DeedEntityDaoAction gtdEventEntityDaoAction;
 
-    private ActionEntityDaoAction(){
+    private DeedEntityDaoAction(){
         super();
     }
 
-    public static ActionEntityDaoAction getInstance(){
+    public static DeedEntityDaoAction getInstance(){
         if(gtdEventEntityDaoAction == null)
-            gtdEventEntityDaoAction = new ActionEntityDaoAction();
+            gtdEventEntityDaoAction = new DeedEntityDaoAction();
         return gtdEventEntityDaoAction;
     }
 
     @Override
-    protected @NonNull AbstractDao<ActionEntityGdBean,Long> getCustomDao() {
-        return daoSession.getActionEntityGdBeanDao();
+    protected @NonNull AbstractDao<DeedEntityGdBean,Long> getCustomDao() {
+        return daoSession.getDeedEntityGdBeanDao();
     }
 
     @Override
-    public Optional<ActionEntityGdBean> queryByKey(String uuid){
+    public Optional<DeedEntityGdBean> queryByKey(String uuid){
         if(TextUtils.isEmpty(uuid))
             return Optional.absent();
-        List<ActionEntityGdBean> actEntityGdBeanList = query(new KeyQueryFilter(uuid));
+        List<DeedEntityGdBean> actEntityGdBeanList = query(new KeyQueryFilter(uuid));
         if(actEntityGdBeanList == null || actEntityGdBeanList.isEmpty())
             return Optional.absent();
         return Optional.of(actEntityGdBeanList.get(0));
     }
 
-    public Optional<ActionEntityGdBean> queryByDetail(String detail){
+    public Optional<DeedEntityGdBean> queryByDetail(String detail){
         if(TextUtils.isEmpty(detail))
             return Optional.absent();
-        List<ActionEntityGdBean> actEntityGdBeanList = query(new DetailQueryFilter(detail));
+        List<DeedEntityGdBean> actEntityGdBeanList = query(new DetailQueryFilter(detail));
         if(actEntityGdBeanList == null || actEntityGdBeanList.isEmpty())
             return Optional.absent();
         return Optional.of(actEntityGdBeanList.get(0));
     }
 
-    class KeyQueryFilter implements IGreenDaoQueryFiltVisitor<ActionEntityGdBean>{
+    class KeyQueryFilter implements IGreenDaoQueryFiltVisitor<DeedEntityGdBean>{
         private String key;
 
         KeyQueryFilter(String key){
@@ -63,11 +63,11 @@ public class ActionEntityDaoAction extends AGreenDaoAction<ActionEntityGdBean, S
         }
 
         @Override
-        public QueryBuilder<ActionEntityGdBean> toFilt(QueryBuilder<ActionEntityGdBean> queryBuilder) {
-            return queryBuilder.where(ActionEntityGdBeanDao.Properties.Uuid.eq(key));
+        public QueryBuilder<DeedEntityGdBean> toFilt(QueryBuilder<DeedEntityGdBean> queryBuilder) {
+            return queryBuilder.where(DeedEntityGdBeanDao.Properties.Uuid.eq(key));
         }
     }
-    class DetailQueryFilter implements IGreenDaoQueryFiltVisitor<ActionEntityGdBean>{
+    class DetailQueryFilter implements IGreenDaoQueryFiltVisitor<DeedEntityGdBean>{
         private String detail;
 
         DetailQueryFilter(String detail){
@@ -75,23 +75,23 @@ public class ActionEntityDaoAction extends AGreenDaoAction<ActionEntityGdBean, S
         }
 
         @Override
-        public QueryBuilder<ActionEntityGdBean> toFilt(QueryBuilder<ActionEntityGdBean> queryBuilder) {
-            return queryBuilder.where(ActionEntityGdBeanDao.Properties.Detail.eq(detail));
+        public QueryBuilder<DeedEntityGdBean> toFilt(QueryBuilder<DeedEntityGdBean> queryBuilder) {
+            return queryBuilder.where(DeedEntityGdBeanDao.Properties.Detail.eq(detail));
         }
     }
 
-    /*public List<ActionEntityGdBean> queryByWhen(DateTime dateTime){
+    /*public List<DeedEntityGdBean> queryByWhen(DateTime dateTime){
         if(dateTime == null)
             return null;
         return query(new WarningTimeQueryFilter(dateTime));
     }*/
-    /*public List<ActionEntityGdBean> queryByState(ActState gtdActionType){
+    /*public List<DeedEntityGdBean> queryByState(ActState gtdActionType){
         if(gtdActionType == null)
             return null;
         return query(new GtdStateQueryFilter(gtdActionType));
     }
 
-    class WarningTimeQueryFilter implements  IGreenDaoQueryFiltVisitor<ActionEntityGdBean>{
+    class WarningTimeQueryFilter implements  IGreenDaoQueryFiltVisitor<DeedEntityGdBean>{
         private DateTime dateTime;
 
         WarningTimeQueryFilter(DateTime dateTime){
@@ -99,13 +99,13 @@ public class ActionEntityDaoAction extends AGreenDaoAction<ActionEntityGdBean, S
         }
 
         @Override
-        public QueryBuilder<ActionEntityGdBean> toFilt(QueryBuilder<ActionEntityGdBean> queryBuilder) {
+        public QueryBuilder<DeedEntityGdBean> toFilt(QueryBuilder<DeedEntityGdBean> queryBuilder) {
 //            return queryBuilder.orderDesc(ActionEntityGdBeanDao.Properties.ActionType)
 //                    .where(ActionEntityGdBeanDao.Properties.When.eq(dateTime));
             return null;
         }
     }
-    class GtdStateQueryFilter implements  IGreenDaoQueryFiltVisitor<ActionEntityGdBean> {
+    class GtdStateQueryFilter implements  IGreenDaoQueryFiltVisitor<DeedEntityGdBean> {
         private ActState gtdType;
 
         GtdStateQueryFilter(ActState actState) {
@@ -113,7 +113,7 @@ public class ActionEntityDaoAction extends AGreenDaoAction<ActionEntityGdBean, S
         }
 
         @Override
-        public QueryBuilder<ActionEntityGdBean> toFilt(QueryBuilder<ActionEntityGdBean> queryBuilder) {
+        public QueryBuilder<DeedEntityGdBean> toFilt(QueryBuilder<DeedEntityGdBean> queryBuilder) {
 //            return queryBuilder.where(ActionEntityGdBeanDao.Properties.ActionType.eq(gtdType));
             return null;
         }

@@ -14,7 +14,7 @@ public enum GtdType {
     PROJECT,
     PLAN,
     PREVIEW,
-    ACTION,
+    DEED,
     TASk,
     MAYBE,
     TRASH,

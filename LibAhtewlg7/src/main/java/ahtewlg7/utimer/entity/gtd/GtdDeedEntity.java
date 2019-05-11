@@ -13,7 +13,7 @@ import javax.annotation.Nonnull;
 
 import ahtewlg7.utimer.common.FileSystemAction;
 import ahtewlg7.utimer.comparator.ITimeComparator;
-import ahtewlg7.utimer.db.entity.ActionEntityGdBean;
+import ahtewlg7.utimer.db.entity.DeedEntityGdBean;
 import ahtewlg7.utimer.entity.AGtdUtimerEntity;
 import ahtewlg7.utimer.entity.IMergerEntity;
 import ahtewlg7.utimer.entity.material.DirAttachFile;
@@ -26,13 +26,13 @@ import ahtewlg7.utimer.enumtype.GtdType;
 import ahtewlg7.utimer.util.DateTimeAction;
 
 
-public class GtdActionEntity extends AGtdUtimerEntity<GtdActionBuilder>
+public class GtdDeedEntity extends AGtdUtimerEntity<GtdDeedBuilder>
         implements ITimeComparator, Serializable {
     private ActState actionState;
     private List<DateTime> warningTimeList;
     private DateTimeAction dateTimeAction;
 
-    protected GtdActionEntity(@Nonnull GtdActionBuilder builder) {
+    protected GtdDeedEntity(@Nonnull GtdDeedBuilder builder) {
         super(builder);
         if(builder.warningTimeList != null)
             setWarningTimeList(builder.warningTimeList);
@@ -56,7 +56,7 @@ public class GtdActionEntity extends AGtdUtimerEntity<GtdActionBuilder>
 
     @Override
     public GtdType getGtdType() {
-        return GtdType.ACTION;
+        return GtdType.DEED;
     }
 
     @Override
@@ -109,7 +109,7 @@ public class GtdActionEntity extends AGtdUtimerEntity<GtdActionBuilder>
     @Override
     public void update(IMergerEntity entity) {
         super.update(entity);
-        BaseW5h2Entity baseW5h2Entity = ((GtdActionEntity)entity).getW5h2Entity();
+        BaseW5h2Entity baseW5h2Entity = ((GtdDeedEntity)entity).getW5h2Entity();
         updateWhen(baseW5h2Entity.getWhen());
         updateWhat(baseW5h2Entity.getWhat());
         updateHowMuch(baseW5h2Entity.getHowMuch());
@@ -141,7 +141,7 @@ public class GtdActionEntity extends AGtdUtimerEntity<GtdActionBuilder>
         return Optional.of(builder.toString());
     }
 
-    private void  initByGbBean(ActionEntityGdBean gdBean){
+    private void  initByGbBean(DeedEntityGdBean gdBean){
         uuid            = gdBean.getUuid();
         title           = gdBean.getTitle();
         detail          = gdBean.getDetail();

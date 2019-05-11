@@ -17,24 +17,24 @@ import com.utimer.common.TextImageFactory;
 
 import java.util.List;
 
-import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
+import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
 import ahtewlg7.utimer.gtd.GtdLifeCycleAction;
 import ahtewlg7.utimer.view.ABaseLinearRecyclerView;
 
-public class GtdActionRecyclerView extends ABaseLinearRecyclerView<GtdActionEntity> {
+public class GtdDeedRecyclerView extends ABaseLinearRecyclerView<GtdDeedEntity> {
     private GtdLifeCycleAction gtdActLifeCycleAction;
 
-    public GtdActionRecyclerView(Context context) {
+    public GtdDeedRecyclerView(Context context) {
         super(context);
         gtdActLifeCycleAction = new GtdLifeCycleAction();
     }
 
-    public GtdActionRecyclerView(Context context, @Nullable AttributeSet attrs) {
+    public GtdDeedRecyclerView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         gtdActLifeCycleAction = new GtdLifeCycleAction();
     }
 
-    public GtdActionRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyle) {
+    public GtdDeedRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         gtdActLifeCycleAction = new GtdLifeCycleAction();
     }
@@ -46,23 +46,23 @@ public class GtdActionRecyclerView extends ABaseLinearRecyclerView<GtdActionEnti
 
     @NonNull
     @Override
-    public BaseItemAdapter<GtdActionEntity> createAdapter(List<GtdActionEntity> entityList) {
+    public BaseItemAdapter<GtdDeedEntity> createAdapter(List<GtdDeedEntity> entityList) {
         return new ActionItemAdapter(entityList);
     }
 
     @Override
-    public void init(Context context, List<GtdActionEntity> entityList, BaseQuickAdapter.OnItemClickListener itemClickListener, BaseQuickAdapter.OnItemChildClickListener itemChildClickListener, BaseQuickAdapter.OnItemLongClickListener itemLongClickListener, BaseQuickAdapter.OnItemChildLongClickListener itemChildLongClickListener, OnItemSwipeListener itemSwipeListener, OnItemDragListener itemDragListener) {
+    public void init(Context context, List<GtdDeedEntity> entityList, BaseQuickAdapter.OnItemClickListener itemClickListener, BaseQuickAdapter.OnItemChildClickListener itemChildClickListener, BaseQuickAdapter.OnItemLongClickListener itemLongClickListener, BaseQuickAdapter.OnItemChildLongClickListener itemChildLongClickListener, OnItemSwipeListener itemSwipeListener, OnItemDragListener itemDragListener) {
         super.init(context, entityList, itemClickListener, itemChildClickListener, itemLongClickListener, itemChildLongClickListener, itemSwipeListener, itemDragListener);
         setLayoutManager(new LinearLayoutManager(context));
     }
 
-    class ActionItemAdapter extends BaseItemAdapter<GtdActionEntity>{
-        ActionItemAdapter(List<GtdActionEntity> dataList){
+    class ActionItemAdapter extends BaseItemAdapter<GtdDeedEntity>{
+        ActionItemAdapter(List<GtdDeedEntity> dataList){
             super(dataList);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, GtdActionEntity item) {
+        protected void convert(BaseViewHolder helper, GtdDeedEntity item) {
             StringBuilder titleBuilder = new StringBuilder();
             StringBuilder detailBuilder = new StringBuilder();
 

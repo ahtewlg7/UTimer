@@ -4,14 +4,14 @@ import android.support.annotation.NonNull;
 
 import com.google.common.base.Optional;
 
-import ahtewlg7.utimer.db.dao.ActionEntityDaoAction;
+import ahtewlg7.utimer.db.dao.DeedEntityDaoAction;
 import ahtewlg7.utimer.db.dao.NoteEntityDaoAction;
 import ahtewlg7.utimer.db.dao.ShortHandEntityDaoAction;
-import ahtewlg7.utimer.db.entity.ActionEntityGdBean;
+import ahtewlg7.utimer.db.entity.DeedEntityGdBean;
 import ahtewlg7.utimer.db.entity.NoteEntityGdBean;
 import ahtewlg7.utimer.db.entity.ShortHandEntityGdBean;
-import ahtewlg7.utimer.entity.gtd.GtdActionBuilder;
-import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
+import ahtewlg7.utimer.entity.gtd.GtdDeedBuilder;
+import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
 import ahtewlg7.utimer.entity.gtd.NoteBuilder;
 import ahtewlg7.utimer.entity.gtd.NoteEntity;
 import ahtewlg7.utimer.entity.gtd.ShortHandBuilder;
@@ -134,44 +134,44 @@ public class DbActionFacade {
         return Flowable.empty();
     }
     /*******************************************Action**************************************************/
-    public Flowable<GtdActionEntity> loadAllActionEntity() {
-        return Flowable.fromIterable(ActionEntityDaoAction.getInstance().loadAll())
-                .map(new Function<ActionEntityGdBean, GtdActionEntity>() {
+    public Flowable<GtdDeedEntity> loadAllActionEntity() {
+        return Flowable.fromIterable(DeedEntityDaoAction.getInstance().loadAll())
+                .map(new Function<DeedEntityGdBean, GtdDeedEntity>() {
                     @Override
-                    public GtdActionEntity apply(ActionEntityGdBean actionEntityGdBean) throws Exception {
-                        return new GtdActionBuilder().setGbBean(actionEntityGdBean).build();
+                    public GtdDeedEntity apply(DeedEntityGdBean actionEntityGdBean) throws Exception {
+                        return new GtdDeedBuilder().setGbBean(actionEntityGdBean).build();
                     }
                 })
                 .subscribeOn(Schedulers.io());
     }
-    public Flowable<Optional<GtdActionEntity>> getUndoActionEntity(@NonNull Flowable<String> nameFlowable) {
-        /*return nameFlowable.map(new Function<String, Optional<GtdActionEntity>>() {
+    public Flowable<Optional<GtdDeedEntity>> getUndoActionEntity(@NonNull Flowable<String> nameFlowable) {
+        /*return nameFlowable.map(new Function<String, Optional<GtdDeedEntity>>() {
             @Override
-            public Optional<GtdActionEntity> apply(String name) throws Exception {
-                Optional<IdKeyEntityBean> beanOptional = ActionEntityDaoAction.getInstance().queryByKey(name);
+            public Optional<GtdDeedEntity> apply(String name) throws Exception {
+                Optional<IdKeyEntityBean> beanOptional = DeedEntityDaoAction.getInstance().queryByKey(name);
                 if(beanOptional.isPresent())
-                    return Optional.fromNullable(JSON.parseObject(beanOptional.get().getValue(), GtdActionEntity.class));
+                    return Optional.fromNullable(JSON.parseObject(beanOptional.get().getValue(), GtdDeedEntity.class));
                 return Optional.absent();
             }
         });*/
         return Flowable.empty();
     }
 
-    public Flowable<Boolean> deleteActionEntity(@NonNull Flowable<GtdActionEntity> eventFlowable){
-        return eventFlowable.map(new Function<GtdActionEntity, Boolean>() {
+    public Flowable<Boolean> deleteActionEntity(@NonNull Flowable<GtdDeedEntity> eventFlowable){
+        return eventFlowable.map(new Function<GtdDeedEntity, Boolean>() {
             @Override
-            public Boolean apply(GtdActionEntity eventEntity) throws Exception {
-                return ActionEntityDaoAction.getInstance().deleteByKey(eventEntity.getUuid());
+            public Boolean apply(GtdDeedEntity eventEntity) throws Exception {
+                return DeedEntityDaoAction.getInstance().deleteByKey(eventEntity.getUuid());
             }
         });
     }
 
-    public Flowable<Boolean> saveActionEntity(Flowable<GtdActionEntity> eventFlowable) {
-        return eventFlowable.map(new Function<GtdActionEntity, Boolean>() {
+    public Flowable<Boolean> saveActionEntity(Flowable<GtdDeedEntity> eventFlowable) {
+        return eventFlowable.map(new Function<GtdDeedEntity, Boolean>() {
             @Override
-            public Boolean apply(GtdActionEntity eventEntity) throws Exception {
-                ActionEntityGdBean bean = mapActionToGdBean(eventEntity);
-                long index = ActionEntityDaoAction.getInstance().insert(bean);
+            public Boolean apply(GtdDeedEntity eventEntity) throws Exception {
+                DeedEntityGdBean bean = mapActionToGdBean(eventEntity);
+                long index = DeedEntityDaoAction.getInstance().insert(bean);
                 return index >= 0;
             }
         });
@@ -229,8 +229,8 @@ public class DbActionFacade {
     }
 
     /***********************************************************************************************/
-    private ActionEntityGdBean mapActionToGdBean(@NonNull GtdActionEntity entity){
-        ActionEntityGdBean bean = new ActionEntityGdBean();
+    private DeedEntityGdBean mapActionToGdBean(@NonNull GtdDeedEntity entity){
+        DeedEntityGdBean bean = new DeedEntityGdBean();
         bean.setUuid(entity.getUuid());
         bean.setTitle(entity.getTitle());
         bean.setActionState(entity.getActionState());

@@ -90,10 +90,10 @@ public class GtdFragment extends AToolbarBkFragment {
         public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
             switch (position){
                 case 0:
-                    ((MainFragment)getParentFragment()).start(ActionMaybeListFragment.newInstance());
+                    ((MainFragment)getParentFragment()).start(DeedMaybeListFragment.newInstance());
                     break;
                 case 1:
-                    ((MainFragment)getParentFragment()).start(ActionTodoListFragment.newInstance());
+                    ((MainFragment)getParentFragment()).start(DeedTodoListFragment.newInstance());
                     break;
             }
         }

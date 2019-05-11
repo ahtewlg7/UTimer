@@ -1,7 +1,7 @@
 package ahtewlg7.utimer.mvp.rw;
 
 import ahtewlg7.utimer.entity.BaseEventBusBean;
-import ahtewlg7.utimer.entity.busevent.ActionBusEvent;
+import ahtewlg7.utimer.entity.busevent.DeedBusEvent;
 import ahtewlg7.utimer.entity.busevent.ActivityBusEvent;
 import ahtewlg7.utimer.entity.busevent.UTimerBusEvent;
 import ahtewlg7.utimer.enumtype.GtdType;
@@ -10,13 +10,13 @@ import ahtewlg7.utimer.enumtype.GtdType;
  * Created by lw on 2019/4/13.
  */
 public class AllEntityRwMvpP {
-    private TableActionRwMvpP actionMvpP;
+    private TableDeedRwMvpP actionMvpP;
     private NoteRwMvpP noteRwMvpP;
     private ShortHandRwMvpP shortHandMvpP;
 
     public AllEntityRwMvpP(AUtimerRwMvpP.IDbMvpV actionMvpV, AUtimerRwMvpP.IDbMvpV shortHandMvpV,
                            AUtimerRwMvpP.IDbMvpV noteMvpV){
-        actionMvpP      = new TableActionRwMvpP(actionMvpV);
+        actionMvpP      = new TableDeedRwMvpP(actionMvpV);
         shortHandMvpP   = new ShortHandRwMvpP(shortHandMvpV);
         noteRwMvpP      = new NoteRwMvpP(noteMvpV);
     }
@@ -31,8 +31,8 @@ public class AllEntityRwMvpP {
             return;
         if(eventBusBean instanceof ActivityBusEvent)
             toHandleBusEvent((ActivityBusEvent)eventBusBean);
-        else if(eventBusBean instanceof ActionBusEvent)
-            toHandleBusEvent((ActionBusEvent)eventBusBean);
+        else if(eventBusBean instanceof DeedBusEvent)
+            toHandleBusEvent((DeedBusEvent)eventBusBean);
         else if(eventBusBean instanceof UTimerBusEvent)
             toHandleBusEvent((UTimerBusEvent)eventBusBean);
     }
@@ -40,7 +40,7 @@ public class AllEntityRwMvpP {
 //        if(busEvent.ifOnBackground())
 //            nextIdMvpP.toSaveAll();
     }
-    private void toHandleBusEvent(ActionBusEvent busEvent){
+    private void toHandleBusEvent(DeedBusEvent busEvent){
         actionMvpP.toHandleBusEvent(busEvent);
     }
     private void toHandleBusEvent(UTimerBusEvent busEvent){

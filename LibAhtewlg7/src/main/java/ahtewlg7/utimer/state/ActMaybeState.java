@@ -6,11 +6,11 @@ import com.google.common.base.Optional;
 
 import ahtewlg7.utimer.entity.AUtimerEntity;
 import ahtewlg7.utimer.entity.BaseEventBusBean;
-import ahtewlg7.utimer.entity.busevent.ActionBusEvent;
-import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
+import ahtewlg7.utimer.entity.busevent.DeedBusEvent;
+import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
 import ahtewlg7.utimer.enumtype.ActState;
 import ahtewlg7.utimer.enumtype.GtdBusEventType;
-import ahtewlg7.utimer.factory.GtdActionByUuidFactory;
+import ahtewlg7.utimer.factory.GtdDeedByUuidFactory;
 
 /**
  * Created by lw on 2019/4/6.
@@ -23,13 +23,13 @@ public class ActMaybeState extends BaseActState {
 
     @Override
     public Optional<BaseEventBusBean> toTrash(@NonNull AUtimerEntity entity) {
-        if(!ifActHandlable(entity) || !toTrashable((GtdActionEntity)entity))
+        if(!ifActHandlable(entity) || !toTrashable((GtdDeedEntity)entity))
             return Optional.absent();
-        ((GtdActionEntity)entity).setActionState(ActState.TRASH);
-        ActionBusEvent busEvent = new ActionBusEvent(GtdBusEventType.DELETE, (GtdActionEntity) entity);
+        ((GtdDeedEntity)entity).setActionState(ActState.TRASH);
+        DeedBusEvent busEvent = new DeedBusEvent(GtdBusEventType.DELETE, (GtdDeedEntity) entity);
         Optional<BaseEventBusBean> eventOptional =  toPostEvent(entity, busEvent);
         if(eventOptional.isPresent())
-            GtdActionByUuidFactory.getInstance().remove(entity.getUuid());
+            GtdDeedByUuidFactory.getInstance().remove(entity.getUuid());
         return eventOptional;
     }
 
@@ -41,7 +41,7 @@ public class ActMaybeState extends BaseActState {
     }
 
     @Override
-    protected boolean toTrashable(GtdActionEntity entity){
+    protected boolean toTrashable(GtdDeedEntity entity){
         return entity.getActionState() == ActState.MAYBE;
     }
 }

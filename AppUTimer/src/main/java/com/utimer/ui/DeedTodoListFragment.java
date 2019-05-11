@@ -13,23 +13,22 @@ import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.trello.rxlifecycle2.LifecycleProvider;
 import com.utimer.R;
-import com.utimer.view.GtdActionRecyclerView;
+import com.utimer.view.GtdDeedRecyclerView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
-import ahtewlg7.utimer.entity.busevent.ActionBusEvent;
-import ahtewlg7.utimer.entity.gtd.GtdActionEntity;
-import ahtewlg7.utimer.enumtype.ActState;
+import ahtewlg7.utimer.entity.busevent.DeedBusEvent;
+import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
 import ahtewlg7.utimer.factory.EventBusFatory;
-import ahtewlg7.utimer.mvp.ActionMaybeListMvpP;
+import ahtewlg7.utimer.mvp.DeedTodoListMvpP;
 import ahtewlg7.utimer.util.MyRInfo;
 import butterknife.BindView;
 import io.reactivex.Flowable;
 
-public class ActionMaybeListFragment extends AToolbarBkFragment implements ActionMaybeListMvpP.IGtdActionListMvpV {
+public class DeedTodoListFragment extends AToolbarBkFragment implements DeedTodoListMvpP.IGtdTodoActionListMvpV {
     public static final int INIT_POSITION = -1;
 
     public static final int REQ_NEW_FRAGMENT = 100;
@@ -38,16 +37,16 @@ public class ActionMaybeListFragment extends AToolbarBkFragment implements Actio
     @BindView(R.id.fragment_gtd_action_list_toolbar)
     Toolbar toolbar;
     @BindView(R.id.fragment_gtd_action_list_recycler_view)
-    GtdActionRecyclerView recyclerView;
+    GtdDeedRecyclerView recyclerView;
 
     private int editIndex = -1;
-    private ActionMaybeListMvpP listMvpP;
+    private DeedTodoListMvpP listMvpP;
     private MyClickListener myClickListener;
 
-    public static ActionMaybeListFragment newInstance() {
+    public static DeedTodoListFragment newInstance() {
         Bundle args = new Bundle();
 
-        ActionMaybeListFragment fragment = new ActionMaybeListFragment();
+        DeedTodoListFragment fragment = new DeedTodoListFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -58,11 +57,8 @@ public class ActionMaybeListFragment extends AToolbarBkFragment implements Actio
 
         myClickListener = new MyClickListener();
 
-        recyclerView.init(getContext(), null,
-                myClickListener, null,
-                myClickListener,null,
-                null,null);
-        listMvpP = new ActionMaybeListMvpP(this);
+        recyclerView.init(getContext(), null, myClickListener, null,myClickListener,null,null,null);
+        listMvpP = new DeedTodoListMvpP(this);
 
         EventBusFatory.getInstance().getDefaultEventBus().register(this);
     }
@@ -82,18 +78,18 @@ public class ActionMaybeListFragment extends AToolbarBkFragment implements Actio
     @Override
     public void onLazyInitView(@Nullable Bundle savedInstanceState) {
         super.onLazyInitView(savedInstanceState);
-        listMvpP.toLoadAllMaybe();
+        listMvpP.toLoadAllItem();
     }
 
     @Override
     public void onFragmentResult(int requestCode, int resultCode, Bundle data) {
         super.onFragmentResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && data != null) {
-            GtdActionEntity entity = (GtdActionEntity) data.getSerializable(ActionEditFragment.KEY_ACTION);
-            if (entity != null && requestCode == REQ_NEW_FRAGMENT)
-                onItemCreate(entity);
-            else if (entity != null && requestCode == REQ_EDIT_FRAGMENT) {
-                onItemEdit(entity);
+            GtdDeedEntity shorthandEntity = (GtdDeedEntity) data.getSerializable(ShortHandEditFragment.KEY_SHORTHAND);
+            if (shorthandEntity != null && requestCode == REQ_NEW_FRAGMENT)
+                onItemCreate(shorthandEntity);
+            else if (shorthandEntity != null && requestCode == REQ_EDIT_FRAGMENT) {
+                onItemEdit(shorthandEntity);
             }
         }
     }
@@ -107,7 +103,7 @@ public class ActionMaybeListFragment extends AToolbarBkFragment implements Actio
 
     @Override
     protected String getTitle() {
-        return MyRInfo.getStringByID(R.string.title_action_maybe_list);
+        return MyRInfo.getStringByID(R.string.title_action_list);
     }
 
     @Override
@@ -152,7 +148,7 @@ public class ActionMaybeListFragment extends AToolbarBkFragment implements Actio
     }
 
     @Override
-    public void onItemLoad(GtdActionEntity data) {
+    public void onItemLoad(GtdDeedEntity data) {
     }
 
     @Override
@@ -160,37 +156,38 @@ public class ActionMaybeListFragment extends AToolbarBkFragment implements Actio
     }
 
     @Override
-    public void onItemLoadEnd(List<GtdActionEntity> alldata) {
+    public void onItemLoadEnd(List<GtdDeedEntity> alldata) {
         if(alldata != null)
             recyclerView.resetData(alldata);
     }
 
     /**********************************************IGtdActionListMvpV**********************************************/
     @Override
-    public void onItemCreate(GtdActionEntity data) {
+    public void onItemCreate(GtdDeedEntity data) {
         listMvpP.onItemCreated(data);
     }
 
     @Override
-    public void onItemEdit(GtdActionEntity data) {
-        onDeleteSucc(INVALID_INDEX, data);
+    public void onItemEdit(GtdDeedEntity data) {
+        if (editIndex != INIT_POSITION)
+            listMvpP.onItemEdited(editIndex, data);
         editIndex = INIT_POSITION;
     }
 
     /**********************************************IGtdActionListMvpV**********************************************/
     @Override
-    public void resetView(List<GtdActionEntity> dataList) {
+    public void resetView(List<GtdDeedEntity> dataList) {
         recyclerView.resetData(dataList);
     }
 
     @Override
-    public void resetView(int index, GtdActionEntity entity) {
+    public void resetView(int index, GtdDeedEntity entity) {
         recyclerView.resetData(index, entity);
     }
 
     /**********************************************IGtdActionListMvpV**********************************************/
     @Override
-    public void onDeleteSucc(int index , GtdActionEntity entity) {
+    public void onDeleteSucc(int index , GtdDeedEntity entity) {
         ToastUtils.showShort(R.string.prompt_del_succ);
         if(index == INVALID_INDEX)
             recyclerView.removeData(entity);
@@ -199,7 +196,7 @@ public class ActionMaybeListFragment extends AToolbarBkFragment implements Actio
     }
 
     @Override
-    public void onDeleteFail(GtdActionEntity entity) {
+    public void onDeleteFail(GtdDeedEntity entity) {
         ToastUtils.showShort(R.string.prompt_del_fail);
     }
 
@@ -214,32 +211,26 @@ public class ActionMaybeListFragment extends AToolbarBkFragment implements Actio
 
     /**********************************************EventBus**********************************************/
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onActionBusEvent(ActionBusEvent eventBus) {
-        listMvpP.toHandleActionEvent(eventBus);
+    public void onActionBusEvent(DeedBusEvent eventBus) {
     }
     /**********************************************IGtdActionListMvpV**********************************************/
 
-    class MyClickListener implements BaseQuickAdapter.OnItemClickListener,
-            BaseQuickAdapter.OnItemLongClickListener{
-        //+++++++++++++++++++++++++++++++++++OnItemClickListener+++++++++++++++++++++++++++++++
+    class MyClickListener implements BaseQuickAdapter.OnItemClickListener, BaseQuickAdapter.OnItemLongClickListener {
         @Override
         public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
             editIndex = position;
-            GtdActionEntity item = (GtdActionEntity)adapter.getItem(position);
-            item.setActionState(ActState.MAYBE);
-            startForResult(ActionEditFragment.newInstance(item), REQ_EDIT_FRAGMENT);
-
+//            startForResult(ShortHandEditFragment.newInstance((GtdDeedEntity) adapter.getData().get(position)), REQ_EDIT_FRAGMENT);
         }
-        //+++++++++++++++++++++++++++++++++++OnItemLongClickListener+++++++++++++++++++++++++++++++
+
         @Override
         public boolean onItemLongClick(BaseQuickAdapter adapter, View view, int position) {
-            GtdActionEntity viewEntity = (GtdActionEntity)adapter.getItem(position);
+            GtdDeedEntity viewEntity = (GtdDeedEntity)adapter.getItem(position);
             if(viewEntity != null)
                 toCreateDelDialog(viewEntity);
             return false;
         }
     }
-    private void toCreateDelDialog(final GtdActionEntity entity){
+    private void toCreateDelDialog(final GtdDeedEntity entity){
         new MaterialDialog.Builder(getContext()).title(R.string.del)
             .content(R.string.prompt_del)
             .negativeText(R.string.no)

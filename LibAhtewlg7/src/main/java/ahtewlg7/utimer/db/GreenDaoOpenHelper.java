@@ -7,6 +7,7 @@ import org.greenrobot.greendao.database.Database;
 import org.greenrobot.greendao.database.DatabaseOpenHelper;
 
 import ahtewlg7.utimer.db.autogen.ActionEntityGdBeanDao;
+import ahtewlg7.utimer.db.autogen.DeedEntityGdBeanDao;
 import ahtewlg7.utimer.db.autogen.NoteEntityGdBeanDao;
 import ahtewlg7.utimer.db.autogen.ShortHandEntityGdBeanDao;
 
@@ -17,9 +18,10 @@ import ahtewlg7.utimer.db.autogen.ShortHandEntityGdBeanDao;
 class GreenDaoOpenHelper extends DatabaseOpenHelper {
     private static final int DBV_0_0_12  = 3;
     private static final int DBV_0_0_13  = 4;
+    private static final int DBV_0_0_14  = 5;
 
     //the DB_VERSION must be same with schemaVersion of greenDao in LibAhtewlg7 build.gradle
-    public static int DB_VERSION = DBV_0_0_13;
+    public static int DB_VERSION = DBV_0_0_14;
 
     public GreenDaoOpenHelper(Context context, String name) {
         super(context, name, DB_VERSION);
@@ -33,7 +35,7 @@ class GreenDaoOpenHelper extends DatabaseOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         ShortHandEntityGdBeanDao.createTable(wrap(db),true);
         NoteEntityGdBeanDao.createTable(wrap(db),true);
-        ActionEntityGdBeanDao.createTable(wrap(db),true);
+        DeedEntityGdBeanDao.createTable(wrap(db),true);
     }
     @Override
     public void onUpgrade(Database db, int oldVersion, int newVersion) {
@@ -41,9 +43,13 @@ class GreenDaoOpenHelper extends DatabaseOpenHelper {
             return;
         }
         if(oldVersion == DBV_0_0_12){
-            db.execSQL("ALTER TABLE " + ActionEntityGdBeanDao.TABLENAME + " ADD COLUMN "
-                    + ActionEntityGdBeanDao.Properties.WarningTimeList.columnName + " TEXT");
+            db.execSQL("ALTER TABLE " + DeedEntityGdBeanDao.TABLENAME + " ADD COLUMN "
+                    + DeedEntityGdBeanDao.Properties.WarningTimeList.columnName + " TEXT");
             oldVersion = DBV_0_0_13;
+        }
+        if(oldVersion == DBV_0_0_13){
+            db.execSQL("ALTER TABLE " + ActionEntityGdBeanDao.TABLENAME + " RENAME TO " + DeedEntityGdBeanDao.TABLENAME);
+            oldVersion = DBV_0_0_14;
         }
     }
 }
