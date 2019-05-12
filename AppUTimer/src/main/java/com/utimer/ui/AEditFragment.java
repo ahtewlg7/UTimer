@@ -7,13 +7,15 @@ import com.blankj.utilcode.util.ToastUtils;
 import com.utimer.R;
 
 import ahtewlg7.utimer.entity.AUtimerEntity;
-import ahtewlg7.utimer.util.Logcat;
 
 /**
  * Created by lw on 2018/11/8.
  */
 public abstract class AEditFragment extends AToolbarBkFragment{
-    public static final String TAG = AEditFragment.class.getSimpleName();
+
+    public static final String KEY_WORK_MODE        = "work";
+    public static final int WORK_AS_NEW             = 1;
+    public static final int WORK_AS_EDIT            = 2;
 
     protected boolean ifEnvReady;
     protected abstract @NonNull AUtimerEntity getUTimerEntity();
@@ -24,7 +26,6 @@ public abstract class AEditFragment extends AToolbarBkFragment{
         super.onViewCreated(inflateView);
 
         if(!ifEnvOk()){
-            Logcat.i(TAG,"the env is not ready , so pop it");
             ToastUtils.showShort(R.string.entity_invalid);
             pop();
             ifEnvReady = false;

@@ -28,11 +28,11 @@ import ahtewlg7.utimer.util.MyRInfo;
 import butterknife.BindView;
 import io.reactivex.Flowable;
 
+import static com.utimer.common.Constants.REQ_EDIT_FRAGMENT;
+import static com.utimer.common.Constants.REQ_NEW_FRAGMENT;
+
 public class DeedTodoListFragment extends AToolbarBkFragment implements DeedTodoListMvpP.IGtdTodoActionListMvpV {
     public static final int INIT_POSITION = -1;
-
-    public static final int REQ_NEW_FRAGMENT = 100;
-    public static final int REQ_EDIT_FRAGMENT = 101;
 
     @BindView(R.id.fragment_gtd_action_list_toolbar)
     Toolbar toolbar;
@@ -103,7 +103,7 @@ public class DeedTodoListFragment extends AToolbarBkFragment implements DeedTodo
 
     @Override
     protected String getTitle() {
-        return MyRInfo.getStringByID(R.string.title_action_list);
+        return MyRInfo.getStringByID(R.string.title_deed_list);
     }
 
     @Override

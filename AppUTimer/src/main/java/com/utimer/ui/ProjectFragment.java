@@ -35,13 +35,16 @@ import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MyRInfo;
 import butterknife.BindView;
 
+import static com.utimer.common.Constants.REQ_EDIT_FRAGMENT;
+import static com.utimer.common.Constants.REQ_NEW_FRAGMENT;
+
 public class ProjectFragment extends AEditFragment
     implements ProjectEditMvpP.IProjectEditMvpV {
     public static final String TAG = ProjectFragment.class.getSimpleName();
 
     public static final int INIT_POSITION           = -1;
-    public static final int REQ_NEW_NOTE_FRAGMENT   = 100;
-    public static final int REQ_EDIT_NOTE_FRAGMENT  = 101;
+    public static final int REQ_NEW_NOTE_FRAGMENT   = REQ_NEW_FRAGMENT;
+    public static final int REQ_EDIT_NOTE_FRAGMENT  = REQ_EDIT_FRAGMENT;
 
     public static final String KEY_GTD_PROJECT = "project";
 

@@ -4,12 +4,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
-import android.text.InputType;
 import android.text.TextUtils;
-import android.view.MenuItem;
 import android.widget.EditText;
 
-import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.blankj.utilcode.util.ToastUtils;
 import com.google.common.base.Optional;
@@ -22,7 +19,7 @@ import ahtewlg7.utimer.common.IdAction;
 import ahtewlg7.utimer.entity.gtd.GtdDeedBuilder;
 import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
 import ahtewlg7.utimer.entity.w5h2.BaseW5h2Entity;
-import ahtewlg7.utimer.enumtype.ActState;
+import ahtewlg7.utimer.enumtype.DeedState;
 import ahtewlg7.utimer.mvp.DeedEditMvpP;
 import ahtewlg7.utimer.util.MyRInfo;
 import butterknife.BindView;
@@ -46,17 +43,19 @@ public class DeedEditFragment extends ATxtEditFragment
 
     public static DeedEditFragment newInstance(GtdDeedEntity entity) {
         Bundle args = new Bundle();
-        if(entity != null)
+        if(entity != null) {
             args.putSerializable(KEY_ACTION, entity);
-        else {
+            args.putInt(KEY_WORK_MODE, WORK_AS_EDIT);
+        }else {
             GtdDeedBuilder builder  = new GtdDeedBuilder()
                     .setCreateTime(DateTime.now())
                     .setUuid(new IdAction().getUUId());
             GtdDeedEntity e = builder.build();
-            e.setActionState(ActState.MAYBE);
+            e.setDeedState(DeedState.MAYBE);
             e.setLastModifyTime(DateTime.now());
             e.setLastAccessTime(DateTime.now());
             args.putSerializable(KEY_ACTION, e);
+            args.putInt(KEY_WORK_MODE, WORK_AS_NEW);
         }
         DeedEditFragment fragment = new DeedEditFragment();
         fragment.setArguments(args);
@@ -68,6 +67,14 @@ public class DeedEditFragment extends ATxtEditFragment
         super.onCreate(savedInstanceState);
         /*false means menu off; true means menu on*/
         setHasOptionsMenu(false);
+    }
+
+    @Override
+    protected boolean ifEnvOk() {
+        int workMode = getArguments().getInt(KEY_WORK_MODE);
+        if(workMode == WORK_AS_EDIT)
+            return getUTimerEntity().ifValid();
+        return !TextUtils.isEmpty(getUTimerEntity().getUuid()) && getUTimerEntity().getDeedState() != null;
     }
 
     @Override
@@ -97,19 +104,18 @@ public class DeedEditFragment extends ATxtEditFragment
         toolbar.setTitle(getTitle());
     }
 
-    @Override
+    /*@Override
     public boolean onOptionsItemSelected(MenuItem item) {
         boolean result = false;
         switch (item.getItemId()) {
             case R.id.note_menu_rename:
-                toCreateRenameDialog();
                 break;
             default:
                 result = super.onOptionsItemSelected(item);
                 break;
         }
         return result;
-    }
+    }*/
 
     /**********************************************AEditFragment**********************************************/
     @Override
@@ -205,36 +211,6 @@ public class DeedEditFragment extends ATxtEditFragment
             nlpWaitDialog.dismiss();
         nlpEditView.setHint(null);
     }
-    private void toCreateRenameDialog(){
-        new MaterialDialog.Builder(getContext()).title(R.string.rename)
-                .inputType(InputType.TYPE_CLASS_TEXT)
-                .input(MyRInfo.getStringByID(R.string.prompt_new_note_name), "", false, new MaterialDialog.InputCallback() {
-                    @Override
-                    public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
-                        //do nothing
-                    }
-                })
-                .negativeText(R.string.no)
-                .positiveText(R.string.yes)
-                .onNegative(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        dialog.dismiss();
-                    }
-                })
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        String name = dialog.getInputEditText().getText().toString();
-                        getUTimerEntity().setTitle(name);
-
-                        /*
-                        GtdProjectEntity entity = (GtdProjectEntity)new GtdProjectBuilder().setTitle(name).build();
-                        startForResult(ProjectFragment.newInstance(entity), REQ_NEW_FRAGMENT);*/
-                    }
-                }).show();
-    }
-
     private void toCreateAIWaitingDialog(){
         nlpWaitDialog = new MaterialDialog.Builder(getContext()).title(R.string.wait)
                 .content(R.string.prompt_nlp_wait)

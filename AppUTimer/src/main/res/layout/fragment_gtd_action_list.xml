@@ -19,7 +19,7 @@
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
     </android.support.design.widget.AppBarLayout>
 
-    <com.utimer.view.GtdActionRecyclerView
+    <com.utimer.view.GtdDeedRecyclerView
         android:id="@+id/fragment_gtd_action_list_recycler_view"
         android:layout_width="0dp"
         android:layout_height="0dp"

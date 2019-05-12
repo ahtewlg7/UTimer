@@ -13,8 +13,13 @@ import com.utimer.R;
 import ahtewlg7.utimer.util.MyRInfo;
 import butterknife.BindView;
 
+import static com.utimer.common.Constants.REQ_NEW_FRAGMENT;
+
 public class MainFragment extends AButterKnifeFragment {
     public static final String TAG = MainFragment.class.getSimpleName();
+
+    public static final int REQ_NEW_SHORTHAND_FRAGMENT = REQ_NEW_FRAGMENT;
+    public static final int REQ_NEW_DEED_FRAGMENT      = REQ_NEW_FRAGMENT + 1;
 
     @BindView(R.id.fragment_main_fragment_container)
     FrameLayout fragmentContainerLayout;
@@ -48,6 +53,18 @@ public class MainFragment extends AButterKnifeFragment {
     }
 
     @Override
+    public void onFragmentResult(int requestCode, int resultCode, Bundle data) {
+        super.onFragmentResult(requestCode, resultCode, data);
+        ((UTimerActivity)getActivity()).getFloatingActionMenu().toggleMenuButton(true);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == REQ_NEW_SHORTHAND_FRAGMENT)
+                start(ShortHandListFragment.newInstance());
+            else if(requestCode == REQ_NEW_DEED_FRAGMENT)
+                start(DeedTodoListFragment.newInstance());
+        }
+    }
+
+    @Override
     public int getLayoutRid() {
         return R.layout.fragment_main;
     }
@@ -57,6 +74,12 @@ public class MainFragment extends AButterKnifeFragment {
         return MyRInfo.getStringByID(R.string.app_name);
     }
 
+    public void toNewShortHand(){
+        startForResult(ShortHandEditFragment.newInstance(null), REQ_NEW_SHORTHAND_FRAGMENT);
+    }
+    public void toNewDeed(){
+        startForResult(DeedEditFragment.newInstance(null), REQ_NEW_DEED_FRAGMENT);
+    }
     private void loadFragment(){
         AButterKnifeFragment firstFragment = findChildFragment(MsgFragment.class);
         if (firstFragment == null) {

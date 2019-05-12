@@ -23,11 +23,11 @@ import ahtewlg7.utimer.util.MyRInfo;
 import butterknife.BindView;
 import io.reactivex.Flowable;
 
+import static com.utimer.common.Constants.REQ_EDIT_FRAGMENT;
+import static com.utimer.common.Constants.REQ_NEW_FRAGMENT;
+
 public class ShortHandListFragment extends AToolbarBkFragment implements ShortHandListMvpP.IShorthandListMvpV {
     public static final int INIT_POSITION = -1;
-
-    public static final int REQ_NEW_FRAGMENT = 100;
-    public static final int REQ_EDIT_FRAGMENT = 101;
 
     @BindView(R.id.fragment_shorthand_list_toolbar)
     Toolbar toolbar;

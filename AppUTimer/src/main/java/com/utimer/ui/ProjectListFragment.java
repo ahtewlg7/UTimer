@@ -26,15 +26,14 @@ import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MyRInfo;
 import butterknife.BindView;
 
+import static com.utimer.common.Constants.REQ_EDIT_FRAGMENT;
+import static com.utimer.common.Constants.REQ_NEW_FRAGMENT;
 import static com.utimer.ui.ProjectFragment.KEY_GTD_PROJECT;
 
 public class ProjectListFragment extends AToolbarBkFragment implements ProjectListMvpP.IProjectListMvpV {
     public static final String TAG = ProjectListFragment.class.getSimpleName();
 
     public static final int INIT_POSITION = -1;
-
-    public static final int REQ_NEW_FRAGMENT  = 100;
-    public static final int REQ_EDIT_FRAGMENT = 101;
 
     @BindView(R.id.fragment_project_list_toolbar)
     Toolbar toolbar;

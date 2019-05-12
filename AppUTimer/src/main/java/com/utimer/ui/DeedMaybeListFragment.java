@@ -22,18 +22,18 @@ import java.util.List;
 
 import ahtewlg7.utimer.entity.busevent.DeedBusEvent;
 import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
-import ahtewlg7.utimer.enumtype.ActState;
+import ahtewlg7.utimer.enumtype.DeedState;
 import ahtewlg7.utimer.factory.EventBusFatory;
 import ahtewlg7.utimer.mvp.DeedMaybeListMvpP;
 import ahtewlg7.utimer.util.MyRInfo;
 import butterknife.BindView;
 import io.reactivex.Flowable;
 
+import static com.utimer.common.Constants.REQ_EDIT_FRAGMENT;
+import static com.utimer.common.Constants.REQ_NEW_FRAGMENT;
+
 public class DeedMaybeListFragment extends AToolbarBkFragment implements DeedMaybeListMvpP.IGtdActionListMvpV {
     public static final int INIT_POSITION = -1;
-
-    public static final int REQ_NEW_FRAGMENT = 100;
-    public static final int REQ_EDIT_FRAGMENT = 101;
 
     @BindView(R.id.fragment_gtd_action_list_toolbar)
     Toolbar toolbar;
@@ -107,7 +107,7 @@ public class DeedMaybeListFragment extends AToolbarBkFragment implements DeedMay
 
     @Override
     protected String getTitle() {
-        return MyRInfo.getStringByID(R.string.title_action_maybe_list);
+        return MyRInfo.getStringByID(R.string.title_deed_maybe_list);
     }
 
     @Override
@@ -226,7 +226,7 @@ public class DeedMaybeListFragment extends AToolbarBkFragment implements DeedMay
         public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
             editIndex = position;
             GtdDeedEntity item = (GtdDeedEntity)adapter.getItem(position);
-            item.setActionState(ActState.MAYBE);
+            item.setDeedState(DeedState.MAYBE);
             startForResult(DeedEditFragment.newInstance(item), REQ_EDIT_FRAGMENT);
 
         }
