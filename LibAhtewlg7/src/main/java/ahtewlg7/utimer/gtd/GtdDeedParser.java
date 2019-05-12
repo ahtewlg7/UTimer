@@ -23,7 +23,7 @@ import ahtewlg7.utimer.entity.w5h2.W5h2What;
 import ahtewlg7.utimer.entity.w5h2.W5h2When;
 import ahtewlg7.utimer.entity.w5h2.W5h2Where;
 import ahtewlg7.utimer.entity.w5h2.W5h2Who;
-import ahtewlg7.utimer.enumtype.ActState;
+import ahtewlg7.utimer.enumtype.DeedState;
 import ahtewlg7.utimer.nlp.NlpAction;
 
 /**
@@ -48,7 +48,7 @@ public class GtdDeedParser {
                                     .setTitle(raw)
                                     .setUuid(new IdAction().getUUId());
         GtdDeedEntity gtdActionEntity = builder.build();
-        gtdActionEntity.setActionState(ActState.MAYBE);
+        gtdActionEntity.setDeedState(DeedState.MAYBE);
         gtdActionEntity.setLastModifyTime(DateTime.now());
         gtdActionEntity.setLastAccessTime(DateTime.now());
         return Optional.of(gtdActionEntity);

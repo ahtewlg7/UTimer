@@ -21,14 +21,14 @@ import ahtewlg7.utimer.entity.w5h2.BaseW5h2Entity;
 import ahtewlg7.utimer.entity.w5h2.W5h2HowMuch;
 import ahtewlg7.utimer.entity.w5h2.W5h2What;
 import ahtewlg7.utimer.entity.w5h2.W5h2When;
-import ahtewlg7.utimer.enumtype.ActState;
+import ahtewlg7.utimer.enumtype.DeedState;
 import ahtewlg7.utimer.enumtype.GtdType;
 import ahtewlg7.utimer.util.DateTimeAction;
 
 
 public class GtdDeedEntity extends AGtdUtimerEntity<GtdDeedBuilder>
         implements ITimeComparator, Serializable {
-    private ActState actionState;
+    private DeedState deedState;
     private List<DateTime> warningTimeList;
     private DateTimeAction dateTimeAction;
 
@@ -51,7 +51,7 @@ public class GtdDeedEntity extends AGtdUtimerEntity<GtdDeedBuilder>
 
     @Override
     public boolean ifValid() {
-        return super.ifValid() && actionState != null && !TextUtils.isEmpty(detail);
+        return super.ifValid() && deedState != null && !TextUtils.isEmpty(detail);
     }
 
     @Override
@@ -72,8 +72,8 @@ public class GtdDeedEntity extends AGtdUtimerEntity<GtdDeedBuilder>
     @Override
     protected void toMakeEntityOk() {
         super.toMakeEntityOk();
-        if(actionState == null)
-            actionState = ActState.MAYBE;
+        if(deedState == null)
+            deedState = DeedState.MAYBE;
     }
 
     @Override
@@ -89,12 +89,12 @@ public class GtdDeedEntity extends AGtdUtimerEntity<GtdDeedBuilder>
         return getFirstWorkTime();
     }
 
-    public ActState getActionState() {
-        return actionState;
+    public DeedState getDeedState() {
+        return deedState;
     }
 
-    public void setActionState(ActState actionState) {
-        this.actionState = actionState;
+    public void setDeedState(DeedState deedState) {
+        this.deedState = deedState;
     }
 
     public List<DateTime> getWarningTimeList() {
@@ -127,8 +127,8 @@ public class GtdDeedEntity extends AGtdUtimerEntity<GtdDeedBuilder>
 
     @Override
     public String toString() {
-        if(actionState != null)
-            return new StringBuilder(super.toString()).append(actionState.name()).toString();
+        if(deedState != null)
+            return new StringBuilder(super.toString()).append(deedState.name()).toString();
          return super.toString();
     }
 
@@ -145,7 +145,7 @@ public class GtdDeedEntity extends AGtdUtimerEntity<GtdDeedBuilder>
         uuid            = gdBean.getUuid();
         title           = gdBean.getTitle();
         detail          = gdBean.getDetail();
-        actionState     = gdBean.getActionState();
+        deedState = gdBean.getActionState();
         warningTimeList = gdBean.getWarningTimeList();
 
         if(w5h2Entity  == null)

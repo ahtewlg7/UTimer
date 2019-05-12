@@ -21,7 +21,7 @@ import ahtewlg7.utimer.db.converter.W5h2WhenConverter;
 import ahtewlg7.utimer.entity.w5h2.W5h2HowMuch;
 import ahtewlg7.utimer.entity.w5h2.W5h2What;
 import ahtewlg7.utimer.entity.w5h2.W5h2When;
-import ahtewlg7.utimer.enumtype.ActState;
+import ahtewlg7.utimer.enumtype.DeedState;
 
 /**
  * Created by lw on 2018/1/6.
@@ -75,10 +75,10 @@ public class DeedEntityGdBean {
     public void setAttachFileRPath(String attachFileRPath) {
         this.attachFileRPath = attachFileRPath;
     }
-    public ActState getActionState() {
+    public DeedState getActionState() {
         return this.actionState;
     }
-    public void setActionState(ActState actionState) {
+    public void setActionState(DeedState actionState) {
         this.actionState = actionState;
     }
     public W5h2When getW5h2When() {
@@ -124,7 +124,7 @@ public class DeedEntityGdBean {
     private String detail;
     private String attachFileRPath;
     @Convert(converter = GtdDeedStateConverter.class, columnType = Integer.class)
-    private ActState actionState;
+    private DeedState actionState;
     @Property(nameInDb = "WARNING_TIME")
     @Convert(converter = DateTimeListTypeConverter.class, columnType = String.class)
     private List<DateTime> warningTimeList;
@@ -138,9 +138,9 @@ public class DeedEntityGdBean {
     @Convert(converter = W5h2HowMuchConverter.class, columnType = String.class)
     private W5h2HowMuch w5h2HowMuch;
 
-    @Generated(hash = 256283279)
+    @Generated(hash = 871181386)
     public DeedEntityGdBean(Long id, @NotNull String uuid, @NotNull String title,
-            @NotNull String detail, String attachFileRPath, ActState actionState,
+            @NotNull String detail, String attachFileRPath, DeedState actionState,
             List<DateTime> warningTimeList, W5h2When w5h2When, W5h2What w5h2What,
             W5h2HowMuch w5h2HowMuch) {
         this.id = id;
@@ -157,5 +157,6 @@ public class DeedEntityGdBean {
     @Generated(hash = 1274789254)
     public DeedEntityGdBean() {
     }
+
 
 }

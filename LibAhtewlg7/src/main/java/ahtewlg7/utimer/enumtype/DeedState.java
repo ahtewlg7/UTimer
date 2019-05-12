@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 
 import java.util.List;
 
-public enum ActState {
+public enum DeedState {
     MAYBE,
     TRASH,
     GTD,
@@ -16,8 +16,8 @@ public enum ActState {
     DELEGATE,
     DONE;
 
-    public static List<ActState> getActiveAll(){
-        List<ActState> list = Lists.newArrayList();
+    public static List<DeedState> getActiveAll(){
+        List<DeedState> list = Lists.newArrayList();
         list.add(GTD);
         list.add(DO_NOW);
         list.add(TODO);

@@ -8,7 +8,7 @@ import ahtewlg7.utimer.entity.AUtimerEntity;
 import ahtewlg7.utimer.entity.BaseEventBusBean;
 import ahtewlg7.utimer.entity.busevent.DeedBusEvent;
 import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
-import ahtewlg7.utimer.enumtype.ActState;
+import ahtewlg7.utimer.enumtype.DeedState;
 import ahtewlg7.utimer.enumtype.GtdBusEventType;
 import ahtewlg7.utimer.factory.GtdDeedByUuidFactory;
 
@@ -25,7 +25,7 @@ public class ActMaybeState extends BaseActState {
     public Optional<BaseEventBusBean> toTrash(@NonNull AUtimerEntity entity) {
         if(!ifActHandlable(entity) || !toTrashable((GtdDeedEntity)entity))
             return Optional.absent();
-        ((GtdDeedEntity)entity).setActionState(ActState.TRASH);
+        ((GtdDeedEntity)entity).setDeedState(DeedState.TRASH);
         DeedBusEvent busEvent = new DeedBusEvent(GtdBusEventType.DELETE, (GtdDeedEntity) entity);
         Optional<BaseEventBusBean> eventOptional =  toPostEvent(entity, busEvent);
         if(eventOptional.isPresent())
@@ -42,6 +42,6 @@ public class ActMaybeState extends BaseActState {
 
     @Override
     protected boolean toTrashable(GtdDeedEntity entity){
-        return entity.getActionState() == ActState.MAYBE;
+        return entity.getDeedState() == DeedState.MAYBE;
     }
 }

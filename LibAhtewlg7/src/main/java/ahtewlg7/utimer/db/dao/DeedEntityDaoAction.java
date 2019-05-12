@@ -85,7 +85,7 @@ public class DeedEntityDaoAction extends AGreenDaoAction<DeedEntityGdBean, Strin
             return null;
         return query(new WarningTimeQueryFilter(dateTime));
     }*/
-    /*public List<DeedEntityGdBean> queryByState(ActState gtdActionType){
+    /*public List<DeedEntityGdBean> queryByState(DeedState gtdActionType){
         if(gtdActionType == null)
             return null;
         return query(new GtdStateQueryFilter(gtdActionType));
@@ -106,9 +106,9 @@ public class DeedEntityDaoAction extends AGreenDaoAction<DeedEntityGdBean, Strin
         }
     }
     class GtdStateQueryFilter implements  IGreenDaoQueryFiltVisitor<DeedEntityGdBean> {
-        private ActState gtdType;
+        private DeedState gtdType;
 
-        GtdStateQueryFilter(ActState actState) {
+        GtdStateQueryFilter(DeedState actState) {
             this.gtdType = actState;
         }
 

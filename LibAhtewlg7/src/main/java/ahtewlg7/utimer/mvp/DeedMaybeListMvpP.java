@@ -14,7 +14,7 @@ import java.util.List;
 import ahtewlg7.utimer.entity.BaseEventBusBean;
 import ahtewlg7.utimer.entity.busevent.DeedBusEvent;
 import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
-import ahtewlg7.utimer.enumtype.ActState;
+import ahtewlg7.utimer.enumtype.DeedState;
 import ahtewlg7.utimer.enumtype.GtdBusEventType;
 import ahtewlg7.utimer.factory.GtdDeedByUuidFactory;
 import ahtewlg7.utimer.state.GtdMachine;
@@ -129,7 +129,7 @@ public class DeedMaybeListMvpP {
 
     class MaybeActListMvpM {
         Flowable<GtdDeedEntity> loadMaybe() {
-            return GtdDeedByUuidFactory.getInstance().getEntityByState(ActState.MAYBE);
+            return GtdDeedByUuidFactory.getInstance().getEntityByState(DeedState.MAYBE);
         }
     }
 

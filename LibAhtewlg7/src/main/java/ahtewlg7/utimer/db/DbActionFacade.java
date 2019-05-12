@@ -233,7 +233,7 @@ public class DbActionFacade {
         DeedEntityGdBean bean = new DeedEntityGdBean();
         bean.setUuid(entity.getUuid());
         bean.setTitle(entity.getTitle());
-        bean.setActionState(entity.getActionState());
+        bean.setActionState(entity.getDeedState());
         if(entity.getWarningTimeList() != null)
             bean.setWarningTimeList(entity.getWarningTimeList());
         if(entity.getDetail().isPresent())

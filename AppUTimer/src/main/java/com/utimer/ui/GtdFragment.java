@@ -75,11 +75,11 @@ public class GtdFragment extends AToolbarBkFragment {
         funcViewEntityList = Lists.newArrayList();
 
         Drawable maybeDrawable = TextImageFactory.getInstance().getGtdMaybeActionImage();
-        String maybeTitle      = getResources().getString(R.string.title_action_maybe);
+        String maybeTitle      = getResources().getString(R.string.title_deed_maybe);
         UtimerFuncRecyclerView.FuncViewEntity maybeViewEntity = new UtimerFuncRecyclerView.FuncViewEntity(maybeDrawable, maybeTitle);
 
         Drawable todoDrawable = TextImageFactory.getInstance().getGtdTodoActionImage();
-        String todoTitle      = getResources().getString(R.string.title_action_todo);
+        String todoTitle      = getResources().getString(R.string.title_deed_todo);
         UtimerFuncRecyclerView.FuncViewEntity todoViewEntity = new UtimerFuncRecyclerView.FuncViewEntity(todoDrawable, todoTitle);
 
         funcViewEntityList.add(maybeViewEntity);
