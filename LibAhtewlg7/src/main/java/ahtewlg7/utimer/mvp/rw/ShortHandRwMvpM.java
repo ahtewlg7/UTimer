@@ -43,7 +43,12 @@ public class ShortHandRwMvpM extends AUtimerRwMvpM<ShortHandEntity> {
 
     @Override
     public Flowable<Boolean> toSave(@NonNull Flowable<ShortHandEntity> entityRx) {
-        return dbActionFacade.saveShortHandEntity(entityRx);
+        return dbActionFacade.saveShortHandEntity(entityRx.doOnNext(new Consumer<ShortHandEntity>() {
+            @Override
+            public void accept(ShortHandEntity entity) throws Exception {
+                ShortHandByUuidFactory.getInstance().update(entity.getUuid(), entity);
+            }
+        }));
     }
 
     @Override

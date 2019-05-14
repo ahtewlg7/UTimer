@@ -125,11 +125,7 @@ public class DeedEditFragment extends ATxtEditFragment
 
     @Override
     protected boolean ifTxtEditing() {
-        if(rawEditView == null)
-            return false;
-        if(getUTimerEntity().getDetail().isPresent())
-            return !rawEditView.getText().toString().equals(getUTimerEntity().getDetail().get());
-        return !TextUtils.isEmpty(rawEditView.getText().toString());
+        return editMvpP.isNlping();
     }
 
     @Override
@@ -138,7 +134,8 @@ public class DeedEditFragment extends ATxtEditFragment
             rawEditView.setText(getUTimerEntity().getDetail().get());
         if(editMvpP == null)
             editMvpP = new DeedEditMvpP(this,getUTimerEntity());
-        editMvpP.toParseW5h2();
+        if(getArguments().getInt(KEY_WORK_MODE) == WORK_AS_EDIT)
+                editMvpP.toParseW5h2();
     }
 
     @Override
@@ -148,8 +145,10 @@ public class DeedEditFragment extends ATxtEditFragment
     @Override
     protected void toEndEdit() {
         int resultCode = RESULT_OK;
-        if(ifTxtEditing())
+        if(ifTxtEdited()) {
             getUTimerEntity().setDetail(rawEditView.getText().toString());
+            getUTimerEntity().setTitle(rawEditView.getText().toString());
+        }
         editMvpP.toFinishEdit();
         /*else if(TextUtils.isEmpty(rawEditView.getText())){
             GtdMachine.getInstance().getCurrState(getUTimerEntity()).toTrash(getUTimerEntity());
@@ -158,8 +157,6 @@ public class DeedEditFragment extends ATxtEditFragment
     }
 
     /**********************************************IShorthandEditMvpV**********************************************/
-
-
     @Override
     public void onParseStart() {
         onNlpStart();
@@ -210,6 +207,13 @@ public class DeedEditFragment extends ATxtEditFragment
         if(nlpWaitDialog != null)
             nlpWaitDialog.dismiss();
         nlpEditView.setHint(null);
+    }
+
+    private boolean ifTxtEdited(){
+        if(rawEditView == null || TextUtils.isEmpty(rawEditView.getText().toString()))
+            return false;
+        return !getUTimerEntity().getDetail().isPresent()
+                || !rawEditView.getText().toString().equals(getUTimerEntity().getDetail().get());
     }
     private void toCreateAIWaitingDialog(){
         nlpWaitDialog = new MaterialDialog.Builder(getContext()).title(R.string.wait)

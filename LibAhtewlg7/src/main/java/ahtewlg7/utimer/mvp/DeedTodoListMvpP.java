@@ -80,8 +80,7 @@ public class DeedTodoListMvpP implements IAllItemListMvpP<GtdDeedEntity> {
                         super.onNext(entity);
                         EventBusFatory.getInstance().getDefaultEventBus().postSticky(new DeedBusEvent(GtdBusEventType.DELETE, entity));
 
-                        boolean delSucc = entity.ifValid() && GtdDeedByUuidFactory.getInstance().remove(entity.getUuid()) != null;
-                        if(mvpV != null && delSucc)
+                        if(mvpV != null && entity.ifValid())
                             mvpV.onDeleteSucc(INVALID_INDEX, entity);
                         else if (mvpV != null)
                             mvpV.onDeleteFail(entity);

@@ -23,6 +23,8 @@ import io.reactivex.schedulers.Schedulers;
  * Created by lw on 2019/5/3.
  */
 public class DeedEditMvpP {
+    private boolean isNlping;
+
     private ActionMvpM mvpM;
     private IActEditMvpV mvpV;
     private GtdDeedEntity actionEntity;
@@ -33,6 +35,10 @@ public class DeedEditMvpP {
         mvpM                = new ActionMvpM();
     }
 
+    public boolean isNlping() {
+        return isNlping;
+    }
+
     public void toParseW5h2(){
         mvpM.toParseW5h2(Flowable.just(actionEntity))
             .compose(((RxFragment) mvpV.getRxLifeCycleBindView()).<Optional<BaseW5h2Entity>>bindUntilEvent(FragmentEvent.DESTROY_VIEW))
@@ -41,6 +47,7 @@ public class DeedEditMvpP {
                 @Override
                 public void onNext(Optional<BaseW5h2Entity> w5h2EntityOptional) {
                     super.onNext(w5h2EntityOptional);
+                    isNlping = false;
                     if(mvpV != null)
                         mvpV.onParseEnd(w5h2EntityOptional);
                 }
@@ -48,6 +55,7 @@ public class DeedEditMvpP {
                 @Override
                 public void onError(Throwable t) {
                     super.onError(t);
+                    isNlping = false;
                     if(mvpV != null)
                         mvpV.onParseErr(t);
                 }
@@ -55,6 +63,7 @@ public class DeedEditMvpP {
                 @Override
                 public void onSubscribe(Subscription s) {
                     super.onSubscribe(s);
+                    isNlping = true;
                     if(mvpV != null)
                         mvpV.onParseStart();
                 }

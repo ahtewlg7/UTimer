@@ -30,7 +30,7 @@ public class ActGtdState extends BaseActState{
         DeedBusEvent busEvent = new DeedBusEvent(GtdBusEventType.SAVE, (GtdDeedEntity) entity);
         Optional<BaseEventBusBean> eventOptional = toPostEvent(entity, busEvent);
         if(eventOptional.isPresent())
-            GtdDeedByUuidFactory.getInstance().updateState(preState, (GtdDeedEntity)entity);
+            GtdDeedByUuidFactory.getInstance().updateState(preState, (GtdDeedEntity) entity);
         return eventOptional;
     }
 
