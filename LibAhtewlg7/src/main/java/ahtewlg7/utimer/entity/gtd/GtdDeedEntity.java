@@ -21,6 +21,8 @@ import ahtewlg7.utimer.entity.w5h2.BaseW5h2Entity;
 import ahtewlg7.utimer.entity.w5h2.W5h2HowMuch;
 import ahtewlg7.utimer.entity.w5h2.W5h2What;
 import ahtewlg7.utimer.entity.w5h2.W5h2When;
+import ahtewlg7.utimer.entity.w5h2.W5h2Where;
+import ahtewlg7.utimer.entity.w5h2.W5h2Who;
 import ahtewlg7.utimer.enumtype.DeedState;
 import ahtewlg7.utimer.enumtype.GtdType;
 import ahtewlg7.utimer.util.DateTimeAction;
@@ -113,6 +115,8 @@ public class GtdDeedEntity extends AGtdUtimerEntity<GtdDeedBuilder>
         updateWhen(baseW5h2Entity.getWhen());
         updateWhat(baseW5h2Entity.getWhat());
         updateHowMuch(baseW5h2Entity.getHowMuch());
+        updateWho(baseW5h2Entity.getWho());
+        updateWhere(baseW5h2Entity.getWhere());
     }
 
     @Override
@@ -168,5 +172,13 @@ public class GtdDeedEntity extends AGtdUtimerEntity<GtdDeedBuilder>
     private void updateHowMuch(W5h2HowMuch howMuch){
         if(howMuch != null)
             w5h2Entity.setHowMuch(howMuch);
+    }
+    private void updateWho(W5h2Who who){
+        if(who != null)
+            w5h2Entity.setWho(who);
+    }
+    private void updateWhere(W5h2Where where){
+        if(where != null)
+            w5h2Entity.setWhere(where);
     }
 }

@@ -37,7 +37,7 @@ public class GtdDeedParser {
     public Optional<GtdDeedEntity> toParseAction(String raw){
         if(TextUtils.isEmpty(raw))
             return Optional.absent();
-        Optional<List<DateTime>> timeElementOptional = getTimeElement(raw);
+        Optional<List<DateTime>> timeElementOptional = toParseTimeElement(raw);
         if(!timeElementOptional.isPresent())
             return Optional.absent();
 
@@ -53,6 +53,15 @@ public class GtdDeedParser {
         gtdActionEntity.setLastAccessTime(DateTime.now());
         return Optional.of(gtdActionEntity);
     }
+
+    public Optional<List<DateTime>> toParseTimeElement(String raw){
+        List<DateTime> timeList = NlpAction.getInstance().toSegTimes(raw);
+        if(timeList == null || timeList.isEmpty())
+            return Optional.absent();
+        Collections.sort(timeList,DateTimeComparator.getInstance());
+        return Optional.of(timeList);
+    }
+
     public Optional<BaseW5h2Entity> toParseW5h2(String raw){
         BaseW5h2Entity w5h2Entity = new BaseW5h2Entity();
         List<Term> termList = NlpAction.getInstance().toSegAllTerm(raw);
@@ -138,13 +147,5 @@ public class GtdDeedParser {
         what.addDeed(new DeedContext(term.word));
         w5h2Entity.setWhat(what);
         return true;
-    }
-
-    private Optional<List<DateTime>> getTimeElement(String raw){
-        List<DateTime> timeList = NlpAction.getInstance().toSegTimes(raw);
-        if(timeList == null || timeList.isEmpty())
-            return Optional.absent();
-        Collections.sort(timeList,DateTimeComparator.getInstance());
-        return Optional.of(timeList);
     }
 }

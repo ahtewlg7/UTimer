@@ -24,6 +24,7 @@ public abstract class ATxtEditFragment extends AEditFragment {
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         if(keyCode == KeyEvent.KEYCODE_BACK && ifTxtEditing()) {
+            toPauseEdit();
             return true;
         }
         return super.onKeyUp(keyCode, event);
@@ -31,10 +32,8 @@ public abstract class ATxtEditFragment extends AEditFragment {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(keyCode == KeyEvent.KEYCODE_BACK && ifTxtEditing()) {
-            toPauseEdit();
+        if(keyCode == KeyEvent.KEYCODE_BACK && ifTxtEditing())
             return true;
-        }
         return super.onKeyDown(keyCode, event);
     }
 

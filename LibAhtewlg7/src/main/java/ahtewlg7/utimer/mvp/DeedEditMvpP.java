@@ -6,7 +6,11 @@ import com.google.common.base.Optional;
 import com.trello.rxlifecycle2.android.FragmentEvent;
 import com.trello.rxlifecycle2.components.support.RxFragment;
 
+import org.joda.time.DateTime;
 import org.reactivestreams.Subscription;
+
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import ahtewlg7.utimer.entity.BaseEventBusBean;
 import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
@@ -40,7 +44,7 @@ public class DeedEditMvpP {
     }
 
     public void toParseW5h2(){
-        mvpM.toParseW5h2(Flowable.just(actionEntity))
+        mvpM.toParseW5h2(Flowable.just(actionEntity).throttleFirst(3, TimeUnit.SECONDS))
             .compose(((RxFragment) mvpV.getRxLifeCycleBindView()).<Optional<BaseW5h2Entity>>bindUntilEvent(FragmentEvent.DESTROY_VIEW))
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(new MySafeSubscriber<Optional<BaseW5h2Entity>>(){
@@ -48,8 +52,10 @@ public class DeedEditMvpP {
                 public void onNext(Optional<BaseW5h2Entity> w5h2EntityOptional) {
                     super.onNext(w5h2EntityOptional);
                     isNlping = false;
+                    /*if(w5h2EntityOptional.isPresent())
+                        actionEntity.getW5h2Entity(w5h2EntityOptional.get())*/
                     if(mvpV != null)
-                        mvpV.onParseEnd(w5h2EntityOptional);
+                        mvpV.onParseEnd();
                 }
 
                 @Override
@@ -68,6 +74,38 @@ public class DeedEditMvpP {
                         mvpV.onParseStart();
                 }
             });
+    }
+    public void toParseTimeElement(){
+        mvpM.toParseTimeElement(Flowable.just(actionEntity).throttleFirst(3, TimeUnit.SECONDS))
+                .compose(((RxFragment) mvpV.getRxLifeCycleBindView()).<Optional<List<DateTime>>>bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new MySafeSubscriber<Optional<List<DateTime>>>(){
+                    @Override
+                    public void onNext(Optional<List<DateTime>> warningTimeList) {
+                        super.onNext(warningTimeList);
+                        isNlping = false;
+                        if(warningTimeList.isPresent())
+                            actionEntity.setWarningTimeList(warningTimeList.get());
+                        if(mvpV != null)
+                            mvpV.onParseEnd();
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+                        super.onError(t);
+                        isNlping = false;
+                        if(mvpV != null)
+                            mvpV.onParseErr(t);
+                    }
+
+                    @Override
+                    public void onSubscribe(Subscription s) {
+                        super.onSubscribe(s);
+                        isNlping = true;
+                        if(mvpV != null)
+                            mvpV.onParseStart();
+                    }
+                });
     }
 
     public void toFinishEdit(){
@@ -94,6 +132,17 @@ public class DeedEditMvpP {
             }).subscribeOn(Schedulers.computation());
         }
 
+        Flowable<Optional<List<DateTime>>> toParseTimeElement(@NonNull Flowable<GtdDeedEntity> actionEntityRx){
+            return actionEntityRx.map(new Function<GtdDeedEntity, Optional<List<DateTime>>>() {
+                @Override
+                public Optional<List<DateTime>> apply(GtdDeedEntity actionEntity) throws Exception {
+                    if(actionEntity == null || !actionEntity.ifValid())
+                        return Optional.absent();
+                    return gtdActParser.toParseTimeElement(actionEntity.getDetail().get());
+                }
+            }).subscribeOn(Schedulers.computation());
+        }
+
         Flowable<Optional<BaseEventBusBean>> toFinishEdit(@NonNull Flowable<GtdDeedEntity> actionEntityRx){
             return actionEntityRx.map(new Function<GtdDeedEntity, Optional<BaseEventBusBean>>() {
                 @Override
@@ -105,7 +154,7 @@ public class DeedEditMvpP {
     }
     public interface IActEditMvpV extends IRxLifeCycleBindView{
         public void onParseStart();
-        public void onParseEnd(Optional<BaseW5h2Entity> baseW5h2EntityOptional);
+        public void onParseEnd();
         public void onParseErr(Throwable t);
     }
 }

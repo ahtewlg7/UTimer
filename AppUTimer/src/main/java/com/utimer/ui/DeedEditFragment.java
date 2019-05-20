@@ -9,7 +9,6 @@ import android.widget.EditText;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.blankj.utilcode.util.ToastUtils;
-import com.google.common.base.Optional;
 import com.trello.rxlifecycle2.LifecycleProvider;
 import com.utimer.R;
 
@@ -37,6 +36,7 @@ public class DeedEditFragment extends ATxtEditFragment
     @BindView(R.id.fragment_action_edit_nlp)
     EditText nlpEditView;
 
+    private String preRawTxt;
     private MaterialDialog nlpWaitDialog;
 
     private DeedEditMvpP editMvpP;
@@ -125,7 +125,7 @@ public class DeedEditFragment extends ATxtEditFragment
 
     @Override
     protected boolean ifTxtEditing() {
-        return editMvpP.isNlping();
+        return ifTxtEdited() || editMvpP.isNlping();
     }
 
     @Override
@@ -134,21 +134,22 @@ public class DeedEditFragment extends ATxtEditFragment
             rawEditView.setText(getUTimerEntity().getDetail().get());
         if(editMvpP == null)
             editMvpP = new DeedEditMvpP(this,getUTimerEntity());
-        if(getArguments().getInt(KEY_WORK_MODE) == WORK_AS_EDIT)
-                editMvpP.toParseW5h2();
+        /*if(getArguments().getInt(KEY_WORK_MODE) == WORK_AS_EDIT)
+            editMvpP.toParseW5h2();*/
     }
 
     @Override
     protected void toPauseEdit() {
+        ToastUtils.showShort(R.string.prompt_nlp_wait);
+        updateEntityDetail();
+        editMvpP.toParseTimeElement();
     }
 
     @Override
     protected void toEndEdit() {
         int resultCode = RESULT_OK;
-        if(ifTxtEdited()) {
-            getUTimerEntity().setDetail(rawEditView.getText().toString());
+        if(ifTxtEdited())
             getUTimerEntity().setTitle(rawEditView.getText().toString());
-        }
         editMvpP.toFinishEdit();
         /*else if(TextUtils.isEmpty(rawEditView.getText())){
             GtdMachine.getInstance().getCurrState(getUTimerEntity()).toTrash(getUTimerEntity());
@@ -163,12 +164,11 @@ public class DeedEditFragment extends ATxtEditFragment
     }
 
     @Override
-    public void onParseEnd(Optional<BaseW5h2Entity> w5h2EntityOptional) {
+    public void onParseEnd() {
         onNlpEnd();
         StringBuilder builder = new StringBuilder();
-        if(w5h2EntityOptional.isPresent()){
-            BaseW5h2Entity w5h2Entity = w5h2EntityOptional.get();
-
+        BaseW5h2Entity w5h2Entity = getUTimerEntity().getW5h2Entity();
+        if(w5h2Entity != null){
             if(w5h2Entity.getWho() != null && w5h2Entity.getWho().toTips().isPresent())
                 builder.append(w5h2Entity.getWho().toTips().get()).append("\n");
             if(w5h2Entity.getWhat() != null && w5h2Entity.getWhat().toTips().isPresent())
@@ -177,10 +177,13 @@ public class DeedEditFragment extends ATxtEditFragment
                 builder.append(w5h2Entity.getWhen().toTips().get()).append("\n");
             if(w5h2Entity.getWhere() != null && w5h2Entity.getWhere().toTips().isPresent())
                 builder.append(w5h2Entity.getWhere().toTips().get()).append("\n");
+        }else if(getUTimerEntity().getWarningTimeList() != null) {
+            builder.append(getUTimerEntity().getWarningTimeList().toString());
         }else{
             builder.append("Null");
         }
         nlpEditView.setText(builder.toString());
+        preRawTxt = rawEditView.getText().toString();
     }
 
     @Override
@@ -194,8 +197,11 @@ public class DeedEditFragment extends ATxtEditFragment
         return this;
     }
 
-
     /******************************************INoteEditMvpV**********************************************/
+    private void updateEntityDetail(){
+        getUTimerEntity().setTitle(rawEditView.getText().toString());
+        getUTimerEntity().setDetail(rawEditView.getText().toString());
+    }
     private void onNlpStart(){
         if(nlpWaitDialog == null )
             toCreateAIWaitingDialog();
@@ -210,10 +216,7 @@ public class DeedEditFragment extends ATxtEditFragment
     }
 
     private boolean ifTxtEdited(){
-        if(rawEditView == null || TextUtils.isEmpty(rawEditView.getText().toString()))
-            return false;
-        return !getUTimerEntity().getDetail().isPresent()
-                || !rawEditView.getText().toString().equals(getUTimerEntity().getDetail().get());
+        return rawEditView != null && !rawEditView.getText().toString().equals(preRawTxt);
     }
     private void toCreateAIWaitingDialog(){
         nlpWaitDialog = new MaterialDialog.Builder(getContext()).title(R.string.wait)
