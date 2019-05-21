@@ -55,7 +55,6 @@ public class MainFragment extends AButterKnifeFragment {
     @Override
     public void onFragmentResult(int requestCode, int resultCode, Bundle data) {
         super.onFragmentResult(requestCode, resultCode, data);
-        ((UTimerActivity)getActivity()).getFloatingActionMenu().toggleMenuButton(true);
         if (resultCode == RESULT_OK) {
             if (requestCode == REQ_NEW_SHORTHAND_FRAGMENT)
                 start(ShortHandListFragment.newInstance());
