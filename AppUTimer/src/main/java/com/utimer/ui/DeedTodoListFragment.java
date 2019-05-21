@@ -219,7 +219,7 @@ public class DeedTodoListFragment extends AToolbarBkFragment implements DeedTodo
         @Override
         public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
             editIndex = position;
-//            startForResult(ShortHandEditFragment.newInstance((GtdDeedEntity) adapter.getData().get(position)), REQ_EDIT_FRAGMENT);
+            startForResult(DeedEditFragment.newInstance((GtdDeedEntity) adapter.getData().get(position)), REQ_EDIT_FRAGMENT);
         }
 
         @Override

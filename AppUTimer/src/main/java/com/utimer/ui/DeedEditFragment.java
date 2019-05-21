@@ -143,6 +143,7 @@ public class DeedEditFragment extends ATxtEditFragment
         ToastUtils.showShort(R.string.prompt_nlp_wait);
         updateEntityDetail();
         editMvpP.toParseTimeElement();
+//        editMvpP.toParseW5h2();
     }
 
     @Override

@@ -14,8 +14,15 @@ public abstract class ATxtEditFragment extends AEditFragment {
     protected abstract boolean ifTxtEditing();
 
     @Override
+    public void onStart() {
+        super.onStart();
+        getAttachActivity().toVisibleFloatingMenu(false);
+    }
+
+    @Override
     public void onStop() {
         super.onStop();
+        getAttachActivity().toVisibleFloatingMenu(true);
         if(ifEnvReady)
             toEndEdit();
     }

@@ -85,6 +85,10 @@ public class UTimerActivity extends AButterKnifeActivity{
         return deedActionButton;
     }
 
+    public void toVisibleFloatingMenu(boolean visible){
+        floatingActionMenu.toggleMenuButton(visible);
+    }
+
     private void initFloatMenu(){
         menuButtonClickListener = new MenuButtonClickListener();
         shortHandActionButton.setOnClickListener(menuButtonClickListener);
@@ -104,16 +108,14 @@ public class UTimerActivity extends AButterKnifeActivity{
         public void onClick(View v) {
             switch (v.getId()){
                 case R.id.activity_utimer_fragment_bn_shorthand:
-                    if(findFragment(MainFragment.class) != null){
+                    if(findFragment(MainFragment.class) != null)
                         findFragment(MainFragment.class).toNewShortHand();
-                        floatingActionMenu.toggleMenuButton(true);
-                    }
+//                        floatingActionMenu.toggleMenuButton(true);
                     break;
                 case R.id.activity_utimer_fragment_bn_deed:
-                    if(findFragment(MainFragment.class) != null){
+                    if(findFragment(MainFragment.class) != null)
                         findFragment(MainFragment.class).toNewDeed();
-                        floatingActionMenu.toggleMenuButton(true);
-                    }
+//                        floatingActionMenu.toggleMenuButton(true);
                     break;
             }
         }
