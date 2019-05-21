@@ -102,6 +102,7 @@ public class ShortHandEntity extends AUtimerEntity<ShortHandBuilder>
                 updateRPath(attachFile);
             }
         }
+        createTime = DateTime.now();
         return attachFile.createOrExist();
     }
 

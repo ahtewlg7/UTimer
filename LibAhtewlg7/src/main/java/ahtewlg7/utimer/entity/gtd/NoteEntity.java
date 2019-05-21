@@ -63,6 +63,7 @@ public class NoteEntity extends AUtimerEntity<NoteBuilder>
 
     @Override
     public boolean ensureAttachFileExist() {
+        createTime = DateTime.now();
         return attachFile.createOrExist();
     }
     @Override

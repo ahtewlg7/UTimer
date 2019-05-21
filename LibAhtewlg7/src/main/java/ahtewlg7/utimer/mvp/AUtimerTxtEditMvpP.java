@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import com.google.common.base.Optional;
 import com.google.common.collect.Table;
 
+import org.joda.time.DateTime;
 import org.reactivestreams.Subscription;
 
 import java.util.List;
@@ -102,6 +103,7 @@ public abstract class AUtimerTxtEditMvpP<T extends AUtimerEntity> implements IUt
                         super.onComplete();
                         if(editMvpV != null)
                             editMvpV.onSaveEnd();
+                        updateEntity();
                         UTimerBusEvent busEvent = new UTimerBusEvent(GtdBusEventType.SAVE, t);
                         EventBusFatory.getInstance().getDefaultEventBus().postSticky(busEvent);
 //                        isChangeSaved = true;
@@ -185,6 +187,11 @@ public abstract class AUtimerTxtEditMvpP<T extends AUtimerEntity> implements IUt
             return true;
         }
         return false;
+    }
+    protected void updateEntity(){
+        if(t != null){
+            t.setLastAccessTime(DateTime.now());
+        }
     }
 
     public interface IUtimerEditMvpM{
