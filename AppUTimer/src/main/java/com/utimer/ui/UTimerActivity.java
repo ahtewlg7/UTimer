@@ -110,12 +110,10 @@ public class UTimerActivity extends AButterKnifeActivity{
                 case R.id.activity_utimer_fragment_bn_shorthand:
                     if(findFragment(MainFragment.class) != null)
                         findFragment(MainFragment.class).toNewShortHand();
-//                        floatingActionMenu.toggleMenuButton(true);
                     break;
                 case R.id.activity_utimer_fragment_bn_deed:
                     if(findFragment(MainFragment.class) != null)
                         findFragment(MainFragment.class).toNewDeed();
-//                        floatingActionMenu.toggleMenuButton(true);
                     break;
             }
         }

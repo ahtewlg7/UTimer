@@ -25,6 +25,18 @@ public abstract class AToolbarBkFragment extends AButterKnifeFragment{
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        getAttachActivity().getFloatingActionMenu().close(false);
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        getAttachActivity().getFloatingActionMenu().close(false);
+    }
+
+    @Override
     public void onViewCreated(View inflateView) {
         super.onViewCreated(inflateView);
         initToolbar();

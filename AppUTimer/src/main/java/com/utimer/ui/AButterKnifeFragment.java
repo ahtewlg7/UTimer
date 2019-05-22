@@ -2,11 +2,11 @@ package com.utimer.ui;
 
 import android.view.View;
 
-import ahtewlg7.utimer.ui.ABaseRxFragement;
+import ahtewlg7.utimer.ui.ABaseRxFragment;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public abstract class AButterKnifeFragment extends ABaseRxFragement{
+public abstract class AButterKnifeFragment extends ABaseRxFragment {
 
     protected abstract String getTitle();
 
