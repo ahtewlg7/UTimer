@@ -127,9 +127,10 @@ public class ShortHandListMvpP implements IAllItemListMvpP<ShortHandEntity> {
 
     @Override
     public void onItemEdited(int index, ShortHandEntity entity) {
-        shortHandList.set(index, entity);
+        shortHandList.remove(index);
+        shortHandList.add(0, entity);
         if(shorthandListMvpV != null)
-            shorthandListMvpV.resetView(index, entity);
+            shorthandListMvpV.resetView(shortHandList);
     }
 
     class ShorthandListMvpM implements IAllItemListMvpM<ShortHandEntity> {
