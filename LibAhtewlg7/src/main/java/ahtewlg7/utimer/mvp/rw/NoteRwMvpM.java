@@ -34,7 +34,12 @@ public class NoteRwMvpM extends AUtimerRwMvpM<NoteEntity> {
 
     @Override
     public Flowable<Boolean> toSave(@NonNull Flowable<NoteEntity> entityRx) {
-        return dbActionFacade.saveNoteEntity(entityRx);
+        return dbActionFacade.saveNoteEntity(entityRx.doOnNext(new Consumer<NoteEntity>() {
+            @Override
+            public void accept(NoteEntity entity) throws Exception {
+                NoteByUuidFactory.getInstance().update(entity.getUuid(), entity);
+            }
+        }));
     }
 
     @Override

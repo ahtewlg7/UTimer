@@ -87,11 +87,15 @@ public class ProjectEditMvpP implements IUtimerEditMvpP{
             mvpV.resetView(noteEntityList);
     }
 
+    //todo: the index is the view 's index, the 0th is the note header,
+    // so the noteEntityList_index is (view_index -1)
     public void onNoteEdited(int index, NoteEntity entity) {
-        if(index > 0)
-            noteEntityList.set(index - 1, entity);
+        if(index > 0) {
+            noteEntityList.remove(index -1);
+            noteEntityList.add(0, entity);
+        }
         if(mvpV != null)
-            mvpV.resetView(index, entity);
+            mvpV.resetView(noteEntityList);
     }
 
     class ProjectEditMvpM{
