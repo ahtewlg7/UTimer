@@ -13,7 +13,6 @@ import android.view.animation.Animation;
 
 import com.trello.rxlifecycle2.components.support.RxFragment;
 
-import ahtewlg7.utimer.util.Logcat;
 import me.yokeyword.fragmentation.ExtraTransaction;
 import me.yokeyword.fragmentation.ISupportFragment;
 import me.yokeyword.fragmentation.SupportFragmentDelegate;
@@ -23,7 +22,7 @@ import me.yokeyword.fragmentation.anim.FragmentAnimator;
 /**
  * Created by lw on 2016/9/11.
  */
-public abstract class ABaseRxFragement extends RxFragment implements ISupportFragment {
+public abstract class ABaseRxFragment extends RxFragment implements ISupportFragment {
 
     public abstract void onViewCreated(View inflateView);
     public abstract int getLayoutRid();

@@ -136,11 +136,14 @@ public abstract class AUtimerEntity<T extends AUtimerBuilder> implements ITipsEn
         Optional<String> titleOptional = attachFile.getTitle();
         if(titleOptional.isPresent() && TextUtils.isEmpty(title))
             setTitle(titleOptional.get());
-        if(attachFile.ifValid()) {
+        if(!attachFile.ifValid())
+            return;
+        if(attachFile.getCreateTime() != null)
             createTime     = attachFile.getCreateTime();
+        if(attachFile.getLassAccessTime() != null)
             lastAccessTime = attachFile.getLassAccessTime();
+        if(attachFile.getLassModifyTime() != null)
             lastModifyTime = attachFile.getLassModifyTime();
-        }
     }
 
     protected DateTime getLifeCycleTime(){

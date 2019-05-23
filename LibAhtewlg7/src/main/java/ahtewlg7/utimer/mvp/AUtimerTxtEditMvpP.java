@@ -189,9 +189,8 @@ public abstract class AUtimerTxtEditMvpP<T extends AUtimerEntity> implements IUt
         return false;
     }
     protected void updateEntity(){
-        if(t != null){
+        if(t != null)
             t.setLastAccessTime(DateTime.now());
-        }
     }
 
     public interface IUtimerEditMvpM{

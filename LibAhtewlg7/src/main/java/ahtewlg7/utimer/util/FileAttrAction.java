@@ -20,7 +20,7 @@ public class FileAttrAction {
 
     public FileAttrAction(File file){
         this.file = file;
-//        initAttr();//tddo
+//        initAttr();//todo: the attr is work in sdk 26, curr is 24
     }
     public BasicFileAttributes getAttr(){
         return attr;
@@ -45,6 +45,7 @@ public class FileAttrAction {
         return new DateTime(time);
     }
 
+    //todo:
     public DateTime getLassModifyTime(){
         if(file == null || !file.exists() || attr == null)
             return null;
