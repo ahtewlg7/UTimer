@@ -20,7 +20,7 @@ public class GtdTimeComparator<T extends ITimeComparator> implements Comparator<
     }
     //who close who first
     @Override
-    public int compare(T o1, T o2) {
+    public int compare(T o2, T o1) {
         int result = ComparatorType.GREATER.value();
         if(!o2.getComparatorTime().isPresent() && o1.getComparatorTime().isPresent())
             result = ComparatorType.LESS.value();
