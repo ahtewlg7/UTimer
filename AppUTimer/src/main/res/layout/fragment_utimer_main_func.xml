@@ -30,4 +30,18 @@
         android:scrollbars="none"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fragment_utimer_main_func_appbarlayout" />
+
+    <TextView
+        android:id="@+id/fragment_utimer_main_func_introduce"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/prompt_note_func"
+        android:textColor="@android:color/darker_gray"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.473"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fragment_utimer_main_func_appbarlayout"
+        app:layout_constraintVertical_bias="0.766" />
 </android.support.constraint.ConstraintLayout>

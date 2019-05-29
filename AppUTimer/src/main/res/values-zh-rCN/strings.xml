@@ -9,7 +9,7 @@
     <string name="title_time">时间</string>
     <string name="title_note">笔记</string>
     <string name="title_note_list">笔记清单</string>
-    <string name="title_gtd">事务</string>
+    <string name="title_gtd">计划</string>
     <string name="title_about">关于</string>
     <string name="title_shorthand">速写</string>
     <string name="title_shorthand_list">速写清单</string>
@@ -23,5 +23,7 @@
 
     <string name="add">添加</string>
     <string name="create_shorthand">新建速写</string>
-    <string name="create_deed">新建工程</string>
+    <string name="create_deed">新建计划</string>
+
+    <string name="prompt_note_func">速写是单个小而短的笔记\n工程是多个归类在一起的，长而专的笔记集合</string>
 </resources>
