@@ -41,6 +41,11 @@ public abstract class AToolbarBkFragment extends AButterKnifeFragment{
         super.onViewCreated(inflateView);
         initToolbar();
         ((AppCompatActivity) getActivity()).setSupportActionBar(getToolbar());
+
+        if(ifHomeButtonShowing()) {
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeButtonEnabled(true);
+        }
     }
 
     @Override
@@ -58,5 +63,9 @@ public abstract class AToolbarBkFragment extends AButterKnifeFragment{
 
     public UTimerActivity getAttachActivity(){
         return (UTimerActivity)getActivity();
+    }
+
+    protected boolean ifHomeButtonShowing(){
+        return true;
     }
 }

@@ -71,6 +71,11 @@ public class GtdFragment extends AToolbarBkFragment {
         toolbar.setTitle(getTitle());
     }
 
+    @Override
+    protected boolean ifHomeButtonShowing() {
+        return false;
+    }
+
     private void initFuncList(){
         funcViewEntityList = Lists.newArrayList();
 
