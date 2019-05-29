@@ -7,42 +7,49 @@ import android.text.Spannable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.Gravity;
+import android.view.inputmethod.InputMethodManager;
 
 import com.google.common.collect.Range;
 
 import ahtewlg7.utimer.md.ClickableMovementMethod;
-import ahtewlg7.utimer.util.Logcat;
+import ahtewlg7.utimer.util.AndrManagerFactory;
 import io.reactivex.annotations.NonNull;
 
 /**
  * Created by lw on 2016/5/18.
  */
 public class MdEditText extends android.support.v7.widget.AppCompatEditText {
-    public static final String TAG = MdEditText.class.getSimpleName();
-
     public static  final int INVALID_LINE_INDEX     = -1;
     public static  final int DEFAULT_PADDING_LEFT   = 20;
     public static  final int DEFAULT_PADDING_RIGHT  = 0;
     public static  final int DEFAULT_PADDING_TOP    = 0;
     public static  final int DEFAULT_PADDING_BOTTOM = 0;
 
+    private InputMethodManager imm;
+
     public MdEditText(Context context) {
         super(context);
         setCursorVisible(true);
         setPadding(DEFAULT_PADDING_LEFT,DEFAULT_PADDING_TOP,DEFAULT_PADDING_RIGHT,DEFAULT_PADDING_BOTTOM);
         setMovementMethod(ClickableMovementMethod.getInstance());
+
+        imm = new AndrManagerFactory().getInputMethodManager();
     }
     public MdEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
         setCursorVisible(true);
         setPadding(DEFAULT_PADDING_LEFT,DEFAULT_PADDING_TOP,DEFAULT_PADDING_RIGHT,DEFAULT_PADDING_BOTTOM);
         setMovementMethod(ClickableMovementMethod.getInstance());
+
+        imm = new AndrManagerFactory().getInputMethodManager();
     }
     public MdEditText(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         setCursorVisible(true);
         setPadding(DEFAULT_PADDING_LEFT,DEFAULT_PADDING_TOP,DEFAULT_PADDING_RIGHT,DEFAULT_PADDING_BOTTOM);
         setMovementMethod(ClickableMovementMethod.getInstance());
+
+        imm = new AndrManagerFactory().getInputMethodManager();
     }
 
     public int getCurrLineIndex() {
@@ -110,10 +117,12 @@ public class MdEditText extends android.support.v7.widget.AppCompatEditText {
             setFocusableInTouchMode(true);
             setFocusable(true);
             requestFocus();
+            imm.showSoftInput(MdEditText.this, InputMethodManager.SHOW_FORCED);
         }else{
             setFocusableInTouchMode(false);
             setFocusable(false);
             clearFocus();
+            imm.hideSoftInputFromWindow(getWindowToken(),0);
         }
     }
     public boolean ifEditable(){
@@ -127,8 +136,6 @@ public class MdEditText extends android.support.v7.widget.AppCompatEditText {
     public boolean ifHasSelected(){
         int stCursorPosition  = getSelectionStart();
         int endCursorPosition = getSelectionEnd();
-
-        Logcat.d(TAG,"ifHasSelected stCursorPosition = " + stCursorPosition + ", endCursorPosition = " + endCursorPosition);
         return stCursorPosition != endCursorPosition;
     }
 
