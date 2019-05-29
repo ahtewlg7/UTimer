@@ -22,7 +22,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:menu_backgroundColor="@android:color/transparent"
-        app:menu_fab_label="New"
         app:menu_labels_ellipsize="end"
         app:menu_labels_singleLine="true">
         <com.github.clans.fab.FloatingActionButton

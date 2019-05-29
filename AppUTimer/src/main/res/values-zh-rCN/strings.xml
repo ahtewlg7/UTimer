@@ -22,4 +22,6 @@
     <string name="title_deed_undo">未完成</string>
 
     <string name="add">添加</string>
+    <string name="create_shorthand">新建速写</string>
+    <string name="create_deed">新建工程</string>
 </resources>
