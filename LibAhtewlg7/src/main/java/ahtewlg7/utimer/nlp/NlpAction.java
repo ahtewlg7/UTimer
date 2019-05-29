@@ -29,7 +29,7 @@ public class NlpAction {
     }
 
     public void initNlp(){
-        hanlpAction.initNLP();
+//        hanlpAction.initNLP();//todo
         timeNlpAction.initNLP();
     }
 
