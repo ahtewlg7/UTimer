@@ -64,6 +64,8 @@ public class NoteEditFragment extends ATxtEditFragment
 
     @Override
     protected String getTitle() {
+        if(getUTimerEntity().ifValid())
+            return getUTimerEntity().getTitle();
         return MyRInfo.getStringByID(R.string.title_note);
     }
 
