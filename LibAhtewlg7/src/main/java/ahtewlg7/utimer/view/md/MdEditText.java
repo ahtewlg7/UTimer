@@ -29,27 +29,15 @@ public class MdEditText extends android.support.v7.widget.AppCompatEditText {
 
     public MdEditText(Context context) {
         super(context);
-        setCursorVisible(true);
-        setPadding(DEFAULT_PADDING_LEFT,DEFAULT_PADDING_TOP,DEFAULT_PADDING_RIGHT,DEFAULT_PADDING_BOTTOM);
-        setMovementMethod(ClickableMovementMethod.getInstance());
-
-        imm = new AndrManagerFactory().getInputMethodManager();
+        init();
     }
     public MdEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
-        setCursorVisible(true);
-        setPadding(DEFAULT_PADDING_LEFT,DEFAULT_PADDING_TOP,DEFAULT_PADDING_RIGHT,DEFAULT_PADDING_BOTTOM);
-        setMovementMethod(ClickableMovementMethod.getInstance());
-
-        imm = new AndrManagerFactory().getInputMethodManager();
+        init();
     }
     public MdEditText(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        setCursorVisible(true);
-        setPadding(DEFAULT_PADDING_LEFT,DEFAULT_PADDING_TOP,DEFAULT_PADDING_RIGHT,DEFAULT_PADDING_BOTTOM);
-        setMovementMethod(ClickableMovementMethod.getInstance());
-
-        imm = new AndrManagerFactory().getInputMethodManager();
+        init();
     }
 
     public int getCurrLineIndex() {
@@ -112,17 +100,19 @@ public class MdEditText extends android.support.v7.widget.AppCompatEditText {
         }
     }
 
-    public void enableEdit(boolean enable){
+    public void enableEdit(boolean enable,boolean immFlag){
         if(enable){
             setFocusableInTouchMode(true);
             setFocusable(true);
             requestFocus();
-            imm.showSoftInput(MdEditText.this, InputMethodManager.SHOW_FORCED);
+            if(immFlag)
+                imm.showSoftInput(MdEditText.this, InputMethodManager.SHOW_FORCED);
         }else{
             setFocusableInTouchMode(false);
             setFocusable(false);
             clearFocus();
-            imm.hideSoftInputFromWindow(getWindowToken(),0);
+            if(immFlag)
+                imm.hideSoftInputFromWindow(getWindowToken(),0);
         }
     }
     public boolean ifEditable(){
@@ -177,5 +167,13 @@ public class MdEditText extends android.support.v7.widget.AppCompatEditText {
     public void replace(@NonNull Range<Integer> srcRange, @NonNull String replaceContent, @NonNull Range<Integer> replaceRange){
         getEditableText().replace(srcRange.lowerEndpoint(), srcRange.upperEndpoint(),
                 replaceContent, replaceRange.lowerEndpoint(),replaceRange.upperEndpoint());
+    }
+
+    private void init(){
+        setCursorVisible(true);
+        setPadding(DEFAULT_PADDING_LEFT,DEFAULT_PADDING_TOP,DEFAULT_PADDING_RIGHT,DEFAULT_PADDING_BOTTOM);
+        setMovementMethod(ClickableMovementMethod.getInstance());
+
+        imm = new AndrManagerFactory().getInputMethodManager();
     }
 }

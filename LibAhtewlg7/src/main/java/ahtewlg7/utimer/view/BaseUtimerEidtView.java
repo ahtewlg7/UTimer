@@ -346,7 +346,7 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
         if(!optional.isPresent())
             return;
         if(editMode == EditMode.OFF){
-            optional.get().enableEdit(false);
+            optional.get().enableEdit(false, false);
             if(editModeListener != null)
                 editModeListener.onEditModeOff();
 
@@ -359,7 +359,7 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
                 toModify(position, Observable.just(editTxt));
             }
         }else if(editMode == EditMode.ON){
-            optional.get().enableEdit(true);
+            optional.get().enableEdit(true, getAdapter().getData().size() == 1 );
             if(optional.get().ifEditable() && editModeListener != null)
                     editModeListener.onEditModeOn();
 
