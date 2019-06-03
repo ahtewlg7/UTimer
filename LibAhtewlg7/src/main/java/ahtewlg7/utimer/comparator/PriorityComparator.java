@@ -16,10 +16,10 @@ public class PriorityComparator<T extends IPriorityBean> implements Comparator<T
     @Override
     public int compare(T o1, T o2) {
         if(o1.getPriorityLevel().value() >  o2.getPriorityLevel().value())
-            return ComparatorType.GREATER.value();
+            return ComparatorType.TH2_FIRST.value();
         else if(o1.getPriorityLevel().value() == o2.getPriorityLevel().value())
-            return ComparatorType.EQUAL.value();
+            return ComparatorType.NO_MATTER.value();
         else
-            return ComparatorType.LESS.value();
+            return ComparatorType.TH1_FIRST.value();
     }
 }

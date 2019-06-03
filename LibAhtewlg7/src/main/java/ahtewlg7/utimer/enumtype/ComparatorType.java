@@ -4,9 +4,9 @@ package ahtewlg7.utimer.enumtype;
  * Created by lw on 2016/9/13.
  */
 public enum ComparatorType {
-    LESS(-1),
-    EQUAL(0),
-    GREATER(1);
+    TH1_FIRST(-1),
+    NO_MATTER(0),
+    TH2_FIRST(1);
 
     private final int value;
 
@@ -21,13 +21,13 @@ public enum ComparatorType {
     public static ComparatorType valueOf(int value){
         switch (value){
             case -1:
-                return LESS;
+                return TH1_FIRST;
             case 0:
-                return EQUAL;
+                return NO_MATTER;
             case 1:
-                return GREATER;
+                return TH2_FIRST;
             default:
-                return EQUAL;
+                return NO_MATTER;
         }
     }
 }

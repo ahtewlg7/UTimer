@@ -12,7 +12,6 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import ahtewlg7.utimer.common.FileSystemAction;
-import ahtewlg7.utimer.comparator.ITimeComparator;
 import ahtewlg7.utimer.db.entity.DeedEntityGdBean;
 import ahtewlg7.utimer.entity.AGtdUtimerEntity;
 import ahtewlg7.utimer.entity.IMergerEntity;
@@ -29,7 +28,7 @@ import ahtewlg7.utimer.util.DateTimeAction;
 
 
 public class GtdDeedEntity extends AGtdUtimerEntity<GtdDeedBuilder>
-        implements ITimeComparator, Serializable {
+        implements Serializable {
     private DeedState deedState;
     private List<DateTime> warningTimeList;
     private DateTimeAction dateTimeAction;
@@ -83,12 +82,6 @@ public class GtdDeedEntity extends AGtdUtimerEntity<GtdDeedBuilder>
         if(warningTimeList != null && !warningTimeList.isEmpty())
             return Optional.of(warningTimeList.get(0));
         return super.getFirstWorkTime();
-    }
-
-    //++++++++++++++++++++++++++++++++++++++ITimeComparator++++++++++++++++++++++++++++++++++++
-    @Override
-    public Optional<DateTime> getComparatorTime() {
-        return getFirstWorkTime();
     }
 
     public DeedState getDeedState() {

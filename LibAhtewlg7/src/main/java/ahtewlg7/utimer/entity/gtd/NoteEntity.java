@@ -12,7 +12,6 @@ import java.io.Serializable;
 import javax.annotation.Nonnull;
 
 import ahtewlg7.utimer.common.FileSystemAction;
-import ahtewlg7.utimer.comparator.ITimeComparator;
 import ahtewlg7.utimer.db.entity.NoteEntityGdBean;
 import ahtewlg7.utimer.entity.AUtimerEntity;
 import ahtewlg7.utimer.entity.IMergerEntity;
@@ -24,7 +23,7 @@ import ahtewlg7.utimer.util.DateTimeAction;
  * Created by lw on 2019/1/23.
  */
 public class NoteEntity extends AUtimerEntity<NoteBuilder>
-        implements Serializable , ITimeComparator {
+        implements Serializable {
     private String rPath;
 
     protected NoteEntity(@Nonnull NoteBuilder builder) {
@@ -71,11 +70,6 @@ public class NoteEntity extends AUtimerEntity<NoteBuilder>
     }
 
     //++++++++++++++++++++++++++++++++++++++ITimeComparator++++++++++++++++++++++++++++++++++++
-    @Override
-    public Optional<DateTime> getComparatorTime() {
-        return Optional.fromNullable(lastAccessTime);
-    }
-
     private void initByProjectEntity(GtdProjectEntity projectEntity){
         if(projectEntity == null || !projectEntity.ifValid()){
             return;

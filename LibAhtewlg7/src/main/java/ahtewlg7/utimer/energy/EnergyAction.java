@@ -25,6 +25,6 @@ public class EnergyAction {
             return true;
         Comparator<DegreeEntity> comparator = new DegreeLevelComparator<DegreeEntity>();
         int compareResult = comparator.compare(energyEntity, curEnergyEntity);
-        return compareResult == ComparatorType.EQUAL.value() || compareResult == ComparatorType.GREATER.value();
+        return compareResult == ComparatorType.NO_MATTER.value() || compareResult == ComparatorType.TH2_FIRST.value();
     }
 }

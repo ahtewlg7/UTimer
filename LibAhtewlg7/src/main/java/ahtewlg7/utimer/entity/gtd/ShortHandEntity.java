@@ -13,7 +13,6 @@ import java.io.Serializable;
 import javax.annotation.Nonnull;
 
 import ahtewlg7.utimer.common.FileSystemAction;
-import ahtewlg7.utimer.comparator.ITimeComparator;
 import ahtewlg7.utimer.db.entity.ShortHandEntityGdBean;
 import ahtewlg7.utimer.entity.AUtimerEntity;
 import ahtewlg7.utimer.entity.IMergerEntity;
@@ -24,7 +23,7 @@ import ahtewlg7.utimer.enumtype.GtdType;
 import ahtewlg7.utimer.util.DateTimeAction;
 
 public class ShortHandEntity extends AUtimerEntity<ShortHandBuilder>
-        implements ITimeComparator,Serializable {
+        implements Serializable {
     private String rPath;
     private EditElement lastModifyElement;
 
@@ -47,12 +46,6 @@ public class ShortHandEntity extends AUtimerEntity<ShortHandBuilder>
     @Override
     public boolean ifRawReadable() {
         return super.ifRawReadable() && ensureAttachFileExist();
-    }
-
-    //++++++++++++++++++++++++++++++++++++++ITimeComparator++++++++++++++++++++++++++++++++++++
-    @Override
-    public Optional<DateTime> getComparatorTime() {
-        return Optional.fromNullable(lastAccessTime);
     }
 
     public EditElement getLastModifyElement() {
