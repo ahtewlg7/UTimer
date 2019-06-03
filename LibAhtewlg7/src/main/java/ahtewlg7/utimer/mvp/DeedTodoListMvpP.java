@@ -10,6 +10,7 @@ import org.reactivestreams.Subscription;
 
 import java.util.List;
 
+import ahtewlg7.utimer.comparator.DeedWarningTimeComparator;
 import ahtewlg7.utimer.entity.busevent.DeedBusEvent;
 import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
 import ahtewlg7.utimer.enumtype.GtdBusEventType;
@@ -116,7 +117,8 @@ public class DeedTodoListMvpP implements IAllItemListMvpP<GtdDeedEntity> {
 
     class EntityListMvpM{
         public Flowable<GtdDeedEntity> loadAllEntity() {
-            return GtdDeedByUuidFactory.getInstance().getEntityByState();
+            return GtdDeedByUuidFactory.getInstance().getEntityByState()
+                    .sorted(new DeedWarningTimeComparator().getAscOrder());
         }
     }
 

@@ -11,6 +11,7 @@ import org.reactivestreams.Subscription;
 
 import java.util.List;
 
+import ahtewlg7.utimer.comparator.CreateTimeComparator;
 import ahtewlg7.utimer.entity.busevent.UTimerBusEvent;
 import ahtewlg7.utimer.entity.gtd.ShortHandEntity;
 import ahtewlg7.utimer.enumtype.GtdBusEventType;
@@ -139,7 +140,8 @@ public class ShortHandListMvpP implements IAllItemListMvpP<ShortHandEntity> {
 
         @Override
         public Flowable<ShortHandEntity> loadAllEntity() {
-            return ShortHandByUuidFactory.getInstance().getAllLifeEntity();
+            return ShortHandByUuidFactory.getInstance().getAllLifeEntity()
+                    .sorted(new CreateTimeComparator<ShortHandEntity>().getDescOrder());
         }
 
         @Override

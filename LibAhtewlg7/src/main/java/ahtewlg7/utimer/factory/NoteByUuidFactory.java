@@ -7,10 +7,8 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Lists;
 
-import java.util.Collections;
 import java.util.List;
 
-import ahtewlg7.utimer.comparator.GtdTimeComparator;
 import ahtewlg7.utimer.entity.gtd.GtdProjectEntity;
 import ahtewlg7.utimer.entity.gtd.NoteEntity;
 import ahtewlg7.utimer.enumtype.GtdLife;
@@ -82,7 +80,7 @@ public class NoteByUuidFactory extends ABaseLruCacheFactory<String, NoteEntity> 
         });
     }
     public Flowable<NoteEntity> getAllLifeEntity(){
-        return Flowable.fromIterable(getAll()).sorted(new GtdTimeComparator<NoteEntity>());
+        return Flowable.fromIterable(getAll());
     }
     public Flowable<NoteEntity> getEntityByLife(@NonNull final GtdLife actLife){
         return getAllLifeEntity().filter(new Predicate<NoteEntity>() {
@@ -102,7 +100,6 @@ public class NoteByUuidFactory extends ABaseLruCacheFactory<String, NoteEntity> 
             if(entity != null)
                 entityList.add(entity);
         }
-        Collections.sort(entityList, new GtdTimeComparator<NoteEntity>());
         return entityList;
     }
 }

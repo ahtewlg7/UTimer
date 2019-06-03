@@ -9,11 +9,9 @@ import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Lists;
 
 import java.io.File;
-import java.util.Collections;
 import java.util.List;
 
 import ahtewlg7.utimer.common.FileSystemAction;
-import ahtewlg7.utimer.comparator.GtdTimeComparator;
 import ahtewlg7.utimer.entity.gtd.ShortHandEntity;
 import ahtewlg7.utimer.enumtype.GtdLife;
 import io.reactivex.Flowable;
@@ -79,7 +77,7 @@ public class ShortHandByUuidFactory extends ABaseLruCacheFactory<String, ShortHa
         pathUuidMap.clear();
     }
     public Flowable<ShortHandEntity> getAllLifeEntity(){
-        return Flowable.fromIterable(getAll()).sorted(new GtdTimeComparator<ShortHandEntity>());
+        return Flowable.fromIterable(getAll());
     }
     public Flowable<ShortHandEntity> getEntityByLife(@NonNull final GtdLife actLife){
         return getAllLifeEntity().filter(new Predicate<ShortHandEntity>() {
@@ -91,7 +89,7 @@ public class ShortHandByUuidFactory extends ABaseLruCacheFactory<String, ShortHa
                 });
     }
 
-    public List<ShortHandEntity> getEntityByUuid(@NonNull List<String> uuidList){
+    public List<ShortHandEntity> getEntitiesByUuid(@NonNull List<String> uuidList){
         List<ShortHandEntity> entityList = Lists.newArrayList();
         for(String uuid : uuidList){
             if(TextUtils.isEmpty(uuid))
@@ -100,7 +98,6 @@ public class ShortHandByUuidFactory extends ABaseLruCacheFactory<String, ShortHa
             if(entity != null)
                 entityList.add(entity);
         }
-        Collections.sort(entityList, new GtdTimeComparator<ShortHandEntity>());
         return entityList;
     }
 

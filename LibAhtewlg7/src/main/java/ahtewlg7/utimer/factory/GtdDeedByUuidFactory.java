@@ -13,10 +13,8 @@ import com.google.common.collect.Multimap;
 import org.reactivestreams.Publisher;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import ahtewlg7.utimer.comparator.GtdTimeComparator;
 import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
 import ahtewlg7.utimer.enumtype.DeedState;
 import ahtewlg7.utimer.enumtype.GtdLife;
@@ -104,7 +102,7 @@ public class GtdDeedByUuidFactory extends ABaseLruCacheFactory<String, GtdDeedEn
     }
 
     public Flowable<GtdDeedEntity> getEntityByLife(){
-        return Flowable.fromIterable(getAll()).sorted(new GtdTimeComparator<GtdDeedEntity>());
+        return Flowable.fromIterable(getAll());
         }
 
     public Flowable<GtdDeedEntity> getEntityByLife(@NonNull final GtdLife actLife){
@@ -125,7 +123,6 @@ public class GtdDeedByUuidFactory extends ABaseLruCacheFactory<String, GtdDeedEn
             if(entity != null)
                 entityList.add(entity);
         }
-        Collections.sort(entityList, new GtdTimeComparator<GtdDeedEntity>());
         return entityList;
     }
 

@@ -8,6 +8,7 @@ import org.reactivestreams.Subscription;
 
 import java.util.List;
 
+import ahtewlg7.utimer.comparator.LastAccessTimeComparator;
 import ahtewlg7.utimer.entity.busevent.UTimerBusEvent;
 import ahtewlg7.utimer.entity.gtd.GtdProjectEntity;
 import ahtewlg7.utimer.entity.gtd.NoteEntity;
@@ -100,7 +101,8 @@ public class ProjectEditMvpP implements IUtimerEditMvpP{
 
     class ProjectEditMvpM{
         public Flowable<NoteEntity> loadAllNote(GtdProjectEntity entity) {
-            return  NoteByUuidFactory.getInstance().getEntityByProject(entity);
+            return  NoteByUuidFactory.getInstance().getEntityByProject(entity)
+                    .sorted(new LastAccessTimeComparator<NoteEntity>().getDescOrder());
         }
     }
 
