@@ -1,4 +1,5 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingTranslation">
     <string name="mypass_element_attr_flags">flags</string>
     <string name="mypass_element_attr_link">link</string>
     <string name="mypass_element_attr_alt">alt</string>
