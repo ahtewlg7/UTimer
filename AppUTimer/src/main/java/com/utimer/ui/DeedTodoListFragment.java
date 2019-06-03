@@ -94,6 +94,13 @@ public class DeedTodoListFragment extends AToolbarBkFragment implements DeedTodo
         }
     }
 
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if(!hidden)
+            listMvpP.toLoadAllItem();
+    }
+
     /**********************************************AToolbarBkFragment**********************************************/
 
     @Override

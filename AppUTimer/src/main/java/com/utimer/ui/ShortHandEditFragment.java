@@ -42,7 +42,6 @@ public class ShortHandEditFragment extends ATxtEditFragment
     @BindView(R.id.fragment_shorthand_editview)
     MdEditView mdEditView;
 
-
     private ShorthandEditMvpP editMvpP;
 
     public static ShortHandEditFragment newInstance(ShortHandEntity entity) {
@@ -50,6 +49,7 @@ public class ShortHandEditFragment extends ATxtEditFragment
         if(entity != null)
             args.putSerializable(KEY_SHORTHAND, entity);
         else {
+            //todo:if the entity is create in one minute, they are the same
             String now = new DateTimeAction().toFormatNow();
             ShortHandEntity e = new ShortHandBuilder().setTitle(now).build();
             args.putSerializable(KEY_SHORTHAND, e);

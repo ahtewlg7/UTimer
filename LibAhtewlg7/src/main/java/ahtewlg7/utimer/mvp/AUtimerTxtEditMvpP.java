@@ -57,21 +57,6 @@ public abstract class AUtimerTxtEditMvpP<T extends AUtimerEntity> implements IUt
         gtdActParser  = new GtdDeedParser();
     }
 
-    public void toDel(int fromIndex, int toIndex){
-//        editMvpV.onParseStart();
-        if(toIndex < fromIndex || fromIndex < 0 || mdMementoOriginator == null || fromIndex > mdMementoOriginator.getMdElementList().size()){
-//            editMvpV.onParseErr(new IndexOutOfBoundsException());
-            return;
-        }
-
-        /*List<EditElement> delList = mdMementoOriginator.getMdElementList().subList(fromIndex, toIndex);
-        Optional<EditMementoBean>  mementoOptional = mdMementoOriginator.createMemento(fromIndex, ElementEditType.DELETE, delList);
-        if(mementoOptional.isPresent()) {
-            mdMementoCaretaker.saveMemento(mementoOptional.get());
-            editMvpV.onParseSucc(mementoOptional.get());
-        }*/
-    }
-
     public boolean toRedo(){
         return mdMementoCaretaker != null && restoreEdit(mdMementoCaretaker.popNextRedo());
     }

@@ -16,8 +16,6 @@ import butterknife.BindView;
 import static com.utimer.common.Constants.REQ_NEW_FRAGMENT;
 
 public class MainFragment extends AButterKnifeFragment {
-    public static final String TAG = MainFragment.class.getSimpleName();
-
     public static final int REQ_NEW_SHORTHAND_FRAGMENT = REQ_NEW_FRAGMENT;
     public static final int REQ_NEW_DEED_FRAGMENT      = REQ_NEW_FRAGMENT + 1;
 
@@ -57,9 +55,9 @@ public class MainFragment extends AButterKnifeFragment {
         super.onFragmentResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == REQ_NEW_SHORTHAND_FRAGMENT)
-                start(ShortHandListFragment.newInstance());
+                start(ShortHandListFragment.newInstance(),SINGLETASK);
             else if(requestCode == REQ_NEW_DEED_FRAGMENT)
-                start(DeedTodoListFragment.newInstance());
+                start(DeedTodoListFragment.newInstance(),SINGLETASK);
         }
     }
 
