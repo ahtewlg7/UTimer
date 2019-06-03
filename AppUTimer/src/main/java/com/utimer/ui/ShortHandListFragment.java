@@ -76,10 +76,9 @@ public class ShortHandListFragment extends AToolbarBkFragment implements ShortHa
     }
 
     @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        if(!hidden)
-            shortHandListMvpP.toLoadAllItem();
+    public void onNewBundle(Bundle args) {
+        super.onNewBundle(args);
+        shortHandListMvpP.toLoadAllItem();
     }
 
     /**********************************************AToolbarBkFragment**********************************************/

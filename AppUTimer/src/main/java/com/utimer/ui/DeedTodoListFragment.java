@@ -95,10 +95,9 @@ public class DeedTodoListFragment extends AToolbarBkFragment implements DeedTodo
     }
 
     @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        if(!hidden)
-            listMvpP.toLoadAllItem();
+    public void onNewBundle(Bundle args) {
+        super.onNewBundle(args);
+        listMvpP.toLoadAllItem();
     }
 
     /**********************************************AToolbarBkFragment**********************************************/
