@@ -16,10 +16,6 @@ import android.util.Patterns;
 import android.view.View;
 
 import com.blankj.utilcode.util.Utils;
-import com.google.common.base.Splitter;
-import com.google.common.collect.Lists;
-
-import java.util.List;
 
 import ahtewlg7.utimer.entity.md.EditElement;
 import ahtewlg7.utimer.util.Logcat;
@@ -50,40 +46,25 @@ public class MyBypass extends Bypass{
         this.spanClickListener = spanClickListener;
     }
 
-    public CharSequence markdownToSpannable(String markdown, boolean byLine) {
-        return markdownToSpannable(markdown, null, byLine);
-    }
-    public CharSequence markdownToSpannable(String markdown, ImageGetter imageGetter, boolean byLine) {
-        if(!byLine)
-            return markdownToSpannable(markdown, imageGetter);
-        List<String> markdownList = Splitter.on(System.lineSeparator()).splitToList(markdown);
-        CharSequence[] charSequenceArray = new CharSequence[markdownList.size()];
-        for(int i = 0; i < markdownList.size(); i++)
-            charSequenceArray[i] = markdownToSpannable(markdownList.get(i)) + System.lineSeparator();
-        return TextUtils.concat(charSequenceArray);
-    }
-
-    public List<EditElement> toParseMd(String rawTxt) {
+    public EditElement toParseMd(String rawTxt) {
         return toParseMd(rawTxt ,null);
     }
 
-    public List<EditElement> toParseMd(String rawTxt, final ImageGetter imageGetter) {
+    public EditElement toParseMd(String rawTxt, final MyImageGetter imageGetter) {
         Document document = processMarkdown(rawTxt);
         int size = document.getElementCount();
-        List<EditElement> mdElements = Lists.newArrayList();
+        CharSequence[] charSequenceArray = new CharSequence[size];
 
-        for (int i = 0; i < size; i++) {
-            CharSequence spans = recurseElement(document.getElement(i), i, size, imageGetter);
-            //todo: document.getElement(i).getText() is empty, so need to fix by jni
-            EditElement element = new EditElement(document.getElement(i).getText());
-            element.setMdCharSequence(spans);
-            mdElements.add(element);
-        }
-        return mdElements;
+        for (int i = 0; i < size; i++)
+            charSequenceArray[i] = recurseElement(document.getElement(i), i, size, imageGetter);
+
+
+        EditElement editElement = new EditElement(rawTxt);
+        editElement.setMdCharSequence(TextUtils.concat(charSequenceArray));
+        return editElement;
     }
-
     protected CharSequence recurseElement(Element element, int indexWithinParent, int numberOfSiblings,
-                                          MyImageGetter imageGetter) {
+                                          MyImageGetter imageGetter){
         if(element == null)
             return null;
 
@@ -104,9 +85,8 @@ public class MyBypass extends Bypass{
         int size = element.size();
         CharSequence[] spans = new CharSequence[size];
 
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < size; i++)
             spans[i] = recurseElement(element.getChildren(i), i, size, imageGetter);
-        }
 
         // Clean up after we're done
         if (isOrderedList) {
@@ -120,6 +100,7 @@ public class MyBypass extends Bypass{
         String text = element.getText();
         if (element.size() == 0
                 && element.getParent() != null
+                && !System.lineSeparator().equals(text)//add by lw , at 20190606
                 && element.getParent().getType() != Element.Type.BLOCK_CODE) {
             text = text.replace('\n', ' ');
         }

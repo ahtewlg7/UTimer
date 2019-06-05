@@ -388,16 +388,11 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
         }
         return Optional.fromNullable(editElement);
     }
-    protected EditElement toParseRawTxt(String rawTxt){
-        EditElement editElement = new EditElement(rawTxt);
-        editElement.setMdCharSequence(myBypass.markdownToSpannable(rawTxt, true));
-        return editElement;
-    }
     protected Flowable<EditElement> toParseRawTxt(@NonNull Flowable<String> rawTxtRx) {
         return rawTxtRx.map(new Function<String, EditElement>() {
                     @Override
                     public EditElement apply(String s) throws Exception {
-                        return toParseRawTxt(s);
+                        return myBypass.toParseMd(s);
                     }
                 });
     }
