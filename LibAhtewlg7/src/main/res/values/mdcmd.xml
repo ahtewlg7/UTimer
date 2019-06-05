@@ -1,11 +1,11 @@
 <resources xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="MissingTranslation">
-    <string name="H1">#H</string>
-    <string name="H2">##H</string>
-    <string name="H3">###H</string>
-    <string name="H4">####H</string>
-    <string name="H5">#####H</string>
-    <string name="H6">######H</string>
+    <string name="H1">#</string>
+    <string name="H2">##</string>
+    <string name="H3">###</string>
+    <string name="H4">####</string>
+    <string name="H5">#####</string>
+    <string name="H6">######</string>
     <string name="indent">&#8195;</string>
     <string name="blockquote">&gt;</string> <!--"&gt;" means '>'-->
     <string name="codeline">    </string>
