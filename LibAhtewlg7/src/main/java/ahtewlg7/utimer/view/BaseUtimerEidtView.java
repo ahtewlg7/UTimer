@@ -1,6 +1,7 @@
 package ahtewlg7.utimer.view;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -39,6 +40,7 @@ import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MySafeSubscriber;
 import ahtewlg7.utimer.util.MySimpleObserver;
 import ahtewlg7.utimer.view.md.MdEditText;
+import in.uncod.android.bypass.Bypass;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
@@ -285,7 +287,7 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
 
     protected void init(){
         setDescendantFocusability(FOCUS_BEFORE_DESCENDANTS);
-        myBypass         = new MyBypass();
+        myBypass         = new MyBypass(getBypassOptions());
         editElementList  = Lists.newArrayList();
         editElementTable = HashBasedTable.create();
     }
@@ -417,6 +419,9 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
         if(clickPositionDisposable != null && !clickPositionDisposable.isDisposed())
             clickPositionDisposable.dispose();
         clickPositionDisposable = null;
+    }
+    protected Bypass.Options getBypassOptions(){
+        return new Bypass.Options().setHruleColor(Color.BLACK);
     }
 
     class BaseUtimerEditItemAdapter extends BaseItemAdapter<EditElement>{

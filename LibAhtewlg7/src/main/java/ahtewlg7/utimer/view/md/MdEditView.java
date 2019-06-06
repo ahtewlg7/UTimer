@@ -204,7 +204,7 @@ public class MdEditView extends FrameLayout {
                             case HORIZONTAL_RULE:
                                 editRecyclerView.gotoLineStart();
                                 cmd = MyRInfo.getStringByID(R.string.horizontalrule);
-                                editRecyclerView.insert(cmd, cmd);
+                                editRecyclerView.insert(cmd);
                                 toastOptional = Optional.of(R.string.action_horizontal_rule);
                                 break;
                             case HEAD1:

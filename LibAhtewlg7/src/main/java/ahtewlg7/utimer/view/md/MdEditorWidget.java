@@ -14,8 +14,6 @@ import ahtewlg7.utimer.util.AndrManagerFactory;
  * Created by lw on 2016/5/17.
  */
 public class MdEditorWidget extends RelativeLayout {
-    public static final String TAG = MdEditorWidget.class.getSimpleName();
-
     private ImageButton actionUndo;
     private ImageButton actionRedo;
     private ImageButton actionBold;

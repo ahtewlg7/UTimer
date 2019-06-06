@@ -5,7 +5,6 @@ import android.text.TextUtils;
 import com.google.common.io.CharSink;
 
 import ahtewlg7.utimer.entity.AUtimerEntity;
-import ahtewlg7.utimer.md.MyBypass;
 import ahtewlg7.utimer.util.FileIOAction;
 import ahtewlg7.utimer.util.Logcat;
 
@@ -13,12 +12,10 @@ import ahtewlg7.utimer.util.Logcat;
  * Created by lw on 2018/12/9.
  */
 public class BaseTxtEditAction<T extends AUtimerEntity>  extends AEditAction<T> {
-    private MyBypass myBypass;
     private FileIOAction fileIOAction;
 
     public BaseTxtEditAction(T t) {
         super(t);
-        myBypass = new MyBypass();
     }
 
     @Override

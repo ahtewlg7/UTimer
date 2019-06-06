@@ -35,7 +35,7 @@ public class MyBypass extends Bypass{
     private SpanClickListener spanClickListener;
 
     public MyBypass() {
-        this(new Options());
+        super(Utils.getApp().getApplicationContext());
     }
 
     public MyBypass(Options options) {
@@ -57,7 +57,6 @@ public class MyBypass extends Bypass{
 
         for (int i = 0; i < size; i++)
             charSequenceArray[i] = recurseElement(document.getElement(i), i, size, imageGetter);
-
 
         EditElement editElement = new EditElement(rawTxt);
         editElement.setMdCharSequence(TextUtils.concat(charSequenceArray));
@@ -266,7 +265,6 @@ public class MyBypass extends Bypass{
         };
         builder.setSpan(clickableSpan, 0, builder.length() - 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
-
 
     public static interface MyImageGetter extends ImageGetter {
         public Drawable getDrawable(Element element);
