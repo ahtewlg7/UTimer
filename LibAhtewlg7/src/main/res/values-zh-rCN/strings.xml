@@ -10,4 +10,6 @@
     <string name="prompt_action_life_next_month">下月工作</string>
     <string name="prompt_action_life_quarter">季度工作</string>
     <string name="prompt_action_life_year">年度工作</string>
+
+    <string name="prompt_md_edit_select_first">请选择需要编辑的内容</string>
 </resources>
