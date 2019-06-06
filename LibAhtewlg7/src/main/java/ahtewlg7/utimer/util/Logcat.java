@@ -6,8 +6,6 @@ import com.orhanobut.logger.Logger;
 import ahtewlg7.utimer.log.MyLoggerAdapterFactory;
 
 public class Logcat {
-	private final static String TAG = Logcat.class.getSimpleName();
-	
 	private static boolean loged        = false;
 	private static boolean saved        = false;
 

@@ -341,7 +341,7 @@ public class Bypass {
 			mCodeBlockIndentUnit = TypedValue.COMPLEX_UNIT_DIP;
 			mCodeBlockIndentSize = 10;
 
-			mHruleColor = Color.GRAY;
+			mHruleColor = Color.BLACK;
 			mHruleUnit = TypedValue.COMPLEX_UNIT_DIP;
 			mHruleSize = 1;
 		}
