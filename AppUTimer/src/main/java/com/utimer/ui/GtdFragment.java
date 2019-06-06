@@ -19,9 +19,9 @@ import butterknife.BindView;
 
 public class GtdFragment extends AToolbarBkFragment {
 
-    @BindView(R.id.fragment_utimer_main_func_toolbar)
+    @BindView(R.id.fragment_gtd_toolbar)
     Toolbar toolbar;
-    @BindView(R.id.fragment_utimer_main_func_recyclerview)
+    @BindView(R.id.fragment_gtd_recyclerview)
     UtimerFuncRecyclerView utimerFuncRecyclerView;
 
     private MyClickListener myClickListener;
@@ -47,7 +47,7 @@ public class GtdFragment extends AToolbarBkFragment {
 
     @Override
     public int getLayoutRid() {
-        return R.layout.fragment_utimer_main_func;
+        return R.layout.fragment_gtd;
     }
 
     @Override
