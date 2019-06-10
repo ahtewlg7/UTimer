@@ -1,14 +1,19 @@
 package ahtewlg7.utimer.common;
 
 import android.app.Application;
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.blankj.utilcode.util.ServiceUtils;
 import com.blankj.utilcode.util.Utils;
 
+import org.acra.ACRA;
+import org.acra.annotation.AcraCore;
+
 import ahtewlg7.utimer.BuildConfig;
 import ahtewlg7.utimer.db.GreenDaoAction;
+import ahtewlg7.utimer.log.AcraReportSenderFactory;
 import ahtewlg7.utimer.ui.BinderService;
 import ahtewlg7.utimer.util.AppInfoAction;
 import ahtewlg7.utimer.util.ProcessAction;
@@ -16,7 +21,7 @@ import ahtewlg7.utimer.verctrl.IBaseVersionControlFactory;
 import ahtewlg7.utimer.verctrl.VcFactoryBuilder;
 import me.yokeyword.fragmentation.Fragmentation;
 
-
+@AcraCore(reportSenderFactoryClasses = AcraReportSenderFactory.class)
 public abstract class MyApplication extends Application {
 	public abstract @NonNull IBaseVersionControlFactory getConfigFactory();
 
@@ -33,6 +38,12 @@ public abstract class MyApplication extends Application {
             initDatabase();
 			toStartBinderService();
 		}
+	}
+
+	@Override
+	protected void attachBaseContext(Context base) {
+		super.attachBaseContext(base);
+		ACRA.init(this);
 	}
 
 	protected void initLibContext(){

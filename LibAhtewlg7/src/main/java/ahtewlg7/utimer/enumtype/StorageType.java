@@ -7,6 +7,7 @@ public enum StorageType {
     UNFILE,
     DIR,
     TXT,
+    LOG,
     MD,
     AUDIO,
     VIDEO,

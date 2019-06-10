@@ -1,4 +1,5 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingTranslation">
     <string name="configs_simple_app_name">UTimer</string>
     <string name="config_log_file_name">log.txt</string>
     <string name="config_datetime_format">YYYYMMdd_HHmm</string>

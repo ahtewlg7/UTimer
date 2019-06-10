@@ -75,4 +75,6 @@ dependencies {
     api 'com.jakewharton:disklrucache:2.0.2'
 
     implementation project(':LibTimeNLP')
+
+    implementation "ch.acra:acra-core:5.3.0"
 }

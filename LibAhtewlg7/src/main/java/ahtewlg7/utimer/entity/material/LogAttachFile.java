@@ -11,26 +11,26 @@ import ahtewlg7.utimer.util.MyRInfo;
 /**
  * Created by lw on 2018/10/30.
  */
-public class MdAttachFile extends AAttachFile {
-    public MdAttachFile(File file) {
+public class LogAttachFile extends AAttachFile {
+    public LogAttachFile(File file) {
         super(file);
     }
 
-    public MdAttachFile(String fileAbsPath) {
+    public LogAttachFile(String fileAbsPath) {
         super(fileAbsPath);
     }
-    public MdAttachFile(String filePath, String fileName) {
+    public LogAttachFile(String filePath, String fileName) {
         super(filePath, fileName);
     }
 
     @Override
     public StorageType getStorageType() {
-        return StorageType.MD;
+        return StorageType.LOG;
     }
 
     @NonNull
     @Override
     public String getFileSuffix() {
-        return MyRInfo.getStringByID(R.string.config_note_file_suffix);
+        return MyRInfo.getStringByID(R.string.config_log_file_name);
     }
 }
