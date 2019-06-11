@@ -10,6 +10,7 @@ import com.blankj.utilcode.util.Utils;
 
 import org.acra.ACRA;
 import org.acra.annotation.AcraCore;
+import org.acra.data.StringFormat;
 
 import ahtewlg7.utimer.BuildConfig;
 import ahtewlg7.utimer.db.GreenDaoAction;
@@ -21,7 +22,9 @@ import ahtewlg7.utimer.verctrl.IBaseVersionControlFactory;
 import ahtewlg7.utimer.verctrl.VcFactoryBuilder;
 import me.yokeyword.fragmentation.Fragmentation;
 
-@AcraCore(reportSenderFactoryClasses = AcraReportSenderFactory.class)
+@AcraCore(buildConfigClass = BuildConfig.class,
+		reportFormat = StringFormat.JSON,
+		reportSenderFactoryClasses = AcraReportSenderFactory.class)
 public abstract class MyApplication extends Application {
 	public abstract @NonNull IBaseVersionControlFactory getConfigFactory();
 
