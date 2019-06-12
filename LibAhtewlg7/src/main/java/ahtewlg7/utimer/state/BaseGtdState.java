@@ -17,10 +17,13 @@ public class BaseGtdState {
         this.gtdMachine = gtdMachine;
     }
 
-    public Optional<BaseEventBusBean> toTrash(@NonNull AUtimerEntity entityRx){
+    public Optional<BaseEventBusBean> toTrash(@NonNull AUtimerEntity entity){
         return Optional.absent();
     }
-    public Optional<BaseEventBusBean> toGtd(@NonNull AUtimerEntity entityRx){
+    public Optional<BaseEventBusBean> toGtd(@NonNull AUtimerEntity entity){
+        return Optional.absent();
+    }
+    public Optional<BaseEventBusBean> toDone(@NonNull AUtimerEntity entity){
         return Optional.absent();
     }
 

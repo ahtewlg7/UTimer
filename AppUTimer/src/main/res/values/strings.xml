@@ -36,20 +36,23 @@
     <string name="title_deed">Deed</string>
     <string name="title_deed_maybe">Maybe</string>
     <string name="title_deed_todo">ToDo</string>
+    <string name="title_deed_done">Done</string>
     <string name="title_deed_all">All</string>
     <string name="title_deed_undo">Undo</string>
     <string name="title_deed_list">ActionList</string>
     <string name="title_deed_maybe_list">MaybeList</string>
+    <string name="title_deed_todo_list">TodoList</string>
+    <string name="title_deed_done_list">DoneList</string>
 
     <string name="create">new</string>
     <string name="create_shorthand">new shorthand</string>
     <string name="create_deed">new deed</string>
+    <string name="create_note">create note</string>
     <string name="add">add</string>
     <string name="del">Delete</string>
+    <string name="done">done</string>
     <string name="rename">Rename</string>
     <string name="wait">Wait</string>
-
-    <string name="create_note">create note</string>
 
     <string name="prompt_note_func">ShortHand is a single note \nProject is a set of note for one purpose</string>
     <string name="prompt_gtd_func">Maybe is parse by AI, but sometime it may be not correct \nTodo is the job need to deal with</string>

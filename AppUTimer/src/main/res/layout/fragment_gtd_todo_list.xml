@@ -5,12 +5,12 @@
     android:layout_height="match_parent">
 
     <android.support.design.widget.AppBarLayout
-        android:id="@+id/fragment_gtd_action_list_appbarlayout"
+        android:id="@+id/fragment_gtd_todo_list_appbarlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/fragment_gtd_action_list_toolbar"
+            android:id="@+id/fragment_gtd_todo_list_toolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="?attr/colorPrimary"
@@ -19,8 +19,8 @@
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
     </android.support.design.widget.AppBarLayout>
 
-    <com.utimer.view.GtdDeedRecyclerView
-        android:id="@+id/fragment_gtd_action_list_recycler_view"
+    <com.utimer.view.GtdDeedTodoRecyclerView
+        android:id="@+id/fragment_gtd_todo_list_recycler_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@android:color/holo_blue_dark"
@@ -33,6 +33,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fragment_gtd_action_list_appbarlayout"
+        app:layout_constraintTop_toBottomOf="@+id/fragment_gtd_todo_list_appbarlayout"
         app:layout_constraintVertical_bias="0.0" />
 </android.support.constraint.ConstraintLayout>

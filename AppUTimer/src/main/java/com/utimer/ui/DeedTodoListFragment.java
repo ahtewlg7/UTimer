@@ -13,7 +13,7 @@ import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.trello.rxlifecycle2.LifecycleProvider;
 import com.utimer.R;
-import com.utimer.view.GtdDeedRecyclerView;
+import com.utimer.view.GtdDeedTodoRecyclerView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -34,10 +34,10 @@ import static com.utimer.common.Constants.REQ_NEW_FRAGMENT;
 public class DeedTodoListFragment extends AToolbarBkFragment implements DeedTodoListMvpP.IGtdTodoActionListMvpV {
     public static final int INIT_POSITION = -1;
 
-    @BindView(R.id.fragment_gtd_action_list_toolbar)
+    @BindView(R.id.fragment_gtd_todo_list_toolbar)
     Toolbar toolbar;
-    @BindView(R.id.fragment_gtd_action_list_recycler_view)
-    GtdDeedRecyclerView recyclerView;
+    @BindView(R.id.fragment_gtd_todo_list_recycler_view)
+    GtdDeedTodoRecyclerView recyclerView;
 
     private int editIndex = -1;
     private DeedTodoListMvpP listMvpP;
@@ -57,7 +57,7 @@ public class DeedTodoListFragment extends AToolbarBkFragment implements DeedTodo
 
         myClickListener = new MyClickListener();
 
-        recyclerView.init(getContext(), null, myClickListener, null,myClickListener,null,null,null);
+        recyclerView.init(getContext(), null, myClickListener, myClickListener,myClickListener,null,null,null);
         listMvpP = new DeedTodoListMvpP(this);
 
         EventBusFatory.getInstance().getDefaultEventBus().register(this);
@@ -104,12 +104,12 @@ public class DeedTodoListFragment extends AToolbarBkFragment implements DeedTodo
 
     @Override
     public int getLayoutRid() {
-        return R.layout.fragment_gtd_action_list;
+        return R.layout.fragment_gtd_todo_list;
     }
 
     @Override
     protected String getTitle() {
-        return MyRInfo.getStringByID(R.string.title_deed_list);
+        return MyRInfo.getStringByID(R.string.title_deed_todo_list);
     }
 
     @Override
@@ -221,11 +221,21 @@ public class DeedTodoListFragment extends AToolbarBkFragment implements DeedTodo
     }
     /**********************************************IGtdActionListMvpV**********************************************/
 
-    class MyClickListener implements BaseQuickAdapter.OnItemClickListener, BaseQuickAdapter.OnItemLongClickListener {
+    class MyClickListener implements BaseQuickAdapter.OnItemClickListener, BaseQuickAdapter.OnItemChildClickListener,
+            BaseQuickAdapter.OnItemLongClickListener {
         @Override
         public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
             editIndex = position;
             startForResult(DeedEditFragment.newInstance((GtdDeedEntity) adapter.getData().get(position)), REQ_EDIT_FRAGMENT);
+        }
+
+        @Override
+        public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+            GtdDeedEntity viewEntity = (GtdDeedEntity)adapter.getItem(position);
+            if(viewEntity != null) {
+                editIndex = position;
+                listMvpP.toDoneItem(Flowable.just(viewEntity));
+            }
         }
 
         @Override

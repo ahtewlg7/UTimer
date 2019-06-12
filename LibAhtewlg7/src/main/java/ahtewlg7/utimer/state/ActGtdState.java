@@ -35,6 +35,17 @@ public class ActGtdState extends BaseActState{
     }
 
     @Override
+    public Optional<BaseEventBusBean> toDone(@NonNull AUtimerEntity entity) {
+        DeedState preState =  ((GtdDeedEntity) entity).getDeedState();
+        ((GtdDeedEntity) entity).setDeedState(DeedState.DONE);
+        DeedBusEvent busEvent = new DeedBusEvent(GtdBusEventType.SAVE, (GtdDeedEntity) entity);
+        Optional<BaseEventBusBean> eventOptional = toPostEvent(entity, busEvent);
+        if(eventOptional.isPresent())
+            GtdDeedByUuidFactory.getInstance().updateState(preState, (GtdDeedEntity) entity);
+        return eventOptional;
+    }
+
+    @Override
     protected boolean toGtdable(GtdDeedEntity entity){
         return entity.getDeedState() == DeedState.MAYBE;
     }

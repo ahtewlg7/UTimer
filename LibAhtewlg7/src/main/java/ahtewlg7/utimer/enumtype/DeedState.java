@@ -25,7 +25,6 @@ public enum DeedState {
         list.add(WAIT_FOR);
         list.add(DATEBOOK);
         list.add(DELEGATE);
-        list.add(DONE);
         return list;
     }
 }

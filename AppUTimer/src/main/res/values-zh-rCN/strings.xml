@@ -17,13 +17,24 @@
     <string name="title_project_list">工程清单</string>
     <string name="title_deed">任务</string>
     <string name="title_deed_maybe">待确认</string>
-    <string name="title_deed_list">任务清单</string>
+    <string name="title_deed_todo">待处理</string>
+    <string name="title_deed_done">已完成</string>
     <string name="title_deed_all">所有</string>
     <string name="title_deed_undo">未完成</string>
+    <string name="title_deed_list">任务清单</string>
+    <string name="title_deed_maybe_list">待确认清单</string>
+    <string name="title_deed_todo_list">待处理清单</string>
+    <string name="title_deed_done_list">已完成清单</string>
 
-    <string name="add">添加</string>
+    <string name="create">new</string>
     <string name="create_shorthand">新建速写</string>
     <string name="create_deed">新建计划</string>
+    <string name="create_note">新建笔记</string>
+    <string name="add">添加</string>
+    <string name="del">删除</string>
+    <string name="done">完成</string>
+    <string name="rename">重命名</string>
+    <string name="wait">等待</string>
 
     <string name="prompt_note_func">速写是单个小而短的笔记\n工程是多个归类在一起的，长而专的笔记集合</string>
     <string name="prompt_gtd_func">Maybe是由AI解析的计划，但它并不一定总是正确\nTodo是亟待处理的确定计划工作</string>
