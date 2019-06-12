@@ -83,12 +83,17 @@ public class GtdFragment extends AToolbarBkFragment {
         String maybeTitle      = getResources().getString(R.string.title_deed_maybe);
         UtimerFuncRecyclerView.FuncViewEntity maybeViewEntity = new UtimerFuncRecyclerView.FuncViewEntity(maybeDrawable, maybeTitle);
 
-        Drawable todoDrawable = TextImageFactory.getInstance().getGtdTodoActionImage();
+        Drawable todoDrawable = TextImageFactory.getInstance().getGtdTodoDeedImage();
         String todoTitle      = getResources().getString(R.string.title_deed_todo);
         UtimerFuncRecyclerView.FuncViewEntity todoViewEntity = new UtimerFuncRecyclerView.FuncViewEntity(todoDrawable, todoTitle);
 
+        Drawable doneDrawable = TextImageFactory.getInstance().getGtdDoneDeedImage();
+        String doneTitle      = getResources().getString(R.string.title_deed_done);
+        UtimerFuncRecyclerView.FuncViewEntity doneViewEntity = new UtimerFuncRecyclerView.FuncViewEntity(doneDrawable, doneTitle);
+
         funcViewEntityList.add(maybeViewEntity);
         funcViewEntityList.add(todoViewEntity);
+        funcViewEntityList.add(doneViewEntity);
 ;    }
     class MyClickListener implements BaseQuickAdapter.OnItemClickListener{
         @Override
@@ -99,6 +104,9 @@ public class GtdFragment extends AToolbarBkFragment {
                     break;
                 case 1:
                     ((MainFragment)getParentFragment()).start(DeedTodoListFragment.newInstance());
+                    break;
+                case 2:
+                    ((MainFragment)getParentFragment()).start(DeedDoneListFragment.newInstance());
                     break;
             }
         }

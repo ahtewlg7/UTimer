@@ -41,7 +41,7 @@ public class GtdDeedRecyclerView extends ABaseLinearRecyclerView<GtdDeedEntity> 
 
     @Override
     public int getViewItemLayout() {
-        return R.layout.view_shorthand_list_item;
+        return R.layout.view_recycler_deed_item;
     }
 
     @NonNull
@@ -75,9 +75,9 @@ public class GtdDeedRecyclerView extends ABaseLinearRecyclerView<GtdDeedEntity> 
             Optional<String> warningTime = item.getWarningTimeInfo();
             if(warningTime.isPresent())
                 titleBuilder.append("at:").append(warningTime.get());
-            helper.setText(R.id.view_shorthand_list_item_title, titleBuilder.toString())
-                .setText(R.id.view_shorthand_list_item_detail, detailBuilder.toString())
-                .setImageDrawable(R.id.view_shorthand_list_item_image, TextImageFactory.getInstance().getGtdActionImage());
+            helper.setText(R.id.view_recycler_deed_item_title, titleBuilder.toString())
+                .setText(R.id.view_recycler_deed_item_detail, detailBuilder.toString())
+                .setImageDrawable(R.id.view_recycler_deed_item_image, TextImageFactory.getInstance().getGtdActionImage());
         }
     }
 }

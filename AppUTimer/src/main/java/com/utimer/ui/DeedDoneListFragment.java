@@ -22,9 +22,8 @@ import java.util.List;
 
 import ahtewlg7.utimer.entity.busevent.DeedBusEvent;
 import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
-import ahtewlg7.utimer.enumtype.DeedState;
 import ahtewlg7.utimer.factory.EventBusFatory;
-import ahtewlg7.utimer.mvp.DeedMaybeListMvpP;
+import ahtewlg7.utimer.mvp.DeedDoneListMvpP;
 import ahtewlg7.utimer.util.MyRInfo;
 import butterknife.BindView;
 import io.reactivex.Flowable;
@@ -32,22 +31,22 @@ import io.reactivex.Flowable;
 import static com.utimer.common.Constants.REQ_EDIT_FRAGMENT;
 import static com.utimer.common.Constants.REQ_NEW_FRAGMENT;
 
-public class DeedMaybeListFragment extends AToolbarBkFragment implements DeedMaybeListMvpP.IGtdActionListMvpV {
+public class DeedDoneListFragment extends AToolbarBkFragment implements DeedDoneListMvpP.IGtdTodoActionListMvpV {
     public static final int INIT_POSITION = -1;
 
-    @BindView(R.id.fragment_gtd_deed_list_toolbar)
+    @BindView(R.id.fragment_gtd_done_list_toolbar)
     Toolbar toolbar;
-    @BindView(R.id.fragment_gtd_deed_list_recycler_view)
+    @BindView(R.id.fragment_gtd_done_list_recycler_view)
     GtdDeedRecyclerView recyclerView;
 
     private int editIndex = -1;
-    private DeedMaybeListMvpP listMvpP;
+    private DeedDoneListMvpP listMvpP;
     private MyClickListener myClickListener;
 
-    public static DeedMaybeListFragment newInstance() {
+    public static DeedDoneListFragment newInstance() {
         Bundle args = new Bundle();
 
-        DeedMaybeListFragment fragment = new DeedMaybeListFragment();
+        DeedDoneListFragment fragment = new DeedDoneListFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -58,11 +57,8 @@ public class DeedMaybeListFragment extends AToolbarBkFragment implements DeedMay
 
         myClickListener = new MyClickListener();
 
-        recyclerView.init(getContext(), null,
-                myClickListener, null,
-                myClickListener,null,
-                null,null);
-        listMvpP = new DeedMaybeListMvpP(this);
+        recyclerView.init(getContext(), null, myClickListener, null,myClickListener,null,null,null);
+        listMvpP = new DeedDoneListMvpP(this);
 
         EventBusFatory.getInstance().getDefaultEventBus().register(this);
     }
@@ -82,32 +78,38 @@ public class DeedMaybeListFragment extends AToolbarBkFragment implements DeedMay
     @Override
     public void onLazyInitView(@Nullable Bundle savedInstanceState) {
         super.onLazyInitView(savedInstanceState);
-        listMvpP.toLoadAllMaybe();
+        listMvpP.toLoadAllItem();
     }
 
     @Override
     public void onFragmentResult(int requestCode, int resultCode, Bundle data) {
         super.onFragmentResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && data != null) {
-            GtdDeedEntity entity = (GtdDeedEntity) data.getSerializable(DeedEditFragment.KEY_ACTION);
-            if (entity != null && requestCode == REQ_NEW_FRAGMENT)
-                onItemCreate(entity);
-            else if (entity != null && requestCode == REQ_EDIT_FRAGMENT) {
-                onItemEdit(entity);
+            GtdDeedEntity shorthandEntity = (GtdDeedEntity) data.getSerializable(ShortHandEditFragment.KEY_SHORTHAND);
+            if (shorthandEntity != null && requestCode == REQ_NEW_FRAGMENT)
+                onItemCreate(shorthandEntity);
+            else if (shorthandEntity != null && requestCode == REQ_EDIT_FRAGMENT) {
+                onItemEdit(shorthandEntity);
             }
         }
+    }
+
+    @Override
+    public void onNewBundle(Bundle args) {
+        super.onNewBundle(args);
+        listMvpP.toLoadAllItem();
     }
 
     /**********************************************AToolbarBkFragment**********************************************/
 
     @Override
     public int getLayoutRid() {
-        return R.layout.fragment_gtd_deed_list;
+        return R.layout.fragment_gtd_done_list;
     }
 
     @Override
     protected String getTitle() {
-        return MyRInfo.getStringByID(R.string.title_deed_maybe_list);
+        return MyRInfo.getStringByID(R.string.title_deed_done_list);
     }
 
     @Override
@@ -129,14 +131,14 @@ public class DeedMaybeListFragment extends AToolbarBkFragment implements DeedMay
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         boolean result = false;
-        /*switch (item.getItemId()) {
+        switch (item.getItemId()) {
             case R.id.tool_menu_add:
                 startForResult(ShortHandEditFragment.newInstance(null), REQ_NEW_FRAGMENT);
                 break;
             default:
                 result = super.onOptionsItemSelected(item);
                 break;
-        }*/
+        }
         return result;
     }
 
@@ -173,7 +175,8 @@ public class DeedMaybeListFragment extends AToolbarBkFragment implements DeedMay
 
     @Override
     public void onItemEdit(GtdDeedEntity data) {
-        onDeleteSucc(INVALID_INDEX, data);
+        if (editIndex != INIT_POSITION)
+            listMvpP.onItemEdited(editIndex, data);
         editIndex = INIT_POSITION;
     }
 
@@ -215,22 +218,23 @@ public class DeedMaybeListFragment extends AToolbarBkFragment implements DeedMay
     /**********************************************EventBus**********************************************/
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onActionBusEvent(DeedBusEvent eventBus) {
-        listMvpP.toHandleActionEvent(eventBus);
     }
     /**********************************************IGtdActionListMvpV**********************************************/
 
-    class MyClickListener implements BaseQuickAdapter.OnItemClickListener,
-            BaseQuickAdapter.OnItemLongClickListener{
-        //+++++++++++++++++++++++++++++++++++OnItemClickListener+++++++++++++++++++++++++++++++
+    class MyClickListener implements BaseQuickAdapter.OnItemClickListener, BaseQuickAdapter.OnItemChildClickListener,
+            BaseQuickAdapter.OnItemLongClickListener {
         @Override
         public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
             editIndex = position;
-            GtdDeedEntity item = (GtdDeedEntity)adapter.getItem(position);
-            item.setDeedState(DeedState.MAYBE);
-            startForResult(DeedEditFragment.newInstance(item), REQ_EDIT_FRAGMENT);
+            startForResult(DeedEditFragment.newInstance((GtdDeedEntity) adapter.getData().get(position)), REQ_EDIT_FRAGMENT);
+        }
+
+        @Override
+        public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+            editIndex = position;
 
         }
-        //+++++++++++++++++++++++++++++++++++OnItemLongClickListener+++++++++++++++++++++++++++++++
+
         @Override
         public boolean onItemLongClick(BaseQuickAdapter adapter, View view, int position) {
             GtdDeedEntity viewEntity = (GtdDeedEntity)adapter.getItem(position);

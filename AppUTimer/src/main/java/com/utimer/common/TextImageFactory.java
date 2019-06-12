@@ -30,8 +30,11 @@ public class TextImageFactory {
     public TextDrawable getActionInboxButtonImage(){
         return TextDrawable.builder().buildRect("Inbox", Color.parseColor("#177bbd"));
     }
-    public TextDrawable getGtdTodoActionImage(){
+    public TextDrawable getGtdTodoDeedImage(){
         return TextDrawable.builder().buildRect("T", Color.parseColor("#177bbd"));
+    }
+    public TextDrawable getGtdDoneDeedImage(){
+        return TextDrawable.builder().buildRect("D", Color.parseColor("#177bbd"));
     }
 
     public TextDrawable getShortHandImage(){
