@@ -1,9 +1,9 @@
 <resources xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="MissingTranslation">
     <string name="configs_simple_app_name">UTimer</string>
-    <string name="config_log_file_name">log.txt</string>
     <string name="config_datetime_format">YYYYMMdd_HHmm</string>
 
+    <string name="config_log_file_suffix">.log</string>
     <string name="config_md_file_suffix">.md.txt</string>
     <string name="config_note_file_suffix">.txt</string>
     <string name="config_manager_file_suffix">.fb</string>

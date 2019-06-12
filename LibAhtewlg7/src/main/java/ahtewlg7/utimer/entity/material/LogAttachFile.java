@@ -31,6 +31,6 @@ public class LogAttachFile extends AAttachFile {
     @NonNull
     @Override
     public String getFileSuffix() {
-        return MyRInfo.getStringByID(R.string.config_log_file_name);
+        return MyRInfo.getStringByID(R.string.config_log_file_suffix);
     }
 }
