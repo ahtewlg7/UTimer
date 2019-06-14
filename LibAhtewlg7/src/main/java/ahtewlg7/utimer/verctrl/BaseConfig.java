@@ -71,6 +71,9 @@ public class BaseConfig {
     public String getInboxNoteDir(){
         return MyRInfo.getStringByID(R.string.config_note_inbox_dir_name);
     }
+    public String getShorthandNoteDir(){
+        return MyRInfo.getStringByID(R.string.config_note_shorthand_dir_name);
+    }
     public String getProjectNoteDir(){
         return MyRInfo.getStringByID(R.string.config_note_project_dir_name);
     }

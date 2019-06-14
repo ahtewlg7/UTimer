@@ -151,6 +151,19 @@ public class FileSystemAction {
     public String getNoteDocAbsPath(){
         return getSdcardPath() + getNoteDocRPath();
     }
+    public String getShorthandNoteRPath(){
+        return getNoteDocRPath() + baseConfig.getShorthandNoteDir() + File.separator;
+    }
+    public String getShorthandNoteAbsPath(){
+        return getSdcardPath() + getShorthandNoteRPath();
+    }
+
+    public String getProjectNoteRPath(){
+        return getNoteDocRPath() + baseConfig.getProjectNoteDir() + File.separator;
+    }
+    public String getProjectNoteAbsPath(){
+        return getSdcardPath() + getProjectNoteRPath();
+    }
 
     public String getGtdDocRPath(){
         return getWorkingDocRPath() + baseConfig.getGtdNoteDir() + File.separator;
@@ -158,6 +171,7 @@ public class FileSystemAction {
     public String getGtdDocAbsPath(){
         return getSdcardPath() + getGtdDocRPath();
     }
+
 
     public String getTrashDocRPath(){
         return getWorkingDocRPath() + baseConfig.getTrashNoteDir() + File.separator;
@@ -252,7 +266,10 @@ public class FileSystemAction {
         //======================================/UTimer/Doc/========================================
         StorageAction.getInstance().createExRelDir(getTrashDocAbsPath());
         StorageAction.getInstance().createExRelDir(getNoteDocAbsPath());
+        StorageAction.getInstance().createExRelDir(getNoteDocAbsPath());
         StorageAction.getInstance().createExRelDir(getGtdDocAbsPath());
+        StorageAction.getInstance().createExRelDir(getShorthandNoteAbsPath());
+        StorageAction.getInstance().createExRelDir(getProjectNoteAbsPath());
 
         //======================================/UTimer/Doc/GTD====================================
         StorageAction.getInstance().createExRelDir(getInboxGtdAbsPath());

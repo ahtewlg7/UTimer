@@ -25,6 +25,7 @@
     <string name="config_note_doc_dir_name">doc</string>
     <string name="config_note_gtd_dir_name">gtd</string>
     <string name="config_note_inbox_dir_name">Inbox</string>
+    <string name="config_note_shorthand_dir_name">Shorthand</string>
     <string name="config_note_project_dir_name">Project</string>
     <string name="config_note_trash_dir_name">Trash</string>
     <string name="config_note_reference_dir_name">Reference</string>
