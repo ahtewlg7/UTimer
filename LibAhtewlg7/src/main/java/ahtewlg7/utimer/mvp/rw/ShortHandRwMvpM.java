@@ -33,11 +33,11 @@ public class ShortHandRwMvpM extends AUtimerRwMvpM<ShortHandEntity> {
         fileSystemAction = new FileSystemAction();
     }
 
-    public String getInboxRDir(){
-        return fileSystemAction.getInboxGtdRPath();
+    public String getShorthandRDir(){
+        return fileSystemAction.getShorthandNoteRPath();
     }
-    public String getInboxAbsDir(){
-        return fileSystemAction.getInboxGtdAbsPath();
+    public String getShorthandAbsDir(){
+        return fileSystemAction.getShorthandNoteAbsPath();
     }
 
 
@@ -82,7 +82,7 @@ public class ShortHandRwMvpM extends AUtimerRwMvpM<ShortHandEntity> {
     }
 
     private Flowable<File> getShortHandFiles(){
-        return Flowable.just(getInboxAbsDir()).subscribeOn(Schedulers.io())
+        return Flowable.just(getShorthandAbsDir()).subscribeOn(Schedulers.io())
                 .flatMap(new Function<String, Publisher<File>>() {
             @Override
             public Publisher<File> apply(String path) throws Exception {

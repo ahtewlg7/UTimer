@@ -78,7 +78,7 @@ public class NoteEntity extends AUtimerEntity<NoteBuilder>
             title = new DateTimeAction().toFormatNow().toString();
 
         if(attachFile == null){
-            String filePath = new FileSystemAction().getProjectGtdAbsPath() + projectEntity.getTitle();
+            String filePath = new FileSystemAction().getProjectNoteAbsPath() + projectEntity.getTitle();
             attachFile      = new MdAttachFile(filePath, title);
         }
     }

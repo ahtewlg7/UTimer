@@ -35,7 +35,7 @@ public class GtdProjectListAction {
         return fileSystemAction.getProjectGtdRPath();
     }
     public String getProjectAbsDir(){
-        return fileSystemAction.getProjectGtdAbsPath();
+        return fileSystemAction.getProjectNoteAbsPath();
     }
 
     public Flowable<GtdProjectEntity> loadAllEntity() {

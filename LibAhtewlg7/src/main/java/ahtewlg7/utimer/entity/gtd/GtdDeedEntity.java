@@ -116,7 +116,7 @@ public class GtdDeedEntity extends AGtdUtimerEntity<GtdDeedBuilder>
     public boolean ensureAttachFileExist() {
         if(attachFile == null){
             String fileName = !TextUtils.isEmpty(getTitle()) ? getTitle() : new DateTimeAction().toFormatNow().toString();
-            String filePath = new FileSystemAction().getProjectGtdAbsPath();
+            String filePath = new FileSystemAction().getProjectNoteAbsPath();
             attachFile = new DirAttachFile(filePath, fileName);
         }
         return attachFile.createOrExist();

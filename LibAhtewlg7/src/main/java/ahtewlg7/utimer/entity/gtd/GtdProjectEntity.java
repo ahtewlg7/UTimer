@@ -50,7 +50,7 @@ public class GtdProjectEntity extends AUtimerEntity<GtdProjectBuilder> implement
     public boolean ensureAttachFileExist() {
         if(attachFile == null){
             String fileName = !TextUtils.isEmpty(getTitle()) ? getTitle() : new DateTimeAction().toFormatNow().toString();
-            String filePath = new FileSystemAction().getProjectGtdAbsPath();
+            String filePath = new FileSystemAction().getProjectNoteAbsPath();
             attachFile = new DirAttachFile(filePath, fileName);
         }
         boolean result = attachFile.createOrExist();

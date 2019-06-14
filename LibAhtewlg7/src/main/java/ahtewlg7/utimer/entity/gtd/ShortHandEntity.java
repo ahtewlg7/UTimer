@@ -90,7 +90,7 @@ public class ShortHandEntity extends AUtimerEntity<ShortHandBuilder>
                 attachFile = new MdAttachFile(absPath.get());
             }else{
                 String fileName = !TextUtils.isEmpty(getTitle()) ? getTitle() : new DateTimeAction().toFormatNow().toString();
-                String filePath = fileSystemAction.getInboxGtdAbsPath();
+                String filePath = fileSystemAction.getShorthandNoteAbsPath();
                 attachFile = new MdAttachFile(filePath, fileName);
                 updateRPath(attachFile);
             }

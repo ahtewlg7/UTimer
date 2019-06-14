@@ -104,7 +104,7 @@ public class ShortHandByUuidFactory extends ABaseLruCacheFactory<String, ShortHa
     public void toUpdatePathList(){
         try{
             FileSystemAction fileSystemAction = new FileSystemAction();
-            String path         = fileSystemAction.getInboxGtdAbsPath();
+            String path         = fileSystemAction.getShorthandNoteAbsPath();
             File shortHandDir   = FileUtils.getFileByPath(path);
             if(!shortHandDir.exists())
                 return;
