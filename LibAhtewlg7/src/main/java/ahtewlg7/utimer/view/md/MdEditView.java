@@ -91,11 +91,13 @@ public class MdEditView extends FrameLayout {
     }
 
     public void toPauseEdit(){
-        editRecyclerView.toPauseEdit();
+        if(editRecyclerView != null)
+            editRecyclerView.toPauseEdit();
     }
 
     public void toEndEdit(){
-        editRecyclerView.toEndEdit();
+        if(editRecyclerView != null)
+            editRecyclerView.toEndEdit();
     }
 
     public List<EditElement> getEditElementList(){
