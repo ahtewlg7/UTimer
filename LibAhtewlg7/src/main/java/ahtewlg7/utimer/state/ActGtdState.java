@@ -26,7 +26,7 @@ public class ActGtdState extends BaseActState{
         if(!ifActHandlable(entity) || !toGtdable((GtdDeedEntity)entity))
             return Optional.absent();
         DeedState preState =  ((GtdDeedEntity) entity).getDeedState();
-        ((GtdDeedEntity) entity).setDeedState(DeedState.GTD);
+        ((GtdDeedEntity) entity).setDeedState(DeedState.INBOX);
         DeedBusEvent busEvent = new DeedBusEvent(GtdBusEventType.SAVE, (GtdDeedEntity) entity);
         Optional<BaseEventBusBean> eventOptional = toPostEvent(entity, busEvent);
         if(eventOptional.isPresent())

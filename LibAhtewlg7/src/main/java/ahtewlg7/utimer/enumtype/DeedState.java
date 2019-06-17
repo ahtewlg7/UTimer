@@ -7,18 +7,19 @@ import java.util.List;
 public enum DeedState {
     MAYBE,
     TRASH,
-    GTD,
+    INBOX,
+    DONE,
+
     DO_NOW,
     TODO,
     NEXT,
     WAIT_FOR,
     DATEBOOK,
-    DELEGATE,
-    DONE;
+    DELEGATE;
 
     public static List<DeedState> getActiveAll(){
         List<DeedState> list = Lists.newArrayList();
-        list.add(GTD);
+        list.add(INBOX);
         list.add(DO_NOW);
         list.add(TODO);
         list.add(NEXT);

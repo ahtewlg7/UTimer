@@ -32,7 +32,7 @@ public class GtdMachine {
                 && ((GtdDeedEntity)entity).getDeedState() == DeedState.MAYBE){
             return actMaybeState;
         }else if(entity.getGtdType() == GtdType.DEED
-                && ((GtdDeedEntity)entity).getDeedState() == DeedState.GTD){
+                && ((GtdDeedEntity)entity).getDeedState() == DeedState.INBOX){
             return actGtdState;
         }else
             return baseState;

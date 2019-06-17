@@ -9,7 +9,6 @@ import ahtewlg7.utimer.enumtype.DeedState;
  * Created by lw on 2016/9/6.
  */
 public class GtdDeedStateConverter implements PropertyConverter<DeedState,Integer> {
-    public static final String TAG = GtdDeedStateConverter.class.getSimpleName();
 
     @Override
     public DeedState convertToEntityProperty(Integer databaseValue) {
