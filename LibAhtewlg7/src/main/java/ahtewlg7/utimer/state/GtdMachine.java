@@ -28,6 +28,8 @@ public class GtdMachine {
     }
 
     public BaseGtdState getCurrState(AUtimerEntity entity){
+        if(entity == null )
+            return baseState;
         if(entity.getGtdType() == GtdType.DEED
                 && ((GtdDeedEntity)entity).getDeedState() == DeedState.MAYBE){
             return actMaybeState;

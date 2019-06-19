@@ -39,6 +39,8 @@ public class GtdDeedEntity extends AGtdUtimerEntity<GtdDeedBuilder>
             setWarningTimeList(builder.warningTimeList);
         if(builder.gdBean != null)
             initByGbBean(builder.gdBean);
+        if(builder.deedState != null)
+            this.deedState = builder.deedState;
         toMakeEntityOk();
         dateTimeAction = new DateTimeAction();
     }

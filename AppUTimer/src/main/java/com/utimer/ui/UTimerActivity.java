@@ -3,11 +3,15 @@ package com.utimer.ui;
 import android.Manifest;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
+import android.text.InputType;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.tbruyelle.rxpermissions2.RxPermissions;
@@ -16,6 +20,8 @@ import com.utimer.R;
 
 import ahtewlg7.utimer.entity.busevent.ActivityBusEvent;
 import ahtewlg7.utimer.factory.EventBusFatory;
+import ahtewlg7.utimer.state.GtdMachine;
+import ahtewlg7.utimer.util.MyRInfo;
 import ahtewlg7.utimer.util.MySimpleObserver;
 import butterknife.BindView;
 
@@ -85,6 +91,13 @@ public class UTimerActivity extends AButterKnifeActivity{
         return deedActionButton;
     }
 
+    public void toShowFloatMenu(boolean show){
+        if(!show)
+            floatingActionMenu.close(false);
+        else
+            floatingActionMenu.open(false);
+    }
+
     public void toVisibleFloatingMenu(boolean visible){
         floatingActionMenu.toggleMenuButton(visible);
     }
@@ -95,12 +108,6 @@ public class UTimerActivity extends AButterKnifeActivity{
         deedActionButton.setOnClickListener(menuButtonClickListener);
 
         floatingActionMenu.setClosedOnTouchOutside(true);
-        /*floatingActionMenu.setOnMenuToggleListener(new FloatingActionMenu.OnMenuToggleListener() {
-            @Override
-            public void onMenuToggle(boolean opened) {
-
-            }
-        });*/
     }
 
     class MenuButtonClickListener implements  View.OnClickListener{
@@ -112,8 +119,10 @@ public class UTimerActivity extends AButterKnifeActivity{
                         findFragment(MainFragment.class).toNewShortHand();
                     break;
                 case R.id.activity_utimer_fragment_bn_deed:
-                    if(findFragment(MainFragment.class) != null)
-                        findFragment(MainFragment.class).toNewDeed();
+                    /*if(findFragment(MainFragment.class) != null)
+                        findFragment(MainFragment.class).toNewDeed();*/
+                    toShowFloatMenu(false);
+                    toCreateInboxDialog();
                     break;
             }
         }
@@ -132,5 +141,30 @@ public class UTimerActivity extends AButterKnifeActivity{
                     }*/
                 }
             });
+    }
+    private void toCreateInboxDialog(){
+        new MaterialDialog.Builder(UTimerActivity.this).title(R.string.create)
+                .inputType(InputType.TYPE_CLASS_TEXT)
+                .input(MyRInfo.getStringByID(R.string.prompt_inbox_msg), "", false, new MaterialDialog.InputCallback() {
+                    @Override
+                    public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
+                        //do nothing
+                    }
+                })
+                .negativeText(R.string.no)
+                .positiveText(R.string.yes)
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
+                })
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        String title = dialog.getInputEditText().getText().toString();
+                        GtdMachine.getInstance().getCurrState(null).toInbox(title, null);
+                    }
+                }).show();
     }
 }

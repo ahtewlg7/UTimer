@@ -191,6 +191,8 @@ public class DeedMaybeListFragment extends AToolbarBkFragment implements DeedMay
     /**********************************************IGtdActionListMvpV**********************************************/
     @Override
     public void onDeleteSucc(int index , GtdDeedEntity entity) {
+        if(recyclerView == null)
+            return;
         ToastUtils.showShort(R.string.prompt_del_succ);
         if(index == INVALID_INDEX)
             recyclerView.removeData(entity);

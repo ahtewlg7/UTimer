@@ -64,6 +64,7 @@
     <string name="prompt_del_err">del err</string>
     <string name="prompt_new_project_name">please input the project name</string>
     <string name="prompt_new_note_name">please input the new note name</string>
+    <string name="prompt_inbox_msg">please input the short message</string>
     <string name="prompt_not_ready">"No, Not Yet! I'm Not Ready, Please Wait!" </string>
     <string name="prompt_nlp_wait">AI Working. Please Wait! </string>
 

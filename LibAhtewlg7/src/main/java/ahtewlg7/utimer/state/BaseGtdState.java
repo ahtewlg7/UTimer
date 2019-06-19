@@ -6,6 +6,13 @@ import com.google.common.base.Optional;
 
 import ahtewlg7.utimer.entity.AUtimerEntity;
 import ahtewlg7.utimer.entity.BaseEventBusBean;
+import ahtewlg7.utimer.entity.busevent.DeedBusEvent;
+import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
+import ahtewlg7.utimer.enumtype.GtdBusEventType;
+import ahtewlg7.utimer.factory.EventBusFatory;
+import ahtewlg7.utimer.factory.GtdDeedByUuidFactory;
+
+import static ahtewlg7.utimer.enumtype.DeedState.INBOX;
 
 /**
  * Created by lw on 2019/1/19.
@@ -17,6 +24,15 @@ public class BaseGtdState {
         this.gtdMachine = gtdMachine;
     }
 
+    public Optional<BaseEventBusBean> toInbox(@NonNull String title, String detail){
+        Optional<GtdDeedEntity> deedEntityOptional =
+                GtdDeedByUuidFactory.getInstance().create(title, detail, INBOX);
+        if(!deedEntityOptional.isPresent())
+            return Optional.absent();
+        BaseEventBusBean actionBusEvent = new DeedBusEvent(GtdBusEventType.SAVE, deedEntityOptional.get());
+        EventBusFatory.getInstance().getDefaultEventBus().postSticky(actionBusEvent);
+        return Optional.of(actionBusEvent);
+    }
     public Optional<BaseEventBusBean> toTrash(@NonNull AUtimerEntity entity){
         return Optional.absent();
     }
@@ -30,4 +46,5 @@ public class BaseGtdState {
     protected GtdMachine getGtdMachine(){
         return gtdMachine;
     }
+
 }

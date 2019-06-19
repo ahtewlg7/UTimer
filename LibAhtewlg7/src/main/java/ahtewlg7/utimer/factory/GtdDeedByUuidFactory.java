@@ -10,11 +10,14 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 
+import org.joda.time.DateTime;
 import org.reactivestreams.Publisher;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import ahtewlg7.utimer.common.IdAction;
+import ahtewlg7.utimer.entity.gtd.GtdDeedBuilder;
 import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
 import ahtewlg7.utimer.enumtype.DeedState;
 import ahtewlg7.utimer.enumtype.GtdLife;
@@ -82,6 +85,26 @@ public class GtdDeedByUuidFactory extends ABaseLruCacheFactory<String, GtdDeedEn
         detailUuidMap.clear();
         stateUuidMultiMap.clear();
     }
+    public Optional<GtdDeedEntity> create(String msg){
+        return create(msg, msg, null);
+    }
+    public Optional<GtdDeedEntity> create(String title, String detail){
+        return create(title, detail, null);
+    }
+    public Optional<GtdDeedEntity> create(String title, String detail, DeedState state){
+        if(TextUtils.isEmpty(title) && TextUtils.isEmpty(detail))
+            return Optional.absent();
+        GtdDeedBuilder builder  = new GtdDeedBuilder()
+                .setCreateTime(DateTime.now())
+                .setDeedState(state == null ? DeedState.MAYBE : state)
+                .setDetail(!TextUtils.isEmpty(detail) ? detail : title)
+                .setTitle(!TextUtils.isEmpty(title) ? title : detail)
+                .setUuid(new IdAction().getUUId());
+        GtdDeedEntity gtdActionEntity = builder.build();
+        gtdActionEntity.setLastModifyTime(DateTime.now());
+        gtdActionEntity.setLastAccessTime(DateTime.now());
+        return Optional.of(gtdActionEntity);
+    }
     public void updateState(DeedState preState, GtdDeedEntity actionEntity){
         if(preState != null && actionEntity != null && actionEntity.ifValid()) {
             stateUuidMultiMap.remove(preState, actionEntity.getUuid());
@@ -91,6 +114,14 @@ public class GtdDeedByUuidFactory extends ABaseLruCacheFactory<String, GtdDeedEn
 
     public Flowable<GtdDeedEntity> getEntityByState(@NonNull DeedState actState){
         return Flowable.fromIterable(getEntityByUuid(new ArrayList<String>(stateUuidMultiMap.get(actState))));
+    }
+    public Flowable<GtdDeedEntity> getEntityByState(@NonNull DeedState... actStates){
+        return Flowable.fromArray(actStates).flatMap(new Function<DeedState, Publisher<GtdDeedEntity>>() {
+            @Override
+            public Publisher<GtdDeedEntity> apply(DeedState actState) throws Exception {
+                return getEntityByState(actState);
+            }
+        });
     }
     public Flowable<GtdDeedEntity> getEntityByState(){
         return Flowable.fromIterable(DeedState.getActiveAll()).flatMap(new Function<DeedState, Publisher<GtdDeedEntity>>() {
