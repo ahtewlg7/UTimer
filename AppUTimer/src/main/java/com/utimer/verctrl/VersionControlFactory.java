@@ -10,7 +10,6 @@ import ahtewlg7.utimer.verctrl.IBaseVersionControlFactory;
  */
 
 public class VersionControlFactory implements IBaseVersionControlFactory {
-    public static final String TAG = VersionControlFactory.class.getSimpleName();
 
     @NonNull
     @Override

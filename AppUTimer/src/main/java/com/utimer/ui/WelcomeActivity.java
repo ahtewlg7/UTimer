@@ -1,7 +1,7 @@
 package com.utimer.ui;
 
 import android.os.Bundle;
-import android.view.KeyEvent;
+import android.support.annotation.NonNull;
 import android.view.Window;
 import android.widget.TextView;
 
@@ -11,6 +11,7 @@ import com.utimer.R;
 import java.util.concurrent.TimeUnit;
 
 import ahtewlg7.utimer.ui.BaseBinderActivity;
+import ahtewlg7.utimer.ui.BinderService;
 import ahtewlg7.utimer.util.Logcat;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,13 +40,10 @@ public class WelcomeActivity extends BaseBinderActivity {
         toDelayFinish();
     }
 
+    @NonNull
     @Override
-    public boolean onKeyUp(int keyCode, KeyEvent event) {
-        /*if(event.getKeyCode() == KeyEvent.KEYCODE_VOLUME_UP)
-            InitJar.setLogFlag(true);
-        else if(event.getKeyCode() == KeyEvent.KEYCODE_VOLUME_DOWN)
-            InitJar.setLogFlag(false);*/
-        return super.onKeyUp(keyCode, event);
+    protected Class<? extends BinderService> getBinderServiceClass() {
+        return BaseBinderService.class;
     }
 
     private void toDelayFinish(){

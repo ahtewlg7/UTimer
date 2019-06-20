@@ -6,8 +6,6 @@ import com.google.common.base.Optional;
  * Created by lw on 2017/2/7.
  */
 public class VcFactoryBuilder {
-    public static final String TAG = VcFactoryBuilder.class.getSimpleName();
-
     private IBaseVersionControlFactory baseConfigFactory;
 
     private static VcFactoryBuilder instance;

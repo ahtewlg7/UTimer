@@ -9,8 +9,8 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import ahtewlg7.utimer.entity.BaseEventBusBean;
-import ahtewlg7.utimer.entity.busevent.DeedBusEvent;
 import ahtewlg7.utimer.entity.busevent.ActivityBusEvent;
+import ahtewlg7.utimer.entity.busevent.DeedBusEvent;
 import ahtewlg7.utimer.entity.busevent.UTimerBusEvent;
 import ahtewlg7.utimer.factory.EventBusFatory;
 import ahtewlg7.utimer.mvp.rw.AllEntityRwMvpP;
@@ -50,6 +50,10 @@ public class BinderService extends Service{
     //+++++++++++++++++++++++++++++++++++++++++++Binder+++++++++++++++++++++++++++++++++++++++++++++++++++
     @Override
     public IBinder onBind(Intent arg0) {
+        return getServiceBinder();
+    }
+
+    protected Binder getServiceBinder(){
         return new BaseServiceBinder();
     }
 
@@ -73,12 +77,12 @@ public class BinderService extends Service{
     }
 
     private void toListenEventBus(){
-        eventBusRx/*.observeOn(AndroidSchedulers.mainThread())*/
-            .subscribe(new MySimpleObserver<BaseEventBusBean>(){
-                @Override
-                public void onNext(BaseEventBusBean eventBusBean) {
-                    entityRwMvpP.toHandleBusEvent(eventBusBean);
-                }
-            });
+        eventBusRx.subscribe(new MySimpleObserver<BaseEventBusBean>(){
+            @Override
+            public void onNext(BaseEventBusBean eventBusBean) {
+                entityRwMvpP.toHandleBusEvent(eventBusBean);
+            }
+        });
     }
+
 }

@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.annotation.NonNull;
 
 import com.blankj.utilcode.util.ServiceUtils;
 import com.trello.rxlifecycle2.components.RxActivity;
@@ -15,10 +16,10 @@ import ahtewlg7.utimer.util.Logcat;
  */
 
 
-public class BaseBinderActivity extends RxActivity {
+public abstract class BaseBinderActivity extends RxActivity {
 	public static final String TAG = BaseBinderActivity.class.getSimpleName();
 
-	protected BinderService serviceBinderProxy;
+	protected IBinder binderProxy;
 	protected ServiceConnection serviceConn;
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -43,11 +44,15 @@ public class BaseBinderActivity extends RxActivity {
 		super.onDestroy();
 	}
 
+	protected @NonNull Class<? extends BinderService> getBinderServiceClass(){
+		return BinderService.class;
+	}
+
 	protected void toBindService(ServiceConnection serviceConn){
 	    try{
 	    	if(serviceConn != null) {
 	    	    Logcat.d(TAG,"toBindService");
-                ServiceUtils.bindService(BinderService.class, serviceConn, Context.BIND_AUTO_CREATE);
+                ServiceUtils.bindService(getBinderServiceClass(), serviceConn, Context.BIND_AUTO_CREATE);
             }
         }catch (Exception e){
 	        e.printStackTrace();
@@ -72,7 +77,8 @@ public class BaseBinderActivity extends RxActivity {
 		@Override
 		public void onServiceConnected(ComponentName name, IBinder service) {
 			Logcat.d(TAG,"onServiceConnected");
-			serviceBinderProxy = ((BinderService.BaseServiceBinder)service).getService();
+			binderProxy = service;
+//			BinderService serviceBinderProxy = ((BinderService.BaseServiceBinder)service).getService();
 			onServiceBinderConnected(name);
 		}
 	}

@@ -10,8 +10,6 @@ import butterknife.ButterKnife;
  * Created by lw on 2018/10/17.
  */
 public abstract class AButterKnifeActivity extends BaseBinderRxActivity {
-    public static final String TAG = AButterKnifeActivity.class.getSimpleName();
-
     protected abstract @LayoutRes int getContentViewLayout();
 
     @Override

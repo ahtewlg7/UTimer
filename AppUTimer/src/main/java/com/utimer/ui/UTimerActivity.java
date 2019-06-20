@@ -21,6 +21,7 @@ import com.utimer.R;
 import ahtewlg7.utimer.entity.busevent.ActivityBusEvent;
 import ahtewlg7.utimer.factory.EventBusFatory;
 import ahtewlg7.utimer.state.GtdMachine;
+import ahtewlg7.utimer.ui.BinderService;
 import ahtewlg7.utimer.util.MyRInfo;
 import ahtewlg7.utimer.util.MySimpleObserver;
 import butterknife.BindView;
@@ -81,6 +82,11 @@ public class UTimerActivity extends AButterKnifeActivity{
         if(getTopFragment().onTouchEvent(event))
             return true;
         return super.onTouchEvent(event);
+    }
+
+    @NonNull
+    protected Class<? extends BinderService> getBinderServiceClass() {
+        return BaseBinderService.class;
     }
 
     public FloatingActionMenu getFloatingActionMenu(){

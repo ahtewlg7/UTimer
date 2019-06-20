@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.annotation.NonNull;
 
 import com.blankj.utilcode.util.ServiceUtils;
 
@@ -12,8 +13,8 @@ import ahtewlg7.utimer.util.Logcat;
 public class BaseBinderRxActivity extends BaseRxActivity {
     public static final String TAG = BaseBinderRxActivity.class.getSimpleName();
 
-    protected BinderService serviceBinderProxy;
-    protected BaseBinderRxActivity.ServiceConnection serviceConn;
+    protected IBinder binderProxy;
+    protected ServiceConnection serviceConn;
 
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     protected void onServiceBinderDisconnected(ComponentName name){
@@ -27,7 +28,7 @@ public class BaseBinderRxActivity extends BaseRxActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        serviceConn  = new BaseBinderRxActivity.ServiceConnection();
+        serviceConn  = new ServiceConnection();
         toBindService(serviceConn);
     }
     @Override
@@ -37,17 +38,22 @@ public class BaseBinderRxActivity extends BaseRxActivity {
         super.onDestroy();
     }
 
-    protected void toBindService(BaseBinderRxActivity.ServiceConnection serviceConn){
+
+    protected @NonNull Class<? extends BinderService> getBinderServiceClass(){
+        return BinderService.class;
+    }
+
+    protected void toBindService(ServiceConnection serviceConn){
         try{
             if(serviceConn != null) {
                 Logcat.d(TAG,"toBindService");
-                ServiceUtils.bindService(BinderService.class, serviceConn, Context.BIND_AUTO_CREATE);
+                ServiceUtils.bindService(getBinderServiceClass(), serviceConn, Context.BIND_AUTO_CREATE);
             }
         }catch (Exception e){
             e.printStackTrace();
         }
     }
-    protected void toUnbindService(BaseBinderRxActivity.ServiceConnection serviceConn){
+    protected void toUnbindService(ServiceConnection serviceConn){
         try{
             if(serviceConn != null) {
                 Logcat.d(TAG,"unBindService");
@@ -66,7 +72,8 @@ public class BaseBinderRxActivity extends BaseRxActivity {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             Logcat.d(TAG,"onServiceConnected");
-            serviceBinderProxy = ((BinderService.BaseServiceBinder)service).getService();
+            binderProxy = service;
+//			BinderService serviceBinderProxy = ((BinderService.BaseServiceBinder)service).getService();
             onServiceBinderConnected(name);
         }
     }
