@@ -43,6 +43,8 @@
     <string name="title_deed_maybe_list">MaybeList</string>
     <string name="title_deed_todo_list">TodoList</string>
     <string name="title_deed_done_list">DoneList</string>
+    <string name="title_notify_fast_inbox">Clear Your Mind</string>
+    <string name="title_notify_action_fast_inbox">inbox</string>
 
     <string name="create">new</string>
     <string name="create_shorthand">new shorthand</string>
@@ -64,7 +66,8 @@
     <string name="prompt_del_err">del err</string>
     <string name="prompt_new_project_name">please input the project name</string>
     <string name="prompt_new_note_name">please input the new note name</string>
-    <string name="prompt_inbox_msg">please input the short message</string>
+    <string name="prompt_inbox_msg">let me help you to keep the stuff in your mind</string>
+    <string name="prompt_fast_inbox">less than 50 words</string>
     <string name="prompt_not_ready">"No, Not Yet! I'm Not Ready, Please Wait!" </string>
     <string name="prompt_nlp_wait">AI Working. Please Wait! </string>
 

@@ -17,7 +17,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name="ahtewlg7.utimer.ui.BinderService" />
+        <service android:name="com.utimer.ui.BaseBinderService" />
 
         <activity
             android:name=".ui.UTimerActivity"
