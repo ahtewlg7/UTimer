@@ -1,0 +1,7 @@
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingTranslation">
+    <string name="notify_remote_input_inbox">Fast_Inbox</string>
+
+    <string name="intent_action_fast_inbox">utimer.action.fast_inbox</string>
+
+</resources>
