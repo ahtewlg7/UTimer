@@ -143,7 +143,7 @@ public class DeedsFragment extends AToolbarBkFragment{
     private void loadFragment(){
         AButterKnifeFragment firstFragment = findChildFragment(DeedMaybeListFragment.class);
         if (firstFragment == null) {
-            fragments[INBOX.value()]  = GtdFragment.newInstance();
+            fragments[INBOX.value()]  = DeedInboxListFragment.newInstance();
             fragments[TODO.value()]   = DeedTodoListFragment.newInstance();
             fragments[MAYBE.value()]  = DeedMaybeListFragment.newInstance();
             fragments[DONE.value()]   = DeedDoneListFragment.newInstance();
@@ -160,6 +160,7 @@ public class DeedsFragment extends AToolbarBkFragment{
             fragments[DONE.value()]  = findChildFragment(DeedDoneListFragment.class);
         }
     }
+
     enum DEED_INDEX{
         INBOX(0),
         TODO(1),

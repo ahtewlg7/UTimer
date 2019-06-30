@@ -112,22 +112,23 @@ public class GtdDeedByUuidFactory extends ABaseLruCacheFactory<String, GtdDeedEn
         }
     }
 
-    public Flowable<GtdDeedEntity> getEntityByState(@NonNull DeedState actState){
-        return Flowable.fromIterable(getEntityByUuid(new ArrayList<String>(stateUuidMultiMap.get(actState))));
-    }
-    public Flowable<GtdDeedEntity> getEntityByState(@NonNull DeedState... actStates){
-        return Flowable.fromArray(actStates).flatMap(new Function<DeedState, Publisher<GtdDeedEntity>>() {
+    @Deprecated
+    public Flowable<GtdDeedEntity> getEntityByState(){
+        return Flowable.fromIterable(DeedState.getActiveAll()).flatMap(new Function<DeedState, Publisher<GtdDeedEntity>>() {
             @Override
             public Publisher<GtdDeedEntity> apply(DeedState actState) throws Exception {
                 return getEntityByState(actState);
             }
         });
     }
-    public Flowable<GtdDeedEntity> getEntityByState(){
-        return Flowable.fromIterable(DeedState.getActiveAll()).flatMap(new Function<DeedState, Publisher<GtdDeedEntity>>() {
+    public Flowable<GtdDeedEntity> getEntityByState(@NonNull DeedState actState){
+        return Flowable.fromIterable(getEntityByUuid(new ArrayList<String>(stateUuidMultiMap.get(actState))));
+    }
+    public Flowable<List<GtdDeedEntity>> getEntityByState(@NonNull DeedState... actStates){
+        return Flowable.fromArray(actStates).map(new Function<DeedState, List<GtdDeedEntity>>() {
             @Override
-            public Publisher<GtdDeedEntity> apply(DeedState actState) throws Exception {
-                return getEntityByState(actState);
+            public List<GtdDeedEntity> apply(DeedState state) throws Exception {
+                return getEntityByState(state).toList().blockingGet();
             }
         });
     }

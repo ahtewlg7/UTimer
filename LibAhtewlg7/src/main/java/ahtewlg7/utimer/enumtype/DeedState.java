@@ -5,26 +5,26 @@ import com.google.common.collect.Lists;
 import java.util.List;
 
 public enum DeedState {
-    MAYBE,
+    MAYBE,//it may be parse by ai，but sometime it is not correct.
     TRASH,
     INBOX,
-    DONE,
-
-    DO_NOW,
-    TODO,
-    NEXT,
-    WAIT_FOR,
-    DATEBOOK,
-    DELEGATE;
+    REFERENCE,
+    WISH,
+    TWO_MIN,
+    PROJECT,
+    DEFER,
+    CALENDAR,
+    DELEGATE,
+    DONE;
 
     public static List<DeedState> getActiveAll(){
         List<DeedState> list = Lists.newArrayList();
         list.add(INBOX);
-        list.add(DO_NOW);
-        list.add(TODO);
-        list.add(NEXT);
-        list.add(WAIT_FOR);
-        list.add(DATEBOOK);
+        list.add(WISH);
+        list.add(TWO_MIN);
+        list.add(PROJECT);
+        list.add(DEFER);
+        list.add(CALENDAR);
         list.add(DELEGATE);
         return list;
     }

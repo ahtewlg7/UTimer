@@ -42,6 +42,7 @@
     <string name="title_deed_undo">Undo</string>
     <string name="title_deed_list">ActionList</string>
     <string name="title_deed_maybe_list">MaybeList</string>
+    <string name="title_deed_inbox_list">InboxList</string>
     <string name="title_deed_todo_list">TodoList</string>
     <string name="title_deed_done_list">DoneList</string>
     <string name="title_notify_fast_inbox">Clear Your Mind</string>
