@@ -17,6 +17,7 @@
     <string name="title_project_list">工程清单</string>
     <string name="title_deed">任务</string>
     <string name="title_deed_maybe">待确认</string>
+    <string name="title_deed_inbox">待分类</string>
     <string name="title_deed_todo">待处理</string>
     <string name="title_deed_done">已完成</string>
     <string name="title_deed_all">所有</string>
