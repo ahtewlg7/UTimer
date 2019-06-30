@@ -24,7 +24,7 @@ public class BaseGtdState {
         this.gtdMachine = gtdMachine;
     }
 
-    public Optional<BaseEventBusBean> toInbox(@NonNull String title, String detail){
+    public Optional<BaseEventBusBean> toInbox(String title, String detail){
         Optional<GtdDeedEntity> deedEntityOptional =
                 GtdDeedByUuidFactory.getInstance().create(title, detail, INBOX);
         if(!deedEntityOptional.isPresent())
@@ -33,18 +33,46 @@ public class BaseGtdState {
         EventBusFatory.getInstance().getDefaultEventBus().postSticky(actionBusEvent);
         return Optional.of(actionBusEvent);
     }
+
     public Optional<BaseEventBusBean> toTrash(@NonNull AUtimerEntity entity){
         return Optional.absent();
     }
-    public Optional<BaseEventBusBean> toGtd(@NonNull AUtimerEntity entity){
+    public Optional<BaseEventBusBean> toActive(@NonNull AUtimerEntity entity){
         return Optional.absent();
     }
-    public Optional<BaseEventBusBean> toDone(@NonNull AUtimerEntity entity){
+    public Optional<BaseEventBusBean> toBeDone(@NonNull AUtimerEntity entity){
+        return Optional.absent();
+    }
+
+    public Optional<BaseEventBusBean> toBeReference(@NonNull AUtimerEntity entity){
+        return Optional.absent();
+    }
+    //it l be done in 2 mins
+    public Optional<BaseEventBusBean> toBe2MinJob(@NonNull AUtimerEntity entity){
+        return Optional.absent();
+    }
+    //it is a multi-step job
+    public Optional<BaseEventBusBean> toBeProject(@NonNull AUtimerEntity entity){
+        return Optional.absent();
+    }
+    //it could be reminder by calendar
+    public Optional<BaseEventBusBean> toBeReminderJob(@NonNull AUtimerEntity entity){
+        return Optional.absent();
+    }
+    //it will be not fixed, but it is useful
+    public Optional<BaseEventBusBean> toBeWishJob(@NonNull AUtimerEntity entity){
+        return Optional.absent();
+    }
+    //it will be fix by me as soon as I can
+    public Optional<BaseEventBusBean> toBeDeferJob(@NonNull AUtimerEntity entity){
+        return Optional.absent();
+    }
+    //it will be fix by someone else
+    public Optional<BaseEventBusBean> toBeDelegateJob(@NonNull AUtimerEntity entity){
         return Optional.absent();
     }
 
     protected GtdMachine getGtdMachine(){
         return gtdMachine;
     }
-
 }

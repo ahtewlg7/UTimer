@@ -12,13 +12,13 @@ public class GtdMachine {
     private static GtdMachine instance;
 
     private BaseGtdState baseState;
-    private ActMaybeState actMaybeState;
-    private ActGtdState actGtdState;
+    private ActMaybeJobState actMaybeState;
+    private ActInboxJobState actGtdState;
 
     private GtdMachine(){
         baseState       = new BaseGtdState(this);
-        actMaybeState   = new ActMaybeState(this);
-        actGtdState     = new ActGtdState(this);
+        actMaybeState   = new ActMaybeJobState(this);
+        actGtdState     = new ActInboxJobState(this);
     }
 
     public static GtdMachine getInstance(){
@@ -30,8 +30,7 @@ public class GtdMachine {
     public BaseGtdState getCurrState(AUtimerEntity entity){
         if(entity == null )
             return baseState;
-        if(entity.getGtdType() == GtdType.DEED
-                && ((GtdDeedEntity)entity).getDeedState() == DeedState.MAYBE){
+        if(entity.getGtdType() == GtdType.DEED){
             return actMaybeState;
         }else if(entity.getGtdType() == GtdType.DEED
                 && ((GtdDeedEntity)entity).getDeedState() == DeedState.INBOX){
@@ -40,11 +39,11 @@ public class GtdMachine {
             return baseState;
     }
 
-    ActMaybeState getActMaybeState() {
+    ActMaybeJobState getActMaybeState() {
         return actMaybeState;
     }
 
-    ActGtdState getActGtdState() {
+    ActInboxJobState getActGtdState() {
         return actGtdState;
     }
 }
