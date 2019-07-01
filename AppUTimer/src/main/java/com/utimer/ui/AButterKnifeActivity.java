@@ -1,7 +1,7 @@
 package com.utimer.ui;
 
 import android.os.Bundle;
-import android.support.annotation.LayoutRes;
+import androidx.annotation.LayoutRes;
 
 import ahtewlg7.utimer.ui.BaseBinderRxActivity;
 import butterknife.ButterKnife;

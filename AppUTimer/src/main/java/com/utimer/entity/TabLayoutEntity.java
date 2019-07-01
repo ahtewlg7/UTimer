@@ -1,7 +1,7 @@
 package com.utimer.entity;
 
-import android.support.annotation.DrawableRes;
-import android.support.annotation.StringRes;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.StringRes;
 
 import com.flyco.tablayout.listener.CustomTabEntity;
 

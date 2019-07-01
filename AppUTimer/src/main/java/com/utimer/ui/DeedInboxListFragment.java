@@ -1,8 +1,9 @@
 package com.utimer.ui;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.View;
+
+import androidx.annotation.Nullable;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.trello.rxlifecycle2.LifecycleProvider;
@@ -72,6 +73,12 @@ public class DeedInboxListFragment extends AButterKnifeFragment implements BaseD
     @Override
     public void onLazyInitView(@Nullable Bundle savedInstanceState) {
         super.onLazyInitView(savedInstanceState);
+        listMvpP.toLoadDeedByState(DeedState.INBOX);
+    }
+
+    @Override
+    public void onNewBundle(Bundle args) {
+        super.onNewBundle(args);
         listMvpP.toLoadDeedByState(DeedState.INBOX);
     }
 

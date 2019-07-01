@@ -1,10 +1,10 @@
 package com.utimer.ui;
 
 import android.os.Bundle;
-import android.support.annotation.MenuRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.MenuRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 
@@ -24,7 +24,7 @@ import ahtewlg7.utimer.mvp.ShorthandEditMvpP;
 import ahtewlg7.utimer.util.DateTimeAction;
 import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MyRInfo;
-import ahtewlg7.utimer.view.BaseUtimerEidtView;
+import ahtewlg7.utimer.view.BaseUtimerEditView;
 import ahtewlg7.utimer.view.md.MdEditView;
 import butterknife.BindView;
 import io.reactivex.Flowable;
@@ -32,7 +32,7 @@ import io.reactivex.Flowable;
 import static ahtewlg7.utimer.enumtype.errcode.NoteEditErrCode.ERR_EDIT_ATTACH_FILE_NOT_READY;
 
 public class ShortHandEditFragment extends ATxtEditFragment
-        implements BaseUtimerEidtView.IUtimerAttachEditView, AUtimerTxtEditMvpP.IUtimerEditMvpV {
+        implements BaseUtimerEditView.IUtimerAttachEditView, AUtimerTxtEditMvpP.IUtimerEditMvpV {
     public static final String TAG = ShortHandEditFragment.class.getSimpleName();
 
     public static final String KEY_SHORTHAND = "shorthand";

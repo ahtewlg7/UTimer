@@ -2,9 +2,9 @@ package com.utimer.ui;
 
 import android.Manifest;
 import android.os.Bundle;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import android.text.InputType;
 import android.view.KeyEvent;
 import android.view.MotionEvent;

@@ -1,13 +1,14 @@
 package com.utimer.ui;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.BottomNavigationView;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.utimer.R;
 
 import ahtewlg7.utimer.util.MyRInfo;
@@ -82,7 +83,8 @@ public class MainFragment extends AButterKnifeFragment {
         if (firstFragment == null) {
             fragments[0] = MsgFragment.newInstance();
             fragments[1] = NoteFragment.newInstance();
-            fragments[2] = GtdFragment.newInstance();
+//            fragments[2] = GtdFragment.newInstance();
+            fragments[2] = DeedsFragment.newInstance();
             fragments[3] = AboutFragment.newInstance();
 
             loadMultipleRootFragment(R.id.fragment_main_fragment_container, prePosition,
@@ -90,7 +92,8 @@ public class MainFragment extends AButterKnifeFragment {
         } else {
             fragments[0] = firstFragment;
             fragments[1] = findChildFragment(NoteFragment.class);
-            fragments[2] = findChildFragment(GtdFragment.class);
+//            fragments[2] = findChildFragment(GtdFragment.class);
+            fragments[2] = findChildFragment(DeedsFragment.class);
             fragments[3] = findChildFragment(AboutFragment.class);
         }
     }

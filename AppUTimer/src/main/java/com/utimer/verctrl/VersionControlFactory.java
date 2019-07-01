@@ -1,6 +1,6 @@
 package com.utimer.verctrl;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import ahtewlg7.utimer.verctrl.BaseConfig;
 import ahtewlg7.utimer.verctrl.IBaseVersionControlFactory;

@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-    <TextView
+    <EditText
         android:id="@+id/view_recycler_simple_deed_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

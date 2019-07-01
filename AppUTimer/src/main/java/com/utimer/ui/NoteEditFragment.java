@@ -1,12 +1,13 @@
 package com.utimer.ui;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -24,13 +25,13 @@ import ahtewlg7.utimer.mvp.NoteEditMvpP;
 import ahtewlg7.utimer.util.DateTimeAction;
 import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MyRInfo;
-import ahtewlg7.utimer.view.BaseUtimerEidtView;
+import ahtewlg7.utimer.view.BaseUtimerEditView;
 import ahtewlg7.utimer.view.md.MdEditView;
 import butterknife.BindView;
 import io.reactivex.Flowable;
 
 public class NoteEditFragment extends ATxtEditFragment
-        implements NoteEditMvpP.INoteEditMvpV, BaseUtimerEidtView.IUtimerAttachEditView{
+        implements NoteEditMvpP.INoteEditMvpV, BaseUtimerEditView.IUtimerAttachEditView{
     public static final String TAG = NoteEditFragment.class.getSimpleName();
 
     public static final String KEY_NOTE = "note";
