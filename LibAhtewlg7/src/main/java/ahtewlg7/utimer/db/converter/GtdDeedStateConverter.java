@@ -12,11 +12,11 @@ public class GtdDeedStateConverter implements PropertyConverter<DeedState,Intege
 
     @Override
     public DeedState convertToEntityProperty(Integer databaseValue) {
-        return DeedState.values()[databaseValue];
+        return DeedState.valueOf(databaseValue);
     }
 
     @Override
     public Integer convertToDatabaseValue(DeedState entityProperty) {
-        return entityProperty.ordinal();
+        return entityProperty.value();
     }
 }
