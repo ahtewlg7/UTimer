@@ -1,10 +1,17 @@
 package com.utimer.view;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.util.AttributeSet;
+import android.view.View;
+import android.widget.EditText;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -15,25 +22,20 @@ import com.utimer.R;
 import java.util.List;
 
 import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
-import ahtewlg7.utimer.gtd.GtdLifeCycleAction;
 import ahtewlg7.utimer.view.ABaseLinearRecyclerView;
 
 public class SimpleDeedRecyclerView extends ABaseLinearRecyclerView<GtdDeedEntity> {
-    private GtdLifeCycleAction gtdActLifeCycleAction;
 
     public SimpleDeedRecyclerView(Context context) {
         super(context);
-        gtdActLifeCycleAction = new GtdLifeCycleAction();
     }
 
     public SimpleDeedRecyclerView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        gtdActLifeCycleAction = new GtdLifeCycleAction();
     }
 
     public SimpleDeedRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        gtdActLifeCycleAction = new GtdLifeCycleAction();
     }
 
     @Override
@@ -60,7 +62,20 @@ public class SimpleDeedRecyclerView extends ABaseLinearRecyclerView<GtdDeedEntit
 
         @Override
         protected void convert(BaseViewHolder helper, GtdDeedEntity item) {
-            helper.setText(R.id.view_recycler_simple_deed_title, item.getTitle().trim());
+            ClickableSpan clickSpan = new MyClickableSpan();
+            SpannableStringBuilder builder = new SpannableStringBuilder(item.getTitle().trim());
+            builder.append("more");
+
+            builder.setSpan(clickSpan, builder.length() - 4, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            helper.setText(R.id.view_recycler_simple_deed_title, builder);
+            ((EditText)helper.getView(R.id.view_recycler_simple_deed_title)).setMovementMethod(LinkMovementMethod.getInstance());
+        }
+    }
+    class MyClickableSpan extends ClickableSpan{
+        @Override
+        public void onClick(@NonNull View widget) {
+            //do nothing
+            int i = 0;
         }
     }
 }
