@@ -1,6 +1,6 @@
 package ahtewlg7.utimer.mvp.rw;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.blankj.utilcode.util.FileUtils;
 import com.google.common.base.Optional;

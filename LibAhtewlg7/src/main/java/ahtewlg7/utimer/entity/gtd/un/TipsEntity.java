@@ -28,7 +28,7 @@ public class TipsEntity extends AUtimerEntity<TipsBuilder> {
     }
 
     @Override
-    protected void initByAttachFile(AAttachFile attachFile) {
+    public void updateAttachFileInfo(AAttachFile attachFile) {
 
     }
 
@@ -43,8 +43,7 @@ public class TipsEntity extends AUtimerEntity<TipsBuilder> {
     }
 
     @Override
-    public IMergerEntity merge(IMergerEntity entity) {
-        return null;
+    public void update(IMergerEntity entity) {
     }
 
     @Override

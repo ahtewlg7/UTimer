@@ -1,7 +1,7 @@
 package ahtewlg7.utimer.log;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import org.acra.config.CoreConfiguration;
 import org.acra.data.CrashReportData;

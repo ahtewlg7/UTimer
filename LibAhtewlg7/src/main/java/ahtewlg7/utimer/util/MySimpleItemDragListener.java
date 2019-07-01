@@ -1,6 +1,6 @@
 package ahtewlg7.utimer.util;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.chad.library.adapter.base.listener.OnItemDragListener;
 

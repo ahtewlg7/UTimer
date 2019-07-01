@@ -20,9 +20,10 @@ class GreenDaoOpenHelper extends DatabaseOpenHelper {
     private static final int DBV_0_0_13  = 4;
     private static final int DBV_0_0_14  = 5;
     private static final int DBV_0_0_17  = 6;
+    private static final int DBV_0_0_18  = 7;
 
     //the DB_VERSION must be same with schemaVersion of greenDao in LibAhtewlg7 build.gradle
-    public static int DB_VERSION = DBV_0_0_17;
+    public static int DB_VERSION = DBV_0_0_18;
 
     public GreenDaoOpenHelper(Context context, String name) {
         super(context, name, DB_VERSION);

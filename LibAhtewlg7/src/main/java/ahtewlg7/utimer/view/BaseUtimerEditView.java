@@ -2,10 +2,10 @@ package ahtewlg7.utimer.view;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -56,7 +56,7 @@ import static ahtewlg7.utimer.enumtype.errcode.NoteEditErrCode.ERR_EDIT_ATTACH_V
 /**
  * Created by lw on 2019/2/3.
  */
-public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
+public class BaseUtimerEditView extends ABaseLinearRecyclerView<EditElement>{
     public static final int INIT_POSITION = -1;
 
     protected int lastAccessPosition    = INIT_POSITION;
@@ -78,17 +78,17 @@ public class BaseUtimerEidtView extends ABaseLinearRecyclerView<EditElement>{
     protected IUtimerAttachEditView attachEditView;
     protected MyClickListener myClickListener;
 
-    public BaseUtimerEidtView(Context context) {
+    public BaseUtimerEditView(Context context) {
         super(context);
         init();
     }
 
-    public BaseUtimerEidtView(Context context, @Nullable AttributeSet attrs) {
+    public BaseUtimerEditView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public BaseUtimerEidtView(Context context, @Nullable AttributeSet attrs, int defStyle) {
+    public BaseUtimerEditView(Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init();
     }

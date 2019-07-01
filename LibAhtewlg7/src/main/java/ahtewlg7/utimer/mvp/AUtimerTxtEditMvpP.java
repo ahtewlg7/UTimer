@@ -1,7 +1,7 @@
 package ahtewlg7.utimer.mvp;
 
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Table;
@@ -113,17 +113,18 @@ public abstract class AUtimerTxtEditMvpP<T extends AUtimerEntity> implements IUt
                                 GtdDeedByUuidFactory.getInstance().getActionByDetail(columnMap.get(0).getMdCharSequence().toString());
                         if (columnMap.size() == 1
                                 && !firstGtdActionOptional.isPresent()) {
-                            GtdDeedByUuidFactory.getInstance().add(gtdActionOptional.get().getUuid(), gtdActionOptional.get());
+                            //new
+//                            GtdDeedByUuidFactory.getInstance().add(gtdActionOptional.get().getUuid(), gtdActionOptional.get());
                             e.onNext(gtdActionOptional.get());
                         } else if (columnMap.size() > 1) {
                             if (firstGtdActionOptional.isPresent() && !eLast.getRawText().equals(eFirst.getMdCharSequence().toString())) {
                                 //means : action is edit
                                 firstGtdActionOptional.get().update(gtdActionOptional.get());
-                                GtdDeedByUuidFactory.getInstance().update(firstGtdActionOptional.get().getUuid(), firstGtdActionOptional.get());
+//                                GtdDeedByUuidFactory.getInstance().update(firstGtdActionOptional.get().getUuid(), firstGtdActionOptional.get());
                                 e.onNext(firstGtdActionOptional.get());
                             } else {
                                 //add
-                                GtdDeedByUuidFactory.getInstance().add(gtdActionOptional.get().getUuid(), gtdActionOptional.get());
+//                                GtdDeedByUuidFactory.getInstance().add(gtdActionOptional.get().getUuid(), gtdActionOptional.get());
                                 e.onNext(gtdActionOptional.get());
                             }
                         }

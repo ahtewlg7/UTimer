@@ -8,8 +8,8 @@ import android.app.RemoteInput;
 import android.content.Intent;
 import android.graphics.drawable.Icon;
 import android.os.Build;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.NonNull;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
 
 import com.blankj.utilcode.util.Utils;
 

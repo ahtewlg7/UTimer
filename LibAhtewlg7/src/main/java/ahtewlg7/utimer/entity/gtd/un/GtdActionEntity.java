@@ -1,25 +1,25 @@
 package ahtewlg7.utimer.entity.gtd.un;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.google.common.base.Optional;
 
 import ahtewlg7.utimer.entity.taskContext.IPosition;
-import ahtewlg7.utimer.enumtype.ActState;
+import ahtewlg7.utimer.enumtype.DeedState;
 import ahtewlg7.utimer.enumtype.GtdType;
 
 public class GtdActionEntity extends AGtdEntity {
     public static final String TAG = GtdActionEntity.class.getSimpleName();
 
     private IPosition position;
-    private ActState actionType;
+    private DeedState actionType;
     private GtdTaskEntity gtdTaskEntity;
 
     @NonNull
     @Override
     public GtdType getGtdType() {
-        return GtdType.ACTION;
+        return GtdType.DEED;
     }
 
 
@@ -31,11 +31,11 @@ public class GtdActionEntity extends AGtdEntity {
         this.position = position;
     }
 
-    public ActState getActionType() {
+    public DeedState getActionType() {
         return actionType;
     }
 
-    public void setActionType(ActState actionType) {
+    public void setActionType(DeedState actionType) {
         this.actionType = actionType;
     }
 

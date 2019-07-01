@@ -1,7 +1,7 @@
 package ahtewlg7.utimer.nlp;
 
 import android.content.res.AssetManager;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.system.ErrnoException;
 import android.system.Os;
 import android.text.TextUtils;

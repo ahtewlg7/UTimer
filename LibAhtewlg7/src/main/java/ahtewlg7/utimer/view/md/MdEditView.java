@@ -24,7 +24,7 @@ import ahtewlg7.utimer.util.MyRInfo;
 import ahtewlg7.utimer.util.MySimpleObserver;
 import ahtewlg7.utimer.verctrl.BaseConfig;
 import ahtewlg7.utimer.verctrl.VcFactoryBuilder;
-import ahtewlg7.utimer.view.BaseUtimerEidtView;
+import ahtewlg7.utimer.view.BaseUtimerEditView;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.subjects.PublishSubject;
 
@@ -36,9 +36,9 @@ public class MdEditView extends FrameLayout {
 
     protected MdEditorWidget editorWidget;
     protected MdEditListener mdEditListener;
-    protected BaseUtimerEidtView editRecyclerView;
+    protected BaseUtimerEditView editRecyclerView;
     protected MyEditModeListener myEditModeListener;
-    protected BaseUtimerEidtView.IUtimerAttachEditView attachEditView;
+    protected BaseUtimerEditView.IUtimerAttachEditView attachEditView;
 
     protected boolean toastEnable;
     protected AUtimerEntity utimerEntity;
@@ -53,7 +53,7 @@ public class MdEditView extends FrameLayout {
         initView();
     }
 
-    public void toSetAttachEditView(BaseUtimerEidtView.IUtimerAttachEditView attachEditView) {
+    public void toSetAttachEditView(BaseUtimerEditView.IUtimerAttachEditView attachEditView) {
         this.attachEditView = attachEditView;
         editRecyclerView.setAttachEditView(attachEditView);
     }
@@ -117,7 +117,7 @@ public class MdEditView extends FrameLayout {
         try{
             layout = new AndrManagerFactory().getLayoutInflater().inflate(R.layout.layout_md_edit, null);
             editorWidget         = (MdEditorWidget)layout.findViewById(R.id.layout_edit_widget);
-            editRecyclerView     = (BaseUtimerEidtView)layout.findViewById(R.id.layout_edit_recycler_view);
+            editRecyclerView     = (BaseUtimerEditView)layout.findViewById(R.id.layout_edit_recycler_view);
 
             mdEditListener       = new MdEditListener();
             myEditModeListener   = new MyEditModeListener();
@@ -507,7 +507,7 @@ public class MdEditView extends FrameLayout {
 
         }*/
     }
-    class MyEditModeListener implements BaseUtimerEidtView.IOnEditModeListener {
+    class MyEditModeListener implements BaseUtimerEditView.IOnEditModeListener {
         @Override
         public void onEditModeOn() {
             editorWidget.setVisibility(View.VISIBLE);

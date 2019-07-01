@@ -1,8 +1,9 @@
 package ahtewlg7.utimer.common;
 
 
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
+
+import androidx.annotation.NonNull;
 
 import com.google.common.base.Optional;
 

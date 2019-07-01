@@ -1,7 +1,8 @@
 package ahtewlg7.utimer.factory;
 
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
+
+import androidx.annotation.NonNull;
 
 import com.blankj.utilcode.util.FileUtils;
 import com.google.common.collect.BiMap;

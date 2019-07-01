@@ -1,6 +1,6 @@
 package ahtewlg7.utimer.entity.gtd;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import ahtewlg7.utimer.db.entity.ShortHandEntityGdBean;
 import ahtewlg7.utimer.entity.AUtimerBuilder;

@@ -1,7 +1,7 @@
 package ahtewlg7.utimer.entity.gtd.un;
 
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;

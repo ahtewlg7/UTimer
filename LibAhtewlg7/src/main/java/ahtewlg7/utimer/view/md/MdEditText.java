@@ -18,7 +18,7 @@ import io.reactivex.annotations.NonNull;
 /**
  * Created by lw on 2016/5/18.
  */
-public class MdEditText extends android.support.v7.widget.AppCompatEditText {
+public class MdEditText extends androidx.appcompat.widget.AppCompatEditText {
     public static  final int INVALID_LINE_INDEX     = -1;
     public static  final int DEFAULT_PADDING_LEFT   = 20;
     public static  final int DEFAULT_PADDING_RIGHT  = 0;

@@ -4,7 +4,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.blankj.utilcode.util.ServiceUtils;
 

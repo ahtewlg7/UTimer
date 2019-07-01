@@ -1,6 +1,6 @@
 package ahtewlg7.utimer.verctrl;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 /**
  * Created by lw on 2017/2/6.

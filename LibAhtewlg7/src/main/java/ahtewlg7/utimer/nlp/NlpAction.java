@@ -1,6 +1,6 @@
 package ahtewlg7.utimer.nlp;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.seg.common.Term;

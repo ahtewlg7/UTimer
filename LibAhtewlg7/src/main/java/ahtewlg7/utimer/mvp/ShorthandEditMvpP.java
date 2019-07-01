@@ -1,6 +1,6 @@
 package ahtewlg7.utimer.mvp;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import org.reactivestreams.Subscription;
 

@@ -1,7 +1,7 @@
 package ahtewlg7.utimer.util;
 
 import android.graphics.Canvas;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.chad.library.adapter.base.listener.OnItemSwipeListener;
 

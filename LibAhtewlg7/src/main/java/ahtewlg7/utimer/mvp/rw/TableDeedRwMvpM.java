@@ -1,6 +1,6 @@
 package ahtewlg7.utimer.mvp.rw;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
 import ahtewlg7.utimer.factory.GtdDeedByUuidFactory;

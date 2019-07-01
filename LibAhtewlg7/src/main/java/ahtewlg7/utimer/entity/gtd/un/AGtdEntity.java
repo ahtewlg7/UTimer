@@ -1,7 +1,8 @@
 package ahtewlg7.utimer.entity.gtd.un;
 
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
+
+import androidx.annotation.NonNull;
 
 import ahtewlg7.utimer.entity.ITipsEntity;
 import ahtewlg7.utimer.entity.un.IUtimerEntity;
