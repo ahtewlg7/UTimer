@@ -6,4 +6,7 @@
 
     <color name="color_light_blue">#00DDB6</color>
     <color name="txt_color">#48495F</color>
+
+    <color name="pink">#ffc0cb</color>
+
 </resources>

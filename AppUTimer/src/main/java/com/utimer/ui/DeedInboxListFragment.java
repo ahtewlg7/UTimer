@@ -5,9 +5,9 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.trello.rxlifecycle2.LifecycleProvider;
 import com.utimer.R;
+import com.utimer.entity.span.DeedSpanMoreTag;
 import com.utimer.view.SimpleDeedRecyclerView;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -20,6 +20,7 @@ import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
 import ahtewlg7.utimer.enumtype.DeedState;
 import ahtewlg7.utimer.factory.EventBusFatory;
 import ahtewlg7.utimer.mvp.BaseDeedListMvpP;
+import ahtewlg7.utimer.span.TextClickableSpan;
 import ahtewlg7.utimer.util.MyRInfo;
 import butterknife.BindView;
 
@@ -50,9 +51,10 @@ public class DeedInboxListFragment extends AButterKnifeFragment implements BaseD
         myClickListener = new MyClickListener();
 
         recyclerView.init(getContext(), null,
-                myClickListener, null,
-                myClickListener,null,
-                null,null);
+                null, null,
+                null,null,
+                null,null,
+                myClickListener);
         listMvpP = new BaseDeedListMvpP(this);
 
         EventBusFatory.getInstance().getDefaultEventBus().register(this);
@@ -190,24 +192,31 @@ public class DeedInboxListFragment extends AButterKnifeFragment implements BaseD
     }
     /**********************************************IGtdActionListMvpV**********************************************/
 
-    class MyClickListener implements BaseQuickAdapter.OnItemClickListener,
-            BaseQuickAdapter.OnItemLongClickListener{
-        //+++++++++++++++++++++++++++++++++++OnItemClickListener+++++++++++++++++++++++++++++++
+    class MyClickListener implements TextClickableSpan.ITextSpanClickListener{
+        /*//+++++++++++++++++++++++++++++++++++OnItemClickListener+++++++++++++++++++++++++++++++
         @Override
         public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
             editIndex = position;
             GtdDeedEntity item = (GtdDeedEntity)adapter.getItem(position);
 //            item.setDeedState(DeedState.MAYBE);
             startForResult(DeedEditFragment.newInstance(item), REQ_EDIT_FRAGMENT);
-
         }
         //+++++++++++++++++++++++++++++++++++OnItemLongClickListener+++++++++++++++++++++++++++++++
         @Override
         public boolean onItemLongClick(BaseQuickAdapter adapter, View view, int position) {
-            /*GtdDeedEntity viewEntity = (GtdDeedEntity)adapter.getItem(position);
+            *//*GtdDeedEntity viewEntity = (GtdDeedEntity)adapter.getItem(position);
             if(viewEntity != null)
-                toCreateDelDialog(viewEntity);*/
+                toCreateDelDialog(viewEntity);*//*
             return false;
+        }*/
+        //+++++++++++++++++++++++++++++++++++ITextSpanClickListener+++++++++++++++++++++++++++++++
+        @Override
+        public void onSpanClick(Object o) {
+            if(o instanceof GtdDeedEntity)
+                startForResult(DeedEditFragment.newInstance((GtdDeedEntity)o), REQ_EDIT_FRAGMENT);
+            else if(o instanceof DeedSpanMoreTag){
+
+            }
         }
     }
     /*private void toCreateDelDialog(final GtdDeedEntity entity){

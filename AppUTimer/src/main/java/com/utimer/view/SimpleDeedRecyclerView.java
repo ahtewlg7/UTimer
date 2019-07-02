@@ -1,30 +1,32 @@
 package com.utimer.view;
 
 import android.content.Context;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
+import android.graphics.Color;
 import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
 import android.util.AttributeSet;
-import android.view.View;
-import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.binaryfork.spanny.Spanny;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chad.library.adapter.base.listener.OnItemDragListener;
 import com.chad.library.adapter.base.listener.OnItemSwipeListener;
 import com.utimer.R;
+import com.utimer.entity.span.DeedSpanMoreTag;
 
 import java.util.List;
 
 import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
+import ahtewlg7.utimer.span.TextClickableSpan;
+import ahtewlg7.utimer.util.MyRInfo;
 import ahtewlg7.utimer.view.ABaseLinearRecyclerView;
 
 public class SimpleDeedRecyclerView extends ABaseLinearRecyclerView<GtdDeedEntity> {
+    private TextClickableSpan.ITextSpanClickListener spanClickListener;
 
     public SimpleDeedRecyclerView(Context context) {
         super(context);
@@ -49,10 +51,28 @@ public class SimpleDeedRecyclerView extends ABaseLinearRecyclerView<GtdDeedEntit
         return new SimpleDeedItemAdapter(entityList);
     }
 
+    @Deprecated
     @Override
-    public void init(Context context, List<GtdDeedEntity> entityList, BaseQuickAdapter.OnItemClickListener itemClickListener, BaseQuickAdapter.OnItemChildClickListener itemChildClickListener, BaseQuickAdapter.OnItemLongClickListener itemLongClickListener, BaseQuickAdapter.OnItemChildLongClickListener itemChildLongClickListener, OnItemSwipeListener itemSwipeListener, OnItemDragListener itemDragListener) {
+    public void init(Context context, List<GtdDeedEntity> entityList,
+                     BaseQuickAdapter.OnItemClickListener itemClickListener,
+                     BaseQuickAdapter.OnItemChildClickListener itemChildClickListener,
+                     BaseQuickAdapter.OnItemLongClickListener itemLongClickListener,
+                     BaseQuickAdapter.OnItemChildLongClickListener itemChildLongClickListener,
+                     OnItemSwipeListener itemSwipeListener,
+                     OnItemDragListener itemDragListener) {
         super.init(context, entityList, itemClickListener, itemChildClickListener, itemLongClickListener, itemChildLongClickListener, itemSwipeListener, itemDragListener);
         setLayoutManager(new LinearLayoutManager(context));
+    }
+    public void init(Context context, List<GtdDeedEntity> entityList,
+                     BaseQuickAdapter.OnItemClickListener itemClickListener,
+                     BaseQuickAdapter.OnItemChildClickListener itemChildClickListener,
+                     BaseQuickAdapter.OnItemLongClickListener itemLongClickListener,
+                     BaseQuickAdapter.OnItemChildLongClickListener itemChildLongClickListener,
+                     OnItemSwipeListener itemSwipeListener,
+                     OnItemDragListener itemDragListener,
+                     TextClickableSpan.ITextSpanClickListener spanClickListener) {
+        init(context, entityList, itemClickListener, itemChildClickListener, itemLongClickListener, itemChildLongClickListener, itemSwipeListener, itemDragListener);
+        this.spanClickListener = spanClickListener;
     }
 
     class SimpleDeedItemAdapter extends BaseItemAdapter<GtdDeedEntity>{
@@ -62,20 +82,11 @@ public class SimpleDeedRecyclerView extends ABaseLinearRecyclerView<GtdDeedEntit
 
         @Override
         protected void convert(BaseViewHolder helper, GtdDeedEntity item) {
-            ClickableSpan clickSpan = new MyClickableSpan();
-            SpannableStringBuilder builder = new SpannableStringBuilder(item.getTitle().trim());
-            builder.append("more");
-
-            builder.setSpan(clickSpan, builder.length() - 4, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            helper.setText(R.id.view_recycler_simple_deed_title, builder);
-            ((EditText)helper.getView(R.id.view_recycler_simple_deed_title)).setMovementMethod(LinkMovementMethod.getInstance());
-        }
-    }
-    class MyClickableSpan extends ClickableSpan{
-        @Override
-        public void onClick(@NonNull View widget) {
-            //do nothing
-            int i = 0;
+            ((TextView)helper.getView(R.id.view_recycler_simple_deed_title)).setMovementMethod(LinkMovementMethod.getInstance());
+            DeedSpanMoreTag moreTag = new DeedSpanMoreTag(item);
+            Spanny spanny = new Spanny().append(item.getTitle().trim(), new TextClickableSpan(item, spanClickListener, Color.WHITE,false))
+                    .append(moreTag.getTagName(), new TextClickableSpan(moreTag, spanClickListener, MyRInfo.getColorByID(R.color.pink),false));
+            helper.setText(R.id.view_recycler_simple_deed_title, spanny);
         }
     }
 }
