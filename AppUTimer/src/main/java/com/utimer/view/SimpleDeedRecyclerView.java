@@ -83,9 +83,12 @@ public class SimpleDeedRecyclerView extends ABaseLinearRecyclerView<GtdDeedEntit
         @Override
         protected void convert(BaseViewHolder helper, GtdDeedEntity item) {
             ((TextView)helper.getView(R.id.view_recycler_simple_deed_title)).setMovementMethod(LinkMovementMethod.getInstance());
+
+            int position  = helper.getLayoutPosition();
             DeedSpanMoreTag moreTag = new DeedSpanMoreTag(item);
-            Spanny spanny = new Spanny().append(item.getTitle().trim(), new TextClickableSpan(item, spanClickListener, Color.WHITE,false))
-                    .append(moreTag.getTagName(), new TextClickableSpan(moreTag, spanClickListener, MyRInfo.getColorByID(R.color.pink),false));
+            Spanny spanny = new Spanny()
+                    .append(item.getTitle().trim(), new TextClickableSpan(item, spanClickListener, Color.WHITE,false, position))
+                    .append(moreTag.getTagName(), new TextClickableSpan(moreTag, spanClickListener, MyRInfo.getColorByID(R.color.pink),false, position));
             helper.setText(R.id.view_recycler_simple_deed_title, spanny);
         }
     }

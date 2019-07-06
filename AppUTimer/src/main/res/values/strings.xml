@@ -22,6 +22,9 @@
     <string name="note_delete_succ">delete note success</string>
     <string name="note_delete_fail">delete note fail</string>
 
+    <string name="span_tag_more">[more]</string>
+
+
     <string name="title_activity_utimer">UTimerActivity</string>
     <string name="title_msg">Msg</string>
     <string name="title_time">Time</string>
@@ -33,9 +36,30 @@
     <string name="title_shorthand_list">ShortHandList</string>
     <string name="title_project">Project</string>
     <string name="title_project_list">ProjectList</string>
+
+
+    <string name="title_deed_tag">Tag</string>
+    <string name="title_deed_tag_trash">Trash</string>
+    <string name="title_deed_tag_reference">Reference</string>
+    <string name="title_deed_tag_wish">Wish</string>
+    <string name="title_deed_tag_two_min">2Min</string>
+    <string name="title_deed_tag_project">Project</string>
+    <string name="title_deed_tag_defer">Defer</string>
+    <string name="title_deed_tag_delegate">Delegate</string>
+    <string name="title_deed_tag_done">Done</string>
+    <string name="title_deed_tag_useless">Useless</string>
+
     <string name="title_deed">Deed</string>
+    <string name="title_deed_tag_maybe">Maybe</string>
     <string name="title_deed_maybe">Maybe</string>
+    <string name="title_deed_trash">trash</string>
     <string name="title_deed_inbox">Inbox</string>
+    <string name="title_deed_reference">Reference</string>
+    <string name="title_deed_wish">Wish</string>
+    <string name="title_deed_two_min">TWO MIN</string>
+    <string name="title_deed_defer">DEFER</string>
+    <string name="title_deed_calendar">Calendar</string>
+    <string name="title_deed_delegate">Delegate</string>
     <string name="title_deed_todo">ToDo</string>
     <string name="title_deed_done">Done</string>
     <string name="title_deed_all">All</string>
@@ -69,9 +93,20 @@
     <string name="prompt_new_project_name">please input the project name</string>
     <string name="prompt_new_note_name">please input the new note name</string>
     <string name="prompt_inbox_msg">let me help you to keep the stuff in your mind</string>
-    <string name="prompt_fast_inbox">less than 50 words</string>
+    <string name="prompt_fast_inbox">please input the msg in 5s</string>
     <string name="prompt_not_ready">"No, Not Yet! I'm Not Ready, Please Wait!" </string>
     <string name="prompt_nlp_wait">AI Working. Please Wait! </string>
+
+    <string name="prompt_deed_tag">To Handle:</string>
+    <string name="prompt_deed_tag_trash">This message is trashed</string>
+    <string name="prompt_deed_tag_useless">This message is useless</string>
+    <string name="prompt_deed_tag_reference">This message may be retrievable when required</string>
+    <string name="prompt_deed_tag_wish">This job no need to do ,but it is meaningful if you fix it</string>
+    <string name="prompt_deed_tag_two_min">This job will be finished in 2min</string>
+    <string name="prompt_deed_tag_project">This job will be finished by many steps</string>
+    <string name="prompt_deed_tag_defer">This job will be finished , and just by yourself</string>
+    <string name="prompt_deed_tag_delegate">This job will be finished , but you can delegate it to someone</string>
+    <string name="prompt_deed_tag_done">This job has been finished</string>
 
     <string name="entity_invalid">the env is not ready , so pop it</string>
 </resources>

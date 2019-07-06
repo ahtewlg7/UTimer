@@ -7,13 +7,17 @@ import android.view.View;
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 
+import static android.widget.AdapterView.INVALID_POSITION;
+
+
 /**
  * Created by lw on 2019/7/2.
  */
 public class TextClickableSpan extends ClickableSpan {
     private @ColorInt Integer linkColor;
-    private Boolean underlineFlag;
+    private int position = INVALID_POSITION;
     private Object target;
+    private Boolean underlineFlag;
     private ITextSpanClickListener spanClickListener;
 
     public TextClickableSpan(ITextSpanClickListener spanClickListener) {
@@ -30,6 +34,15 @@ public class TextClickableSpan extends ClickableSpan {
         this.spanClickListener = spanClickListener;
         this.linkColor         = linkColor;
         this.underlineFlag     = underlineFlag;
+    }
+    public TextClickableSpan(Object target, ITextSpanClickListener spanClickListener,
+                             @ColorInt Integer linkColor, Boolean underlineFlag,
+                             int position) {
+        this.target            = target;
+        this.spanClickListener = spanClickListener;
+        this.linkColor         = linkColor;
+        this.underlineFlag     = underlineFlag;
+        this.position          = position;
     }
 
     public Object getTarget() {
@@ -48,10 +61,10 @@ public class TextClickableSpan extends ClickableSpan {
     @Override
     public void onClick(@NonNull View widget) {
         if(spanClickListener != null)
-            spanClickListener.onSpanClick(target);
+            spanClickListener.onSpanClick(position, target);
     }
 
     public interface ITextSpanClickListener{
-        public void onSpanClick(Object o);
+        public void onSpanClick(int position, Object o);
     }
 }

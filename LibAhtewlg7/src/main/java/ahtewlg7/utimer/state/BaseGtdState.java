@@ -37,17 +37,20 @@ public class BaseGtdState {
     public Optional<BaseEventBusBean> toTrash(@NonNull AUtimerEntity entity){
         return Optional.absent();
     }
+
     public Optional<BaseEventBusBean> toActive(@NonNull AUtimerEntity entity){
         return Optional.absent();
     }
     public Optional<BaseEventBusBean> toBeDone(@NonNull AUtimerEntity entity){
         return Optional.absent();
     }
-
+    public Optional<BaseEventBusBean> toBeUseless(@NonNull AUtimerEntity entity){
+        return Optional.absent();
+    }
     public Optional<BaseEventBusBean> toBeReference(@NonNull AUtimerEntity entity){
         return Optional.absent();
     }
-    //it l be done in 2 mins
+    //it will be done in 2 mins
     public Optional<BaseEventBusBean> toBe2MinJob(@NonNull AUtimerEntity entity){
         return Optional.absent();
     }

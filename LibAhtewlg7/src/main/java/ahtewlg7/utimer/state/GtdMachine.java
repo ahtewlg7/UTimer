@@ -30,10 +30,10 @@ public class GtdMachine {
     public BaseGtdState getCurrState(AUtimerEntity entity){
         if(entity == null )
             return baseState;
-        if(entity.getGtdType() == GtdType.DEED){
+        if(entity.getGtdType() == GtdType.DEED
+                && ((GtdDeedEntity)entity).getDeedState() == DeedState.MAYBE){
             return actMaybeState;
-        }else if(entity.getGtdType() == GtdType.DEED
-                && ((GtdDeedEntity)entity).getDeedState() == DeedState.INBOX){
+        }else if(entity.getGtdType() == GtdType.DEED){
             return actGtdState;
         }else
             return baseState;

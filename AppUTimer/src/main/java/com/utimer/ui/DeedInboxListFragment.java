@@ -3,17 +3,21 @@ package com.utimer.ui;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.common.collect.Sets;
 import com.trello.rxlifecycle2.LifecycleProvider;
 import com.utimer.R;
 import com.utimer.entity.span.DeedSpanMoreTag;
+import com.utimer.view.DeedTagBottomSheetDialog;
 import com.utimer.view.SimpleDeedRecyclerView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
+import java.util.Set;
 
 import ahtewlg7.utimer.entity.busevent.DeedBusEvent;
 import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
@@ -24,6 +28,16 @@ import ahtewlg7.utimer.span.TextClickableSpan;
 import ahtewlg7.utimer.util.MyRInfo;
 import butterknife.BindView;
 
+import static ahtewlg7.utimer.enumtype.DeedState.DEFER;
+import static ahtewlg7.utimer.enumtype.DeedState.DELEGATE;
+import static ahtewlg7.utimer.enumtype.DeedState.DONE;
+import static ahtewlg7.utimer.enumtype.DeedState.INBOX;
+import static ahtewlg7.utimer.enumtype.DeedState.PROJECT;
+import static ahtewlg7.utimer.enumtype.DeedState.REFERENCE;
+import static ahtewlg7.utimer.enumtype.DeedState.TRASH;
+import static ahtewlg7.utimer.enumtype.DeedState.TWO_MIN;
+import static ahtewlg7.utimer.enumtype.DeedState.USELESS;
+import static ahtewlg7.utimer.enumtype.DeedState.WISH;
 import static com.utimer.common.Constants.REQ_EDIT_FRAGMENT;
 
 public class DeedInboxListFragment extends AButterKnifeFragment implements BaseDeedListMvpP.IBaseDeedMvpV {
@@ -35,6 +49,7 @@ public class DeedInboxListFragment extends AButterKnifeFragment implements BaseD
     private int editIndex = -1;
     private BaseDeedListMvpP listMvpP;
     private MyClickListener myClickListener;
+    private DeedTagBottomSheetDialog bottomSheetDialog;
 
     public static DeedInboxListFragment newInstance() {
         Bundle args = new Bundle();
@@ -75,13 +90,14 @@ public class DeedInboxListFragment extends AButterKnifeFragment implements BaseD
     @Override
     public void onLazyInitView(@Nullable Bundle savedInstanceState) {
         super.onLazyInitView(savedInstanceState);
-        listMvpP.toLoadDeedByState(DeedState.INBOX);
+        listMvpP.toLoadDeedByState(INBOX);
     }
 
     @Override
-    public void onNewBundle(Bundle args) {
-        super.onNewBundle(args);
-        listMvpP.toLoadDeedByState(DeedState.INBOX);
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if(!hidden)
+            listMvpP.toLoadDeedByState(INBOX);
     }
 
     @Override
@@ -117,7 +133,6 @@ public class DeedInboxListFragment extends AButterKnifeFragment implements BaseD
 
     @Override
     public void onLoadStart(DeedState state) {
-
     }
 
     @Override
@@ -128,12 +143,37 @@ public class DeedInboxListFragment extends AButterKnifeFragment implements BaseD
 
     @Override
     public void onLoadErr(DeedState state, Throwable err) {
-
     }
 
     @Override
     public void onLoadEnd(DeedState state) {
+    }
 
+    @Override
+    public void onTagStart(GtdDeedEntity entity, DeedState toState) {
+    }
+
+    @Override
+    public void onTagSucc(GtdDeedEntity entity, DeedState toState,int position) {
+        recyclerView.removeData(entity);
+    }
+
+    @Override
+    public void onTagFail(GtdDeedEntity entity, DeedState toState) {
+        if(bottomSheetDialog.isShowing())
+            bottomSheetDialog.dismiss();
+    }
+
+    @Override
+    public void onTagErr(GtdDeedEntity entity, DeedState toState, Throwable err) {
+        if(bottomSheetDialog.isShowing())
+            bottomSheetDialog.dismiss();
+    }
+
+    @Override
+    public void onTagEnd(GtdDeedEntity entity, DeedState toState) {
+        if(bottomSheetDialog.isShowing())
+            bottomSheetDialog.dismiss();
     }
 
     /**********************************************IGtdActionListMvpV**********************************************//*
@@ -192,7 +232,8 @@ public class DeedInboxListFragment extends AButterKnifeFragment implements BaseD
     }
     /**********************************************IGtdActionListMvpV**********************************************/
 
-    class MyClickListener implements TextClickableSpan.ITextSpanClickListener{
+    class MyClickListener implements TextClickableSpan.ITextSpanClickListener,
+            DeedTagBottomSheetDialog.OnItemClickListener {
         /*//+++++++++++++++++++++++++++++++++++OnItemClickListener+++++++++++++++++++++++++++++++
         @Override
         public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
@@ -211,12 +252,16 @@ public class DeedInboxListFragment extends AButterKnifeFragment implements BaseD
         }*/
         //+++++++++++++++++++++++++++++++++++ITextSpanClickListener+++++++++++++++++++++++++++++++
         @Override
-        public void onSpanClick(Object o) {
+        public void onSpanClick(int position, Object o) {
             if(o instanceof GtdDeedEntity)
                 startForResult(DeedEditFragment.newInstance((GtdDeedEntity)o), REQ_EDIT_FRAGMENT);
-            else if(o instanceof DeedSpanMoreTag){
-
-            }
+            else if(o instanceof DeedSpanMoreTag)
+                createBottomSheet(((DeedSpanMoreTag)o).getDeedEntity(), position);
+        }
+        //+++++++++++++++++++++++++++++++++++OnItemClickListener+++++++++++++++++++++++++++++++
+        @Override
+        public void onTagClick(int position, DeedState deedState) {
+            listMvpP.toTagDeed((GtdDeedEntity) recyclerView.getAdapter().getItem(position), deedState, position);
         }
     }
     /*private void toCreateDelDialog(final GtdDeedEntity entity){
@@ -237,4 +282,25 @@ public class DeedInboxListFragment extends AButterKnifeFragment implements BaseD
                 }
             }).show();
     }*/
+
+    private void createBottomSheet(@NonNull GtdDeedEntity deedEntity, int position){
+        if (bottomSheetDialog == null) {
+            bottomSheetDialog = new DeedTagBottomSheetDialog(getContext());
+            bottomSheetDialog.setOnItemClickListener(myClickListener);
+        }
+        bottomSheetDialog.toShow(getTagState(), position);
+    }
+    private Set<DeedState> getTagState(){
+        Set<DeedState> set = Sets.newLinkedHashSet();
+        set.add(TWO_MIN);
+        set.add(DEFER);
+        set.add(DELEGATE);
+        set.add(PROJECT);
+        set.add(WISH);
+        set.add(REFERENCE);
+        set.add(DONE);
+        set.add(USELESS);
+        set.add(TRASH);
+        return set;
+    }
 }
