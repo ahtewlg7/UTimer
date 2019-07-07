@@ -18,6 +18,9 @@
     <string name="title_project">工程</string>
     <string name="title_project_list">工程清单</string>
 
+    <string name="title_deed_list_todo">待做清单</string>
+    <string name="title_deed_list_undo">不做清单</string>
+
     <string name="title_deed_tag">标记</string>
     <string name="title_deed_tag_trash">清除</string>
     <string name="title_deed_tag_reference">原材料</string>
@@ -30,23 +33,6 @@
     <string name="title_deed_tag_useless">已无效</string>
 
     <string name="title_deed">计划</string>
-    <string name="title_deed_maybe">待确认</string>
-    <string name="title_deed_trash">待删除</string>
-    <string name="title_deed_inbox">待分类</string>
-    <string name="title_deed_reference">素材库</string>
-    <string name="title_deed_wish">愿望库</string>
-    <string name="title_deed_two_min">2分钟完成</string>
-    <string name="title_deed_defer">延迟执行</string>
-    <string name="title_deed_calendar">日历</string>
-    <string name="title_deed_delegate">授权别人</string>
-    <string name="title_deed_todo">待处理</string>
-    <string name="title_deed_done">已完成</string>
-    <string name="title_deed_all">所有</string>
-    <string name="title_deed_undo">未完成</string>
-    <string name="title_deed_list">任务清单</string>
-    <string name="title_deed_maybe_list">待确认清单</string>
-    <string name="title_deed_todo_list">待处理清单</string>
-    <string name="title_deed_done_list">已完成清单</string>
     <string name="title_notify_fast_inbox">清空大脑</string>
     <string name="title_notify_action_fast_inbox">速记</string>
 

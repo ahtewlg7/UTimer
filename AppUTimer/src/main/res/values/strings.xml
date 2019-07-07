@@ -38,6 +38,8 @@
     <string name="title_project_list">ProjectList</string>
 
 
+    <string name="title_deed_list_todo">ToDoList</string>
+    <string name="title_deed_list_undo">UnDoList</string>
     <string name="title_deed_tag">Tag</string>
     <string name="title_deed_tag_trash">Trash</string>
     <string name="title_deed_tag_reference">Reference</string>
@@ -50,25 +52,6 @@
     <string name="title_deed_tag_useless">Useless</string>
 
     <string name="title_deed">Deed</string>
-    <string name="title_deed_tag_maybe">Maybe</string>
-    <string name="title_deed_maybe">Maybe</string>
-    <string name="title_deed_trash">trash</string>
-    <string name="title_deed_inbox">Inbox</string>
-    <string name="title_deed_reference">Reference</string>
-    <string name="title_deed_wish">Wish</string>
-    <string name="title_deed_two_min">TWO MIN</string>
-    <string name="title_deed_defer">DEFER</string>
-    <string name="title_deed_calendar">Calendar</string>
-    <string name="title_deed_delegate">Delegate</string>
-    <string name="title_deed_todo">ToDo</string>
-    <string name="title_deed_done">Done</string>
-    <string name="title_deed_all">All</string>
-    <string name="title_deed_undo">Undo</string>
-    <string name="title_deed_list">ActionList</string>
-    <string name="title_deed_maybe_list">MaybeList</string>
-    <string name="title_deed_inbox_list">InboxList</string>
-    <string name="title_deed_todo_list">TodoList</string>
-    <string name="title_deed_done_list">DoneList</string>
     <string name="title_notify_fast_inbox">Clear Your Mind</string>
     <string name="title_notify_action_fast_inbox">inbox</string>
 
@@ -107,6 +90,7 @@
     <string name="prompt_deed_tag_defer">This job will be finished , and just by yourself</string>
     <string name="prompt_deed_tag_delegate">This job will be finished , but you can delegate it to someone</string>
     <string name="prompt_deed_tag_done">This job has been finished</string>
+    <string name="prompt_tag_fail">tag failed, please try again</string>
 
     <string name="entity_invalid">the env is not ready , so pop it</string>
 </resources>

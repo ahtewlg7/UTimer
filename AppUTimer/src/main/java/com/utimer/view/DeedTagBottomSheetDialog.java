@@ -27,7 +27,7 @@ import ahtewlg7.utimer.util.AndrManagerFactory;
 public class DeedTagBottomSheetDialog extends BottomSheetDialog {
     public static final int DEFAULT_SPAN_COUNT = 5;
 
-    private int position;
+    private int entityIndex;
     private TagAdapter tagAdapter;
     private OnItemClickListener onItemClickListener;
 
@@ -50,8 +50,8 @@ public class DeedTagBottomSheetDialog extends BottomSheetDialog {
         this.onItemClickListener = onItemClickListener;
     }
 
-    public void toShow(@NonNull Set<DeedState> deedStateSet, int position){
-        this.position = position;
+    public void toShow(@NonNull Set<DeedState> deedStateSet, int entityIndex){
+        this.entityIndex = entityIndex;
 
         View view = new AndrManagerFactory().getLayoutInflater().inflate(R.layout.layout_bottom_sheet_more,null);
         RecyclerView recyclerView = (RecyclerView)view.findViewById(R.id.layout_bottom_sheet_more_recyclerView);
@@ -63,8 +63,8 @@ public class DeedTagBottomSheetDialog extends BottomSheetDialog {
     }
 
     private void initView(){
-        setCancelable(false);
-        setCanceledOnTouchOutside(false);
+        setCancelable(true);
+        setCanceledOnTouchOutside(true);
     }
     private List<TagViewEntity> getTagView(@NonNull Set<DeedState> deedStateSet){
         List<TagViewEntity> tagViewEntityList = Lists.newArrayList();
@@ -96,7 +96,7 @@ public class DeedTagBottomSheetDialog extends BottomSheetDialog {
                 @Override
                 public void onClick(View v) {
                     if(onItemClickListener != null)
-                        onItemClickListener.onTagClick(position, entity.getDeedState());
+                        onItemClickListener.onTagClick(entityIndex, entity.getDeedState());
                 }
             });
         }

@@ -16,7 +16,7 @@ public enum DeedState {
     CALENDAR(8),
     DELEGATE(9),
     DONE(3),
-    USELESS(11),;
+    USELESS(11);
 
     private int value;
 

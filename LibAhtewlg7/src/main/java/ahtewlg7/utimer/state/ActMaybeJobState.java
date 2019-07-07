@@ -10,7 +10,6 @@ import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
 import ahtewlg7.utimer.enumtype.DeedState;
 
 import static ahtewlg7.utimer.enumtype.DeedState.INBOX;
-import static ahtewlg7.utimer.enumtype.DeedState.TRASH;
 
 /**
  * Created by lw on 2019/4/6.
@@ -25,7 +24,7 @@ public class ActMaybeJobState extends BaseJobState {
     public Optional<BaseEventBusBean> toTrash(@NonNull AUtimerEntity entity) {
         if(!ifActHandlable(entity) || !toTrashable((GtdDeedEntity)entity))
             return Optional.absent();
-        return updateState(TRASH, entity);
+        return removeState(entity);
     }
 
     @Override

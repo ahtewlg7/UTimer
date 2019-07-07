@@ -22,6 +22,14 @@ class BaseJobState extends BaseGtdState {
         super(gtdMachine);
     }
 
+    protected Optional<BaseEventBusBean> removeState(@NonNull AUtimerEntity entity){
+        DeedBusEvent busEvent = new DeedBusEvent(GtdBusEventType.DELETE, (GtdDeedEntity) entity);
+        Optional<BaseEventBusBean> eventOptional = toPostEvent(entity, busEvent);
+        if(eventOptional.isPresent())
+            GtdDeedByUuidFactory.getInstance().remove(entity.getUuid());
+        return eventOptional;
+    }
+
     protected Optional<BaseEventBusBean> updateState(@NonNull DeedState state , @NonNull AUtimerEntity entity){
         DeedState preState =  ((GtdDeedEntity) entity).getDeedState();
         ((GtdDeedEntity) entity).setDeedState(state);
