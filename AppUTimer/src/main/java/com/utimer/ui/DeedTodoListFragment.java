@@ -1,48 +1,58 @@
 package com.utimer.ui;
 
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.blankj.utilcode.util.ToastUtils;
-import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.google.common.collect.Sets;
 import com.trello.rxlifecycle2.LifecycleProvider;
 import com.utimer.R;
-import com.utimer.view.GtdDeedTodoRecyclerView;
+import com.utimer.entity.span.DeedSpanMoreTag;
+import com.utimer.view.DeedTagBottomSheetDialog;
+import com.utimer.view.SimpleDeedRecyclerView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
+import java.util.Set;
 
 import ahtewlg7.utimer.entity.busevent.DeedBusEvent;
 import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
+import ahtewlg7.utimer.enumtype.DeedState;
 import ahtewlg7.utimer.factory.EventBusFatory;
-import ahtewlg7.utimer.mvp.un.DeedTodoListMvpP;
+import ahtewlg7.utimer.mvp.BaseDeedListMvpP;
+import ahtewlg7.utimer.span.TextClickableSpan;
 import ahtewlg7.utimer.util.MyRInfo;
 import butterknife.BindView;
-import io.reactivex.Flowable;
 
+import static ahtewlg7.utimer.enumtype.DeedState.DEFER;
+import static ahtewlg7.utimer.enumtype.DeedState.DELEGATE;
+import static ahtewlg7.utimer.enumtype.DeedState.DONE;
+import static ahtewlg7.utimer.enumtype.DeedState.INBOX;
+import static ahtewlg7.utimer.enumtype.DeedState.MAYBE;
+import static ahtewlg7.utimer.enumtype.DeedState.PROJECT;
+import static ahtewlg7.utimer.enumtype.DeedState.REFERENCE;
+import static ahtewlg7.utimer.enumtype.DeedState.TRASH;
+import static ahtewlg7.utimer.enumtype.DeedState.TWO_MIN;
+import static ahtewlg7.utimer.enumtype.DeedState.USELESS;
+import static ahtewlg7.utimer.enumtype.DeedState.WISH;
 import static com.utimer.common.Constants.REQ_EDIT_FRAGMENT;
-import static com.utimer.common.Constants.REQ_NEW_FRAGMENT;
 
-public class DeedTodoListFragment extends AToolbarBkFragment implements DeedTodoListMvpP.IGtdTodoActionListMvpV {
+public class DeedTodoListFragment extends AButterKnifeFragment implements BaseDeedListMvpP.IBaseDeedMvpV {
     public static final int INIT_POSITION = -1;
 
-    @BindView(R.id.fragment_gtd_todo_list_toolbar)
-    Toolbar toolbar;
-    @BindView(R.id.fragment_gtd_todo_list_recycler_view)
-    GtdDeedTodoRecyclerView recyclerView;
+    @BindView(R.id.fragment_deed_simple_list_recycler_view)
+    SimpleDeedRecyclerView recyclerView;
 
     private int editIndex = -1;
-    private DeedTodoListMvpP listMvpP;
+    private DeedState[] todoState;
+    private BaseDeedListMvpP listMvpP;
     private MyClickListener myClickListener;
+    private DeedTagBottomSheetDialog bottomSheetDialog;
 
     public static DeedTodoListFragment newInstance() {
         Bundle args = new Bundle();
@@ -56,10 +66,15 @@ public class DeedTodoListFragment extends AToolbarBkFragment implements DeedTodo
     public void onViewCreated(View inflateView) {
         super.onViewCreated(inflateView);
 
+        todoState       = new DeedState[]{INBOX, MAYBE,TWO_MIN, DEFER, DELEGATE};
         myClickListener = new MyClickListener();
 
-        recyclerView.init(getContext(), null, myClickListener, myClickListener,myClickListener,null,null,null);
-        listMvpP = new DeedTodoListMvpP(this);
+        recyclerView.init(getContext(), null,
+                null, null,
+                null,null,
+                null,null,
+                myClickListener);
+        listMvpP = new BaseDeedListMvpP(this);
 
         EventBusFatory.getInstance().getDefaultEventBus().register(this);
     }
@@ -79,96 +94,92 @@ public class DeedTodoListFragment extends AToolbarBkFragment implements DeedTodo
     @Override
     public void onLazyInitView(@Nullable Bundle savedInstanceState) {
         super.onLazyInitView(savedInstanceState);
-        listMvpP.toLoadAllItem();
+        listMvpP.toLoadDeedByState(todoState);
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if(!hidden)
+            listMvpP.toLoadDeedByState(todoState);
     }
 
     @Override
     public void onFragmentResult(int requestCode, int resultCode, Bundle data) {
         super.onFragmentResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && data != null) {
-            GtdDeedEntity shorthandEntity = (GtdDeedEntity) data.getSerializable(ShortHandEditFragment.KEY_SHORTHAND);
-            if (shorthandEntity != null && requestCode == REQ_NEW_FRAGMENT)
-                onItemCreate(shorthandEntity);
-            else if (shorthandEntity != null && requestCode == REQ_EDIT_FRAGMENT) {
-                onItemEdit(shorthandEntity);
+        /*if (resultCode == RESULT_OK && data != null) {
+            GtdDeedEntity entity = (GtdDeedEntity) data.getSerializable(DeedEditFragment.KEY_ACTION);
+            if (entity != null && requestCode == REQ_NEW_FRAGMENT)
+                onItemCreate(entity);
+            else if (entity != null && requestCode == REQ_EDIT_FRAGMENT) {
+                onItemEdit(entity);
             }
-        }
-    }
-
-    @Override
-    public void onNewBundle(Bundle args) {
-        super.onNewBundle(args);
-        listMvpP.toLoadAllItem();
+        }*/
     }
 
     /**********************************************AToolbarBkFragment**********************************************/
 
     @Override
     public int getLayoutRid() {
-        return R.layout.fragment_gtd_todo_list;
+        return R.layout.fragment_deed_simple_list;
     }
 
     @Override
     protected String getTitle() {
-        return MyRInfo.getStringByID(R.string.title_deed_todo_list);
+        return MyRInfo.getStringByID(R.string.title_deed_list_todo);
     }
 
-    @Override
-    protected int getMenuRid() {
-        return R.menu.tool_menu;
-    }
-
-    @NonNull
-    @Override
-    protected Toolbar getToolbar() {
-        return toolbar;
-    }
-
-    @Override
-    protected void initToolbar() {
-        toolbar.setTitle(getTitle());
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        boolean result = false;
-        switch (item.getItemId()) {
-            case R.id.tool_menu_add:
-                startForResult(ShortHandEditFragment.newInstance(null), REQ_NEW_FRAGMENT);
-                break;
-            default:
-                result = super.onOptionsItemSelected(item);
-                break;
-        }
-        return result;
-    }
-
-    /**********************************************IGtdActionListMvpV**********************************************/
+    /**********************************************IBaseDeedMvpV**********************************************/
     @Override
     public LifecycleProvider getRxLifeCycleBindView() {
         return this;
     }
 
-    /**********************************************IGtdActionListMvpV**********************************************/
     @Override
-    public void onItemLoadStart() {
+    public void onLoadStart() {
     }
 
     @Override
-    public void onItemLoad(GtdDeedEntity data) {
+    public void onLoadSucc(List<GtdDeedEntity> entityList) {
+        if(entityList != null)
+            recyclerView.resetData(entityList);
     }
 
     @Override
-    public void onItemLoadErr(Throwable t) {
+    public void onLoadErr(Throwable err) {
+    }
+
+
+    @Override
+    public void onTagStart(GtdDeedEntity entity, DeedState toState) {
     }
 
     @Override
-    public void onItemLoadEnd(List<GtdDeedEntity> alldata) {
-        if(alldata != null)
-            recyclerView.resetData(alldata);
+    public void onTagSucc(GtdDeedEntity entity, DeedState toState,int position) {
+        recyclerView.removeData(entity);
     }
 
-    /**********************************************IGtdActionListMvpV**********************************************/
+    @Override
+    public void onTagFail(GtdDeedEntity entity, DeedState toState) {
+        ToastUtils.showShort(R.string.prompt_tag_fail);
+        if(bottomSheetDialog.isShowing())
+            bottomSheetDialog.dismiss();
+    }
+
+    @Override
+    public void onTagErr(GtdDeedEntity entity, DeedState toState, Throwable err) {
+        ToastUtils.showShort(R.string.prompt_tag_fail);
+        if(bottomSheetDialog.isShowing())
+            bottomSheetDialog.dismiss();
+    }
+
+    @Override
+    public void onTagEnd(GtdDeedEntity entity, DeedState toState) {
+        if(bottomSheetDialog.isShowing())
+            bottomSheetDialog.dismiss();
+    }
+
+    /**********************************************IGtdActionListMvpV**********************************************//*
     @Override
     public void onItemCreate(GtdDeedEntity data) {
         listMvpP.onItemCreated(data);
@@ -176,12 +187,11 @@ public class DeedTodoListFragment extends AToolbarBkFragment implements DeedTodo
 
     @Override
     public void onItemEdit(GtdDeedEntity data) {
-        if (editIndex != INIT_POSITION)
-            listMvpP.onItemEdited(editIndex, data);
+        onDeleteSucc(INVALID_INDEX, data);
         editIndex = INIT_POSITION;
     }
 
-    /**********************************************IGtdActionListMvpV**********************************************/
+    *//**********************************************IGtdActionListMvpV**********************************************//*
     @Override
     public void resetView(List<GtdDeedEntity> dataList) {
         recyclerView.resetData(dataList);
@@ -191,78 +201,57 @@ public class DeedTodoListFragment extends AToolbarBkFragment implements DeedTodo
     public void resetView(int index, GtdDeedEntity entity) {
         recyclerView.resetData(index, entity);
     }
-
-    /**********************************************IGtdActionListMvpV**********************************************/
-    @Override
-    public void onDeleteSucc(int index , GtdDeedEntity entity) {
-        ToastUtils.showShort(R.string.prompt_del_succ);
-        if(index == INVALID_INDEX)
-            recyclerView.removeData(entity);
-        else
-            recyclerView.removeData(index);
-    }
-
-    @Override
-    public void onDeleteFail(GtdDeedEntity entity) {
-        ToastUtils.showShort(R.string.prompt_del_fail);
-    }
-
-    @Override
-    public void onDeleteErr(Throwable throwable) {
-        ToastUtils.showShort(R.string.prompt_del_err);
-    }
-
-    @Override
-    public void onDeleteEnd() {
-    }
-
     /**********************************************EventBus**********************************************/
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onActionBusEvent(DeedBusEvent eventBus) {
+        listMvpP.toHandleActionEvent(eventBus, todoState);
     }
     /**********************************************IGtdActionListMvpV**********************************************/
 
-    class MyClickListener implements BaseQuickAdapter.OnItemClickListener, BaseQuickAdapter.OnItemChildClickListener,
-            BaseQuickAdapter.OnItemLongClickListener {
+    class MyClickListener implements TextClickableSpan.ITextSpanClickListener,
+            DeedTagBottomSheetDialog.OnItemClickListener {
+        //+++++++++++++++++++++++++++++++++++ITextSpanClickListener+++++++++++++++++++++++++++++++
         @Override
-        public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-            editIndex = position;
-            startForResult(DeedEditFragment.newInstance((GtdDeedEntity) adapter.getData().get(position)), REQ_EDIT_FRAGMENT);
+        public void onSpanClick(int position, Object o) {
+            if(o instanceof GtdDeedEntity)
+                startForResult(DeedEditFragment.newInstance((GtdDeedEntity)o), REQ_EDIT_FRAGMENT);
+            else if(o instanceof DeedSpanMoreTag)
+                createBottomSheet(((DeedSpanMoreTag)o).getDeedEntity(), position);
         }
-
+        //+++++++++++++++++++++++++++++++++++OnItemClickListener+++++++++++++++++++++++++++++++
         @Override
-        public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-            GtdDeedEntity viewEntity = (GtdDeedEntity)adapter.getItem(position);
-            if(viewEntity != null) {
-                editIndex = position;
-                listMvpP.toDoneItem(Flowable.just(viewEntity));
-            }
-        }
-
-        @Override
-        public boolean onItemLongClick(BaseQuickAdapter adapter, View view, int position) {
-            GtdDeedEntity viewEntity = (GtdDeedEntity)adapter.getItem(position);
-            if(viewEntity != null)
-                toCreateDelDialog(viewEntity);
-            return false;
+        public void onTagClick(int position, DeedState deedState) {
+            listMvpP.toTagDeed((GtdDeedEntity) recyclerView.getAdapter().getItem(position), deedState, position);
         }
     }
-    private void toCreateDelDialog(final GtdDeedEntity entity){
-        new MaterialDialog.Builder(getContext()).title(R.string.del)
-            .content(R.string.prompt_del)
-            .negativeText(R.string.no)
-            .positiveText(R.string.yes)
-            .onNegative(new MaterialDialog.SingleButtonCallback() {
-                @Override
-                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                    dialog.dismiss();
-                }
-            })
-            .onPositive(new MaterialDialog.SingleButtonCallback() {
-                @Override
-                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                    listMvpP.toDeleteItem(Flowable.just(entity));
-                }
-            }).show();
+
+    private void createBottomSheet(@NonNull GtdDeedEntity deedEntity, int position){
+        if (bottomSheetDialog == null) {
+            bottomSheetDialog = new DeedTagBottomSheetDialog(getContext());
+            bottomSheetDialog.setOnItemClickListener(myClickListener);
+        }
+        bottomSheetDialog.toShow(getTagState(), position);
     }
+
+    private Set<DeedState> getTagState(){
+        Set<DeedState> set = Sets.newLinkedHashSet();
+        set.add(TWO_MIN);
+        set.add(DEFER);
+        set.add(DELEGATE);
+        set.add(PROJECT);
+        set.add(WISH);
+        set.add(REFERENCE);
+        set.add(DONE);
+        set.add(USELESS);
+        set.add(TRASH);
+        return set;
+    }
+
+     /*TRASH(1),
+                REFERENCE(10),
+                WISH(4),
+                PROJECT(6),
+                CALENDAR(8),
+                DONE(3),
+                USELESS(11);*/
 }

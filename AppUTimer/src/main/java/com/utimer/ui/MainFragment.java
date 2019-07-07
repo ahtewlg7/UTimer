@@ -57,8 +57,8 @@ public class MainFragment extends AButterKnifeFragment {
         if (resultCode == RESULT_OK) {
             if (requestCode == REQ_NEW_SHORTHAND_FRAGMENT)
                 start(ShortHandListFragment.newInstance(),SINGLETASK);
-            else if(requestCode == REQ_NEW_DEED_FRAGMENT)
-                start(DeedTodoListFragment.newInstance(),SINGLETASK);
+//            else if(requestCode == REQ_NEW_DEED_FRAGMENT)
+//                start(DeedTodoListFragment.newInstance(),SINGLETASK);
         }
     }
 

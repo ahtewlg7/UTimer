@@ -21,10 +21,8 @@ import ahtewlg7.utimer.util.MyRInfo;
 import butterknife.BindView;
 
 import static com.utimer.common.Constants.REQ_NEW_FRAGMENT;
-import static com.utimer.ui.DeedsFragment.DEED_INDEX.DONE;
-import static com.utimer.ui.DeedsFragment.DEED_INDEX.INBOX;
-import static com.utimer.ui.DeedsFragment.DEED_INDEX.MAYBE;
 import static com.utimer.ui.DeedsFragment.DEED_INDEX.TODO;
+import static com.utimer.ui.DeedsFragment.DEED_INDEX.UNDO;
 
 public class DeedsFragment extends AToolbarBkFragment{
     @BindView(R.id.fragment_deeds_toolbar)
@@ -121,10 +119,9 @@ public class DeedsFragment extends AToolbarBkFragment{
     private void initTabLayout(){
         if(tabEntityList == null)
             tabEntityList = Lists.newArrayList();
-        tabEntityList.add(INBOX.value(),new TabLayoutEntity(R.string.title_deed_inbox, 0,0));
-        tabEntityList.add(TODO.value(),new TabLayoutEntity(R.string.title_deed_todo, 0,0));
-        tabEntityList.add(MAYBE.value(),new TabLayoutEntity(R.string.title_deed_maybe, 0,0));
-        tabEntityList.add(DONE.value(),new TabLayoutEntity(R.string.title_deed_done, 0,0));
+        tabEntityList.clear();
+        tabEntityList.add(TODO.value(),new TabLayoutEntity(R.string.title_deed_list_todo, 0,0));
+        tabEntityList.add(UNDO.value(),new TabLayoutEntity(R.string.title_deed_list_undo, 0,0));
 
         tabLayout.setTabData(tabEntityList);
         tabLayout.setOnTabSelectListener(new OnTabSelectListener() {
@@ -142,31 +139,34 @@ public class DeedsFragment extends AToolbarBkFragment{
     }
 
     private void loadFragment(){
-        AButterKnifeFragment firstFragment = findChildFragment(DeedMaybeListFragment.class);
+        AButterKnifeFragment firstFragment = findChildFragment(DeedTodoListFragment.class);
         if (firstFragment == null) {
-            fragments[INBOX.value()]  = DeedInboxListFragment.newInstance();
-            fragments[TODO.value()]   = DeedTodoListFragment.newInstance();
-            fragments[MAYBE.value()]  = DeedMaybeListFragment.newInstance();
-            fragments[DONE.value()]   = DeedDoneListFragment.newInstance();
+            fragments[TODO.value()]  = DeedTodoListFragment.newInstance();
+            fragments[UNDO.value()]  = DeedUndoListFragment.newInstance();
 
             loadMultipleRootFragment(R.id.fragment_deeds_fragment_container, prePosition,
-                    fragments[INBOX.value()],
                     fragments[TODO.value()],
-                    fragments[MAYBE.value()],
-                    fragments[DONE.value()]);
+                    fragments[UNDO.value()]);
         } else {
-            fragments[INBOX.value()] = firstFragment;
-            fragments[TODO.value()]  = findChildFragment(DeedTodoListFragment.class);
-            fragments[MAYBE.value()] = findChildFragment(DeedMaybeListFragment.class);
-            fragments[DONE.value()]  = findChildFragment(DeedDoneListFragment.class);
+            fragments[TODO.value()] = firstFragment;
+            fragments[UNDO.value()]  = findChildFragment(DeedUndoListFragment.class);
         }
     }
 
     enum DEED_INDEX{
-        INBOX(0),
-        TODO(1),
-        MAYBE(2),
-        DONE(3);
+        TODO(0),
+        UNDO(1),
+        INBOX(2),
+        DEFER(3),
+        DELEGATE(4),
+        TWO_MIN(5),
+        PROJECT(6),
+        WISH(7),
+        REFERENCE(8),
+        MAYBE(9),
+        USELESS(10),
+        TRASH(11),
+        DONE(12);
 
         private int value;
         DEED_INDEX(int value) {
@@ -177,15 +177,42 @@ public class DeedsFragment extends AToolbarBkFragment{
             DEED_INDEX tmp = null;
             switch (index){
                 case 0:
-                    tmp = INBOX;
-                    break;
-                case 1:
                     tmp = TODO;
                     break;
+                case 1:
+                    tmp = UNDO;
+                    break;
                 case 2:
-                    tmp = MAYBE;
+                    tmp = INBOX;
                     break;
                 case 3:
+                    tmp = DEFER;
+                    break;
+                case 4:
+                    tmp = DELEGATE;
+                    break;
+                case 5:
+                    tmp = TWO_MIN;
+                    break;
+                case 6:
+                    tmp = PROJECT;
+                    break;
+                case 7:
+                    tmp = WISH;
+                    break;
+                case 8:
+                    tmp = REFERENCE;
+                    break;
+                case 9:
+                    tmp = MAYBE;
+                    break;
+                case 10:
+                    tmp = USELESS;
+                    break;
+                case 11:
+                    tmp = TRASH;
+                    break;
+                case 12:
                     tmp = DONE;
                     break;
             }
