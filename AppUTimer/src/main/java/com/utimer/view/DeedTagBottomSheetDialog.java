@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.common.collect.Lists;
 import com.utimer.R;
+import com.utimer.common.TagTitleFactory;
 
 import java.util.List;
 import java.util.Set;
@@ -121,7 +122,7 @@ public class DeedTagBottomSheetDialog extends BottomSheetDialog {
 
         TagViewEntity(DeedState deedState) {
             this.deedState = deedState;
-            this.strRid    = getStrRid(deedState);
+            this.strRid    = new TagTitleFactory().getTagTitleRid(deedState);
         }
         TagViewEntity(DeedState deedState, int strRid) {
             this.deedState = deedState;
@@ -134,43 +135,6 @@ public class DeedTagBottomSheetDialog extends BottomSheetDialog {
 
         @StringRes int getStrRid() {
             return strRid;
-        }
-
-        @StringRes int getStrRid(DeedState deedState){
-            int tmp = 0;
-            switch(deedState){
-                case TWO_MIN:
-                    tmp = R.string.title_deed_tag_two_min;
-                    break;
-                case DEFER:
-                    tmp = R.string.title_deed_tag_defer;
-                    break;
-                case DELEGATE:
-                    tmp = R.string.title_deed_tag_delegate;
-                    break;
-                case WISH:
-                    tmp = R.string.title_deed_tag_wish;
-                    break;
-                case REFERENCE:
-                    tmp = R.string.title_deed_tag_reference;
-                    break;
-                case PROJECT:
-                    tmp = R.string.title_deed_tag_project;
-                    break;
-                case DONE:
-                    tmp = R.string.title_deed_tag_done;
-                    break;
-                case USELESS:
-                    tmp = R.string.title_deed_tag_useless;
-                    break;
-                case TRASH:
-                    tmp = R.string.title_deed_tag_trash;
-                    break;
-                default:
-                    //todo
-                    break;
-            }
-            return tmp;
         }
     }
 

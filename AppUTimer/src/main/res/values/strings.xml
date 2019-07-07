@@ -22,8 +22,7 @@
     <string name="note_delete_succ">delete note success</string>
     <string name="note_delete_fail">delete note fail</string>
 
-    <string name="span_tag_more">[more]</string>
-
+    <string name="span_tag_more">more</string>
 
     <string name="title_activity_utimer">UTimerActivity</string>
     <string name="title_msg">Msg</string>

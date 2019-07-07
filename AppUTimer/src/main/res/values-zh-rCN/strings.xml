@@ -5,7 +5,7 @@
     <string name="note_name">笔记文件:</string>
     <string name="note_detail">笔记简介:</string>
 
-    <string name="span_tag_more">[更多]</string>
+    <string name="span_tag_more">更多</string>
 
     <string name="title_msg">消息</string>
     <string name="title_time">时间</string>

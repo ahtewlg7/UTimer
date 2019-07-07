@@ -3,6 +3,7 @@ package com.utimer.view;
 import android.content.Context;
 import android.graphics.Color;
 import android.text.method.LinkMovementMethod;
+import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
@@ -15,12 +16,15 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chad.library.adapter.base.listener.OnItemDragListener;
 import com.chad.library.adapter.base.listener.OnItemSwipeListener;
+import com.google.common.base.Optional;
 import com.utimer.R;
+import com.utimer.common.TagTitleFactory;
 import com.utimer.entity.span.DeedSpanMoreTag;
 
 import java.util.List;
 
 import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
+import ahtewlg7.utimer.entity.span.SimpleSpanTag;
 import ahtewlg7.utimer.span.TextClickableSpan;
 import ahtewlg7.utimer.util.MyRInfo;
 import ahtewlg7.utimer.view.ABaseLinearRecyclerView;
@@ -86,9 +90,13 @@ public class SimpleDeedRecyclerView extends ABaseLinearRecyclerView<GtdDeedEntit
 
             int position  = helper.getLayoutPosition();
             DeedSpanMoreTag moreTag = new DeedSpanMoreTag(item);
-            Spanny spanny = new Spanny()
-                    .append(item.getTitle().trim(), new TextClickableSpan(item, spanClickListener, Color.WHITE,false, position))
-                    .append(moreTag.getTagName(), new TextClickableSpan(moreTag, spanClickListener, MyRInfo.getColorByID(R.color.pink),false, position));
+
+            Spanny spanny = new Spanny();
+            Optional<String> currTagOptional = new TagTitleFactory().getTagTitle(item.getDeedState());
+            if(currTagOptional.isPresent())
+                spanny.append(new SimpleSpanTag(currTagOptional.get()).getTagTitle(), new ForegroundColorSpan(Color.GREEN));
+            spanny.append(item.getTitle().trim(), new TextClickableSpan(item, spanClickListener, Color.WHITE,false, position))
+                .append(moreTag.getTagTitle(), new TextClickableSpan(moreTag, spanClickListener, MyRInfo.getColorByID(R.color.pink),false, position));
             helper.setText(R.id.view_recycler_simple_deed_title, spanny);
         }
     }
