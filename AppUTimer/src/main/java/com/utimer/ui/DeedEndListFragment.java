@@ -39,7 +39,6 @@ import static ahtewlg7.utimer.enumtype.DeedState.TRASH;
 import static ahtewlg7.utimer.enumtype.DeedState.TWO_MIN;
 import static ahtewlg7.utimer.enumtype.DeedState.USELESS;
 import static ahtewlg7.utimer.enumtype.DeedState.WISH;
-import static com.utimer.common.Constants.REQ_EDIT_FRAGMENT;
 
 public class DeedEndListFragment extends AButterKnifeFragment implements BaseDeedListMvpP.IBaseDeedMvpV {
     public static final int INIT_POSITION = -1;
@@ -215,9 +214,9 @@ public class DeedEndListFragment extends AButterKnifeFragment implements BaseDee
         //+++++++++++++++++++++++++++++++++++ITextSpanClickListener+++++++++++++++++++++++++++++++
         @Override
         public void onSpanClick(int position, Object o) {
-            if(o instanceof GtdDeedEntity)
+            /*if(o instanceof GtdDeedEntity)
                 startForResult(DeedEditFragment.newInstance((GtdDeedEntity)o), REQ_EDIT_FRAGMENT);
-            else if(o instanceof DeedSpanMoreTag)
+            else */if(o instanceof DeedSpanMoreTag)
                 createBottomSheet(((DeedSpanMoreTag)o).getDeedEntity(), position);
         }
         //+++++++++++++++++++++++++++++++++++OnItemClickListener+++++++++++++++++++++++++++++++

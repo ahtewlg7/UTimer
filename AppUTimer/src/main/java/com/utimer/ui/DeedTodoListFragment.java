@@ -217,9 +217,9 @@ public class DeedTodoListFragment extends AButterKnifeFragment implements BaseDe
         //+++++++++++++++++++++++++++++++++++ITextSpanClickListener+++++++++++++++++++++++++++++++
         @Override
         public void onSpanClick(int position, Object o) {
-            if(o instanceof GtdDeedEntity)
+            /*if(o instanceof GtdDeedEntity)
                 startForResult(DeedEditFragment.newInstance((GtdDeedEntity)o), REQ_EDIT_FRAGMENT);
-            else if(o instanceof DeedSpanMoreTag)
+            else */if(o instanceof DeedSpanMoreTag)
                 createBottomSheet(((DeedSpanMoreTag)o).getDeedEntity(), position);
         }
         //+++++++++++++++++++++++++++++++++++OnItemClickListener+++++++++++++++++++++++++++++++

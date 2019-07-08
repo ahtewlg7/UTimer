@@ -23,7 +23,7 @@ import butterknife.BindView;
 import static com.utimer.common.Constants.REQ_NEW_FRAGMENT;
 import static com.utimer.ui.DeedsFragment.DEED_INDEX.END;
 import static com.utimer.ui.DeedsFragment.DEED_INDEX.TODO;
-import static com.utimer.ui.DeedsFragment.DEED_INDEX.UNDO;
+import static com.utimer.ui.DeedsFragment.DEED_INDEX.MARK;
 
 public class DeedsFragment extends AToolbarBkFragment{
     @BindView(R.id.fragment_deeds_toolbar)
@@ -122,7 +122,7 @@ public class DeedsFragment extends AToolbarBkFragment{
             tabEntityList = Lists.newArrayList();
         tabEntityList.clear();
         tabEntityList.add(TODO.value(), new TabLayoutEntity(R.string.title_deed_list_todo, 0,0));
-        tabEntityList.add(UNDO.value(), new TabLayoutEntity(R.string.title_deed_list_undo, 0,0));
+        tabEntityList.add(MARK.value(), new TabLayoutEntity(R.string.title_deed_list_mark, 0,0));
         tabEntityList.add(END.value(),  new TabLayoutEntity(R.string.title_deed_list_end, 0,0));
 
         tabLayout.setTabData(tabEntityList);
@@ -144,21 +144,21 @@ public class DeedsFragment extends AToolbarBkFragment{
         AButterKnifeFragment firstFragment = findChildFragment(DeedTodoListFragment.class);
         if (firstFragment == null) {
             fragments[TODO.value()]  = DeedTodoListFragment.newInstance();
-            fragments[UNDO.value()]  = DeedUndoListFragment.newInstance();
+            fragments[MARK.value()]  = DeedMarkListFragment.newInstance();
             fragments[END.value()]   = DeedEndListFragment.newInstance();
 
             loadMultipleRootFragment(R.id.fragment_deeds_fragment_container, prePosition,
-                    fragments[TODO.value()], fragments[UNDO.value()],fragments[END.value()]);
+                    fragments[TODO.value()], fragments[MARK.value()],fragments[END.value()]);
         } else {
             fragments[TODO.value()] = firstFragment;
-            fragments[UNDO.value()]  = findChildFragment(DeedUndoListFragment.class);
+            fragments[MARK.value()]  = findChildFragment(DeedMarkListFragment.class);
             fragments[END.value()]  = findChildFragment(DeedEndListFragment.class);
         }
     }
 
     enum DEED_INDEX{
         TODO(0),
-        UNDO(1),
+        MARK(1),
         END(2),
         INBOX(2),
         DEFER(3),
@@ -184,7 +184,7 @@ public class DeedsFragment extends AToolbarBkFragment{
                     tmp = TODO;
                     break;
                 case 1:
-                    tmp = UNDO;
+                    tmp = MARK;
                     break;
                 case 2:
                     tmp = END;
