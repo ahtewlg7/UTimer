@@ -49,4 +49,9 @@ public class DeedInboxState extends DeedBaseState {
     public Optional<BaseEventBusBean> toBeWishJob(@NonNull AUtimerEntity entity){
         return updateState(DeedState.WISH, entity);
     }
+
+    @Override
+    public Optional<BaseEventBusBean> toBeUseless(@NonNull AUtimerEntity entity) {
+        return updateState(DeedState.USELESS, entity);
+    }
 }
