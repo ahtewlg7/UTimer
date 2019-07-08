@@ -21,6 +21,7 @@ import ahtewlg7.utimer.util.MyRInfo;
 import butterknife.BindView;
 
 import static com.utimer.common.Constants.REQ_NEW_FRAGMENT;
+import static com.utimer.ui.DeedsFragment.DEED_INDEX.END;
 import static com.utimer.ui.DeedsFragment.DEED_INDEX.TODO;
 import static com.utimer.ui.DeedsFragment.DEED_INDEX.UNDO;
 
@@ -120,8 +121,9 @@ public class DeedsFragment extends AToolbarBkFragment{
         if(tabEntityList == null)
             tabEntityList = Lists.newArrayList();
         tabEntityList.clear();
-        tabEntityList.add(TODO.value(),new TabLayoutEntity(R.string.title_deed_list_todo, 0,0));
-        tabEntityList.add(UNDO.value(),new TabLayoutEntity(R.string.title_deed_list_undo, 0,0));
+        tabEntityList.add(TODO.value(), new TabLayoutEntity(R.string.title_deed_list_todo, 0,0));
+        tabEntityList.add(UNDO.value(), new TabLayoutEntity(R.string.title_deed_list_undo, 0,0));
+        tabEntityList.add(END.value(),  new TabLayoutEntity(R.string.title_deed_list_end, 0,0));
 
         tabLayout.setTabData(tabEntityList);
         tabLayout.setOnTabSelectListener(new OnTabSelectListener() {
@@ -143,19 +145,21 @@ public class DeedsFragment extends AToolbarBkFragment{
         if (firstFragment == null) {
             fragments[TODO.value()]  = DeedTodoListFragment.newInstance();
             fragments[UNDO.value()]  = DeedUndoListFragment.newInstance();
+            fragments[END.value()]   = DeedEndListFragment.newInstance();
 
             loadMultipleRootFragment(R.id.fragment_deeds_fragment_container, prePosition,
-                    fragments[TODO.value()],
-                    fragments[UNDO.value()]);
+                    fragments[TODO.value()], fragments[UNDO.value()],fragments[END.value()]);
         } else {
             fragments[TODO.value()] = firstFragment;
             fragments[UNDO.value()]  = findChildFragment(DeedUndoListFragment.class);
+            fragments[END.value()]  = findChildFragment(DeedEndListFragment.class);
         }
     }
 
     enum DEED_INDEX{
         TODO(0),
         UNDO(1),
+        END(2),
         INBOX(2),
         DEFER(3),
         DELEGATE(4),
@@ -183,7 +187,7 @@ public class DeedsFragment extends AToolbarBkFragment{
                     tmp = UNDO;
                     break;
                 case 2:
-                    tmp = INBOX;
+                    tmp = END;
                     break;
                 case 3:
                     tmp = DEFER;
