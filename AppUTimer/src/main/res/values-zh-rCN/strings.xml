@@ -19,8 +19,8 @@
     <string name="title_project_list">工程清单</string>
 
     <string name="title_deed_list_todo">待做清单</string>
-    <string name="title_deed_list_undo">不做清单</string>
-    <string name="title_deed_list_end">结束清单</string>
+    <string name="title_deed_list_mark">留意清单</string>
+    <string name="title_deed_list_end">终止清单</string>
 
     <string name="title_deed_tag">标记</string>
     <string name="title_deed_tag_trash">清除</string>
