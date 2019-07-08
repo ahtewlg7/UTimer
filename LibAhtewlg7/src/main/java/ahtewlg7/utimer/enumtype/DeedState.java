@@ -27,6 +27,7 @@ public enum DeedState {
     public static DeedState valueOf(int index){
         DeedState tmp = null;
         switch (index){
+            default:
             case 0:
                 tmp = MAYBE;
                 break;
@@ -59,6 +60,9 @@ public enum DeedState {
                 break;
             case 10:
                 tmp = REFERENCE;
+                break;
+            case 11:
+                tmp = USELESS;
                 break;
         }
         return tmp;
