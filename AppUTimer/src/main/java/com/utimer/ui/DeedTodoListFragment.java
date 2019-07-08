@@ -65,7 +65,7 @@ public class DeedTodoListFragment extends AButterKnifeFragment implements BaseDe
     public void onViewCreated(View inflateView) {
         super.onViewCreated(inflateView);
 
-        workState       = new DeedState[]{INBOX, MAYBE,TWO_MIN, DEFER, DELEGATE};
+        workState       = new DeedState[]{INBOX, MAYBE, TWO_MIN, DEFER, DELEGATE};
         myClickListener = new MyClickListener();
 
         recyclerView.init(getContext(), null,

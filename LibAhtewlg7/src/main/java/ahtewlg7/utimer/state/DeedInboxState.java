@@ -42,7 +42,7 @@ public class DeedInboxState extends DeedBaseState {
         return updateState(DeedState.PROJECT, entity);
     }
     @Override
-    public Optional<BaseEventBusBean> toBeReminderJob(@NonNull AUtimerEntity entity){
+    public Optional<BaseEventBusBean> toBeCalendarJob(@NonNull AUtimerEntity entity){
         return updateState(DeedState.CALENDAR, entity);
     }
     @Override

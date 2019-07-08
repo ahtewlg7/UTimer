@@ -59,7 +59,7 @@ public class GtdBaseState {
         return Optional.absent();
     }
     //it could be reminder by calendar
-    public Optional<BaseEventBusBean> toBeReminderJob(@NonNull AUtimerEntity entity){
+    public Optional<BaseEventBusBean> toBeCalendarJob(@NonNull AUtimerEntity entity){
         return Optional.absent();
     }
     //it will be not fixed, but it is useful
