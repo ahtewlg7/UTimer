@@ -11,14 +11,16 @@ public class GtdMachine {
 
     private static GtdMachine instance;
 
-    private BaseGtdState baseState;
-    private ActMaybeJobState actMaybeState;
-    private ActInboxJobState actGtdState;
+    private GtdBaseState baseState;
+    private DeedMaybeState maybeState;
+    private DeedInboxState inboxState;
+    private DeedDoneState doneState;
 
     private GtdMachine(){
-        baseState       = new BaseGtdState(this);
-        actMaybeState   = new ActMaybeJobState(this);
-        actGtdState     = new ActInboxJobState(this);
+        baseState       = new GtdBaseState(this);
+        maybeState      = new DeedMaybeState(this);
+        inboxState      = new DeedInboxState(this);
+        doneState       = new DeedDoneState(this);
     }
 
     public static GtdMachine getInstance(){
@@ -27,23 +29,47 @@ public class GtdMachine {
         return instance;
     }
 
-    public BaseGtdState getCurrState(AUtimerEntity entity){
-        if(entity == null )
+    public GtdBaseState getCurrState(AUtimerEntity entity){
+        if(entity == null || entity.getGtdType() != GtdType.DEED)
             return baseState;
-        if(entity.getGtdType() == GtdType.DEED
-                && ((GtdDeedEntity)entity).getDeedState() == DeedState.MAYBE){
-            return actMaybeState;
-        }else if(entity.getGtdType() == GtdType.DEED){
-            return actGtdState;
-        }else
-            return baseState;
+        GtdBaseState state = baseState;
+        DeedState deedState = ((GtdDeedEntity)entity).getDeedState();
+        switch (deedState){
+            case MAYBE:
+                state = maybeState;
+                break;
+            case INBOX:
+            case TWO_MIN:
+            case DEFER:
+            case CALENDAR:
+            case DELEGATE:
+            case PROJECT:
+                state = inboxState;
+                break;
+            case DONE:
+                state = doneState;
+                break;
+            default:
+                state = baseState;
+                break;
+            /*TRASH(1),
+                    REFERENCE(10),
+                    WISH(4),
+                    DONE(3),
+                    USELESS(11);*/
+        }
+        return state;
     }
 
-    ActMaybeJobState getActMaybeState() {
-        return actMaybeState;
+    DeedMaybeState getMaybeState() {
+        return maybeState;
     }
 
-    ActInboxJobState getActGtdState() {
-        return actGtdState;
+    DeedInboxState getInboxState() {
+        return inboxState;
+    }
+
+    DeedDoneState getDoneState() {
+        return doneState;
     }
 }

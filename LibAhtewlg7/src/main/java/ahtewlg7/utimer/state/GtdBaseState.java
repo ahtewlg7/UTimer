@@ -17,10 +17,10 @@ import static ahtewlg7.utimer.enumtype.DeedState.INBOX;
 /**
  * Created by lw on 2019/1/19.
  */
-public class BaseGtdState {
+public class GtdBaseState {
     protected GtdMachine gtdMachine;
 
-    BaseGtdState(@NonNull GtdMachine gtdMachine){
+    GtdBaseState(@NonNull GtdMachine gtdMachine){
         this.gtdMachine = gtdMachine;
     }
 

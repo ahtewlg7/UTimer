@@ -16,13 +16,15 @@ import ahtewlg7.utimer.factory.GtdDeedByUuidFactory;
 /**
  * Created by lw on 2019/4/6.
  */
-class BaseJobState extends BaseGtdState {
+class DeedBaseState extends GtdBaseState {
 
-    protected BaseJobState(GtdMachine gtdMachine){
+    protected DeedBaseState(GtdMachine gtdMachine){
         super(gtdMachine);
     }
 
     protected Optional<BaseEventBusBean> removeState(@NonNull AUtimerEntity entity){
+        if(!ifTrashable(entity))
+            return Optional.absent();
         DeedBusEvent busEvent = new DeedBusEvent(GtdBusEventType.DELETE, (GtdDeedEntity) entity);
         Optional<BaseEventBusBean> eventOptional = toPostEvent(entity, busEvent);
         if(eventOptional.isPresent())
@@ -31,6 +33,8 @@ class BaseJobState extends BaseGtdState {
     }
 
     protected Optional<BaseEventBusBean> updateState(@NonNull DeedState state , @NonNull AUtimerEntity entity){
+        if(!ifGtdable(entity))
+            return Optional.absent();
         DeedState preState =  ((GtdDeedEntity) entity).getDeedState();
         ((GtdDeedEntity) entity).setDeedState(state);
         DeedBusEvent busEvent = new DeedBusEvent(GtdBusEventType.SAVE, (GtdDeedEntity) entity);
@@ -43,7 +47,7 @@ class BaseJobState extends BaseGtdState {
     protected Optional<BaseEventBusBean> toPostEvent(AUtimerEntity entity, BaseEventBusBean busEvent){
         if(entity == null || busEvent == null)
             return Optional.absent();
-        if(!ifActHandlable(entity))
+        if(!ifHandlable(entity))
             busEvent.setPerform(false);
         else{
             EventBusFatory.getInstance().getDefaultEventBus().postSticky(busEvent);
@@ -51,15 +55,16 @@ class BaseJobState extends BaseGtdState {
         }
         return Optional.of(busEvent);
     }
-    protected boolean ifActHandlable(AUtimerEntity entity){
+    protected boolean ifHandlable(AUtimerEntity entity){
         return entity != null && entity.ifValid()
                 && entity.getClass().isAssignableFrom(GtdDeedEntity.class) ;
     }
 
-    protected boolean toTrashable(GtdDeedEntity entity){
+    protected boolean ifTrashable(AUtimerEntity entity){
         return false;
     }
-    protected boolean toGtdable(GtdDeedEntity entity){
-        return false;
+    protected boolean ifGtdable(AUtimerEntity entity){
+        return entity != null && entity.ifValid()
+                && entity.getClass().isAssignableFrom(GtdDeedEntity.class) ;
     }
 }

@@ -21,7 +21,7 @@ import ahtewlg7.utimer.enumtype.DeedState;
 import ahtewlg7.utimer.enumtype.GtdBusEventType;
 import ahtewlg7.utimer.factory.EventBusFatory;
 import ahtewlg7.utimer.factory.GtdDeedByUuidFactory;
-import ahtewlg7.utimer.state.BaseGtdState;
+import ahtewlg7.utimer.state.GtdBaseState;
 import ahtewlg7.utimer.state.GtdMachine;
 import ahtewlg7.utimer.util.MySafeSubscriber;
 import io.reactivex.Flowable;
@@ -134,7 +134,7 @@ public class BaseDeedListMvpP {
             Optional<BaseEventBusBean> busBean = Optional.absent();
             if(entity == null || state == null)
                 return Flowable.just(busBean);
-            BaseGtdState currState = GtdMachine.getInstance().getCurrState(entity);
+            GtdBaseState currState = GtdMachine.getInstance().getCurrState(entity);
             switch (state){
                 case TWO_MIN:
                     busBean = currState.toBe2MinJob(entity);
