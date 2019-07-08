@@ -3,7 +3,6 @@ package com.utimer.ui;
 import android.os.Bundle;
 import android.view.View;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.blankj.utilcode.util.ToastUtils;
@@ -217,7 +216,7 @@ public class DeedEndListFragment extends AButterKnifeFragment implements BaseDee
             /*if(o instanceof GtdDeedEntity)
                 startForResult(DeedEditFragment.newInstance((GtdDeedEntity)o), REQ_EDIT_FRAGMENT);
             else */if(o instanceof DeedSpanMoreTag)
-                createBottomSheet(((DeedSpanMoreTag)o).getDeedEntity(), position);
+                createBottomSheet(position);
         }
         //+++++++++++++++++++++++++++++++++++OnItemClickListener+++++++++++++++++++++++++++++++
         @Override
@@ -226,7 +225,7 @@ public class DeedEndListFragment extends AButterKnifeFragment implements BaseDee
         }
     }
 
-    private void createBottomSheet(@NonNull GtdDeedEntity deedEntity, int position){
+    private void createBottomSheet(int position){
         if (bottomSheetDialog == null) {
             bottomSheetDialog = new DeedTagBottomSheetDialog(getContext());
             bottomSheetDialog.setOnItemClickListener(myClickListener);

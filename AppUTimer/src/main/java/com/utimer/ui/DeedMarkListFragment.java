@@ -3,7 +3,6 @@ package com.utimer.ui;
 import android.os.Bundle;
 import android.view.View;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.blankj.utilcode.util.ToastUtils;
@@ -39,7 +38,6 @@ import static ahtewlg7.utimer.enumtype.DeedState.TRASH;
 import static ahtewlg7.utimer.enumtype.DeedState.TWO_MIN;
 import static ahtewlg7.utimer.enumtype.DeedState.USELESS;
 import static ahtewlg7.utimer.enumtype.DeedState.WISH;
-import static com.utimer.common.Constants.REQ_EDIT_FRAGMENT;
 
 public class DeedMarkListFragment extends AButterKnifeFragment implements BaseDeedListMvpP.IBaseDeedMvpV {
     public static final int INIT_POSITION = -1;
@@ -218,7 +216,7 @@ public class DeedMarkListFragment extends AButterKnifeFragment implements BaseDe
             /*if(o instanceof GtdDeedEntity)
                 startForResult(DeedEditFragment.newInstance((GtdDeedEntity)o), REQ_EDIT_FRAGMENT);
             else */if(o instanceof DeedSpanMoreTag)
-                createBottomSheet(((DeedSpanMoreTag)o).getDeedEntity(), position);
+                createBottomSheet(position);
         }
         //+++++++++++++++++++++++++++++++++++OnItemClickListener+++++++++++++++++++++++++++++++
         @Override
@@ -227,7 +225,7 @@ public class DeedMarkListFragment extends AButterKnifeFragment implements BaseDe
         }
     }
 
-    private void createBottomSheet(@NonNull GtdDeedEntity deedEntity, int position){
+    private void createBottomSheet(int position){
         if (bottomSheetDialog == null) {
             bottomSheetDialog = new DeedTagBottomSheetDialog(getContext());
             bottomSheetDialog.setOnItemClickListener(myClickListener);
