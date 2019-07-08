@@ -11,6 +11,7 @@ import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
 import ahtewlg7.utimer.enumtype.DeedState;
 import ahtewlg7.utimer.enumtype.GtdBusEventType;
 import ahtewlg7.utimer.factory.EventBusFatory;
+import ahtewlg7.utimer.factory.GtdDeedByUuidFactory;
 
 /**
  * Created by lw on 2019/4/6.
@@ -25,7 +26,10 @@ class DeedBaseState extends GtdBaseState {
         if(!ifTrashable(entity))
             return Optional.absent();
         DeedBusEvent busEvent = new DeedBusEvent(GtdBusEventType.DELETE, (GtdDeedEntity) entity);
-        return  toPostEvent(entity, busEvent);
+        Optional<BaseEventBusBean> eventOptional = toPostEvent(entity, busEvent);
+        if(eventOptional.isPresent())
+            GtdDeedByUuidFactory.getInstance().remove(entity.getUuid());
+        return eventOptional;
     }
 
     protected Optional<BaseEventBusBean> updateState(@NonNull DeedState state , @NonNull AUtimerEntity entity){
@@ -34,7 +38,10 @@ class DeedBaseState extends GtdBaseState {
         DeedState preState =  ((GtdDeedEntity) entity).getDeedState();
         ((GtdDeedEntity) entity).setDeedState(state);
         DeedBusEvent busEvent = new DeedBusEvent(GtdBusEventType.SAVE, (GtdDeedEntity) entity);
-        return  toPostEvent(entity, busEvent);
+        Optional<BaseEventBusBean> eventOptional = toPostEvent(entity, busEvent);
+        if(eventOptional.isPresent())
+            GtdDeedByUuidFactory.getInstance().updateState(preState, (GtdDeedEntity) entity);
+        return eventOptional;
     }
 
     protected Optional<BaseEventBusBean> toPostEvent(AUtimerEntity entity, BaseEventBusBean busEvent){
