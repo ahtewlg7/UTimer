@@ -17,6 +17,7 @@ import com.utimer.view.SimpleDeedRecyclerView;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -47,7 +48,7 @@ public class DeedEndListFragment extends AButterKnifeFragment implements BaseDee
     SimpleDeedRecyclerView recyclerView;
 
     private int editIndex = -1;
-    private DeedState[] todoState;
+    private DeedState[] workState;
     private BaseDeedListMvpP listMvpP;
     private MyClickListener myClickListener;
     private DeedTagBottomSheetDialog bottomSheetDialog;
@@ -64,7 +65,7 @@ public class DeedEndListFragment extends AButterKnifeFragment implements BaseDee
     public void onViewCreated(View inflateView) {
         super.onViewCreated(inflateView);
 
-        todoState       = new DeedState[]{DONE, TRASH};
+        workState = new DeedState[]{DONE, TRASH};
         myClickListener = new MyClickListener();
 
         recyclerView.init(getContext(), null,
@@ -92,14 +93,14 @@ public class DeedEndListFragment extends AButterKnifeFragment implements BaseDee
     @Override
     public void onLazyInitView(@Nullable Bundle savedInstanceState) {
         super.onLazyInitView(savedInstanceState);
-        listMvpP.toLoadDeedByState(todoState);
+        listMvpP.toLoadDeedByState(workState);
     }
 
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if(!hidden)
-            listMvpP.toLoadDeedByState(todoState);
+            listMvpP.toLoadDeedByState(workState);
     }
 
     @Override
@@ -154,7 +155,10 @@ public class DeedEndListFragment extends AButterKnifeFragment implements BaseDee
 
     @Override
     public void onTagSucc(GtdDeedEntity entity, DeedState toState,int position) {
-        recyclerView.removeData(entity);
+        if(Arrays.asList(workState).contains(toState))
+            recyclerView.resetData(position, entity);
+        else
+            recyclerView.removeData(entity);
     }
 
     @Override
@@ -202,7 +206,7 @@ public class DeedEndListFragment extends AButterKnifeFragment implements BaseDee
     /**********************************************EventBus**********************************************/
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onActionBusEvent(DeedBusEvent eventBus) {
-        listMvpP.toHandleActionEvent(eventBus, todoState);
+        listMvpP.toHandleActionEvent(eventBus, workState);
     }
     /**********************************************IGtdActionListMvpV**********************************************/
 
