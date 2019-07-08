@@ -156,7 +156,7 @@ public class DeedTodoListFragment extends AButterKnifeFragment implements BaseDe
 
     @Override
     public void onTagSucc(GtdDeedEntity entity, DeedState toState,int position) {
-        recyclerView.removeData(entity);
+        recyclerView.resetData(position, entity);
     }
 
     @Override
