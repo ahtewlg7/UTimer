@@ -15,6 +15,8 @@ import ahtewlg7.utimer.util.MyRInfo;
 import butterknife.BindView;
 
 import static com.utimer.common.Constants.REQ_NEW_FRAGMENT;
+import static com.utimer.ui.MainFragment.MAIN_INDEX.DEED;
+import static com.utimer.ui.MainFragment.MAIN_INDEX.NOTE;
 
 public class MainFragment extends AButterKnifeFragment {
     public static final int REQ_NEW_SHORTHAND_FRAGMENT = REQ_NEW_FRAGMENT;
@@ -27,7 +29,7 @@ public class MainFragment extends AButterKnifeFragment {
 
     private int prePosition = 0;
 
-    private AButterKnifeFragment[] fragments = new AButterKnifeFragment[4];
+    private AButterKnifeFragment[] fragments = new AButterKnifeFragment[2];
     private NavigationLinstener navigationLinstener;
 
     public static MainFragment newInstance() {
@@ -81,20 +83,17 @@ public class MainFragment extends AButterKnifeFragment {
     private void loadFragment(){
         AButterKnifeFragment firstFragment = findChildFragment(MsgFragment.class);
         if (firstFragment == null) {
-            fragments[0] = MsgFragment.newInstance();
-            fragments[1] = NoteFragment.newInstance();
-//            fragments[2] = GtdFragment.newInstance();
-            fragments[2] = DeedsFragment.newInstance();
-            fragments[3] = AboutFragment.newInstance();
+            fragments[DEED.value()]  = DeedsFragment.newInstance();
+            fragments[NOTE.value()]  = NoteFragment.newInstance();
+//            fragments[MSG.value()]   = MsgFragment.newInstance();
+//            fragments[ABOUT.value()] = AboutFragment.newInstance();
 
-            loadMultipleRootFragment(R.id.fragment_main_fragment_container, prePosition,
-                    fragments[0],fragments[1],fragments[2],fragments[3]);
+            loadMultipleRootFragment(R.id.fragment_main_fragment_container, prePosition, fragments);
         } else {
-            fragments[0] = firstFragment;
-            fragments[1] = findChildFragment(NoteFragment.class);
-//            fragments[2] = findChildFragment(GtdFragment.class);
-            fragments[2] = findChildFragment(DeedsFragment.class);
-            fragments[3] = findChildFragment(AboutFragment.class);
+            fragments[DEED.value()]  = findChildFragment(DeedsFragment.class);
+            fragments[NOTE.value()]  = findChildFragment(NoteFragment.class);
+//            fragments[MSG.value()]   = firstFragment;
+//            fragments[ABOUT.value()] = findChildFragment(AboutFragment.class);
         }
     }
 
@@ -103,28 +102,63 @@ public class MainFragment extends AButterKnifeFragment {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             boolean result = false;
             switch (item.getItemId()) {
-                case R.id.navigation_msg:
-                    showHideFragment(fragments[0], fragments[prePosition]);
-                    prePosition = 0;
+                case R.id.navigation_gtd:
+                    showHideFragment(fragments[DEED.value()], fragments[prePosition]);
+                    prePosition = DEED.value();
                     result = true;
                     break;
                 case R.id.navigation_note:
-                    showHideFragment(fragments[1], fragments[prePosition]);
-                    prePosition = 1;
+                    showHideFragment(fragments[NOTE.value()], fragments[prePosition]);
+                    prePosition = NOTE.value();
                     result = true;
                     break;
-                case R.id.navigation_gtd:
-                    showHideFragment(fragments[2], fragments[prePosition]);
-                    prePosition = 2;
+                /*case R.id.navigation_msg:
+                    showHideFragment(fragments[MSG.value()], fragments[prePosition]);
+                    prePosition = MSG.value();
                     result = true;
                     break;
                 case R.id.navigation_about:
-                    showHideFragment(fragments[3], fragments[prePosition]);
-                    prePosition = 3;
+                    showHideFragment(fragments[ABOUT.value()], fragments[prePosition]);
+                    prePosition = ABOUT.value();
                     result = true;
-                    break;
+                    break;*/
             }
             return result;
+        }
+    }
+
+    enum MAIN_INDEX{
+        DEED(0),
+        NOTE(1),
+        MSG(2),
+        ABOUT(3);
+
+        private int value;
+        MAIN_INDEX(int value) {
+            this.value = value;
+        }
+
+        static MAIN_INDEX valueOf(int index){
+            MAIN_INDEX tmp = null;
+            switch (index){
+                case 0:
+                    tmp = DEED;
+                    break;
+                case 1:
+                    tmp = NOTE;
+                    break;
+                case 2:
+                    tmp = MSG;
+                    break;
+                case 3:
+                    tmp = ABOUT;
+                    break;
+            }
+            return tmp;
+        }
+
+        int value(){
+            return value;
         }
     }
 }
