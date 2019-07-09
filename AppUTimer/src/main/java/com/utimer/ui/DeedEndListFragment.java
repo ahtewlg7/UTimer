@@ -89,12 +89,6 @@ public class DeedEndListFragment extends AButterKnifeFragment implements BaseDee
     }
 
     @Override
-    public void onLazyInitView(@Nullable Bundle savedInstanceState) {
-        super.onLazyInitView(savedInstanceState);
-        listMvpP.toLoadDeedByState(workState);
-    }
-
-    @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if(!hidden)
