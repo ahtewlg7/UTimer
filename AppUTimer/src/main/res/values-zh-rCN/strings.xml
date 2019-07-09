@@ -49,7 +49,7 @@
 
     <string name="prompt_note_func">速写是单个小而短的笔记\n工程是多个归类在一起的，长而专的笔记集合</string>
     <string name="prompt_gtd_func">Maybe是由AI解析的计划，但它并不一定总是正确\nTodo是亟待处理的确定计划工作</string>
-    <string name="prompt_inbox_msg">请简洁记录下凡需要您用脑的信息</string>
+    <string name="prompt_inbox_msg">请简洁记录下所有需要您用脑的信息</string>
     <string name="prompt_fast_inbox">请花5—10秒快速的完成记录</string>
 
     <string name="prompt_deed_tag">分类:</string>
