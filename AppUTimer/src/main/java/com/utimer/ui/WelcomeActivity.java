@@ -1,17 +1,16 @@
 package com.utimer.ui;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
 import android.view.Window;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.ActivityUtils;
+import com.blankj.utilcode.util.ServiceUtils;
 import com.utimer.R;
 
 import java.util.concurrent.TimeUnit;
 
-import ahtewlg7.utimer.ui.BaseBinderActivity;
-import ahtewlg7.utimer.ui.BinderService;
+import ahtewlg7.utimer.ui.BaseRxActivity;
 import ahtewlg7.utimer.util.Logcat;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,7 +21,7 @@ import io.reactivex.functions.Consumer;
  * Created by lw on 2017/12/27.
  */
 
-public class WelcomeActivity extends BaseBinderActivity {
+public class WelcomeActivity extends BaseRxActivity {
     public static final String TAG = WelcomeActivity.class.getSimpleName();
 
     @BindView(R.id.fullscreen_content)
@@ -37,13 +36,8 @@ public class WelcomeActivity extends BaseBinderActivity {
         Logcat.i(TAG,"onCreate");
         ButterKnife.bind(this);
 
+        ServiceUtils.startService(BaseBinderService.class);
         toDelayFinish();
-    }
-
-    @NonNull
-    @Override
-    protected Class<? extends BinderService> getBinderServiceClass() {
-        return BaseBinderService.class;
     }
 
     private void toDelayFinish(){
