@@ -1,16 +1,17 @@
 package com.utimer.ui;
 
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.View;
+
 import androidx.annotation.MenuRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
-import android.text.TextUtils;
-import android.view.View;
 
 import com.blankj.utilcode.util.ToastUtils;
 import com.google.common.collect.Table;
-import com.trello.rxlifecycle2.LifecycleProvider;
+import com.trello.rxlifecycle3.LifecycleProvider;
 import com.utimer.R;
 
 import java.util.List;

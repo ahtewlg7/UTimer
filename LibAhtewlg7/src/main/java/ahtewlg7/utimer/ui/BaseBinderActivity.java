@@ -4,10 +4,11 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.IBinder;
+
 import androidx.annotation.NonNull;
 
 import com.blankj.utilcode.util.ServiceUtils;
-import com.trello.rxlifecycle2.components.RxActivity;
+import com.trello.rxlifecycle3.components.RxActivity;
 
 import ahtewlg7.utimer.util.Logcat;
 

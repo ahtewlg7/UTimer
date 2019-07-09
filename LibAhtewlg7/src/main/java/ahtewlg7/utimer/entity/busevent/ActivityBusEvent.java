@@ -1,6 +1,7 @@
 package ahtewlg7.utimer.entity.busevent;
 
-import com.trello.rxlifecycle2.android.ActivityEvent;
+
+import com.trello.rxlifecycle3.android.ActivityEvent;
 
 import ahtewlg7.utimer.entity.BaseEventBusBean;
 

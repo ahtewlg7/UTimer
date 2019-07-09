@@ -9,8 +9,8 @@ android {
         applicationId "com.utimer"
         minSdkVersion 24
 //        targetSdkVersion 25
-        versionCode 17
-        versionName "0.0.17"
+        versionCode 18
+        versionName "0.01.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -85,7 +85,6 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     implementation 'com.binaryfork:spanny:1.0.4'
-
 }
 repositories {
     mavenCentral()

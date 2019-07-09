@@ -8,8 +8,8 @@ import android.widget.FrameLayout;
 import com.blankj.utilcode.util.ToastUtils;
 import com.google.common.base.Optional;
 import com.google.common.collect.Table;
-import com.trello.rxlifecycle2.android.FragmentEvent;
-import com.trello.rxlifecycle2.components.support.RxFragment;
+import com.trello.rxlifecycle3.android.FragmentEvent;
+import com.trello.rxlifecycle3.components.support.RxFragment;
 
 import java.util.List;
 

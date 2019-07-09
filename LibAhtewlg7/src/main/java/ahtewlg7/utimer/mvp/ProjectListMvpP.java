@@ -4,8 +4,8 @@ import androidx.annotation.NonNull;
 
 import com.blankj.utilcode.util.FileUtils;
 import com.google.common.collect.Lists;
-import com.trello.rxlifecycle2.android.FragmentEvent;
-import com.trello.rxlifecycle2.components.support.RxFragment;
+import com.trello.rxlifecycle3.android.FragmentEvent;
+import com.trello.rxlifecycle3.components.support.RxFragment;
 
 import org.reactivestreams.Subscription;
 

@@ -7,7 +7,7 @@ import androidx.annotation.Nullable;
 
 import com.blankj.utilcode.util.ToastUtils;
 import com.google.common.collect.Sets;
-import com.trello.rxlifecycle2.LifecycleProvider;
+import com.trello.rxlifecycle3.LifecycleProvider;
 import com.utimer.R;
 import com.utimer.entity.span.DeedSpanMoreTag;
 import com.utimer.view.DeedTagBottomSheetDialog;
