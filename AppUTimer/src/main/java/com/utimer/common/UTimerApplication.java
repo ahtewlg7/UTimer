@@ -3,6 +3,8 @@ package com.utimer.common;
 
 import androidx.annotation.NonNull;
 
+import com.blankj.utilcode.util.ServiceUtils;
+import com.utimer.ui.BaseBinderService;
 import com.utimer.verctrl.VersionControlFactory;
 
 import ahtewlg7.utimer.common.LibContextInit;
@@ -23,6 +25,12 @@ public class UTimerApplication extends MyApplication {
         LibContextInit.initWorkingFileSystem();
         GreenDaoAction.getInstance().init();
     }
+
+    @Override
+    protected void toStartBinderService(){
+        ServiceUtils.startService(BaseBinderService.class);
+    }
+
     @NonNull
     @Override
     public IBaseVersionControlFactory getConfigFactory() {
