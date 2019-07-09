@@ -37,7 +37,7 @@ import static ahtewlg7.utimer.enumtype.DeedState.MAYBE;
 import static ahtewlg7.utimer.enumtype.DeedState.PROJECT;
 import static ahtewlg7.utimer.enumtype.DeedState.REFERENCE;
 import static ahtewlg7.utimer.enumtype.DeedState.TRASH;
-import static ahtewlg7.utimer.enumtype.DeedState.TWO_MIN;
+import static ahtewlg7.utimer.enumtype.DeedState.ONE_QUARTER;
 import static ahtewlg7.utimer.enumtype.DeedState.USELESS;
 import static ahtewlg7.utimer.enumtype.DeedState.WISH;
 
@@ -65,7 +65,7 @@ public class DeedTodoListFragment extends AButterKnifeFragment implements BaseDe
     public void onViewCreated(View inflateView) {
         super.onViewCreated(inflateView);
 
-        workState       = new DeedState[]{INBOX, MAYBE, TWO_MIN, DEFER, DELEGATE};
+        workState       = new DeedState[]{INBOX, MAYBE, ONE_QUARTER, DEFER, DELEGATE};
         myClickListener = new MyClickListener();
 
         recyclerView.init(getContext(), null,
@@ -237,7 +237,7 @@ public class DeedTodoListFragment extends AButterKnifeFragment implements BaseDe
 
     private Set<DeedState> getTagState(){
         Set<DeedState> set = Sets.newLinkedHashSet();
-        set.add(TWO_MIN);
+        set.add(ONE_QUARTER);
         set.add(DEFER);
         set.add(DELEGATE);
         set.add(PROJECT);

@@ -39,7 +39,7 @@ public class GtdMachine {
                 state = maybeState;
                 break;
             case INBOX:
-            case TWO_MIN:
+            case ONE_QUARTER:
             case DEFER:
             case CALENDAR:
             case DELEGATE:

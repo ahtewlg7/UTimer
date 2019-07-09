@@ -24,8 +24,8 @@ public class TagTitleFactory {
     public @StringRes int getTagTitleRid(@NonNull DeedState deedState){
         int tmp = INVALID_TAG_RID;
         switch(deedState){
-            case TWO_MIN:
-                tmp = R.string.title_deed_tag_two_min;
+            case ONE_QUARTER:
+                tmp = R.string.title_deed_tag_quarter;
                 break;
             case DEFER:
                 tmp = R.string.title_deed_tag_defer;

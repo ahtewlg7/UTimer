@@ -136,7 +136,7 @@ public class BaseDeedListMvpP {
                 return Flowable.just(busBean);
             GtdBaseState currState = GtdMachine.getInstance().getCurrState(entity);
             switch (state){
-                case TWO_MIN:
+                case ONE_QUARTER:
                     busBean = currState.toBe2MinJob(entity);
                     break;
                 case DEFER:

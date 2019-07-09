@@ -44,7 +44,7 @@
     <string name="title_deed_tag_trash">Trash</string>
     <string name="title_deed_tag_reference">Reference</string>
     <string name="title_deed_tag_wish">Wish</string>
-    <string name="title_deed_tag_two_min">2Min</string>
+    <string name="title_deed_tag_quarter">15Min</string>
     <string name="title_deed_tag_project">Project</string>
     <string name="title_deed_tag_defer">Defer</string>
     <string name="title_deed_tag_delegate">Delegate</string>

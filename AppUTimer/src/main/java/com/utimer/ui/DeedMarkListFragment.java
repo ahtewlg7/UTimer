@@ -35,7 +35,7 @@ import static ahtewlg7.utimer.enumtype.DeedState.DONE;
 import static ahtewlg7.utimer.enumtype.DeedState.PROJECT;
 import static ahtewlg7.utimer.enumtype.DeedState.REFERENCE;
 import static ahtewlg7.utimer.enumtype.DeedState.TRASH;
-import static ahtewlg7.utimer.enumtype.DeedState.TWO_MIN;
+import static ahtewlg7.utimer.enumtype.DeedState.ONE_QUARTER;
 import static ahtewlg7.utimer.enumtype.DeedState.USELESS;
 import static ahtewlg7.utimer.enumtype.DeedState.WISH;
 
@@ -235,7 +235,7 @@ public class DeedMarkListFragment extends AButterKnifeFragment implements BaseDe
 
     private Set<DeedState> getTagState(){
         Set<DeedState> set = Sets.newLinkedHashSet();
-        set.add(TWO_MIN);
+        set.add(ONE_QUARTER);
         set.add(DEFER);
         set.add(DELEGATE);
         set.add(PROJECT);

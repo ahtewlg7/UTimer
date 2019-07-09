@@ -10,7 +10,7 @@ public enum DeedState {
     INBOX(2),
     REFERENCE(10),
     WISH(4),
-    TWO_MIN(5),
+    ONE_QUARTER(5),
     PROJECT(6),
     DEFER(7),
     CALENDAR(8),
@@ -44,7 +44,7 @@ public enum DeedState {
                 tmp = WISH;
                 break;
             case 5:
-                tmp = TWO_MIN;
+                tmp = ONE_QUARTER;
                 break;
             case 6:
                 tmp = PROJECT;
@@ -76,7 +76,7 @@ public enum DeedState {
         List<DeedState> list = Lists.newArrayList();
         list.add(INBOX);
         list.add(WISH);
-        list.add(TWO_MIN);
+        list.add(ONE_QUARTER);
         list.add(PROJECT);
         list.add(DEFER);
         list.add(CALENDAR);

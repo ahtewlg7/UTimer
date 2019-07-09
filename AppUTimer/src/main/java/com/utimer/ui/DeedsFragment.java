@@ -163,7 +163,7 @@ public class DeedsFragment extends AToolbarBkFragment{
         INBOX(2),
         DEFER(3),
         DELEGATE(4),
-        TWO_MIN(5),
+        ONE_QUARTER(5),
         PROJECT(6),
         WISH(7),
         REFERENCE(8),
@@ -196,7 +196,7 @@ public class DeedsFragment extends AToolbarBkFragment{
                     tmp = DELEGATE;
                     break;
                 case 5:
-                    tmp = TWO_MIN;
+                    tmp = ONE_QUARTER;
                     break;
                 case 6:
                     tmp = PROJECT;

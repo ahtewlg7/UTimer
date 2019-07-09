@@ -27,7 +27,7 @@ public class DeedInboxState extends DeedBaseState {
     }
     @Override
     public Optional<BaseEventBusBean> toBe2MinJob(@NonNull AUtimerEntity entity) {
-        return updateState(DeedState.TWO_MIN, entity);
+        return updateState(DeedState.ONE_QUARTER, entity);
     }
     @Override
     public Optional<BaseEventBusBean> toBeDeferJob(@NonNull AUtimerEntity entity){
