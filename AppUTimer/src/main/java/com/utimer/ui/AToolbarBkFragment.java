@@ -1,14 +1,15 @@
 package com.utimer.ui;
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.View;
+
 import androidx.annotation.MenuRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.View;
 
 
 public abstract class AToolbarBkFragment extends AButterKnifeFragment{
@@ -65,6 +66,7 @@ public abstract class AToolbarBkFragment extends AButterKnifeFragment{
         return (UTimerActivity)getActivity();
     }
 
+    //Default: the "UP" button of toolbar (back to parent) is showed ;
     protected boolean ifHomeButtonShowing(){
         return true;
     }

@@ -48,7 +48,6 @@ public class DeedsFragment extends AToolbarBkFragment{
         super.onViewCreated(inflateView);
 
         initTabLayout();
-        loadFragment();
 //        EventBusFatory.getInstance().getDefaultEventBus().register(this);
     }
     @Override
@@ -67,13 +66,14 @@ public class DeedsFragment extends AToolbarBkFragment{
     @Override
     public void onLazyInitView(@Nullable Bundle savedInstanceState) {
         super.onLazyInitView(savedInstanceState);
+        loadFragment();
     }
 
-    @Override
-    public void onNewBundle(Bundle args) {
-        super.onNewBundle(args);
-//        listMvpP.toLoadAllItem();
-    }
+//    @Override
+//    public void onNewBundle(Bundle args) {
+//        super.onNewBundle(args);
+////        listMvpP.toLoadAllItem();
+//    }
 
     /**********************************************AToolbarBkFragment**********************************************/
 
@@ -101,6 +101,11 @@ public class DeedsFragment extends AToolbarBkFragment{
     @Override
     protected void initToolbar() {
         toolbar.setTitle(getTitle());
+    }
+
+    @Override
+    protected boolean ifHomeButtonShowing() {
+        return false;//not to show the "UP" button of toolbar
     }
 
     @Override
