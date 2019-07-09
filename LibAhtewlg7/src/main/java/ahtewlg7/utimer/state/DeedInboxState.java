@@ -54,4 +54,9 @@ public class DeedInboxState extends DeedBaseState {
     public Optional<BaseEventBusBean> toBeUseless(@NonNull AUtimerEntity entity) {
         return updateState(DeedState.USELESS, entity);
     }
+
+    @Override
+    public Optional<BaseEventBusBean> toTrash(@NonNull AUtimerEntity entity) {
+        return updateState(DeedState.TRASH, entity);
+    }
 }
