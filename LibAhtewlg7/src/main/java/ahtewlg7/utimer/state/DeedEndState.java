@@ -12,20 +12,21 @@ import ahtewlg7.utimer.enumtype.DeedState;
 /**
  * Created by lw on 2019/4/6.
  */
-public class DeedDoneState extends DeedBaseState {
+public class DeedEndState extends DeedBaseState {
 
-    DeedDoneState(GtdMachine gtdMachine) {
+    DeedEndState(GtdMachine gtdMachine) {
         super(gtdMachine);
     }
 
     @Override
     public Optional<BaseEventBusBean> toTrash(@NonNull AUtimerEntity entity) {
-        return removeState(entity);
+        return updateState(DeedState.TRASH, entity);
     }
 
     @Override
     protected boolean ifTrashable(AUtimerEntity entity) {
         return super.ifTrashable(entity)
-                && ((GtdDeedEntity)entity).getDeedState() == DeedState.DONE;
+                && (((GtdDeedEntity)entity).getDeedState() == DeedState.DONE
+                    || ((GtdDeedEntity)entity).getDeedState() == DeedState.USELESS);
     }
 }

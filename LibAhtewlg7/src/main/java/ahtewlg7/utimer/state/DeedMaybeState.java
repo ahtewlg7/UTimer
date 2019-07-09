@@ -38,56 +38,56 @@ public class DeedMaybeState extends DeedBaseState {
         if(!ifGtdable(entity))
             return Optional.absent();
         ((GtdDeedEntity) entity).setDeedState(INBOX);
-        return getGtdMachine().getInboxState().toBeDone(entity);
+        return getGtdMachine().getWorkState().toBeDone(entity);
     }
     @Override
     public Optional<BaseEventBusBean> toBeReference(@NonNull AUtimerEntity entity){
         if(!ifGtdable(entity))
             return Optional.absent();
         ((GtdDeedEntity) entity).setDeedState(INBOX);
-        return getGtdMachine().getInboxState().toBeReference(entity);
+        return getGtdMachine().getWorkState().toBeReference(entity);
     }
     @Override
-    public Optional<BaseEventBusBean> toBe2MinJob(@NonNull AUtimerEntity entity) {
+    public Optional<BaseEventBusBean> toBeQuarterJob(@NonNull AUtimerEntity entity) {
         if(!ifGtdable(entity))
             return Optional.absent();
         ((GtdDeedEntity) entity).setDeedState(INBOX);
-        return getGtdMachine().getInboxState().toBe2MinJob(entity);
+        return getGtdMachine().getWorkState().toBeQuarterJob(entity);
     }
     @Override
     public Optional<BaseEventBusBean> toBeDeferJob(@NonNull AUtimerEntity entity){
         if(!ifGtdable(entity))
             return Optional.absent();
         ((GtdDeedEntity) entity).setDeedState(INBOX);
-        return getGtdMachine().getInboxState().toBeDeferJob(entity);
+        return getGtdMachine().getWorkState().toBeDeferJob(entity);
     }
     @Override
     public Optional<BaseEventBusBean> toBeDelegateJob(@NonNull AUtimerEntity entity){
         if(!ifGtdable(entity))
             return Optional.absent();
         ((GtdDeedEntity) entity).setDeedState(INBOX);
-        return getGtdMachine().getInboxState().toBeDelegateJob(entity);
+        return getGtdMachine().getWorkState().toBeDelegateJob(entity);
     }
     @Override
     public Optional<BaseEventBusBean> toBeProject(@NonNull AUtimerEntity entity){
         if(!ifGtdable(entity))
             return Optional.absent();
         ((GtdDeedEntity) entity).setDeedState(INBOX);
-        return getGtdMachine().getInboxState().toBeProject(entity);
+        return getGtdMachine().getWorkState().toBeProject(entity);
     }
     @Override
     public Optional<BaseEventBusBean> toBeCalendarJob(@NonNull AUtimerEntity entity){
         if(!ifGtdable(entity))
             return Optional.absent();
         ((GtdDeedEntity) entity).setDeedState(INBOX);
-        return getGtdMachine().getInboxState().toBeCalendarJob(entity);
+        return getGtdMachine().getWorkState().toBeCalendarJob(entity);
     }
     @Override
     public Optional<BaseEventBusBean> toBeWishJob(@NonNull AUtimerEntity entity){
         if(!ifGtdable(entity))
             return Optional.absent();
         ((GtdDeedEntity) entity).setDeedState(INBOX);
-        return getGtdMachine().getInboxState().toBeWishJob(entity);
+        return getGtdMachine().getWorkState().toBeWishJob(entity);
     }
 
     @Override
@@ -95,7 +95,7 @@ public class DeedMaybeState extends DeedBaseState {
         if(!ifGtdable(entity))
             return Optional.absent();
         ((GtdDeedEntity) entity).setDeedState(INBOX);
-        return getGtdMachine().getInboxState().toBeUseless(entity);
+        return getGtdMachine().getWorkState().toBeUseless(entity);
     }
 
     @Override

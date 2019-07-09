@@ -60,7 +60,7 @@ class DeedBaseState extends GtdBaseState {
     }
 
     protected boolean ifTrashable(AUtimerEntity entity){
-        return false;
+        return true;
     }
     protected boolean ifGtdable(AUtimerEntity entity){
         return entity != null && entity.ifValid()

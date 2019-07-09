@@ -137,7 +137,7 @@ public class BaseDeedListMvpP {
             GtdBaseState currState = GtdMachine.getInstance().getCurrState(entity);
             switch (state){
                 case ONE_QUARTER:
-                    busBean = currState.toBe2MinJob(entity);
+                    busBean = currState.toBeQuarterJob(entity);
                     break;
                 case DEFER:
                     busBean = currState.toBeDeferJob(entity);

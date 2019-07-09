@@ -13,14 +13,16 @@ public class GtdMachine {
 
     private GtdBaseState baseState;
     private DeedMaybeState maybeState;
-    private DeedInboxState inboxState;
-    private DeedDoneState doneState;
+    private DeedInboxState workState;
+    private DeedEndState endState;
+    private DeedTrashState trashState;
 
     private GtdMachine(){
         baseState       = new GtdBaseState(this);
         maybeState      = new DeedMaybeState(this);
-        inboxState      = new DeedInboxState(this);
-        doneState       = new DeedDoneState(this);
+        workState = new DeedInboxState(this);
+        endState        = new DeedEndState(this);
+        trashState      = new DeedTrashState(this);
     }
 
     public static GtdMachine getInstance(){
@@ -44,19 +46,21 @@ public class GtdMachine {
             case CALENDAR:
             case DELEGATE:
             case PROJECT:
-                state = inboxState;
+            case WISH:
+                state = workState;
                 break;
             case DONE:
-                state = doneState;
+            case USELESS:
+                state = endState;
+                break;
+            case TRASH:
+                state = trashState;
                 break;
             default:
                 state = baseState;
                 break;
-            /*TRASH(1),
-                    REFERENCE(10),
-                    WISH(4),
-                    DONE(3),
-                    USELESS(11);*/
+            /*REFERENCE(10),
+                    WISH(4),*/
         }
         return state;
     }
@@ -65,11 +69,15 @@ public class GtdMachine {
         return maybeState;
     }
 
-    DeedInboxState getInboxState() {
-        return inboxState;
+    DeedInboxState getWorkState() {
+        return workState;
     }
 
-    DeedDoneState getDoneState() {
-        return doneState;
+    DeedEndState getEndState() {
+        return endState;
+    }
+
+    DeedTrashState getTrashState() {
+        return trashState;
     }
 }

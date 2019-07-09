@@ -51,7 +51,7 @@ public class GtdBaseState {
         return Optional.absent();
     }
     //it will be done in 2 mins
-    public Optional<BaseEventBusBean> toBe2MinJob(@NonNull AUtimerEntity entity){
+    public Optional<BaseEventBusBean> toBeQuarterJob(@NonNull AUtimerEntity entity){
         return Optional.absent();
     }
     //it is a multi-step job

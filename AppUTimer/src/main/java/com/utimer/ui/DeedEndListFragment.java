@@ -153,7 +153,7 @@ public class DeedEndListFragment extends AButterKnifeFragment implements BaseDee
 
     @Override
     public void onTagSucc(GtdDeedEntity entity, DeedState toState,int position) {
-        if(Arrays.asList(workState).contains(toState))
+        if(toState != TRASH &&  Arrays.asList(workState).contains(toState))
             recyclerView.resetData(position, entity);
         else
             recyclerView.removeData(entity);
