@@ -10,6 +10,7 @@ import com.trello.rxlifecycle3.components.support.RxFragment;
 
 import org.reactivestreams.Subscription;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -115,10 +116,12 @@ public class BaseDeedListMvpP {
     public void toHandleActionEvent(DeedBusEvent actionBusEvent, DeedState... state){
         if(actionBusEvent == null || !actionBusEvent.ifValid())
             return;
-        if(actionBusEvent.getEventType() == GtdBusEventType.LOAD)
+        if(actionBusEvent.getEventType() == GtdBusEventType.LOAD ||
+            (actionBusEvent.getEventType() == GtdBusEventType.SAVE
+                && Arrays.asList(state).contains(DeedState.MAYBE)
+                && actionBusEvent.getDeedEntity().getDeedState() == DeedState.MAYBE ))
             toLoadDeedByState(state);
     }
-
 
     class BaseDeedMvpM{
         Flowable<List<GtdDeedEntity>> toLoad(DeedState... state) {

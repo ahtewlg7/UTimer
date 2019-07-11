@@ -12,11 +12,10 @@ import org.reactivestreams.Subscription;
 import java.util.List;
 import java.util.Map;
 
-import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
-import ahtewlg7.utimer.gtd.GtdDeedParser;
 import ahtewlg7.utimer.entity.AUtimerEntity;
 import ahtewlg7.utimer.entity.busevent.DeedBusEvent;
 import ahtewlg7.utimer.entity.busevent.UTimerBusEvent;
+import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
 import ahtewlg7.utimer.entity.md.EditElement;
 import ahtewlg7.utimer.entity.md.EditMementoBean;
 import ahtewlg7.utimer.entity.md.EditMementoCaretaker;
@@ -24,6 +23,7 @@ import ahtewlg7.utimer.entity.md.EditMementoOriginator;
 import ahtewlg7.utimer.enumtype.GtdBusEventType;
 import ahtewlg7.utimer.factory.EventBusFatory;
 import ahtewlg7.utimer.factory.GtdDeedByUuidFactory;
+import ahtewlg7.utimer.gtd.GtdDeedParser;
 import ahtewlg7.utimer.util.MySafeFlowableOnSubscribe;
 import ahtewlg7.utimer.util.MySafeSubscriber;
 import io.reactivex.BackpressureStrategy;
@@ -114,17 +114,14 @@ public abstract class AUtimerTxtEditMvpP<T extends AUtimerEntity> implements IUt
                         if (columnMap.size() == 1
                                 && !firstGtdActionOptional.isPresent()) {
                             //new
-//                            GtdDeedByUuidFactory.getInstance().add(gtdActionOptional.get().getUuid(), gtdActionOptional.get());
                             e.onNext(gtdActionOptional.get());
                         } else if (columnMap.size() > 1) {
                             if (firstGtdActionOptional.isPresent() && !eLast.getRawText().equals(eFirst.getMdCharSequence().toString())) {
                                 //means : action is edit
                                 firstGtdActionOptional.get().update(gtdActionOptional.get());
-//                                GtdDeedByUuidFactory.getInstance().update(firstGtdActionOptional.get().getUuid(), firstGtdActionOptional.get());
                                 e.onNext(firstGtdActionOptional.get());
                             } else {
-                                //add
-//                                GtdDeedByUuidFactory.getInstance().add(gtdActionOptional.get().getUuid(), gtdActionOptional.get());
+                                //new
                                 e.onNext(gtdActionOptional.get());
                             }
                         }

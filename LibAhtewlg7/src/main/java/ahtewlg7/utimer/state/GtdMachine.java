@@ -20,7 +20,7 @@ public class GtdMachine {
     private GtdMachine(){
         baseState       = new GtdBaseState(this);
         maybeState      = new DeedMaybeState(this);
-        workState = new DeedInboxState(this);
+        workState       = new DeedInboxState(this);
         endState        = new DeedEndState(this);
         trashState      = new DeedTrashState(this);
     }
@@ -59,8 +59,7 @@ public class GtdMachine {
             default:
                 state = baseState;
                 break;
-            /*REFERENCE(10),
-                    WISH(4),*/
+            /*REFERENCE(10)*/
         }
         return state;
     }

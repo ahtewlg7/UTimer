@@ -10,21 +10,21 @@ import ahtewlg7.utimer.enumtype.GtdBusEventType;
 public class DeedBusEvent extends BaseEventBusBean {
 
     private GtdBusEventType eventType;
-    private GtdDeedEntity actionEntity;
+    private GtdDeedEntity deedEntity;
 
     public DeedBusEvent(GtdBusEventType eventType){
         this.eventType      = eventType;
     }
-    public DeedBusEvent(GtdBusEventType eventType, GtdDeedEntity actionEntity) {
-        this.eventType      = eventType;
-        this.actionEntity   = actionEntity;
+    public DeedBusEvent(GtdBusEventType eventType, GtdDeedEntity deedEntity) {
+        this.eventType  = eventType;
+        this.deedEntity = deedEntity;
     }
 
     public GtdBusEventType getEventType() {
         return eventType;
     }
 
-    public GtdDeedEntity getActionEntity() {
-        return actionEntity;
+    public GtdDeedEntity getDeedEntity() {
+        return deedEntity;
     }
 }

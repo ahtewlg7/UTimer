@@ -27,10 +27,10 @@ class TableDeedRwMvpP extends AUtimerRwMvpP<GtdDeedEntity, TableDeedRwMvpM> {
             case LOAD:
                 break;
             case SAVE:
-                toSave(Flowable.just(actionBusEvent.getActionEntity()));
+                toSave(Flowable.just(actionBusEvent.getDeedEntity()));
                 break;
             case DELETE:
-                toDel(Flowable.just(actionBusEvent.getActionEntity()));
+                toDel(Flowable.just(actionBusEvent.getDeedEntity()));
                 break;
         }
     }
