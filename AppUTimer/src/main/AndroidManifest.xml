@@ -19,9 +19,7 @@
 
         <service android:name="com.utimer.ui.BaseBinderService" />
 
-        <activity
-            android:name=".ui.UTimerActivity"
-            android:label="@string/title_activity_utimer">
+        <activity android:name=".ui.UTimerActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
