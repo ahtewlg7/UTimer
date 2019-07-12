@@ -118,8 +118,9 @@ public class BaseDeedListMvpP {
             return;
         if(actionBusEvent.getEventType() == GtdBusEventType.LOAD ||
             (actionBusEvent.getEventType() == GtdBusEventType.SAVE
-                && Arrays.asList(state).contains(DeedState.MAYBE)
-                && actionBusEvent.getDeedEntity().getDeedState() == DeedState.MAYBE ))
+                && Arrays.asList(state).contains(actionBusEvent.getDeedEntity().getDeedState())
+                && (actionBusEvent.getDeedEntity().getDeedState() == DeedState.MAYBE
+                    || actionBusEvent.getDeedEntity().getDeedState() == DeedState.INBOX)))
             toLoadDeedByState(state);
     }
 
