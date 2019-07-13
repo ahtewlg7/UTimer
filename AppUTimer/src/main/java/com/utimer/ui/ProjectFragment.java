@@ -243,7 +243,8 @@ public class ProjectFragment extends AEditFragment
             sectionViewEntityList.add(projectInfoSectionViewEntity);
         }
 
-        projectRecyclerView.resetData(sectionViewEntityList);
+        if(projectRecyclerView != null)
+            projectRecyclerView.resetData(sectionViewEntityList);
     }
 
     class MyClickListener implements BaseQuickAdapter.OnItemClickListener, BaseQuickAdapter.OnItemLongClickListener {
