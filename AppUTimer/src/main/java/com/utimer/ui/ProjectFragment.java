@@ -234,9 +234,9 @@ public class ProjectFragment extends AEditFragment
         }
         List<ProjectInfoSectionViewEntity> sectionViewEntityList = Lists.newArrayList();
 
-        String noteheaderName = MyRInfo.getStringByID(R.string.title_note_list);
+        /*String noteheaderName = MyRInfo.getStringByID(R.string.title_note_list);
         ProjectInfoSectionViewEntity projectInfoSectionHeaderEntity = new ProjectInfoSectionViewEntity(true, noteheaderName,true);
-        sectionViewEntityList.add(projectInfoSectionHeaderEntity);
+        sectionViewEntityList.add(projectInfoSectionHeaderEntity);*/
 
         for(NoteEntity data : alldata){
             ProjectInfoSectionViewEntity projectInfoSectionViewEntity = new ProjectInfoSectionViewEntity(data);
