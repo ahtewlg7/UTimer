@@ -39,9 +39,36 @@ public abstract class AAttachFile {
     }
 
     protected AAttachFile(String filePath, String fileName){
-        if(!TextUtils.isEmpty(filePath) && !TextUtils.isEmpty(fileName))
-            file = new File(filePath, fileName + getFileSuffix().trim());
-        fileAttrAction = new FileAttrAction(file);
+        renameFile(filePath, fileName);
+    }
+
+    public boolean renameFile(String fileName){
+        return renameFile(file.getParentFile(), fileName);
+    }
+
+    public boolean renameFile(File parentFile, String fileName){
+        if(parentFile == null || TextUtils.isEmpty(fileName))
+            return false;
+        return renameFile(parentFile.getPath(), fileName);
+    }
+
+    public boolean renameFile(String filePath, String fileName){
+        if(TextUtils.isEmpty(filePath) || TextUtils.isEmpty(fileName))
+            return false;
+        String tmp = fileName + getFileSuffix().trim();
+        boolean result = false;
+        try{
+            if(ifValid() && !tmp.equals(file.getName())) {
+                Files.move(file, new File(filePath, tmp));
+                file = new File(filePath, fileName + getFileSuffix().trim());
+                fileAttrAction = new FileAttrAction(file);
+                result = true;
+            }else if(tmp.equals(file.getName()))
+                result = true;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return result;
     }
 
     public boolean createOrExist(){

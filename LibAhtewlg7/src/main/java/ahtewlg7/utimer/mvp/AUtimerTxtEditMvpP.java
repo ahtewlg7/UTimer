@@ -26,18 +26,21 @@ import ahtewlg7.utimer.factory.GtdDeedByUuidFactory;
 import ahtewlg7.utimer.gtd.GtdDeedParser;
 import ahtewlg7.utimer.util.MySafeFlowableOnSubscribe;
 import ahtewlg7.utimer.util.MySafeSubscriber;
+import ahtewlg7.utimer.util.MySimpleObserver;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import io.reactivex.FlowableEmitter;
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by lw on 2018/10/20.
  */
 public abstract class AUtimerTxtEditMvpP<T extends AUtimerEntity> implements IUtimerEditMvpP{
-    protected abstract IUtimerEditMvpM getEditMvpM(T t);
+    protected abstract AUtimerEditMvpM getEditMvpM(T t);
 
     protected Disposable insertDisplose;
     protected Disposable modifyDispose;
@@ -46,7 +49,7 @@ public abstract class AUtimerTxtEditMvpP<T extends AUtimerEntity> implements IUt
 
     protected GtdDeedParser gtdActParser;
     protected IUtimerEditMvpV editMvpV;
-    protected IUtimerEditMvpM editMvpM;
+    protected AUtimerEditMvpM editMvpM;
     protected EditMementoOriginator mdMementoOriginator;
     protected EditMementoCaretaker mdMementoCaretaker;
 
@@ -65,35 +68,69 @@ public abstract class AUtimerTxtEditMvpP<T extends AUtimerEntity> implements IUt
         return mdMementoCaretaker != null && restoreEdit(mdMementoCaretaker.popNextUndo());
     }
 
-    public void toFinishEdit(@NonNull Flowable<EditElement> editElementRx){
-        editMvpM.toSaveElement(editElementRx)
+    public void toRenameAttachFile(final String name){
+        Observable.just(name)
+                .subscribeOn(Schedulers.io())
+                .map(new Function<String, Boolean>() {
+                    @Override
+                    public Boolean apply(String name) throws Exception {
+                        return editMvpM.toRenameAttachFile(name);
+                    }
+                })
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new MySafeSubscriber<Boolean>() {
+                .subscribe(new MySimpleObserver<Boolean>() {
                     @Override
-                    public void onSubscribe(Subscription s) {
-                        super.onSubscribe(s);
+                    public void onSubscribe(Disposable d) {
+                        super.onSubscribe(d);
                         if(editMvpV != null)
-                            editMvpV.onSaveStart();
+                            editMvpV.onRenameStart();
                     }
 
                     @Override
-                    public void onError(Throwable t) {
-                        super.onError(t);
+                    public void onNext(Boolean b) {
+                        super.onNext(b);
                         if(editMvpV != null)
-                            editMvpV.onSaveErr(t);
+                            editMvpV.onRenameEnd(b);
                     }
 
                     @Override
-                    public void onComplete() {
-                        super.onComplete();
+                    public void onError(Throwable e) {
+                        super.onError(e);
                         if(editMvpV != null)
-                            editMvpV.onSaveEnd();
-                        updateEntity();
-                        UTimerBusEvent busEvent = new UTimerBusEvent(GtdBusEventType.SAVE, t);
-                        EventBusFatory.getInstance().getDefaultEventBus().postSticky(busEvent);
-//                        isChangeSaved = true;
+                            editMvpV.onRenameErr(e);
                     }
                 });
+    }
+
+    public void toFinishEdit(@NonNull Flowable<EditElement> editElementRx){
+        editMvpM.toSaveElement(editElementRx)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new MySafeSubscriber<Boolean>() {
+                @Override
+                public void onSubscribe(Subscription s) {
+                    super.onSubscribe(s);
+                    if(editMvpV != null)
+                        editMvpV.onSaveStart();
+                }
+
+                @Override
+                public void onError(Throwable t) {
+                    super.onError(t);
+                    if(editMvpV != null)
+                        editMvpV.onSaveErr(t);
+                }
+
+                @Override
+                public void onComplete() {
+                    super.onComplete();
+                    if(editMvpV != null)
+                        editMvpV.onSaveEnd();
+                    updateEntity();
+                    UTimerBusEvent busEvent = new UTimerBusEvent(GtdBusEventType.SAVE, t);
+                    EventBusFatory.getInstance().getDefaultEventBus().postSticky(busEvent);
+//                        isChangeSaved = true;
+                }
+            });
     }
     public void toPostAction(@NonNull final Table<Integer, Integer, EditElement> editElementTable){
         Flowable.create(new MySafeFlowableOnSubscribe<GtdDeedEntity>() {
@@ -176,8 +213,14 @@ public abstract class AUtimerTxtEditMvpP<T extends AUtimerEntity> implements IUt
             t.setLastAccessTime(DateTime.now());
     }
 
-    public interface IUtimerEditMvpM{
-        public Flowable<Boolean> toSaveElement(@NonNull Flowable<EditElement> elementObservable);
+    public abstract class AUtimerEditMvpM {
+        public abstract Flowable<Boolean> toSaveElement(@NonNull Flowable<EditElement> elementObservable);
+        public boolean toRenameAttachFile(String newName){
+            if(t == null || !t.ifValid())
+                return false;
+            t.setTitle(newName);
+            return t.getAttachFile().renameFile(t.getTitle());
+        }
     }
 
     public interface IUtimerEditMvpV{
@@ -185,5 +228,9 @@ public abstract class AUtimerTxtEditMvpP<T extends AUtimerEntity> implements IUt
         public void onSaveStart();
         public void onSaveErr(Throwable e);
         public void onSaveEnd();
+
+        public void onRenameStart();
+        public void onRenameEnd(boolean succ);
+        public void onRenameErr(Throwable e);
     }
 }

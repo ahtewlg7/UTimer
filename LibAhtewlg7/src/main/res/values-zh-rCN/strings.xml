@@ -11,5 +11,7 @@
     <string name="prompt_action_life_quarter">季度工作</string>
     <string name="prompt_action_life_year">年度工作</string>
 
+    <string name="prompt_not_be_empty">不能为空！</string>
+    <string name="prompt_is_same_with_the_old">与之前的相同</string>
     <string name="prompt_md_edit_select_first">请选择需要编辑的内容</string>
 </resources>

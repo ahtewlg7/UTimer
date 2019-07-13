@@ -160,12 +160,29 @@ public class NoteEditFragment extends ATxtEditFragment
         ToastUtils.showShort("onLoadErr : " + e.getMessage());
     }
 
+
+    @Override
+    public void onRenameStart() {
+    }
+
+    @Override
+    public void onRenameEnd(boolean succ) {
+        if(succ) {
+            ToastUtils.showShort(R.string.prompt_note_rename_succ);
+            toolbar.setTitle(getUTimerEntity().getTitle());
+        }else
+            ToastUtils.showShort(R.string.prompt_note_rename_fail);
+    }
+
+    @Override
+    public void onRenameErr(Throwable e) {
+        ToastUtils.showShort("onRenameErr : " + e.getMessage());
+    }
+
     @Override
     public LifecycleProvider getRxLifeCycleBindView() {
         return this;
     }
-
-
     /******************************************INoteEditMvpV**********************************************/
 
     @Override
@@ -209,11 +226,10 @@ public class NoteEditFragment extends ATxtEditFragment
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         String name = dialog.getInputEditText().getText().toString();
-                        getUTimerEntity().setTitle(name);
-
-                        /*
-                        GtdProjectEntity entity = (GtdProjectEntity)new GtdProjectBuilder().setTitle(name).build();
-                        startForResult(ProjectFragment.newInstance(entity), REQ_NEW_FRAGMENT);*/
+                        if(!TextUtils.isEmpty(name))
+                            editMvpP.toRenameAttachFile(name);
+                        else
+                            ToastUtils.showShort(R.string.prompt_not_be_empty);
                     }
                 }).show();
     }

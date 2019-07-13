@@ -21,11 +21,11 @@ public class ShorthandEditMvpP extends AUtimerTxtEditMvpP<ShortHandEntity> {
     }
 
     @Override
-    protected IUtimerEditMvpM getEditMvpM(ShortHandEntity utimerEntity) {
+    protected AUtimerEditMvpM getEditMvpM(ShortHandEntity utimerEntity) {
         return new ShorthandEditMvpM(utimerEntity);
     }
 
-    class ShorthandEditMvpM implements IUtimerEditMvpM{
+    class ShorthandEditMvpM extends AUtimerEditMvpM {
         private ShortHandEntity shortHandEntity;
         private GtdShortHandEditAction shortHandEditAction;
 

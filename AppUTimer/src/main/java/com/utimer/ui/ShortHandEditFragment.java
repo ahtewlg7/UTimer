@@ -128,6 +128,24 @@ public class ShortHandEditFragment extends ATxtEditFragment
     }
 
     @Override
+    public void onRenameStart() {
+
+    }
+
+    @Override
+    public void onRenameEnd(boolean succ) {
+        if(succ)
+            ToastUtils.showShort(R.string.prompt_note_rename_succ);
+        else
+            ToastUtils.showShort(R.string.prompt_note_rename_fail);
+    }
+
+    @Override
+    public void onRenameErr(Throwable e) {
+        ToastUtils.showShort(R.string.prompt_note_rename_fail);
+    }
+
+    @Override
     public LifecycleProvider getRxLifeCycleBindView() {
         return this;
     }

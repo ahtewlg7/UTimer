@@ -25,11 +25,11 @@ public class NoteEditMvpP extends AUtimerTxtEditMvpP<NoteEntity> {
     }
 
     @Override
-    protected IUtimerEditMvpM getEditMvpM(NoteEntity utimerEntity) {
+    protected AUtimerEditMvpM getEditMvpM(NoteEntity utimerEntity) {
         return new NoteEditMvpM((NoteEntity) utimerEntity);
     }
 
-    class NoteEditMvpM implements IUtimerEditMvpM{
+    class NoteEditMvpM extends AUtimerEditMvpM {
         private NoteEntity noteEntity;
         private NoteEditAction editAction;
 
@@ -37,7 +37,6 @@ public class NoteEditMvpP extends AUtimerTxtEditMvpP<NoteEntity> {
             this.noteEntity = noteEntity;
             editAction      = new NoteEditAction(noteEntity);
         }
-
 
         @Override
         public Flowable<Boolean> toSaveElement(Flowable<EditElement> elementObservable) {

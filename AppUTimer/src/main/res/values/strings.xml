@@ -75,6 +75,8 @@
     <string name="prompt_del_err">del err</string>
     <string name="prompt_new_project_name">please input the project name</string>
     <string name="prompt_new_note_name">please input the new note name</string>
+    <string name="prompt_note_rename_succ">rename success</string>
+    <string name="prompt_note_rename_fail">rename fail</string>
     <string name="prompt_inbox_msg">let me help you to keep the stuff in your mind</string>
     <string name="prompt_fast_inbox">please input the msg in 5s</string>
     <string name="prompt_not_ready">"No, Not Yet! I'm Not Ready, Please Wait!" </string>

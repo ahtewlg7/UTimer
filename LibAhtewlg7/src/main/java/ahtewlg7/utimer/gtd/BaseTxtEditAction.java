@@ -51,4 +51,8 @@ public class BaseTxtEditAction<T extends AUtimerEntity>  extends AEditAction<T> 
         }
         return result;
     }
+
+    public boolean toRename(String newName){
+        return ifReady() && t.getAttachFile().renameFile(newName);
+    }
 }
