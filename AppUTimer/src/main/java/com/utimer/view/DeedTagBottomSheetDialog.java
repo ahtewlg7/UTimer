@@ -16,9 +16,11 @@ import com.google.common.collect.Lists;
 import com.utimer.R;
 import com.utimer.common.TagTitleFactory;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import ahtewlg7.utimer.comparator.ABaseIntComparator;
 import ahtewlg7.utimer.enumtype.DeedState;
 import ahtewlg7.utimer.util.AndrManagerFactory;
 
@@ -70,7 +72,9 @@ public class DeedTagBottomSheetDialog extends BottomSheetDialog {
     private List<TagViewEntity> getTagView(@NonNull Set<DeedState> deedStateSet){
         List<TagViewEntity> tagViewEntityList = Lists.newArrayList();
         for(DeedState state : deedStateSet)
-            tagViewEntityList.add(new TagViewEntity(state));
+            if(state != DeedState.CALENDAR)
+                tagViewEntityList.add(new TagViewEntity(state));
+        Collections.<TagViewEntity>sort(tagViewEntityList, new TagViewComparator().getAscOrder());
         return tagViewEntityList;
     }
     class TagAdapter extends RecyclerView.Adapter{
@@ -135,6 +139,12 @@ public class DeedTagBottomSheetDialog extends BottomSheetDialog {
 
         @StringRes int getStrRid() {
             return strRid;
+        }
+    }
+    class TagViewComparator extends ABaseIntComparator<TagViewEntity>{
+        @Override
+        protected int getComparatorInt(TagViewEntity t) {
+            return t.getDeedState().order();
         }
     }
 

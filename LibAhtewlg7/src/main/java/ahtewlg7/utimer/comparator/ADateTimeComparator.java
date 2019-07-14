@@ -13,7 +13,7 @@ import ahtewlg7.utimer.enumtype.ComparatorType;
  * Created by lw on 2017/11/15.
  */
 
-abstract class ADateTimeComparator<T> {
+public abstract class ADateTimeComparator<T> {
     protected Comparator<T> ascOrder;
     protected Comparator<T> descOrder;
 
