@@ -12,9 +12,8 @@ import ahtewlg7.utimer.util.MyRInfo;
 /**
  * Created by lw on 2019/7/7.
  */
-public class TagTitleFactory {
+public class TagInfoFactory {
     public static final int INVALID_TAG_RID = 0;
-
 
     public Optional<String> getTagTitle(@NonNull DeedState deedState){
         @StringRes int rId = getTagTitleRid(deedState);
@@ -50,6 +49,43 @@ public class TagTitleFactory {
                 break;
             case TRASH:
                 tmp = R.string.title_deed_tag_trash;
+                break;
+            default:
+                //todo
+                break;
+        }
+        return tmp;
+    }
+
+    public @StringRes int getTagDetailRid(@NonNull DeedState deedState){
+        int tmp = INVALID_TAG_RID;
+        switch(deedState){
+            case ONE_QUARTER:
+                tmp = R.string.prompt_deed_tag_one_quarter;
+                break;
+            case DEFER:
+                tmp = R.string.prompt_deed_tag_defer;
+                break;
+            case DELEGATE:
+                tmp = R.string.prompt_deed_tag_delegate;
+                break;
+            case WISH:
+                tmp = R.string.prompt_deed_tag_wish;
+                break;
+            case REFERENCE:
+                tmp = R.string.prompt_deed_tag_reference;
+                break;
+            case PROJECT:
+                tmp = R.string.prompt_deed_tag_project;
+                break;
+            case DONE:
+                tmp = R.string.prompt_deed_tag_done;
+                break;
+            case USELESS:
+                tmp = R.string.prompt_deed_tag_useless;
+                break;
+            case TRASH:
+                tmp = R.string.prompt_deed_tag_trash;
                 break;
             default:
                 //todo

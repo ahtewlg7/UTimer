@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.common.collect.Lists;
 import com.utimer.R;
-import com.utimer.common.TagTitleFactory;
+import com.utimer.common.TagInfoFactory;
 
 import java.util.Collections;
 import java.util.List;
@@ -32,6 +32,7 @@ public class DeedTagBottomSheetDialog extends BottomSheetDialog {
 
     private int entityIndex;
     private TagAdapter tagAdapter;
+    private TagInfoFactory tagInfoFactory;
     private OnItemClickListener onItemClickListener;
 
     public DeedTagBottomSheetDialog(@NonNull Context context) {
@@ -68,6 +69,8 @@ public class DeedTagBottomSheetDialog extends BottomSheetDialog {
     private void initView(){
         setCancelable(true);
         setCanceledOnTouchOutside(true);
+
+        tagInfoFactory = new TagInfoFactory();
     }
     private List<TagViewEntity> getTagView(@NonNull Set<DeedState> deedStateSet){
         List<TagViewEntity> tagViewEntityList = Lists.newArrayList();
@@ -126,7 +129,7 @@ public class DeedTagBottomSheetDialog extends BottomSheetDialog {
 
         TagViewEntity(DeedState deedState) {
             this.deedState = deedState;
-            this.strRid    = new TagTitleFactory().getTagTitleRid(deedState);
+            this.strRid    = tagInfoFactory.getTagTitleRid(deedState);
         }
         TagViewEntity(DeedState deedState, int strRid) {
             this.deedState = deedState;

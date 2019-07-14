@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import com.blankj.utilcode.util.ToastUtils;
 import com.trello.rxlifecycle3.LifecycleProvider;
 import com.utimer.R;
+import com.utimer.common.TagInfoFactory;
 import com.utimer.entity.span.DeedSpanMoreTag;
 import com.utimer.view.DeedTagBottomSheetDialog;
 import com.utimer.view.SimpleDeedRecyclerView;
@@ -33,6 +34,7 @@ import static ahtewlg7.utimer.enumtype.DeedState.DELEGATE;
 import static ahtewlg7.utimer.enumtype.DeedState.INBOX;
 import static ahtewlg7.utimer.enumtype.DeedState.MAYBE;
 import static ahtewlg7.utimer.enumtype.DeedState.ONE_QUARTER;
+import static com.utimer.common.TagInfoFactory.INVALID_TAG_RID;
 
 public class DeedTodoListFragment extends AButterKnifeFragment implements BaseDeedListMvpP.IBaseDeedMvpV {
     public static final int INIT_POSITION = -1;
@@ -43,6 +45,7 @@ public class DeedTodoListFragment extends AButterKnifeFragment implements BaseDe
     private int editIndex = -1;
     private DeedState[] workState;
     private BaseDeedListMvpP listMvpP;
+    private TagInfoFactory tagInfoFactory;
     private MyClickListener myClickListener;
     private DeedTagBottomSheetDialog bottomSheetDialog;
 
@@ -59,6 +62,7 @@ public class DeedTodoListFragment extends AButterKnifeFragment implements BaseDe
         super.onViewCreated(inflateView);
 
         workState       = new DeedState[]{INBOX, MAYBE, ONE_QUARTER, DEFER, DELEGATE};
+        tagInfoFactory  = new TagInfoFactory();
         myClickListener = new MyClickListener();
 
         recyclerView.init(getContext(), null,
@@ -147,11 +151,14 @@ public class DeedTodoListFragment extends AButterKnifeFragment implements BaseDe
     }
 
     @Override
-    public void onTagSucc(GtdDeedEntity entity, DeedState toState,int position) {
+    public void onTagSucc(GtdDeedEntity entity, DeedState toState, int position) {
         if(Arrays.asList(workState).contains(toState))
             recyclerView.resetData(position, entity);
         else
             recyclerView.removeData(entity);
+        int strRid = tagInfoFactory.getTagDetailRid(toState);
+        if(strRid != INVALID_TAG_RID)
+            ToastUtils.showShort(strRid);
     }
 
     @Override
@@ -219,7 +226,6 @@ public class DeedTodoListFragment extends AButterKnifeFragment implements BaseDe
             listMvpP.toTagDeed((GtdDeedEntity) recyclerView.getAdapter().getItem(position), targetState, position);
         }
     }
-
     private void createBottomSheet(int position){
         if(position < 0 || position >= recyclerView.getAdapter().getItemCount()) {
             Logcat.d("Warning","createBottomSheet failed");

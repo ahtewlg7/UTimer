@@ -18,7 +18,7 @@ import com.chad.library.adapter.base.listener.OnItemDragListener;
 import com.chad.library.adapter.base.listener.OnItemSwipeListener;
 import com.google.common.base.Optional;
 import com.utimer.R;
-import com.utimer.common.TagTitleFactory;
+import com.utimer.common.TagInfoFactory;
 import com.utimer.entity.span.DeedSpanMoreTag;
 
 import java.util.List;
@@ -30,18 +30,22 @@ import ahtewlg7.utimer.util.MyRInfo;
 import ahtewlg7.utimer.view.ABaseLinearRecyclerView;
 
 public class SimpleDeedRecyclerView extends ABaseLinearRecyclerView<GtdDeedEntity> {
+    private TagInfoFactory tagInfoFactory;
     private TextClickableSpan.ITextSpanClickListener spanClickListener;
 
     public SimpleDeedRecyclerView(Context context) {
         super(context);
+        tagInfoFactory = new TagInfoFactory();
     }
 
     public SimpleDeedRecyclerView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        tagInfoFactory = new TagInfoFactory();
     }
 
     public SimpleDeedRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        tagInfoFactory = new TagInfoFactory();
     }
 
     @Override
@@ -92,7 +96,7 @@ public class SimpleDeedRecyclerView extends ABaseLinearRecyclerView<GtdDeedEntit
             DeedSpanMoreTag moreTag = new DeedSpanMoreTag(item);
 
             Spanny spanny = new Spanny();
-            Optional<String> currTagOptional = new TagTitleFactory().getTagTitle(item.getDeedState());
+            Optional<String> currTagOptional = tagInfoFactory.getTagTitle(item.getDeedState());
             if(currTagOptional.isPresent())
                 spanny.append(new SimpleSpanTag(currTagOptional.get()).getTagTitle(), new ForegroundColorSpan(Color.GREEN));
             spanny.append(item.getTitle().trim(), new TextClickableSpan(item, spanClickListener, Color.WHITE,false, position))

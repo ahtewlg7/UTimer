@@ -87,7 +87,7 @@
     <string name="prompt_deed_tag_useless">This message is useless</string>
     <string name="prompt_deed_tag_reference">This message may be retrievable when required</string>
     <string name="prompt_deed_tag_wish">This job no need to do ,but it is meaningful if you fix it</string>
-    <string name="prompt_deed_tag_two_min">This job will be finished in 2min</string>
+    <string name="prompt_deed_tag_one_quarter">This job will be finished in 15 min</string>
     <string name="prompt_deed_tag_project">This job will be finished by many steps</string>
     <string name="prompt_deed_tag_defer">This job will be finished , and just by yourself</string>
     <string name="prompt_deed_tag_delegate">This job will be finished , but you can delegate it to someone</string>

@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import com.blankj.utilcode.util.ToastUtils;
 import com.trello.rxlifecycle3.LifecycleProvider;
 import com.utimer.R;
+import com.utimer.common.TagInfoFactory;
 import com.utimer.entity.span.DeedSpanMoreTag;
 import com.utimer.view.DeedTagBottomSheetDialog;
 import com.utimer.view.SimpleDeedRecyclerView;
@@ -30,6 +31,7 @@ import butterknife.BindView;
 
 import static ahtewlg7.utimer.enumtype.DeedState.DONE;
 import static ahtewlg7.utimer.enumtype.DeedState.TRASH;
+import static com.utimer.common.TagInfoFactory.INVALID_TAG_RID;
 
 public class DeedEndListFragment extends AButterKnifeFragment implements BaseDeedListMvpP.IBaseDeedMvpV {
     public static final int INIT_POSITION = -1;
@@ -40,6 +42,7 @@ public class DeedEndListFragment extends AButterKnifeFragment implements BaseDee
     private int editIndex = -1;
     private DeedState[] workState;
     private BaseDeedListMvpP listMvpP;
+    private TagInfoFactory tagInfoFactory;
     private MyClickListener myClickListener;
     private DeedTagBottomSheetDialog bottomSheetDialog;
 
@@ -56,6 +59,7 @@ public class DeedEndListFragment extends AButterKnifeFragment implements BaseDee
         super.onViewCreated(inflateView);
 
         workState = new DeedState[]{DONE, TRASH};
+        tagInfoFactory  = new TagInfoFactory();
         myClickListener = new MyClickListener();
 
         recyclerView.init(getContext(), null,
@@ -143,6 +147,9 @@ public class DeedEndListFragment extends AButterKnifeFragment implements BaseDee
             recyclerView.resetData(position, entity);
         else
             recyclerView.removeData(entity);
+        int strRid = tagInfoFactory.getTagDetailRid(toState);
+        if(strRid != INVALID_TAG_RID)
+            ToastUtils.showShort(strRid);
     }
 
     @Override

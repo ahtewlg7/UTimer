@@ -60,7 +60,7 @@
     <string name="prompt_deed_tag_useless">该信息已无效</string>
     <string name="prompt_deed_tag_reference">该信息可能以后会作为参考资料</string>
     <string name="prompt_deed_tag_wish">该工作可做可不做，但有备无患，做了总是有好处</string>
-    <string name="prompt_deed_tag_two_min">该工作可几分钟内随手完成</string>
+    <string name="prompt_deed_tag_one_quarter">该工作可以在很短时间内随手完成</string>
     <string name="prompt_deed_tag_project">该工作需要分多步骤完成</string>
     <string name="prompt_deed_tag_defer">该工作必须做，而且必须得亲自做</string>
     <string name="prompt_deed_tag_delegate">该工作必须做，但可以委托别人做</string>
