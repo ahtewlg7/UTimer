@@ -13,6 +13,7 @@ import org.reactivestreams.Subscription;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import ahtewlg7.utimer.comparator.DeedWarningTimeComparator;
 import ahtewlg7.utimer.entity.BaseEventBusBean;
@@ -22,6 +23,7 @@ import ahtewlg7.utimer.enumtype.DeedState;
 import ahtewlg7.utimer.enumtype.GtdBusEventType;
 import ahtewlg7.utimer.factory.EventBusFatory;
 import ahtewlg7.utimer.factory.GtdDeedByUuidFactory;
+import ahtewlg7.utimer.state.DeedStateGraph;
 import ahtewlg7.utimer.state.GtdBaseState;
 import ahtewlg7.utimer.state.GtdMachine;
 import ahtewlg7.utimer.util.MySafeSubscriber;
@@ -35,10 +37,15 @@ import io.reactivex.functions.Consumer;
 public class BaseDeedListMvpP {
     private IBaseDeedMvpV mvpV;
     private BaseDeedMvpM mvpM;
+    private DeedStateGraph stateGraph;
 
     public BaseDeedListMvpP(IBaseDeedMvpV mvpV){
-        this.mvpV = mvpV;
-        mvpM      = new BaseDeedMvpM();
+        this.mvpV  = mvpV;
+        mvpM       = new BaseDeedMvpM();
+        stateGraph = new DeedStateGraph();
+    }
+    public Set<DeedState> getNextState(@NonNull GtdDeedEntity deedEntity){
+        return stateGraph.getNextNodeList(deedEntity.getDeedState());
     }
     public void toLoadDeedByState(final DeedState... deedState){
         mvpM.toLoad(deedState)

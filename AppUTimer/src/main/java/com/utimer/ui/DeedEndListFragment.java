@@ -6,7 +6,6 @@ import android.view.View;
 import androidx.annotation.Nullable;
 
 import com.blankj.utilcode.util.ToastUtils;
-import com.google.common.collect.Sets;
 import com.trello.rxlifecycle3.LifecycleProvider;
 import com.utimer.R;
 import com.utimer.entity.span.DeedSpanMoreTag;
@@ -18,7 +17,6 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 import ahtewlg7.utimer.entity.busevent.DeedBusEvent;
 import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
@@ -26,18 +24,12 @@ import ahtewlg7.utimer.enumtype.DeedState;
 import ahtewlg7.utimer.factory.EventBusFatory;
 import ahtewlg7.utimer.mvp.BaseDeedListMvpP;
 import ahtewlg7.utimer.span.TextClickableSpan;
+import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MyRInfo;
 import butterknife.BindView;
 
-import static ahtewlg7.utimer.enumtype.DeedState.DEFER;
-import static ahtewlg7.utimer.enumtype.DeedState.DELEGATE;
 import static ahtewlg7.utimer.enumtype.DeedState.DONE;
-import static ahtewlg7.utimer.enumtype.DeedState.PROJECT;
-import static ahtewlg7.utimer.enumtype.DeedState.REFERENCE;
 import static ahtewlg7.utimer.enumtype.DeedState.TRASH;
-import static ahtewlg7.utimer.enumtype.DeedState.ONE_QUARTER;
-import static ahtewlg7.utimer.enumtype.DeedState.USELESS;
-import static ahtewlg7.utimer.enumtype.DeedState.WISH;
 
 public class DeedEndListFragment extends AButterKnifeFragment implements BaseDeedListMvpP.IBaseDeedMvpV {
     public static final int INIT_POSITION = -1;
@@ -220,32 +212,15 @@ public class DeedEndListFragment extends AButterKnifeFragment implements BaseDee
     }
 
     private void createBottomSheet(int position){
+        if(position < 0 || position >= recyclerView.getAdapter().getItemCount()) {
+            Logcat.d("Warning","createBottomSheet failed");
+            return;
+        }
         if (bottomSheetDialog == null) {
             bottomSheetDialog = new DeedTagBottomSheetDialog(getContext());
             bottomSheetDialog.setOnItemClickListener(myClickListener);
         }
-        bottomSheetDialog.toShow(getTagState(), position);
+        GtdDeedEntity currEntity = (GtdDeedEntity)recyclerView.getAdapter().getItem(position);
+        bottomSheetDialog.toShow(listMvpP.getNextState(currEntity), position);
     }
-
-    private Set<DeedState> getTagState(){
-        Set<DeedState> set = Sets.newLinkedHashSet();
-        set.add(ONE_QUARTER);
-        set.add(DEFER);
-        set.add(DELEGATE);
-        set.add(PROJECT);
-        set.add(WISH);
-        set.add(REFERENCE);
-        set.add(DONE);
-        set.add(USELESS);
-        set.add(TRASH);
-        return set;
-    }
-
-     /*TRASH(1),
-                REFERENCE(10),
-                WISH(4),
-                PROJECT(6),
-                CALENDAR(8),
-                DONE(3),
-                USELESS(11);*/
 }
