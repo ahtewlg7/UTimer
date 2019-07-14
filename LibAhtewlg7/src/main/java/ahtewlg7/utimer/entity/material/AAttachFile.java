@@ -33,17 +33,21 @@ public abstract class AAttachFile {
         fileAttrAction = new FileAttrAction(file);
     }
     protected AAttachFile(String fileAbsPath){
-        if(!TextUtils.isEmpty(fileAbsPath))
+        if(!TextUtils.isEmpty(fileAbsPath)) {
             file = new File(fileAbsPath);
-        fileAttrAction = new FileAttrAction(file);
+            fileAttrAction = new FileAttrAction(file);
+        }
     }
 
     protected AAttachFile(String filePath, String fileName){
-        renameFile(filePath, fileName);
+        if(!TextUtils.isEmpty(filePath) && !TextUtils.isEmpty(fileName)) {
+            file = new File(filePath, fileName + getFileSuffix().trim());
+            fileAttrAction = new FileAttrAction(file);
+        }
     }
 
     public boolean renameFile(String fileName){
-        return renameFile(file.getParentFile(), fileName);
+        return file != null && renameFile(file.getParentFile(), fileName);
     }
 
     public boolean renameFile(File parentFile, String fileName){
