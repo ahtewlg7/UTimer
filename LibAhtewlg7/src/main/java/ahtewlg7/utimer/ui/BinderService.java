@@ -64,8 +64,8 @@ public class BinderService extends Service{
     }
     //+++++++++++++++++++++++++++++++++++++++++++EventBus+++++++++++++++++++++++++++++++++++++++++++++++++++
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    public void onActionBusEvent(DeedBusEvent actionBusEvent) {
-        eventBusRx.onNext(actionBusEvent);
+    public void onDeedBusEvent(DeedBusEvent deedBusEvent) {
+        eventBusRx.onNext(deedBusEvent);
     }
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onActivityBusEvent(ActivityBusEvent actionBusEvent) {

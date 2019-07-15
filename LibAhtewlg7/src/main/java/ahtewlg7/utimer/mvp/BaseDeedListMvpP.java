@@ -120,7 +120,7 @@ public class BaseDeedListMvpP {
                 }
             });
     }
-    public void toHandleActionEvent(DeedBusEvent actionBusEvent, DeedState... state){
+    public void toHandleDeedBusEvent(DeedBusEvent actionBusEvent, DeedState... state){
         if(actionBusEvent == null || !actionBusEvent.ifValid())
             return;
         if(actionBusEvent.getEventType() == GtdBusEventType.LOAD ||

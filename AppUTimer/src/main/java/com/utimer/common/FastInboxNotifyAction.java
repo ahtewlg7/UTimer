@@ -75,9 +75,6 @@ public class FastInboxNotifyAction {
         ifListening = !notifyIntentReceiver.toStopListen();
     }
     private Notification getNotification(){
-        /*Notification.MessagingStyle messagingStyle = new Notification.MessagingStyle("老王");
-        messagingStyle.setConversationTitle("来自老宋");
-        builder.setStyle(messagingStyle);*/
         RemoteInput remoteInput     = notifyAction.getRemoteInput(RESULT_KEY_REMOTE_INPUT_INBOX, LABEL_REMOTE_INPUT_INBOX);
         PendingIntent intent        = notifyAction.getServiceIntent(VALUE_REQUEST_CODE_FAST_INBOX, new Intent(INTENT_ACTION_FAST_INBOX));
         Notification.Action action  = notifyAction.getNotifyAction(R.mipmap.ic_launcher_round, LABEL_ACTION_INBOX, intent, remoteInput);

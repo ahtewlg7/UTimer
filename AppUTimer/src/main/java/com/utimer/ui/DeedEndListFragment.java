@@ -196,8 +196,8 @@ public class DeedEndListFragment extends AButterKnifeFragment implements BaseDee
     }
     /**********************************************EventBus**********************************************/
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onActionBusEvent(DeedBusEvent eventBus) {
-        listMvpP.toHandleActionEvent(eventBus, workState);
+    public void onDeedBusEvent(DeedBusEvent eventBus) {
+        listMvpP.toHandleDeedBusEvent(eventBus, workState);
     }
     /**********************************************IGtdActionListMvpV**********************************************/
 
