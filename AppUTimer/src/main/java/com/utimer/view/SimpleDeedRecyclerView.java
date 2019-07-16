@@ -24,7 +24,7 @@ import com.utimer.entity.span.DeedSpanMoreTag;
 import java.util.List;
 
 import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
-import ahtewlg7.utimer.entity.span.SimpleSpanTag;
+import ahtewlg7.utimer.entity.span.SimpleMultiSpanTag;
 import ahtewlg7.utimer.span.TextClickableSpan;
 import ahtewlg7.utimer.util.MyRInfo;
 import ahtewlg7.utimer.view.ABaseLinearRecyclerView;
@@ -93,15 +93,27 @@ public class SimpleDeedRecyclerView extends ABaseLinearRecyclerView<GtdDeedEntit
             ((TextView)helper.getView(R.id.view_recycler_simple_deed_title)).setMovementMethod(LinkMovementMethod.getInstance());
 
             int position  = helper.getLayoutPosition();
-            DeedSpanMoreTag moreTag = new DeedSpanMoreTag(item);
+
+            SimpleMultiSpanTag multiSpanTag = getTagInfo(item);
+            DeedSpanMoreTag moreTag         = new DeedSpanMoreTag(item);
 
             Spanny spanny = new Spanny();
+            if(multiSpanTag.getTagTitle().isPresent())
+                spanny.append(multiSpanTag.getTagTitle().get(), new ForegroundColorSpan(Color.GREEN));
+            spanny.append(item.getTitle().trim(), new TextClickableSpan(item, spanClickListener, Color.WHITE,false, position));
+            if(moreTag.getTagTitle().isPresent())
+                spanny.append(moreTag.getTagTitle().get(), new TextClickableSpan(moreTag, spanClickListener, MyRInfo.getColorByID(R.color.pink),false, position));
+            helper.setText(R.id.view_recycler_simple_deed_title, spanny);
+        }
+
+        private SimpleMultiSpanTag getTagInfo(@NonNull GtdDeedEntity item){
+            SimpleMultiSpanTag multiSpanTag = new SimpleMultiSpanTag();
             Optional<String> currTagOptional = tagInfoFactory.getTagTitle(item.getDeedState());
             if(currTagOptional.isPresent())
-                spanny.append(new SimpleSpanTag(currTagOptional.get()).getTagTitle(), new ForegroundColorSpan(Color.GREEN));
-            spanny.append(item.getTitle().trim(), new TextClickableSpan(item, spanClickListener, Color.WHITE,false, position))
-                .append(moreTag.getTagTitle(), new TextClickableSpan(moreTag, spanClickListener, MyRInfo.getColorByID(R.color.pink),false, position));
-            helper.setText(R.id.view_recycler_simple_deed_title, spanny);
+                multiSpanTag.appendTag(currTagOptional.get());
+            if(item.getGtdLifeDetail().isPresent())
+                multiSpanTag.appendTag(item.getGtdLifeDetail().get());
+            return multiSpanTag;
         }
     }
 }
