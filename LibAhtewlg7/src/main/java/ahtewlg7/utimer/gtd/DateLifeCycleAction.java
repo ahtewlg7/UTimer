@@ -3,91 +3,91 @@ package ahtewlg7.utimer.gtd;
 import org.joda.time.DateTime;
 
 import ahtewlg7.utimer.R;
-import ahtewlg7.utimer.enumtype.GtdLife;
+import ahtewlg7.utimer.enumtype.DateLife;
 import ahtewlg7.utimer.util.DateTimeAction;
 import ahtewlg7.utimer.util.MyRInfo;
 
 /**
  * Created by lw on 2019/3/31.
  */
-public class GtdLifeCycleAction {
+public class DateLifeCycleAction {
 
     private DateTimeAction dateTimeAction;
 
-    public GtdLifeCycleAction() {
+    public DateLifeCycleAction() {
         dateTimeAction = new DateTimeAction();
     }
 
-    public GtdLife getLife(DateTime dateTime){
-        GtdLife actDateTime = null;
-        if(isTodayWork(dateTime))
-            actDateTime = GtdLife.TODAY;
-        else if(isTomorrowWork(dateTime))
-            actDateTime = GtdLife.TOMORROW;
-        else if(ifWeekWork(dateTime))
-            actDateTime = GtdLife.WEEK;
-        else if(ifNextWeekWork(dateTime))
-            actDateTime = GtdLife.NEXT_WEEK;
-        else if(ifMonthWork(dateTime))
-            actDateTime = GtdLife.MONTH;
-        else if(ifNextMonthWork(dateTime))
-            actDateTime = GtdLife.NEXT_MONTH;
-        else if(ifQuarterWork(dateTime))
-            actDateTime = GtdLife.QUARTER_YEAR;
-        else if(ifYearWork(dateTime))
-            actDateTime = GtdLife.YEAR;
-        else if(ifHalfYearWork(dateTime))
-            actDateTime = GtdLife.HALF_YEAR;
+    public DateLife getLife(DateTime dateTime){
+        DateLife actDateTime = null;
+        if(isToday(dateTime))
+            actDateTime = DateLife.TODAY;
+        else if(isTomorrow(dateTime))
+            actDateTime = DateLife.TOMORROW;
+        else if(ifThisWeek(dateTime))
+            actDateTime = DateLife.WEEK;
+        else if(ifNextWeek(dateTime))
+            actDateTime = DateLife.NEXT_WEEK;
+        else if(ifThisMonth(dateTime))
+            actDateTime = DateLife.MONTH;
+        else if(ifNextMonth(dateTime))
+            actDateTime = DateLife.NEXT_MONTH;
+        else if(ifThisQuarter(dateTime))
+            actDateTime = DateLife.QUARTER_YEAR;
+        else if(ifThisYear(dateTime))
+            actDateTime = DateLife.YEAR;
+        else if(ifHalfYear(dateTime))
+            actDateTime = DateLife.HALF_YEAR;
         return actDateTime;
     }
 
-    public boolean isTodayWork(DateTime dateTime){
+    public boolean isToday(DateTime dateTime){
         if(dateTime == null)
             return false;
         return dateTimeAction.isInToday(dateTime);
     }
-    public boolean isTomorrowWork(DateTime dateTime){
+    public boolean isTomorrow(DateTime dateTime){
         if(dateTime == null)
             return false;
         return dateTimeAction.isInTomorrow(dateTime);
     }
-    public boolean ifWeekWork(DateTime dateTime) {
+    public boolean ifThisWeek(DateTime dateTime) {
         if (dateTime == null)
             return false;
         return dateTimeAction.isInWeek(dateTime);
     }
-    public boolean ifNextWeekWork(DateTime dateTime) {
+    public boolean ifNextWeek(DateTime dateTime) {
         if (dateTime == null)
             return false;
         return dateTimeAction.isInNextWeek(dateTime);
     }
-    public boolean ifMonthWork(DateTime dateTime) {
+    public boolean ifThisMonth(DateTime dateTime) {
         if (dateTime == null)
             return false;
         return dateTimeAction.isInMonth(dateTime);
     }
-    public boolean ifNextMonthWork(DateTime dateTime) {
+    public boolean ifNextMonth(DateTime dateTime) {
         if (dateTime == null)
             return false;
         return dateTimeAction.isInNextMonth(dateTime);
     }
-    public boolean ifQuarterWork(DateTime dateTime) {
+    public boolean ifThisQuarter(DateTime dateTime) {
         if (dateTime == null)
             return false;
         return dateTimeAction.isInQuarter(dateTime);
     }
-    public boolean ifHalfYearWork(DateTime dateTime) {
+    public boolean ifHalfYear(DateTime dateTime) {
         if (dateTime == null)
             return false;
         return dateTimeAction.isInHalfYear(dateTime);
     }
-    public boolean ifYearWork(DateTime dateTime) {
+    public boolean ifThisYear(DateTime dateTime) {
         if (dateTime == null)
             return false;
         return dateTimeAction.isInYear(dateTime);
     }
 
-    public String getLifeDetail(GtdLife actLife){
+    public String getLifeDetail(DateLife actLife){
         String detail = null;
         switch (actLife){
             case TODAY:

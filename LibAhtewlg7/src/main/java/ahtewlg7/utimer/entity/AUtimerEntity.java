@@ -12,9 +12,9 @@ import javax.annotation.Nonnull;
 
 import ahtewlg7.utimer.common.IdAction;
 import ahtewlg7.utimer.entity.material.AAttachFile;
-import ahtewlg7.utimer.enumtype.GtdLife;
+import ahtewlg7.utimer.enumtype.DateLife;
 import ahtewlg7.utimer.enumtype.GtdType;
-import ahtewlg7.utimer.gtd.GtdLifeCycleAction;
+import ahtewlg7.utimer.gtd.DateLifeCycleAction;
 
 public abstract class AUtimerEntity<T extends AUtimerBuilder> implements ITipsEntity, IMergerEntity{
     @NonNull
@@ -33,7 +33,7 @@ public abstract class AUtimerEntity<T extends AUtimerBuilder> implements ITipsEn
     protected DateTime lastModifyTime;
     protected AAttachFile attachFile;
 
-    protected GtdLifeCycleAction lifeCycleAction;
+    protected DateLifeCycleAction lifeCycleAction;
 
     protected AUtimerEntity(@Nonnull T t){
         //update first
@@ -110,9 +110,9 @@ public abstract class AUtimerEntity<T extends AUtimerBuilder> implements ITipsEn
         this.detail = detail;
     }
 
-    public GtdLife getGtdLife() {
+    public DateLife getGtdLife() {
         if(lifeCycleAction == null)
-            lifeCycleAction = new GtdLifeCycleAction();
+            lifeCycleAction = new DateLifeCycleAction();
         return lifeCycleAction.getLife(getLifeCycleTime());
     }
     public Optional<String> getGtdLifeDetail() {
