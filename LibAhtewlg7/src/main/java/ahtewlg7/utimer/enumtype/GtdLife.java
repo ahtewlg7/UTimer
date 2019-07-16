@@ -7,6 +7,7 @@ public enum GtdLife {
     NEXT_WEEK,
     MONTH,
     NEXT_MONTH,
-    QUARTER,
+    QUARTER_YEAR,
+    HALF_YEAR,
     YEAR;
 }

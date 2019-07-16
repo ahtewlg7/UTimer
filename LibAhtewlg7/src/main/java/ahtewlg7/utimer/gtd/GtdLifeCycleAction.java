@@ -33,9 +33,11 @@ public class GtdLifeCycleAction {
         else if(ifNextMonthWork(dateTime))
             actDateTime = GtdLife.NEXT_MONTH;
         else if(ifQuarterWork(dateTime))
-            actDateTime = GtdLife.QUARTER;
+            actDateTime = GtdLife.QUARTER_YEAR;
         else if(ifYearWork(dateTime))
             actDateTime = GtdLife.YEAR;
+        else if(ifHalfYearWork(dateTime))
+            actDateTime = GtdLife.HALF_YEAR;
         else
             actDateTime = GtdLife.TODAY;
         return actDateTime;
@@ -76,6 +78,11 @@ public class GtdLifeCycleAction {
             return false;
         return dateTimeAction.isInQuarter(dateTime);
     }
+    public boolean ifHalfYearWork(DateTime dateTime) {
+        if (dateTime == null)
+            return false;
+        return dateTimeAction.isInHalfYear(dateTime);
+    }
     public boolean ifYearWork(DateTime dateTime) {
         if (dateTime == null)
             return false;
@@ -103,8 +110,11 @@ public class GtdLifeCycleAction {
             case NEXT_MONTH:
                 detail = MyRInfo.getStringByID(R.string.prompt_action_life_next_month);
                 break;
-            case QUARTER:
-                detail = MyRInfo.getStringByID(R.string.prompt_action_life_quarter);
+            case QUARTER_YEAR:
+                detail = MyRInfo.getStringByID(R.string.prompt_action_life_quarter_year);
+                break;
+            case HALF_YEAR:
+                detail = MyRInfo.getStringByID(R.string.prompt_action_life_half_year);
                 break;
             case YEAR:
                 detail = MyRInfo.getStringByID(R.string.prompt_action_life_year);

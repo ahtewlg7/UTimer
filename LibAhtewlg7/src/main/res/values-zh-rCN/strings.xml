@@ -8,7 +8,8 @@
     <string name="prompt_action_life_next_week">下周工作</string>
     <string name="prompt_action_life_month">本月工作</string>
     <string name="prompt_action_life_next_month">下月工作</string>
-    <string name="prompt_action_life_quarter">季度工作</string>
+    <string name="prompt_action_life_quarter_year">季度工作</string>
+    <string name="prompt_action_life_half_year">半年工作</string>
     <string name="prompt_action_life_year">年度工作</string>
 
     <string name="prompt_not_be_empty">不能为空！</string>

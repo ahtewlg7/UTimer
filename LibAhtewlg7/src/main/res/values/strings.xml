@@ -24,7 +24,8 @@
     <string name="prompt_action_life_next_week">Next Week Job</string>
     <string name="prompt_action_life_month">Month Job</string>
     <string name="prompt_action_life_next_month">Next Month Job</string>
-    <string name="prompt_action_life_quarter">Quarter Job</string>
+    <string name="prompt_action_life_quarter_year">Three Month Job</string>
+    <string name="prompt_action_life_half_year">Half Year job</string>
     <string name="prompt_action_life_year">Year Job</string>
 
     <string name="prompt_nlp_start">AI Start</string>

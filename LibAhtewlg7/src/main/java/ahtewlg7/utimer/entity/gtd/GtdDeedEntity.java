@@ -144,7 +144,7 @@ public class GtdDeedEntity extends AGtdUtimerEntity<GtdDeedBuilder>
         uuid            = gdBean.getUuid();
         title           = gdBean.getTitle();
         detail          = gdBean.getDetail();
-        deedState = gdBean.getActionState();
+        deedState       = gdBean.getActionState();
         warningTimeList = gdBean.getWarningTimeList();
 
         if(w5h2Entity  == null)

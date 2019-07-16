@@ -147,7 +147,7 @@ public abstract class AUtimerTxtEditMvpP<T extends AUtimerEntity> implements IUt
                             continue;
                         EditElement eFirst = columnMap.get(0);
                         Optional<GtdDeedEntity> firstGtdActionOptional =
-                                GtdDeedByUuidFactory.getInstance().getActionByDetail(columnMap.get(0).getMdCharSequence().toString());
+                                GtdDeedByUuidFactory.getInstance().getDeedByTitle(columnMap.get(0).getMdCharSequence().toString());
                         if (columnMap.size() == 1
                                 && !firstGtdActionOptional.isPresent()) {
                             //new

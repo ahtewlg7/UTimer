@@ -94,6 +94,9 @@ public class DateTimeAction {
     public boolean isInQuarter(DateTime dateTime){
         return dateTime != null && !isInNextMonth(dateTime) && dateTime.isBefore(DateTime.now().plusMonths(3).dayOfMonth().withMinimumValue().withTimeAtStartOfDay());
     }
+    public boolean isInHalfYear(DateTime dateTime){
+        return dateTime != null && !isInQuarter(dateTime) && dateTime.isBefore(DateTime.now().plusMonths(6).dayOfMonth().withMinimumValue().withTimeAtStartOfDay());
+    }
     public boolean isInYear(DateTime dateTime){
         return dateTime != null && !isInQuarter(dateTime)  && dateTime.isBefore(DateTime.now().plusYears(1).dayOfYear().withMinimumValue().withTimeAtStartOfDay());
     }
