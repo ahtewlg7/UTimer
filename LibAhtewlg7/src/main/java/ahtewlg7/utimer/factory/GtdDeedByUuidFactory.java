@@ -22,6 +22,7 @@ import ahtewlg7.utimer.entity.gtd.GtdDeedBuilder;
 import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
 import ahtewlg7.utimer.enumtype.DeedState;
 import ahtewlg7.utimer.enumtype.GtdLife;
+import ahtewlg7.utimer.nlp.NlpAction;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
@@ -32,13 +33,13 @@ import io.reactivex.functions.Predicate;
 public class GtdDeedByUuidFactory extends ABaseLruCacheFactory<String, GtdDeedEntity> {
     private static GtdDeedByUuidFactory instance;
 
-    private BiMap<String, String> detailUuidMap;
+    private BiMap<String, String> titleUuidMap;
     private Multimap<DeedState, String> stateUuidMultiMap;
 
 
     protected GtdDeedByUuidFactory(){
         super();
-        detailUuidMap       = HashBiMap.create();
+        titleUuidMap = HashBiMap.create();
         stateUuidMultiMap   = HashMultimap.create();
     }
 
@@ -60,11 +61,11 @@ public class GtdDeedByUuidFactory extends ABaseLruCacheFactory<String, GtdDeedEn
 
     @Override
     public boolean add(String key, GtdDeedEntity actionEntity) {
-        if(detailUuidMap.containsKey(key))
+        if(titleUuidMap.containsKey(key))
             return false;
         boolean result = super.add(key, actionEntity);
         if(result && actionEntity.getDetail().isPresent())
-            detailUuidMap.put(actionEntity.getDetail().get(), actionEntity.getUuid());
+            titleUuidMap.put(actionEntity.getDetail().get(), actionEntity.getUuid());
         if(result && actionEntity.getDeedState() != null)
             stateUuidMultiMap.put(actionEntity.getDeedState(), actionEntity.getUuid());
         return result;
@@ -73,8 +74,8 @@ public class GtdDeedByUuidFactory extends ABaseLruCacheFactory<String, GtdDeedEn
     @Override
     public GtdDeedEntity remove(String key) {
         GtdDeedEntity actionEntity = super.remove(key);
-        if(actionEntity != null && actionEntity.ifValid() && detailUuidMap.containsValue(actionEntity.getUuid()))
-            detailUuidMap.inverse().remove(actionEntity.getUuid());
+        if(actionEntity != null && actionEntity.ifValid() && titleUuidMap.containsValue(actionEntity.getUuid()))
+            titleUuidMap.inverse().remove(actionEntity.getUuid());
         if(actionEntity != null && actionEntity.ifValid())
             stateUuidMultiMap.remove(actionEntity.getDeedState(), actionEntity.getUuid());
         return actionEntity;
@@ -83,7 +84,7 @@ public class GtdDeedByUuidFactory extends ABaseLruCacheFactory<String, GtdDeedEn
     @Override
     public void clearAll() {
         super.clearAll();
-        detailUuidMap.clear();
+        titleUuidMap.clear();
         stateUuidMultiMap.clear();
     }
     public Optional<GtdDeedEntity> create(String msg){
@@ -102,6 +103,10 @@ public class GtdDeedByUuidFactory extends ABaseLruCacheFactory<String, GtdDeedEn
                 .setTitle(!TextUtils.isEmpty(title) ? title : detail)
                 .setUuid(new IdAction().getUUId());
         GtdDeedEntity gtdActionEntity = builder.build();
+        List<DateTime> dateTimeList = NlpAction.getInstance().toSegTimes(detail);
+        if(dateTimeList == null)
+            dateTimeList = NlpAction.getInstance().toSegTimes(title);
+        gtdActionEntity.setWarningTimeList(dateTimeList);
         gtdActionEntity.setLastModifyTime(DateTime.now());
         gtdActionEntity.setLastAccessTime(DateTime.now());
         return Optional.of(gtdActionEntity);
@@ -159,9 +164,9 @@ public class GtdDeedByUuidFactory extends ABaseLruCacheFactory<String, GtdDeedEn
         return entityList;
     }
 
-    public Optional<GtdDeedEntity> getActionByDetail(String detail){
-        if(!TextUtils.isEmpty(detail) && detailUuidMap.containsKey(detail))
-            return Optional.fromNullable(get(detailUuidMap.get(detail)));
+    public Optional<GtdDeedEntity> getDeedByTitle(String detail){
+        if(!TextUtils.isEmpty(detail) && titleUuidMap.containsKey(detail))
+            return Optional.fromNullable(get(titleUuidMap.get(detail)));
         return Optional.absent();
     }
 }

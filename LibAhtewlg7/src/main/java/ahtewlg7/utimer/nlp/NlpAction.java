@@ -1,5 +1,7 @@
 package ahtewlg7.utimer.nlp;
 
+import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
 
 import com.hankcs.hanlp.corpus.tag.Nature;
@@ -34,6 +36,8 @@ public class NlpAction {
     }
 
     public List<DateTime> toSegTimes(String raw){
+        if(TextUtils.isEmpty(raw))
+            return null;
         return timeNlpAction.toParse(raw);
     }
 

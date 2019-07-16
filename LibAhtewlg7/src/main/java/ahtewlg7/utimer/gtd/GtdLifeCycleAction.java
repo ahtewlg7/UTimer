@@ -38,8 +38,6 @@ public class GtdLifeCycleAction {
             actDateTime = GtdLife.YEAR;
         else if(ifHalfYearWork(dateTime))
             actDateTime = GtdLife.HALF_YEAR;
-        else
-            actDateTime = GtdLife.TODAY;
         return actDateTime;
     }
 
@@ -89,7 +87,7 @@ public class GtdLifeCycleAction {
         return dateTimeAction.isInYear(dateTime);
     }
 
-    public String getActLifeDetail(GtdLife actLife){
+    public String getLifeDetail(GtdLife actLife){
         String detail = null;
         switch (actLife){
             case TODAY:

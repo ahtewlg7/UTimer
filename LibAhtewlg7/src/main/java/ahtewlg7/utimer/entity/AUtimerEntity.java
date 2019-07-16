@@ -115,6 +115,11 @@ public abstract class AUtimerEntity<T extends AUtimerBuilder> implements ITipsEn
             lifeCycleAction = new GtdLifeCycleAction();
         return lifeCycleAction.getLife(getLifeCycleTime());
     }
+    public Optional<String> getGtdLifeDetail() {
+        if(getGtdLife() == null)
+            return Optional.absent();
+        return Optional.fromNullable(lifeCycleAction.getLifeDetail(getGtdLife()));
+    }
 
     public DateTime getLastAccessTime() {
         return lastAccessTime;
@@ -166,7 +171,8 @@ public abstract class AUtimerEntity<T extends AUtimerBuilder> implements ITipsEn
             builder.append(",title=").append(title);
         if(getDetail().isPresent() && !TextUtils.isEmpty(getDetail().get()))
             builder.append(",detail=").append(getDetail().get());
-        builder.append(",gtdLife=").append(getGtdLife().name());
+        if(getGtdLife() != null)
+            builder.append(",gtdLife=").append(getGtdLife().name());
         if(createTime != null)
             builder.append(",createTime=").append(createTime.toString());
         if(lastAccessTime != null)
