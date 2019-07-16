@@ -47,10 +47,10 @@ public class GtdMachine {
             case DELEGATE:
             case PROJECT:
             case WISH:
+            case USELESS:
                 state = workState;
                 break;
             case DONE:
-            case USELESS:
                 state = endState;
                 break;
             case TRASH:
