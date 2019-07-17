@@ -21,7 +21,7 @@ import ahtewlg7.utimer.common.IdAction;
 import ahtewlg7.utimer.entity.gtd.GtdDeedBuilder;
 import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
 import ahtewlg7.utimer.enumtype.DeedState;
-import ahtewlg7.utimer.enumtype.GtdLife;
+import ahtewlg7.utimer.enumtype.DateLife;
 import ahtewlg7.utimer.nlp.NlpAction;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Function;
@@ -143,7 +143,7 @@ public class GtdDeedByUuidFactory extends ABaseLruCacheFactory<String, GtdDeedEn
         return Flowable.fromIterable(getAll());
         }
 
-    public Flowable<GtdDeedEntity> getEntityByLife(@NonNull final GtdLife actLife){
+    public Flowable<GtdDeedEntity> getEntityByLife(@NonNull final DateLife actLife){
         return getEntityByLife().filter(new Predicate<GtdDeedEntity>() {
                     @Override
                     public boolean test(GtdDeedEntity entity) throws Exception {

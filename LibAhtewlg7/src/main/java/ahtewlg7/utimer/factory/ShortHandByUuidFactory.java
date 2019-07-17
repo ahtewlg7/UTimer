@@ -14,7 +14,7 @@ import java.util.List;
 
 import ahtewlg7.utimer.common.FileSystemAction;
 import ahtewlg7.utimer.entity.gtd.ShortHandEntity;
-import ahtewlg7.utimer.enumtype.GtdLife;
+import ahtewlg7.utimer.enumtype.DateLife;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Predicate;
 
@@ -80,7 +80,7 @@ public class ShortHandByUuidFactory extends ABaseLruCacheFactory<String, ShortHa
     public Flowable<ShortHandEntity> getAllLifeEntity(){
         return Flowable.fromIterable(getAll());
     }
-    public Flowable<ShortHandEntity> getEntityByLife(@NonNull final GtdLife actLife){
+    public Flowable<ShortHandEntity> getEntityByLife(@NonNull final DateLife actLife){
         return getAllLifeEntity().filter(new Predicate<ShortHandEntity>() {
                     @Override
                     public boolean test(ShortHandEntity entity) throws Exception {

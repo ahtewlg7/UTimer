@@ -12,7 +12,7 @@ import java.util.List;
 
 import ahtewlg7.utimer.entity.gtd.GtdProjectEntity;
 import ahtewlg7.utimer.entity.gtd.NoteEntity;
-import ahtewlg7.utimer.enumtype.GtdLife;
+import ahtewlg7.utimer.enumtype.DateLife;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Predicate;
 
@@ -83,7 +83,7 @@ public class NoteByUuidFactory extends ABaseLruCacheFactory<String, NoteEntity> 
     public Flowable<NoteEntity> getAllLifeEntity(){
         return Flowable.fromIterable(getAll());
     }
-    public Flowable<NoteEntity> getEntityByLife(@NonNull final GtdLife actLife){
+    public Flowable<NoteEntity> getEntityByLife(@NonNull final DateLife actLife){
         return getAllLifeEntity().filter(new Predicate<NoteEntity>() {
                     @Override
                     public boolean test(NoteEntity entity) throws Exception {
