@@ -30,6 +30,7 @@ import ahtewlg7.utimer.util.MyRInfo;
 import ahtewlg7.utimer.view.ABaseLinearRecyclerView;
 
 public class SimpleDeedRecyclerView extends ABaseLinearRecyclerView<GtdDeedEntity> {
+    private boolean showLifeInfo;
     private TagInfoFactory tagInfoFactory;
     private TextClickableSpan.ITextSpanClickListener spanClickListener;
 
@@ -83,6 +84,14 @@ public class SimpleDeedRecyclerView extends ABaseLinearRecyclerView<GtdDeedEntit
         this.spanClickListener = spanClickListener;
     }
 
+    public boolean isShowLifeInfo() {
+        return showLifeInfo;
+    }
+
+    public void setShowLifeInfo(boolean showLifeInfo) {
+        this.showLifeInfo = showLifeInfo;
+    }
+
     class SimpleDeedItemAdapter extends BaseItemAdapter<GtdDeedEntity>{
         SimpleDeedItemAdapter(List<GtdDeedEntity> dataList){
             super(dataList);
@@ -111,7 +120,7 @@ public class SimpleDeedRecyclerView extends ABaseLinearRecyclerView<GtdDeedEntit
             Optional<String> currTagOptional = tagInfoFactory.getTagTitle(item.getDeedState());
             if(currTagOptional.isPresent())
                 multiSpanTag.appendTag(currTagOptional.get());
-            if(item.getGtdLifeDetail().isPresent())
+            if(item.getGtdLifeDetail().isPresent() && showLifeInfo)
                 multiSpanTag.appendTag(item.getGtdLifeDetail().get());
             return multiSpanTag;
         }

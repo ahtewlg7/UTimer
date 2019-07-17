@@ -68,6 +68,7 @@ public class DeedMarkListFragment extends AButterKnifeFragment implements BaseDe
                 null,null,
                 null,null,
                 myClickListener);
+        recyclerView.setShowLifeInfo(true);
         listMvpP = new BaseDeedListMvpP(this);
 
         EventBusFatory.getInstance().getDefaultEventBus().register(this);
