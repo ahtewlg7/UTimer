@@ -31,7 +31,6 @@ public class GtdDeedEntity extends AGtdUtimerEntity<GtdDeedBuilder>
         implements Serializable {
     private DeedState deedState;
     private List<DateTime> warningTimeList;
-    private DateTimeAction dateTimeAction;
 
     protected GtdDeedEntity(@Nonnull GtdDeedBuilder builder) {
         super(builder);
@@ -42,7 +41,6 @@ public class GtdDeedEntity extends AGtdUtimerEntity<GtdDeedBuilder>
         if(builder.deedState != null)
             this.deedState = builder.deedState;
         toMakeEntityOk();
-        dateTimeAction = new DateTimeAction();
     }
 
     @Override
@@ -129,15 +127,6 @@ public class GtdDeedEntity extends AGtdUtimerEntity<GtdDeedBuilder>
         if(deedState != null)
             return new StringBuilder(super.toString()).append(deedState.name()).toString();
          return super.toString();
-    }
-
-    public Optional<String> getWarningTimeInfo(){
-        if(warningTimeList == null || warningTimeList.isEmpty())
-            return Optional.absent();
-        StringBuilder builder = new StringBuilder();
-        for(DateTime dateTime : warningTimeList)
-            builder.append(dateTimeAction.toFormat(dateTime)).append(";\t");
-        return Optional.of(builder.toString());
     }
 
     private void  initByGbBean(DeedEntityGdBean gdBean){
