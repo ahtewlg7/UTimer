@@ -13,6 +13,7 @@
         android:background="@android:color/holo_blue_dark"
         app:calendar_content_view_id="@+id/fragment_deed_calendar_simple_list_recycler_view"
         app:calendar_show_mode="both_month_week_view"
+        app:default_status="shrink"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
