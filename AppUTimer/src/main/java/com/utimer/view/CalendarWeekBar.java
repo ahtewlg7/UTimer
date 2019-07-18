@@ -16,7 +16,7 @@ public class CalendarWeekBar extends WeekBar {
     public CalendarWeekBar(Context context) {
         super(context);
         LayoutInflater.from(context).inflate(R.layout.view_calendar_week_bar, this, true);
-        setBackgroundColor(Color.WHITE);
+        setTextColor(Color.WHITE);
     }
 
     @Override

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.haibin.calendarview.CalendarLayout
+        android:id="@+id/fragment_deed_calendar_calendarLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:background="@android:color/holo_blue_dark"
+        app:calendar_content_view_id="@+id/fragment_deed_calendar_simple_list_recycler_view"
+        app:calendar_show_mode="both_month_week_view"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.haibin.calendarview.CalendarView
+            android:id="@+id/fragment_deed_calendar_calendarView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:calendar_padding="5dp"
+            app:calendar_height="35dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:day_text_size="15sp"
+            app:lunar_text_size="9sp"
+            app:max_year="2050"
+            app:max_year_day="31"
+            app:max_year_month="12"
+            app:min_year="2008"
+            app:min_year_day="1"
+            app:min_year_month="1"
+            app:month_view="com.utimer.view.CalendarMonthView"
+            app:month_view_auto_select_day="last_select_day_ignore_current"
+            app:month_view_show_mode="mode_only_current"
+
+            app:scheme_lunar_text_color="#CFCFCF"
+            app:scheme_text_color="#333"
+            app:scheme_theme_color="#128c4b"
+
+            app:current_day_lunar_text_color="#FF00FF00"
+            app:current_day_text_color="#FF00FF00"
+            app:current_month_lunar_text_color="@android:color/darker_gray"
+            app:current_month_text_color="#333333"
+            app:other_month_lunar_text_color="@android:color/darker_gray"
+            app:other_month_text_color="@android:color/darker_gray"
+
+            app:selected_lunar_text_color="@android:color/white"
+            app:selected_text_color="@android:color/white"
+            app:selected_theme_color="#80cfcfcf"
+
+            app:week_background="#fff"
+            app:week_bar_height="46dp"
+            app:week_bar_view="com.utimer.view.CalendarWeekBar"
+            app:week_text_color="@android:color/white"
+            app:week_line_background="@android:color/transparent"
+            app:week_line_margin="16dp"
+            app:week_start_with="sun"
+            app:week_text_size="10sp"
+            app:week_view="com.utimer.view.CalendarWeekView"
+
+            app:year_view_background="#f6f6f6"
+            app:year_view_day_text_color="#333333"
+            app:year_view_day_text_size="8sp"
+            app:year_view_month_text_color="#ff0000"
+            app:year_view_month_text_size="20sp"
+            app:year_view_scheme_color="#f17706"
+            app:year_view_week_height="0dp"
+            app:year_view_week_text_color="#666666"
+            app:year_view_week_text_size="7sp" />
+
+        <com.utimer.view.SimpleDeedRecyclerView
+            android:id="@+id/fragment_deed_calendar_simple_list_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="8dp"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="12dp"
+            android:scrollbars="none"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/fragment_deed_calendar_calendarView" />
+    </com.haibin.calendarview.CalendarLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

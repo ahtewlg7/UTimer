@@ -105,6 +105,8 @@ public class SimpleDeedRecyclerView extends ABaseLinearRecyclerView<GtdDeedEntit
 
             SimpleMultiSpanTag multiSpanTag = getTagInfo(item);
             DeedSpanMoreTag moreTag         = new DeedSpanMoreTag(item);
+            multiSpanTag.setShowBracket(true);
+            moreTag.setShowBracket(true);
 
             Spanny spanny = new Spanny();
             if(multiSpanTag.getTagTitle().isPresent())

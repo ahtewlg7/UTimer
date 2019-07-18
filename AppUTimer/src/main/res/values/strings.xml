@@ -36,7 +36,7 @@
     <string name="title_project">Project</string>
     <string name="title_project_list">ProjectList</string>
 
-
+    <string name="title_calendar_today">T</string>
     <string name="title_deed_list_todo">ToDoList</string>
     <string name="title_deed_list_calendar">CalendarList</string>
     <string name="title_deed_list_mark">MarkList</string>
