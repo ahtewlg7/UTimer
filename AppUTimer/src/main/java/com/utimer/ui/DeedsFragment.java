@@ -21,6 +21,7 @@ import ahtewlg7.utimer.util.MyRInfo;
 import butterknife.BindView;
 
 import static com.utimer.common.Constants.REQ_NEW_FRAGMENT;
+import static com.utimer.ui.DeedsFragment.DEED_INDEX.SCHEDULE;
 import static com.utimer.ui.DeedsFragment.DEED_INDEX.END;
 import static com.utimer.ui.DeedsFragment.DEED_INDEX.TODO;
 import static com.utimer.ui.DeedsFragment.DEED_INDEX.MARK;
@@ -126,6 +127,7 @@ public class DeedsFragment extends AToolbarBkFragment{
         if(tabEntityList == null)
             tabEntityList = Lists.newArrayList();
         tabEntityList.clear();
+        tabEntityList.add(SCHEDULE.value(), new TabLayoutEntity(R.string.title_deed_list_schedule, 0,0));
         tabEntityList.add(TODO.value(), new TabLayoutEntity(R.string.title_deed_list_todo, 0,0));
         tabEntityList.add(MARK.value(), new TabLayoutEntity(R.string.title_deed_list_mark, 0,0));
         tabEntityList.add(END.value(),  new TabLayoutEntity(R.string.title_deed_list_end, 0,0));
@@ -148,23 +150,26 @@ public class DeedsFragment extends AToolbarBkFragment{
     private void loadFragment(){
         AButterKnifeFragment firstFragment = findChildFragment(DeedTodoListFragment.class);
         if (firstFragment == null) {
-            fragments[TODO.value()]  = DeedTodoListFragment.newInstance();
-            fragments[MARK.value()]  = DeedMarkListFragment.newInstance();
-            fragments[END.value()]   = DeedEndListFragment.newInstance();
+            fragments[TODO.value()]      = DeedTodoListFragment.newInstance();
+            fragments[SCHEDULE.value()]  = DeedScheduleListFragment.newInstance();
+            fragments[MARK.value()]      = DeedMarkListFragment.newInstance();
+            fragments[END.value()]       = DeedEndListFragment.newInstance();
 
             loadMultipleRootFragment(R.id.fragment_deeds_fragment_container, prePosition,
-                    fragments[TODO.value()], fragments[MARK.value()],fragments[END.value()]);
+                    fragments[SCHEDULE.value()], fragments[TODO.value()], fragments[MARK.value()],fragments[END.value()]);
         } else {
-            fragments[TODO.value()] = firstFragment;
-            fragments[MARK.value()]  = findChildFragment(DeedMarkListFragment.class);
-            fragments[END.value()]  = findChildFragment(DeedEndListFragment.class);
+            fragments[TODO.value()]     = firstFragment;
+            fragments[SCHEDULE.value()] = DeedScheduleListFragment.newInstance();
+            fragments[MARK.value()]     = findChildFragment(DeedMarkListFragment.class);
+            fragments[END.value()]      = findChildFragment(DeedEndListFragment.class);
         }
     }
 
     enum DEED_INDEX{
-        TODO(0),
-        MARK(1),
-        END(2),
+        SCHEDULE(0),
+        TODO(1),
+        MARK(2),
+        END(3)/*,
         INBOX(2),
         DEFER(3),
         DELEGATE(4),
@@ -175,7 +180,7 @@ public class DeedsFragment extends AToolbarBkFragment{
         MAYBE(9),
         USELESS(10),
         TRASH(11),
-        DONE(12);
+        DONE(12)*/;
 
         private int value;
         DEED_INDEX(int value) {
@@ -189,12 +194,15 @@ public class DeedsFragment extends AToolbarBkFragment{
                     tmp = TODO;
                     break;
                 case 1:
-                    tmp = MARK;
+                    tmp = SCHEDULE;
                     break;
                 case 2:
-                    tmp = END;
+                    tmp = MARK;
                     break;
                 case 3:
+                    tmp = END;
+                    break;
+                /*case 4:
                     tmp = DEFER;
                     break;
                 case 4:
@@ -223,7 +231,7 @@ public class DeedsFragment extends AToolbarBkFragment{
                     break;
                 case 12:
                     tmp = DONE;
-                    break;
+                    break;*/
             }
             return tmp;
         }
