@@ -1,12 +1,17 @@
 package com.utimer.ui;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.binaryfork.spanny.Spanny;
 import com.blankj.utilcode.util.ToastUtils;
+import com.google.common.base.Optional;
 import com.trello.rxlifecycle3.LifecycleProvider;
 import com.utimer.R;
 import com.utimer.common.TagInfoFactory;
@@ -23,39 +28,43 @@ import java.util.List;
 import ahtewlg7.utimer.entity.busevent.DeedBusEvent;
 import ahtewlg7.utimer.entity.busevent.DeedDoneBusEvent;
 import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
+import ahtewlg7.utimer.entity.span.SimpleMultiSpanTag;
 import ahtewlg7.utimer.enumtype.DeedState;
 import ahtewlg7.utimer.factory.EventBusFatory;
 import ahtewlg7.utimer.mvp.BaseDeedListMvpP;
 import ahtewlg7.utimer.span.TextClickableSpan;
 import ahtewlg7.utimer.util.Logcat;
+import ahtewlg7.utimer.util.MyRInfo;
 
 import static com.utimer.common.TagInfoFactory.INVALID_TAG_RID;
 
-public abstract class ADeedListFragment extends AButterKnifeFragment implements BaseDeedListMvpP.IBaseDeedMvpV {
+public abstract class ADeedListFragment extends AButterKnifeFragment
+        implements BaseDeedListMvpP.IBaseDeedMvpV , SimpleDeedRecyclerView.IDeedSpanner {
     public static final int INIT_POSITION = -1;
 
     protected abstract @NonNull DeedState[] getLoadDeedState();
     protected abstract @NonNull SimpleDeedRecyclerView getRecyclerView();
 
     protected int editIndex = -1;
+    protected boolean showLifeInfo = true;
+
     protected BaseDeedListMvpP listMvpP;
     protected TagInfoFactory tagInfoFactory;
-    protected MyClickListener myClickListener;
+    protected MyClickListener mySpanClickListener;
     protected DeedTagBottomSheetDialog bottomSheetDialog;
 
     @Override
     public void onViewCreated(View inflateView) {
         super.onViewCreated(inflateView);
 
-        tagInfoFactory  = new TagInfoFactory();
-        myClickListener = new MyClickListener();
+        tagInfoFactory      = new TagInfoFactory();
+        mySpanClickListener = new MyClickListener();
 
         getRecyclerView().init(getContext(), null,
                 null, null,
                 null,null,
-                null,null,
-                myClickListener);
-        getRecyclerView().setShowLifeInfo(true);
+                null,null);
+        getRecyclerView().setSpanner(this);
         listMvpP = new BaseDeedListMvpP(this);
 
         EventBusFatory.getInstance().getDefaultEventBus().register(this);
@@ -161,7 +170,9 @@ public abstract class ADeedListFragment extends AButterKnifeFragment implements 
         editIndex = INIT_POSITION;
     }
 
-    *//**********************************************IGtdActionListMvpV**********************************************//*
+    */
+    /**********************************************IGtdActionListMvpV**********************************************/
+    /*
     @Override
     public void resetView(List<GtdDeedEntity> dataList) {
         recyclerView.resetData(dataList);
@@ -170,7 +181,36 @@ public abstract class ADeedListFragment extends AButterKnifeFragment implements 
     @Override
     public void resetView(int index, GtdDeedEntity entity) {
         recyclerView.resetData(index, entity);
+    }*/
+
+    /**********************************************IDeedSpanner**********************************************/
+    @NonNull
+    @Override
+    public SpannableStringBuilder toSpan(int position, @NonNull GtdDeedEntity item) {
+        SimpleMultiSpanTag multiSpanTag = getTagInfo(item);
+        DeedSpanMoreTag moreTag         = new DeedSpanMoreTag(item);
+        multiSpanTag.setShowBracket(true);
+        moreTag.setShowBracket(true);
+
+        Spanny spanny = new Spanny();
+        if(multiSpanTag.getTagTitle().isPresent())
+            spanny.append(multiSpanTag.getTagTitle().get(), new ForegroundColorSpan(Color.GREEN));
+        spanny.append(item.getTitle().trim(), new TextClickableSpan(item, mySpanClickListener, Color.WHITE,false, position));
+        if(moreTag.getTagTitle().isPresent())
+            spanny.append(moreTag.getTagTitle().get(), new TextClickableSpan(moreTag, mySpanClickListener, MyRInfo.getColorByID(R.color.pink),false, position));
+        return spanny;
     }
+
+    protected SimpleMultiSpanTag getTagInfo(@NonNull GtdDeedEntity item){
+        SimpleMultiSpanTag multiSpanTag = new SimpleMultiSpanTag();
+        Optional<String> currTagOptional = tagInfoFactory.getTagTitle(item.getDeedState());
+        if(currTagOptional.isPresent())
+            multiSpanTag.appendTag(currTagOptional.get());
+        if(item.getGtdLifeDetail().isPresent() && showLifeInfo)
+            multiSpanTag.appendTag(item.getGtdLifeDetail().get());
+        return multiSpanTag;
+    }
+
     /**********************************************EventBus**********************************************/
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDeedBusEvent(DeedBusEvent eventBus) {
@@ -206,7 +246,7 @@ public abstract class ADeedListFragment extends AButterKnifeFragment implements 
         }
         if (bottomSheetDialog == null) {
             bottomSheetDialog = new DeedTagBottomSheetDialog(getContext());
-            bottomSheetDialog.setOnItemClickListener(myClickListener);
+            bottomSheetDialog.setOnItemClickListener(mySpanClickListener);
         }
         GtdDeedEntity currEntity = (GtdDeedEntity)getRecyclerView().getAdapter().getItem(position);
         bottomSheetDialog.toShow(listMvpP.getNextState(currEntity), position);

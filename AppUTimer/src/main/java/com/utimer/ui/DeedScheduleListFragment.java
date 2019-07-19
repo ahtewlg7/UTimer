@@ -48,6 +48,7 @@ public class DeedScheduleListFragment extends ADeedListFragment implements BaseD
 
         mCalendarView.scrollToCurrent();
 
+        showLifeInfo    = false;
         workState       = new DeedState[]{INBOX, MAYBE, ONE_QUARTER, DEFER, DELEGATE};
     }
 
