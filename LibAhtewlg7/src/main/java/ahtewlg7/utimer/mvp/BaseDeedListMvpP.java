@@ -8,6 +8,7 @@ import com.trello.rxlifecycle3.LifecycleProvider;
 import com.trello.rxlifecycle3.android.FragmentEvent;
 import com.trello.rxlifecycle3.components.support.RxFragment;
 
+import org.joda.time.LocalDate;
 import org.reactivestreams.Subscription;
 
 import java.util.Arrays;
@@ -18,6 +19,7 @@ import java.util.Set;
 import ahtewlg7.utimer.comparator.DeedWarningTimeComparator;
 import ahtewlg7.utimer.entity.BaseEventBusBean;
 import ahtewlg7.utimer.entity.busevent.DeedBusEvent;
+import ahtewlg7.utimer.entity.busevent.DeedDoneBusEvent;
 import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
 import ahtewlg7.utimer.enumtype.DeedState;
 import ahtewlg7.utimer.enumtype.GtdBusEventType;
@@ -48,38 +50,43 @@ public class BaseDeedListMvpP {
         return stateGraph.getNextNodeList(deedEntity.getDeedState());
     }
     public void toLoadDeedByState(final DeedState... deedState){
-        mvpM.toLoad(deedState)
-            .compose(((RxFragment)mvpV.getRxLifeCycleBindView()).<List<GtdDeedEntity>>bindUntilEvent(FragmentEvent.DESTROY))
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(new MySafeSubscriber<List<GtdDeedEntity>>() {
-                List<GtdDeedEntity> allEntity = Lists.newArrayList();
-                @Override
-                public void onSubscribe(Subscription s) {
-                    super.onSubscribe(s);
-                    if(mvpV != null)
-                        mvpV.onLoadStart();
-                }
+        toLoad(mvpM.toLoad(deedState));
+    }
+    public void toLoadDeedByDate(final LocalDate... localDates){
+        toLoad(mvpM.toLoad(localDates));
+    }
+    public void toLoad(@NonNull Flowable<List<GtdDeedEntity>> loadRx){
+        loadRx.compose(((RxFragment)mvpV.getRxLifeCycleBindView()).<List<GtdDeedEntity>>bindUntilEvent(FragmentEvent.DESTROY))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new MySafeSubscriber<List<GtdDeedEntity>>() {
+                    List<GtdDeedEntity> allEntity = Lists.newArrayList();
+                    @Override
+                    public void onSubscribe(Subscription s) {
+                        super.onSubscribe(s);
+                        if(mvpV != null)
+                            mvpV.onLoadStart();
+                    }
 
-                @Override
-                public void onNext(List<GtdDeedEntity> entityList) {
-                    super.onNext(entityList);
-                    allEntity.addAll(entityList);
-                }
+                    @Override
+                    public void onNext(List<GtdDeedEntity> entityList) {
+                        super.onNext(entityList);
+                        allEntity.addAll(entityList);
+                    }
 
-                @Override
-                public void onError(Throwable t) {
-                    super.onError(t);
-                    if(mvpV != null)
-                        mvpV.onLoadErr(t);
-                }
+                    @Override
+                    public void onError(Throwable t) {
+                        super.onError(t);
+                        if(mvpV != null)
+                            mvpV.onLoadErr(t);
+                    }
 
-                @Override
-                public void onComplete() {
-                    super.onComplete();
-                    if(mvpV != null)
-                        mvpV.onLoadSucc(allEntity);
-                }
-            });
+                    @Override
+                    public void onComplete() {
+                        super.onComplete();
+                        if(mvpV != null)
+                            mvpV.onLoadSucc(allEntity);
+                    }
+                });
     }
 
     public void toTagDeed(final GtdDeedEntity deedEntity, final DeedState deedState, final int position){
@@ -120,20 +127,34 @@ public class BaseDeedListMvpP {
                 }
             });
     }
-    public void toHandleDeedBusEvent(DeedBusEvent actionBusEvent, DeedState... state){
-        if(actionBusEvent == null || !actionBusEvent.ifValid())
+    public void toHandleBusEvent(DeedBusEvent busEvent, DeedState... state){
+        if(busEvent == null || !busEvent.ifValid())
             return;
-        if(actionBusEvent.getEventType() == GtdBusEventType.LOAD ||
-            (actionBusEvent.getEventType() == GtdBusEventType.SAVE
-                && Arrays.asList(state).contains(actionBusEvent.getDeedEntity().getDeedState())
-                && (actionBusEvent.getDeedEntity().getDeedState() == DeedState.MAYBE
-                    || actionBusEvent.getDeedEntity().getDeedState() == DeedState.INBOX)))
+        if(busEvent.getEventType() == GtdBusEventType.LOAD)
+            toLoadDeedByState(state);
+    }
+    public void toHandleBusEvent(DeedDoneBusEvent busEvent, DeedState... state){
+        if(busEvent == null || !busEvent.ifValid())
+            return;
+        if((busEvent.getEventType() == GtdBusEventType.SAVE
+            && Arrays.asList(state).contains(busEvent.getDeedEntity().getDeedState())
+            && (busEvent.getDeedEntity().getDeedState() == DeedState.MAYBE
+            || busEvent.getDeedEntity().getDeedState() == DeedState.INBOX)))
             toLoadDeedByState(state);
     }
 
     class BaseDeedMvpM{
         Flowable<List<GtdDeedEntity>> toLoad(DeedState... state) {
             return GtdDeedByUuidFactory.getInstance().getEntityByState(state)
+                    .doOnNext(new Consumer<List<GtdDeedEntity>>() {
+                        @Override
+                        public void accept(List<GtdDeedEntity> entityList) throws Exception {
+                            Collections.sort(entityList, new DeedWarningTimeComparator().getAscOrder());
+                        }
+                    });
+        }
+        Flowable<List<GtdDeedEntity>> toLoad(LocalDate... dates) {
+            return GtdDeedByUuidFactory.getInstance().getEntityByDate(dates)
                     .doOnNext(new Consumer<List<GtdDeedEntity>>() {
                         @Override
                         public void accept(List<GtdDeedEntity> entityList) throws Exception {
