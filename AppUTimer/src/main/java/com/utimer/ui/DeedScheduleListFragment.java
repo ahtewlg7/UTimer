@@ -6,23 +6,23 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.haibin.calendarview.Calendar;
 import com.haibin.calendarview.CalendarLayout;
 import com.haibin.calendarview.CalendarView;
 import com.utimer.R;
+import com.utimer.mvp.ScheduleDeedListMvpP;
 import com.utimer.view.SimpleDeedRecyclerView;
+
+import java.util.Map;
 
 import ahtewlg7.utimer.enumtype.DeedState;
 import ahtewlg7.utimer.mvp.BaseDeedListMvpP;
 import ahtewlg7.utimer.util.MyRInfo;
 import butterknife.BindView;
 
-import static ahtewlg7.utimer.enumtype.DeedState.DEFER;
-import static ahtewlg7.utimer.enumtype.DeedState.DELEGATE;
-import static ahtewlg7.utimer.enumtype.DeedState.INBOX;
-import static ahtewlg7.utimer.enumtype.DeedState.MAYBE;
-import static ahtewlg7.utimer.enumtype.DeedState.ONE_QUARTER;
+import static ahtewlg7.utimer.enumtype.DeedState.SCHEDULE;
 
-public class DeedScheduleListFragment extends ADeedListFragment implements BaseDeedListMvpP.IBaseDeedMvpV {
+public class DeedScheduleListFragment extends ADeedListFragment implements ScheduleDeedListMvpP.IScheduleMvpV {
     @BindView(R.id.fragment_deed_calendar_calendarLayout)
     CalendarLayout mCalendarLayout;
 
@@ -49,13 +49,14 @@ public class DeedScheduleListFragment extends ADeedListFragment implements BaseD
         mCalendarView.scrollToCurrent();
 
         showLifeInfo    = false;
-        workState       = new DeedState[]{INBOX, MAYBE, ONE_QUARTER, DEFER, DELEGATE};
+        workState       = new DeedState[]{SCHEDULE};
     }
 
     @Override
     public void onLazyInitView(@Nullable Bundle savedInstanceState) {
         super.onLazyInitView(savedInstanceState);
         listMvpP.toLoadDeedByState(workState);
+        ((ScheduleDeedListMvpP)listMvpP).toLoadScheduleDate();
     }
 
     /**********************************************AToolbarBkFragment**********************************************/
@@ -78,7 +79,28 @@ public class DeedScheduleListFragment extends ADeedListFragment implements BaseD
 
     @NonNull
     @Override
+    protected BaseDeedListMvpP getDeedMvpP() {
+        return new ScheduleDeedListMvpP(this);
+    }
+
+    @NonNull
+    @Override
     protected SimpleDeedRecyclerView getRecyclerView() {
         return recyclerView;
+    }
+    /**********************************************IScheduleMvpV**********************************************/
+    @Override
+    public void onScheduleDateGetStart() {
+
+    }
+
+    @Override
+    public void onScheduleDateGetSucc(Map<String, Calendar> calendarMap) {
+        mCalendarView.setSchemeDate(calendarMap);
+    }
+
+    @Override
+    public void onScheduleDateGetErr(Throwable err) {
+
     }
 }

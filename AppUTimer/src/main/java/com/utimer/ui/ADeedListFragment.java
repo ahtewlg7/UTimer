@@ -43,6 +43,7 @@ public abstract class ADeedListFragment extends AButterKnifeFragment
     public static final int INIT_POSITION = -1;
 
     protected abstract @NonNull DeedState[] getLoadDeedState();
+    protected abstract @NonNull BaseDeedListMvpP getDeedMvpP();
     protected abstract @NonNull SimpleDeedRecyclerView getRecyclerView();
 
     protected int editIndex = -1;
@@ -65,7 +66,7 @@ public abstract class ADeedListFragment extends AButterKnifeFragment
                 null,null,
                 null,null);
         getRecyclerView().setSpanner(this);
-        listMvpP = new BaseDeedListMvpP(this);
+        listMvpP = getDeedMvpP();
 
         EventBusFatory.getInstance().getDefaultEventBus().register(this);
     }

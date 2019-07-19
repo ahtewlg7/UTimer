@@ -12,6 +12,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.reactivestreams.Publisher;
 
 import java.util.ArrayList;
@@ -20,8 +21,8 @@ import java.util.List;
 import ahtewlg7.utimer.common.IdAction;
 import ahtewlg7.utimer.entity.gtd.GtdDeedBuilder;
 import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
-import ahtewlg7.utimer.enumtype.DeedState;
 import ahtewlg7.utimer.enumtype.DateLife;
+import ahtewlg7.utimer.enumtype.DeedState;
 import ahtewlg7.utimer.nlp.NlpAction;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Function;
@@ -35,12 +36,14 @@ public class GtdDeedByUuidFactory extends ABaseLruCacheFactory<String, GtdDeedEn
 
     private BiMap<String, String> titleUuidMap;
     private Multimap<DeedState, String> stateUuidMultiMap;
+    private Multimap<LocalDate, String> dateUuidMultiMap;
 
 
     protected GtdDeedByUuidFactory(){
         super();
         titleUuidMap = HashBiMap.create();
         stateUuidMultiMap   = HashMultimap.create();
+        dateUuidMultiMap    = HashMultimap.create();
     }
 
     public static GtdDeedByUuidFactory getInstance() {
@@ -55,30 +58,37 @@ public class GtdDeedByUuidFactory extends ABaseLruCacheFactory<String, GtdDeedEn
     }
 
     @Override
-    protected boolean ifValueValid(GtdDeedEntity actionEntity) {
-        return actionEntity != null && actionEntity.ifValid();
+    protected boolean ifValueValid(GtdDeedEntity deedEntity) {
+        return deedEntity != null && deedEntity.ifValid();
     }
 
     @Override
-    public boolean add(String key, GtdDeedEntity actionEntity) {
+    public boolean add(String key, GtdDeedEntity deedEntity) {
         if(titleUuidMap.containsKey(key))
             return false;
-        boolean result = super.add(key, actionEntity);
-        if(result && actionEntity.getDetail().isPresent())
-            titleUuidMap.put(actionEntity.getDetail().get(), actionEntity.getUuid());
-        if(result && actionEntity.getDeedState() != null)
-            stateUuidMultiMap.put(actionEntity.getDeedState(), actionEntity.getUuid());
+        boolean result = super.add(key, deedEntity);
+        if(result && deedEntity.getDetail().isPresent())
+            titleUuidMap.put(deedEntity.getDetail().get(), deedEntity.getUuid());
+        if(result && deedEntity.getDeedState() != null)
+            stateUuidMultiMap.put(deedEntity.getDeedState(), deedEntity.getUuid());
+        //todo: firstWorkTime to multiWorkTime
+        if(result && deedEntity.getFirstWorkTime().isPresent())
+            dateUuidMultiMap.put(deedEntity.getFirstWorkTime().get().toLocalDate(), deedEntity.getUuid());
         return result;
     }
 
     @Override
     public GtdDeedEntity remove(String key) {
-        GtdDeedEntity actionEntity = super.remove(key);
-        if(actionEntity != null && actionEntity.ifValid() && titleUuidMap.containsValue(actionEntity.getUuid()))
-            titleUuidMap.inverse().remove(actionEntity.getUuid());
-        if(actionEntity != null && actionEntity.ifValid())
-            stateUuidMultiMap.remove(actionEntity.getDeedState(), actionEntity.getUuid());
-        return actionEntity;
+        GtdDeedEntity deedEntity = super.remove(key);
+        if(deedEntity != null && deedEntity.ifValid() && titleUuidMap.containsValue(deedEntity.getUuid()))
+            titleUuidMap.inverse().remove(deedEntity.getUuid());
+        if(deedEntity != null && deedEntity.ifValid())
+            stateUuidMultiMap.remove(deedEntity.getDeedState(), deedEntity.getUuid());
+        if(deedEntity != null && deedEntity.ifValid() && deedEntity.getWarningTimeList() != null) {
+            for(DateTime date : deedEntity.getWarningTimeList())
+                dateUuidMultiMap.remove(date.toLocalDate(), deedEntity.getUuid());
+        }
+        return deedEntity;
     }
 
     @Override
@@ -86,6 +96,7 @@ public class GtdDeedByUuidFactory extends ABaseLruCacheFactory<String, GtdDeedEn
         super.clearAll();
         titleUuidMap.clear();
         stateUuidMultiMap.clear();
+        dateUuidMultiMap.clear();
     }
     public Optional<GtdDeedEntity> create(String msg){
         return create(msg, msg, null);
@@ -111,10 +122,10 @@ public class GtdDeedByUuidFactory extends ABaseLruCacheFactory<String, GtdDeedEn
         gtdActionEntity.setLastAccessTime(DateTime.now());
         return Optional.of(gtdActionEntity);
     }
-    public void updateState(DeedState preState, GtdDeedEntity actionEntity){
-        if(preState != null && actionEntity != null && actionEntity.ifValid()) {
-            stateUuidMultiMap.remove(preState, actionEntity.getUuid());
-            stateUuidMultiMap.put(actionEntity.getDeedState(), actionEntity.getUuid());
+    public void updateState(DeedState preState, GtdDeedEntity deedEntity){
+        if(preState != null && deedEntity != null && deedEntity.ifValid()) {
+            stateUuidMultiMap.remove(preState, deedEntity.getUuid());
+            stateUuidMultiMap.put(deedEntity.getDeedState(), deedEntity.getUuid());
         }
     }
 
@@ -127,6 +138,25 @@ public class GtdDeedByUuidFactory extends ABaseLruCacheFactory<String, GtdDeedEn
             }
         });
     }
+
+    public Flowable<LocalDate> getScheduleDate(){
+        /*Set<LocalDate> dateSet = Sets.newTreeSet(DateTimeComparator.getDateOnlyInstance());
+        dateSet.addAll(dateUuidMultiMap.keySet());
+        return Flowable.fromIterable(dateSet);*/
+        return Flowable.fromIterable(dateUuidMultiMap.keySet());
+    }
+    public Flowable<GtdDeedEntity> getEntityByDate(@NonNull LocalDate localDate){
+        return Flowable.fromIterable(getEntityByUuid(new ArrayList<String>(dateUuidMultiMap.get(localDate))));
+    }
+    public Flowable<List<GtdDeedEntity>> getEntityByDate(@NonNull LocalDate... localDate){
+        return Flowable.fromArray(localDate).map(new Function<LocalDate, List<GtdDeedEntity>>() {
+            @Override
+            public List<GtdDeedEntity> apply(LocalDate date) throws Exception {
+                return getEntityByDate(date).toList().blockingGet();
+            }
+        });
+    }
+
     public Flowable<GtdDeedEntity> getEntityByState(@NonNull DeedState actState){
         return Flowable.fromIterable(getEntityByUuid(new ArrayList<String>(stateUuidMultiMap.get(actState))));
     }

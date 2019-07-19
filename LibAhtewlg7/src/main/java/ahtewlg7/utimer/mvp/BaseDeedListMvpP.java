@@ -37,9 +37,9 @@ import io.reactivex.functions.Consumer;
  * Created by lw on 2019/6/25.
  */
 public class BaseDeedListMvpP {
-    private IBaseDeedMvpV mvpV;
-    private BaseDeedMvpM mvpM;
-    private DeedStateGraph stateGraph;
+    protected IBaseDeedMvpV mvpV;
+    protected BaseDeedMvpM mvpM;
+    protected DeedStateGraph stateGraph;
 
     public BaseDeedListMvpP(IBaseDeedMvpV mvpV){
         this.mvpV  = mvpV;
@@ -57,36 +57,36 @@ public class BaseDeedListMvpP {
     }
     public void toLoad(@NonNull Flowable<List<GtdDeedEntity>> loadRx){
         loadRx.compose(((RxFragment)mvpV.getRxLifeCycleBindView()).<List<GtdDeedEntity>>bindUntilEvent(FragmentEvent.DESTROY))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new MySafeSubscriber<List<GtdDeedEntity>>() {
-                    List<GtdDeedEntity> allEntity = Lists.newArrayList();
-                    @Override
-                    public void onSubscribe(Subscription s) {
-                        super.onSubscribe(s);
-                        if(mvpV != null)
-                            mvpV.onLoadStart();
-                    }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new MySafeSubscriber<List<GtdDeedEntity>>() {
+                List<GtdDeedEntity> allEntity = Lists.newArrayList();
+                @Override
+                public void onSubscribe(Subscription s) {
+                    super.onSubscribe(s);
+                    if(mvpV != null)
+                        mvpV.onLoadStart();
+                }
 
-                    @Override
-                    public void onNext(List<GtdDeedEntity> entityList) {
-                        super.onNext(entityList);
-                        allEntity.addAll(entityList);
-                    }
+                @Override
+                public void onNext(List<GtdDeedEntity> entityList) {
+                    super.onNext(entityList);
+                    allEntity.addAll(entityList);
+                }
 
-                    @Override
-                    public void onError(Throwable t) {
-                        super.onError(t);
-                        if(mvpV != null)
-                            mvpV.onLoadErr(t);
-                    }
+                @Override
+                public void onError(Throwable t) {
+                    super.onError(t);
+                    if(mvpV != null)
+                        mvpV.onLoadErr(t);
+                }
 
-                    @Override
-                    public void onComplete() {
-                        super.onComplete();
-                        if(mvpV != null)
-                            mvpV.onLoadSucc(allEntity);
-                    }
-                });
+                @Override
+                public void onComplete() {
+                    super.onComplete();
+                    if(mvpV != null)
+                        mvpV.onLoadSucc(allEntity);
+                }
+            });
     }
 
     public void toTagDeed(final GtdDeedEntity deedEntity, final DeedState deedState, final int position){
@@ -143,8 +143,11 @@ public class BaseDeedListMvpP {
             toLoadDeedByState(state);
     }
 
-    class BaseDeedMvpM{
-        Flowable<List<GtdDeedEntity>> toLoad(DeedState... state) {
+    public class BaseDeedMvpM{
+        public Flowable<LocalDate> loadScheduleDate(){
+            return GtdDeedByUuidFactory.getInstance().getScheduleDate();
+        }
+        public Flowable<List<GtdDeedEntity>> toLoad(DeedState... state) {
             return GtdDeedByUuidFactory.getInstance().getEntityByState(state)
                     .doOnNext(new Consumer<List<GtdDeedEntity>>() {
                         @Override
@@ -153,7 +156,7 @@ public class BaseDeedListMvpP {
                         }
                     });
         }
-        Flowable<List<GtdDeedEntity>> toLoad(LocalDate... dates) {
+        public Flowable<List<GtdDeedEntity>> toLoad(LocalDate... dates) {
             return GtdDeedByUuidFactory.getInstance().getEntityByDate(dates)
                     .doOnNext(new Consumer<List<GtdDeedEntity>>() {
                         @Override
@@ -162,7 +165,7 @@ public class BaseDeedListMvpP {
                         }
                     });
         }
-        Flowable<Optional<BaseEventBusBean>> toTag(GtdDeedEntity entity, DeedState state) {
+        public Flowable<Optional<BaseEventBusBean>> toTag(GtdDeedEntity entity, DeedState state) {
             Optional<BaseEventBusBean> busBean = Optional.absent();
             if(entity == null || state == null)
                 return Flowable.just(busBean);

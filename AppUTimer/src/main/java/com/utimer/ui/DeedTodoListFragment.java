@@ -58,7 +58,14 @@ public class DeedTodoListFragment extends ADeedListFragment implements BaseDeedL
 
     @NonNull
     @Override
+    protected BaseDeedListMvpP getDeedMvpP() {
+        return new BaseDeedListMvpP(this);
+    }
+
+    @NonNull
+    @Override
     protected SimpleDeedRecyclerView getRecyclerView() {
         return recyclerView;
     }
+
 }

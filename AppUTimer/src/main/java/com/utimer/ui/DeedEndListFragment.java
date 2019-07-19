@@ -72,6 +72,12 @@ public class DeedEndListFragment extends ADeedListFragment implements BaseDeedLi
 
     @NonNull
     @Override
+    protected BaseDeedListMvpP getDeedMvpP() {
+        return new BaseDeedListMvpP(this);
+    }
+
+    @NonNull
+    @Override
     protected SimpleDeedRecyclerView getRecyclerView() {
         return recyclerView;
     }

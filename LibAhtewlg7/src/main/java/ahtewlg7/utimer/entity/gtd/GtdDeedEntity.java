@@ -83,21 +83,18 @@ public class GtdDeedEntity extends AGtdUtimerEntity<GtdDeedBuilder>
             return Optional.of(warningTimeList.get(0));
         return super.getFirstWorkTime();
     }
+    public List<DateTime> getWarningTimeList() {
+        return warningTimeList;
+    }
+    public void setWarningTimeList(List<DateTime> warningTimeList) {
+        this.warningTimeList = warningTimeList;
+    }
 
     public DeedState getDeedState() {
         return deedState;
     }
-
     public void setDeedState(DeedState deedState) {
         this.deedState = deedState;
-    }
-
-    public List<DateTime> getWarningTimeList() {
-        return warningTimeList;
-    }
-
-    public void setWarningTimeList(List<DateTime> warningTimeList) {
-        this.warningTimeList = warningTimeList;
     }
 
     //todo
