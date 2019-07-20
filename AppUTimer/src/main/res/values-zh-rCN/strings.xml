@@ -7,6 +7,7 @@
 
     <string name="span_tag_more">更多</string>
 
+    <string name="title_calendar_scheme">事</string>
     <string name="title_msg">消息</string>
     <string name="title_time">时间</string>
     <string name="title_note">笔记</string>
@@ -29,6 +30,7 @@
     <string name="title_deed_tag_reference">原材料</string>
     <string name="title_deed_tag_wish">可能做</string>
     <string name="title_deed_tag_quarter">一刻钟</string>
+    <string name="title_deed_tag_schedule">倒计时</string>
     <string name="title_deed_tag_project">分步做</string>
     <string name="title_deed_tag_defer">准备做</string>
     <string name="title_deed_tag_delegate">别人做</string>
@@ -62,6 +64,7 @@
     <string name="prompt_deed_tag_useless">该信息已无效</string>
     <string name="prompt_deed_tag_reference">该信息可能以后会作为参考资料</string>
     <string name="prompt_deed_tag_wish">该工作可做可不做，但有备无患，做了总是有好处</string>
+    <string name="prompt_deed_tag_schedule">该工作已进入24小时倒计时</string>
     <string name="prompt_deed_tag_one_quarter">该工作可以在很短时间内随手完成</string>
     <string name="prompt_deed_tag_project">该工作需要分多步骤完成</string>
     <string name="prompt_deed_tag_defer">该工作必须做，而且必须得亲自做</string>

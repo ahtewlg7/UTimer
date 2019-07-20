@@ -42,7 +42,7 @@
             app:month_view_show_mode="mode_only_current"
 
             app:scheme_lunar_text_color="#CFCFCF"
-            app:scheme_text_color="#333"
+            app:scheme_text_color="#ffc0cb"
             app:scheme_theme_color="#128c4b"
 
             app:current_day_lunar_text_color="#FF00FF00"

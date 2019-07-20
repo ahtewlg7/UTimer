@@ -24,6 +24,7 @@
 
     <string name="span_tag_more">more</string>
 
+    <string name="title_calendar_scheme">Do</string>
     <string name="title_activity_utimer">UTimerActivity</string>
     <string name="title_msg">Msg</string>
     <string name="title_time">Time</string>
@@ -45,6 +46,7 @@
     <string name="title_deed_tag_trash">Trash</string>
     <string name="title_deed_tag_reference">Reference</string>
     <string name="title_deed_tag_wish">Wish</string>
+    <string name="title_deed_tag_schedule">CountDown</string>
     <string name="title_deed_tag_quarter">One Quarter</string>
     <string name="title_deed_tag_project">Project</string>
     <string name="title_deed_tag_defer">Defer</string>
@@ -88,6 +90,7 @@
     <string name="prompt_deed_tag_useless">This message is useless</string>
     <string name="prompt_deed_tag_reference">This message may be retrievable when required</string>
     <string name="prompt_deed_tag_wish">This job no need to do ,but it is meaningful if you fix it</string>
+    <string name="prompt_deed_tag_schedule">This job must be finished in 24h</string>
     <string name="prompt_deed_tag_one_quarter">This job will be finished in 15 min</string>
     <string name="prompt_deed_tag_project">This job will be finished by many steps</string>
     <string name="prompt_deed_tag_defer">This job will be finished , and just by yourself</string>

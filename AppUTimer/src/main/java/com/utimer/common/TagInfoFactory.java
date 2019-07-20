@@ -23,6 +23,9 @@ public class TagInfoFactory {
     public @StringRes int getTagTitleRid(@NonNull DeedState deedState){
         int tmp = INVALID_TAG_RID;
         switch(deedState){
+            case SCHEDULE:
+                tmp = R.string.title_deed_tag_schedule;
+                break;
             case ONE_QUARTER:
                 tmp = R.string.title_deed_tag_quarter;
                 break;
@@ -60,6 +63,9 @@ public class TagInfoFactory {
     public @StringRes int getTagDetailRid(@NonNull DeedState deedState){
         int tmp = INVALID_TAG_RID;
         switch(deedState){
+            case SCHEDULE:
+                tmp = R.string.prompt_deed_tag_schedule;
+                break;
             case ONE_QUARTER:
                 tmp = R.string.prompt_deed_tag_one_quarter;
                 break;
