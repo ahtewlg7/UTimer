@@ -70,7 +70,7 @@ public class DeedStateGraph {
         graph.putEdge(MAYBE, ONE_QUARTER);
         graph.putEdge(MAYBE, DEFER);
         graph.putEdge(MAYBE, DELEGATE);
-        graph.putEdge(MAYBE, PROJECT);
+//        graph.putEdge(MAYBE, PROJECT);
         graph.putEdge(MAYBE, WISH);
         graph.putEdge(MAYBE, REFERENCE);
         graph.putEdge(MAYBE, DONE);
@@ -82,7 +82,7 @@ public class DeedStateGraph {
         graph.putEdge(INBOX, ONE_QUARTER);
         graph.putEdge(INBOX, DEFER);
         graph.putEdge(INBOX, DELEGATE);
-        graph.putEdge(INBOX, PROJECT);
+//        graph.putEdge(INBOX, PROJECT);
         graph.putEdge(INBOX, WISH);
         graph.putEdge(INBOX, REFERENCE);
         graph.putEdge(INBOX, DONE);
@@ -94,7 +94,7 @@ public class DeedStateGraph {
         graph.putEdge(REFERENCE, ONE_QUARTER);
         graph.putEdge(REFERENCE, DEFER);
         graph.putEdge(REFERENCE, DELEGATE);
-        graph.putEdge(REFERENCE, PROJECT);
+//        graph.putEdge(REFERENCE, PROJECT);
         graph.putEdge(REFERENCE, WISH);
         graph.putEdge(REFERENCE, DONE);
 //        graph.putEdge(REFERENCE, CALENDAR);
@@ -104,7 +104,7 @@ public class DeedStateGraph {
     private void initOneQuarterNode(){
         graph.putEdge(ONE_QUARTER, DEFER);
         graph.putEdge(ONE_QUARTER, DELEGATE);
-        graph.putEdge(ONE_QUARTER, PROJECT);
+//        graph.putEdge(ONE_QUARTER, PROJECT);
 //        graph.putEdge(ONE_QUARTER, CALENDAR);
         graph.putEdge(ONE_QUARTER, WISH);
         graph.putEdge(ONE_QUARTER, DONE);
@@ -114,7 +114,7 @@ public class DeedStateGraph {
     private void initDeferNode(){
         graph.putEdge(DEFER, ONE_QUARTER);
         graph.putEdge(DEFER, DELEGATE);
-        graph.putEdge(DEFER, PROJECT);
+//        graph.putEdge(DEFER, PROJECT);
 //        graph.putEdge(DEFER, CALENDAR);
         graph.putEdge(DEFER, WISH);
         graph.putEdge(DEFER, DONE);
@@ -124,7 +124,7 @@ public class DeedStateGraph {
     private void initDelegateNode(){
         graph.putEdge(DELEGATE, ONE_QUARTER);
         graph.putEdge(DELEGATE, DEFER);
-        graph.putEdge(DELEGATE, PROJECT);
+//        graph.putEdge(DELEGATE, PROJECT);
 //        graph.putEdge(DELEGATE, CALENDAR);
         graph.putEdge(DELEGATE, WISH);
         graph.putEdge(DELEGATE, DONE);
@@ -139,7 +139,7 @@ public class DeedStateGraph {
         graph.putEdge(CALENDAR, ONE_QUARTER);
         graph.putEdge(CALENDAR, DEFER);
         graph.putEdge(CALENDAR, DELEGATE);
-        graph.putEdge(CALENDAR, PROJECT);
+//        graph.putEdge(CALENDAR, PROJECT);
         graph.putEdge(CALENDAR, WISH);
         graph.putEdge(CALENDAR, DONE);
         graph.putEdge(CALENDAR, USELESS);
@@ -149,7 +149,7 @@ public class DeedStateGraph {
         graph.putEdge(WISH, ONE_QUARTER);
         graph.putEdge(WISH, DEFER);
         graph.putEdge(WISH, DELEGATE);
-        graph.putEdge(WISH, PROJECT);
+//        graph.putEdge(WISH, PROJECT);
 //        graph.putEdge(WISH, CALENDAR);
         graph.putEdge(WISH, DONE);
         graph.putEdge(WISH, USELESS);
@@ -159,7 +159,7 @@ public class DeedStateGraph {
         graph.putEdge(USELESS, ONE_QUARTER);
         graph.putEdge(USELESS, DEFER);
         graph.putEdge(USELESS, DELEGATE);
-        graph.putEdge(USELESS, PROJECT);
+//        graph.putEdge(USELESS, PROJECT);
 //        graph.putEdge(USELESS, CALENDAR);
         graph.putEdge(USELESS, DONE);
         graph.putEdge(USELESS, WISH);

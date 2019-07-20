@@ -5,18 +5,19 @@ import com.google.common.collect.Lists;
 import java.util.List;
 
 public enum DeedState {
-    MAYBE(0, 11),//it may be parse by ai，but sometime it is not correct.
-    TRASH(1, 8),
-    INBOX(2,10),
-    REFERENCE(10, 5),
-    WISH(4, 4),
-    ONE_QUARTER(5, 0),
-    PROJECT(6, 3),
-    DEFER(7, 1),
-    CALENDAR(8, 9),
-    DELEGATE(9, 2),
-    DONE(3, 6),
-    USELESS(11, 7);
+    MAYBE(0, 12),//it may be parse by ai，but sometime it is not correct.
+    TRASH(1, 9),
+    INBOX(2,11),
+    REFERENCE(10, 6),
+    WISH(4, 5),
+    ONE_QUARTER(5, 1),
+    PROJECT(6, 4),
+    DEFER(7, 2),
+    CALENDAR(8, 10),
+    DELEGATE(9, 3),
+    DONE(3, 7),
+    USELESS(11, 8),
+    SCHEDULE(12, 0);
 
     private int value;
     private int order;
@@ -66,6 +67,9 @@ public enum DeedState {
             case 11:
                 tmp = USELESS;
                 break;
+            case 12:
+                tmp = SCHEDULE;
+                break;
         }
         return tmp;
     }
@@ -75,39 +79,42 @@ public enum DeedState {
         switch (index){
             default:
             case 0:
-                tmp = ONE_QUARTER;
+                tmp = SCHEDULE;
                 break;
             case 1:
-                tmp = DEFER;
+                tmp = ONE_QUARTER;
                 break;
             case 2:
-                tmp = DELEGATE;
+                tmp = DEFER;
                 break;
             case 3:
-                tmp = PROJECT;
+                tmp = DELEGATE;
                 break;
             case 4:
-                tmp = WISH;
+                tmp = PROJECT;
                 break;
             case 5:
-                tmp = REFERENCE;
+                tmp = WISH;
                 break;
             case 6:
-                tmp = DONE;
+                tmp = REFERENCE;
                 break;
             case 7:
-                tmp = USELESS;
+                tmp = DONE;
                 break;
             case 8:
-                tmp = TRASH;
+                tmp = USELESS;
                 break;
             case 9:
-                tmp = CALENDAR;
+                tmp = TRASH;
                 break;
             case 10:
-                tmp = INBOX;
+                tmp = CALENDAR;
                 break;
             case 11:
+                tmp = INBOX;
+                break;
+            case 12:
                 tmp = MAYBE;
                 break;
         }
