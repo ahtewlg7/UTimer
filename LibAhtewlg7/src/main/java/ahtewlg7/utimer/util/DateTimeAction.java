@@ -76,6 +76,9 @@ public class DateTimeAction {
     public boolean isInPast(DateTime dateTime){
         return dateTime != null && dateTime.isBefore(DateTime.now().withTimeAtStartOfDay());
     }
+    public boolean isIn24Hour(DateTime dateTime){
+        return dateTime != null && DateTime.now().isBefore(dateTime.plusHours(24));
+    }
     public boolean isInToday(DateTime dateTime){
         return dateTime != null && dateTime.isBefore(DateTime.now().plusDays(1).withTimeAtStartOfDay());
     }

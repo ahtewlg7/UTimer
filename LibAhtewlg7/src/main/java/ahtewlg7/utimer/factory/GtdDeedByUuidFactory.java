@@ -36,14 +36,13 @@ public class GtdDeedByUuidFactory extends ABaseLruCacheFactory<String, GtdDeedEn
 
     private BiMap<String, String> titleUuidMap;
     private Multimap<DeedState, String> stateUuidMultiMap;
-    private Multimap<LocalDate, String> dateUuidMultiMap;
-
+    private Multimap<LocalDate, String> wraningDateUuidMultiMap;
 
     protected GtdDeedByUuidFactory(){
         super();
-        titleUuidMap = HashBiMap.create();
-        stateUuidMultiMap   = HashMultimap.create();
-        dateUuidMultiMap    = HashMultimap.create();
+        titleUuidMap            = HashBiMap.create();
+        stateUuidMultiMap       = HashMultimap.create();
+        wraningDateUuidMultiMap = HashMultimap.create();
     }
 
     public static GtdDeedByUuidFactory getInstance() {
@@ -73,7 +72,7 @@ public class GtdDeedByUuidFactory extends ABaseLruCacheFactory<String, GtdDeedEn
             stateUuidMultiMap.put(deedEntity.getDeedState(), deedEntity.getUuid());
         //todo: firstWorkTime to multiWorkTime
         if(result && deedEntity.getFirstWorkTime().isPresent())
-            dateUuidMultiMap.put(deedEntity.getFirstWorkTime().get().toLocalDate(), deedEntity.getUuid());
+            wraningDateUuidMultiMap.put(deedEntity.getFirstWorkTime().get().toLocalDate(), deedEntity.getUuid());
         return result;
     }
 
@@ -86,7 +85,7 @@ public class GtdDeedByUuidFactory extends ABaseLruCacheFactory<String, GtdDeedEn
             stateUuidMultiMap.remove(deedEntity.getDeedState(), deedEntity.getUuid());
         if(deedEntity != null && deedEntity.ifValid() && deedEntity.getWarningTimeList() != null) {
             for(DateTime date : deedEntity.getWarningTimeList())
-                dateUuidMultiMap.remove(date.toLocalDate(), deedEntity.getUuid());
+                wraningDateUuidMultiMap.remove(date.toLocalDate(), deedEntity.getUuid());
         }
         return deedEntity;
     }
@@ -96,7 +95,7 @@ public class GtdDeedByUuidFactory extends ABaseLruCacheFactory<String, GtdDeedEn
         super.clearAll();
         titleUuidMap.clear();
         stateUuidMultiMap.clear();
-        dateUuidMultiMap.clear();
+        wraningDateUuidMultiMap.clear();
     }
     public Optional<GtdDeedEntity> create(String msg){
         return create(msg, msg, null);
@@ -140,19 +139,16 @@ public class GtdDeedByUuidFactory extends ABaseLruCacheFactory<String, GtdDeedEn
     }
 
     public Flowable<LocalDate> getScheduleDate(){
-        /*Set<LocalDate> dateSet = Sets.newTreeSet(DateTimeComparator.getDateOnlyInstance());
-        dateSet.addAll(dateUuidMultiMap.keySet());
-        return Flowable.fromIterable(dateSet);*/
-        return Flowable.fromIterable(dateUuidMultiMap.keySet());
+        return Flowable.fromIterable(wraningDateUuidMultiMap.keySet());
     }
     public Flowable<GtdDeedEntity> getEntityByDate(@NonNull LocalDate localDate){
-        return Flowable.fromIterable(getEntityByUuid(new ArrayList<String>(dateUuidMultiMap.get(localDate))));
+        return Flowable.fromIterable(getEntityByUuid(new ArrayList<String>(wraningDateUuidMultiMap.get(localDate))));
     }
     public Flowable<List<GtdDeedEntity>> getEntityByDate(@NonNull LocalDate... localDate){
         return Flowable.fromArray(localDate).map(new Function<LocalDate, List<GtdDeedEntity>>() {
             @Override
-            public List<GtdDeedEntity> apply(LocalDate date) throws Exception {
-                return getEntityByDate(date).toList().blockingGet();
+            public List<GtdDeedEntity> apply(LocalDate localDate) throws Exception {
+                return getEntityByDate(localDate).toList().blockingGet();
             }
         });
     }

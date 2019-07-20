@@ -5,14 +5,20 @@ import android.graphics.BlurMaskFilter;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.RectF;
 import android.text.TextUtils;
 import android.view.View;
 
+import com.google.common.base.Optional;
 import com.haibin.calendarview.Calendar;
 import com.haibin.calendarview.WeekView;
 import com.utimer.R;
+import com.utimer.common.CalendarSchemeFactory;
+import com.utimer.entity.CalendarSchemeInfo;
 
 import ahtewlg7.utimer.util.MyRInfo;
+
+import static com.utimer.entity.CalendarSchemeInfo.INVALID_PROGRESS;
 
 public class CalendarWeekView extends WeekView {
 
@@ -40,6 +46,12 @@ public class CalendarWeekView extends WeekView {
      */
     private Paint mCurrentDayPaint = new Paint();
 
+    /**
+     * 进度条
+     */
+    private Paint mProgressPaint = new Paint();
+    private Paint mNoneProgressPaint = new Paint();
+
 
     /**
      * 圆点半径
@@ -55,6 +67,8 @@ public class CalendarWeekView extends WeekView {
     private Paint mSchemeBasicPaint = new Paint();
 
     private float mSchemeBaseLine;
+
+    private CalendarSchemeFactory calendarInfoFactory;
 
     public CalendarWeekView(Context context) {
         super(context);
@@ -79,10 +93,18 @@ public class CalendarWeekView extends WeekView {
         mPointPaint.setTextAlign(Paint.Align.CENTER);
         mPointPaint.setColor(Color.RED);
 
-
         mCurrentDayPaint.setAntiAlias(true);
         mCurrentDayPaint.setStyle(Paint.Style.FILL);
         mCurrentDayPaint.setColor(Color.WHITE);
+
+        mProgressPaint.setAntiAlias(true);
+        mProgressPaint.setStyle(Paint.Style.STROKE);
+        mProgressPaint.setStrokeWidth(dipToPx(context, 2.2f));
+
+        mNoneProgressPaint.setAntiAlias(true);
+        mNoneProgressPaint.setStyle(Paint.Style.STROKE);
+        mNoneProgressPaint.setStrokeWidth(dipToPx(context, 2.2f));
+        mNoneProgressPaint.setColor(0xffaaaaaa);
 
 
         mCircleRadius = dipToPx(getContext(), 7);
@@ -101,6 +123,8 @@ public class CalendarWeekView extends WeekView {
 
         setLayerType(View.LAYER_TYPE_SOFTWARE, mSchemeBasicPaint);
         mSchemeBasicPaint.setMaskFilter(new BlurMaskFilter(28, BlurMaskFilter.Blur.SOLID));
+
+        calendarInfoFactory = new CalendarSchemeFactory();
     }
 
 
@@ -119,21 +143,25 @@ public class CalendarWeekView extends WeekView {
         return true;
     }
 
-    @SuppressWarnings("IntegerDivisionInFloatingPointContext")
     @Override
     protected void onDrawScheme(Canvas canvas, Calendar calendar, int x) {
+        Optional<CalendarSchemeInfo> calendarInfoOptional = calendarInfoFactory.toObject(calendar.getScheme());
+        if(!calendarInfoOptional.isPresent() || calendarInfoOptional.get().getProgress() == INVALID_PROGRESS)
+            return;
 
-        boolean isSelected = isSelected(calendar);
-        if (isSelected) {
-            mPointPaint.setColor(Color.WHITE);
-        } else {
-            mPointPaint.setColor(Color.GRAY);
-        }
+        int cx = x + mItemWidth / 2;
+        int cy = mItemHeight / 2;
 
-        canvas.drawCircle(x + mItemWidth / 2, mItemHeight - 3 * mPadding, mPointRadius, mPointPaint);
+        int angle = getAngle(calendarInfoOptional.get().getProgress());
+
+        mProgressPaint.setColor(calendar.getSchemeColor());
+        RectF progressRectF = new RectF(cx - mRadius, cy - mRadius, cx + mRadius, cy + mRadius);
+        canvas.drawArc(progressRectF, -90, angle, false, mProgressPaint);
+
+        RectF noneRectF = new RectF(cx - mRadius, cy - mRadius, cx + mRadius, cy + mRadius);
+        canvas.drawArc(noneRectF, angle - 90, 360 - angle, false, mNoneProgressPaint);
     }
 
-    @SuppressWarnings("IntegerDivisionInFloatingPointContext")
     @Override
     protected void onDrawText(Canvas canvas, Calendar calendar, int x, boolean hasScheme, boolean isSelected) {
         int cx = x + mItemWidth / 2;
@@ -144,21 +172,16 @@ public class CalendarWeekView extends WeekView {
             canvas.drawCircle(cx, cy, mRadius, mCurrentDayPaint);
         }
 
-        if(hasScheme){
-            canvas.drawCircle(x + mItemWidth - mPadding - mCircleRadius / 2, mPadding + mCircleRadius, mCircleRadius, mSchemeBasicPaint);
+        Optional<CalendarSchemeInfo> calendarInfoOptional = calendarInfoFactory.toObject(calendar.getScheme());
+        if (hasScheme && calendarInfoOptional.isPresent()) {
             mTextPaint.setColor(calendar.getSchemeColor());
-            canvas.drawText(calendar.getScheme(), x + mItemWidth - mPadding - mCircleRadius, mPadding + mSchemeBaseLine, mTextPaint);
+            canvas.drawText(calendarInfoOptional.get().getTip(), x + mItemWidth - mPadding - mCircleRadius, mPadding + mSchemeBaseLine, mTextPaint);
         }
 
         String today = MyRInfo.getStringByID(R.string.title_calendar_today);
         if (isSelected) {
             canvas.drawText(calendar.isCurrentDay() ? today : String.valueOf(calendar.getDay()), cx, mTextBaseLine + top, mSelectTextPaint);
             canvas.drawText(calendar.getLunar(), cx, mTextBaseLine + mItemHeight / 10, mSelectedLunarTextPaint);
-        } else if (hasScheme) {
-            canvas.drawText(calendar.isCurrentDay() ? today : String.valueOf(calendar.getDay()), cx, mTextBaseLine + top,
-                    calendar.isCurrentMonth() ? mSchemeTextPaint : mOtherMonthTextPaint);
-            canvas.drawText(calendar.getLunar(), cx, mTextBaseLine + mItemHeight / 10,
-                    !TextUtils.isEmpty(calendar.getSolarTerm()) ? mSolarTermTextPaint : mSchemeLunarTextPaint);
         } else {
             canvas.drawText(calendar.isCurrentDay() ? today : String.valueOf(calendar.getDay()), cx, mTextBaseLine + top,
                     calendar.isCurrentDay() ? mCurDayTextPaint :
@@ -169,6 +192,16 @@ public class CalendarWeekView extends WeekView {
                                     calendar.isCurrentMonth() ?
                                             mCurMonthLunarTextPaint : mOtherMonthLunarTextPaint);
         }
+    }
+
+    /**
+     * 获取角度
+     *
+     * @param progress 进度
+     * @return 获取角度
+     */
+    private static int getAngle(int progress) {
+        return (int) (progress * 3.6);
     }
 
     /**

@@ -3,10 +3,14 @@ package com.utimer.mvp;
 
 import android.graphics.Color;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
 import com.haibin.calendarview.Calendar;
 import com.trello.rxlifecycle3.android.FragmentEvent;
 import com.trello.rxlifecycle3.components.support.RxFragment;
+import com.utimer.R;
+import com.utimer.common.CalendarSchemeFactory;
+import com.utimer.entity.CalendarSchemeInfo;
 
 import org.joda.time.LocalDate;
 import org.reactivestreams.Subscription;
@@ -14,6 +18,7 @@ import org.reactivestreams.Subscription;
 import java.util.Map;
 
 import ahtewlg7.utimer.mvp.BaseDeedListMvpP;
+import ahtewlg7.utimer.util.MyRInfo;
 import ahtewlg7.utimer.util.MySafeSubscriber;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
@@ -34,8 +39,10 @@ public class ScheduleDeedListMvpP extends BaseDeedListMvpP {
                     calendar.setYear(localDate.getYear());
                     calendar.setMonth(localDate.getMonthOfYear());
                     calendar.setDay(localDate.getDayOfMonth());
-                    calendar.setSchemeColor(Color.RED);//如果单独标记颜色、则会使用这个颜色
-                    calendar.setScheme("事");
+                    calendar.setSchemeColor(Color.GREEN);//如果单独标记颜色、则会使用这个颜色
+                    Optional<String> scheme = getSchemeJson();
+                    if(scheme.isPresent())
+                        calendar.setScheme(scheme.get());
                     return calendar;
                 }
             })
@@ -70,6 +77,11 @@ public class ScheduleDeedListMvpP extends BaseDeedListMvpP {
                         ((IScheduleMvpV)mvpV).onScheduleDateGetSucc(allEntity);
                 }
             });
+    }
+    private Optional<String> getSchemeJson(){
+        CalendarSchemeInfo schemeInfo = new CalendarSchemeInfo();
+        schemeInfo.setTip(MyRInfo.getStringByID(R.string.title_calendar_scheme));
+        return new CalendarSchemeFactory().toJsonStr(schemeInfo);
     }
     public interface IScheduleMvpV extends IBaseDeedMvpV{
         public void onScheduleDateGetStart();

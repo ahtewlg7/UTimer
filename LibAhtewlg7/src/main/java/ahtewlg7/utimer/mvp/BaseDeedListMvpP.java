@@ -157,13 +157,7 @@ public class BaseDeedListMvpP {
                     });
         }
         public Flowable<List<GtdDeedEntity>> toLoad(LocalDate... dates) {
-            return GtdDeedByUuidFactory.getInstance().getEntityByDate(dates)
-                    .doOnNext(new Consumer<List<GtdDeedEntity>>() {
-                        @Override
-                        public void accept(List<GtdDeedEntity> entityList) throws Exception {
-                            Collections.sort(entityList, new DeedWarningTimeComparator().getAscOrder());
-                        }
-                    });
+            return GtdDeedByUuidFactory.getInstance().getEntityByDate(dates);
         }
         public Flowable<Optional<BaseEventBusBean>> toTag(GtdDeedEntity entity, DeedState state) {
             Optional<BaseEventBusBean> busBean = Optional.absent();

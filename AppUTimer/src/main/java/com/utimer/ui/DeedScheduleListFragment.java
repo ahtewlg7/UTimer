@@ -6,6 +6,8 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Multimap;
 import com.haibin.calendarview.Calendar;
 import com.haibin.calendarview.CalendarLayout;
 import com.haibin.calendarview.CalendarView;
@@ -13,8 +15,13 @@ import com.utimer.R;
 import com.utimer.mvp.ScheduleDeedListMvpP;
 import com.utimer.view.SimpleDeedRecyclerView;
 
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+
+import java.util.List;
 import java.util.Map;
 
+import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
 import ahtewlg7.utimer.enumtype.DeedState;
 import ahtewlg7.utimer.mvp.BaseDeedListMvpP;
 import ahtewlg7.utimer.util.MyRInfo;
@@ -22,7 +29,8 @@ import butterknife.BindView;
 
 import static ahtewlg7.utimer.enumtype.DeedState.SCHEDULE;
 
-public class DeedScheduleListFragment extends ADeedListFragment implements ScheduleDeedListMvpP.IScheduleMvpV {
+public class DeedScheduleListFragment extends ADeedListFragment
+        implements ScheduleDeedListMvpP.IScheduleMvpV,CalendarView.OnCalendarSelectListener {
     @BindView(R.id.fragment_deed_calendar_calendarLayout)
     CalendarLayout mCalendarLayout;
 
@@ -33,6 +41,7 @@ public class DeedScheduleListFragment extends ADeedListFragment implements Sched
     SimpleDeedRecyclerView recyclerView;
 
     private DeedState[] workState;
+    private Multimap<LocalDate, GtdDeedEntity> dateDeedMap;
 
     public static DeedScheduleListFragment newInstance() {
         Bundle args = new Bundle();
@@ -47,9 +56,11 @@ public class DeedScheduleListFragment extends ADeedListFragment implements Sched
         super.onViewCreated(inflateView);
 
         mCalendarView.scrollToCurrent();
+        mCalendarView.setOnCalendarSelectListener(this);
 
         showLifeInfo    = false;
         workState       = new DeedState[]{SCHEDULE};
+        dateDeedMap     = LinkedHashMultimap.create();
     }
 
     @Override
@@ -57,6 +68,12 @@ public class DeedScheduleListFragment extends ADeedListFragment implements Sched
         super.onLazyInitView(savedInstanceState);
         listMvpP.toLoadDeedByState(workState);
         ((ScheduleDeedListMvpP)listMvpP).toLoadScheduleDate();
+    }
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if(!hidden)
+            listMvpP.toLoadDeedByDate(DateTime.now().toLocalDate());
     }
 
     /**********************************************AToolbarBkFragment**********************************************/
@@ -88,6 +105,22 @@ public class DeedScheduleListFragment extends ADeedListFragment implements Sched
     protected SimpleDeedRecyclerView getRecyclerView() {
         return recyclerView;
     }
+
+    @Override
+    public void onLoadSucc(List<GtdDeedEntity> entityList) {
+        super.onLoadSucc(entityList);
+    }
+    /**********************************************OnCalendarSelectListener**********************************************/
+    @Override
+    public void onCalendarOutOfRange(Calendar calendar) {
+    }
+
+    @Override
+    public void onCalendarSelect(Calendar calendar, boolean isClick) {
+        LocalDate localDate = new LocalDate(calendar.getYear(), calendar.getMonth(), calendar.getDay());
+        listMvpP.toLoadDeedByDate(localDate);
+    }
+
     /**********************************************IScheduleMvpV**********************************************/
     @Override
     public void onScheduleDateGetStart() {
@@ -97,6 +130,7 @@ public class DeedScheduleListFragment extends ADeedListFragment implements Sched
     @Override
     public void onScheduleDateGetSucc(Map<String, Calendar> calendarMap) {
         mCalendarView.setSchemeDate(calendarMap);
+        listMvpP.toLoadDeedByDate(DateTime.now().toLocalDate());
     }
 
     @Override
