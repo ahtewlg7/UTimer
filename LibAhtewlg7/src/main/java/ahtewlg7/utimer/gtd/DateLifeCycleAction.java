@@ -19,6 +19,8 @@ public class DateLifeCycleAction {
     }
 
     public DateLife getLife(DateTime dateTime){
+        if(dateTime == null)
+            return null;
         DateLife actDateTime = null;
         if(isToday(dateTime))
             actDateTime = DateLife.TODAY;

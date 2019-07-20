@@ -55,6 +55,7 @@ public class DeedScheduleListFragment extends ADeedListFragment
     public void onViewCreated(View inflateView) {
         super.onViewCreated(inflateView);
 
+        mCalendarView.setWeekStarWithMon();
         mCalendarView.scrollToCurrent();
         mCalendarView.setOnCalendarSelectListener(this);
 

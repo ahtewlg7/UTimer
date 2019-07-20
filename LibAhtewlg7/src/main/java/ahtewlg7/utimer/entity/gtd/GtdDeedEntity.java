@@ -47,7 +47,7 @@ public class GtdDeedEntity extends AGtdUtimerEntity<GtdDeedBuilder>
     protected DateTime getLifeCycleTime() {
         if(getFirstWorkTime().isPresent())
             return getFirstWorkTime().get();
-        return super.getCreateTime();
+        return super.getLifeCycleTime();
     }
 
     @Override

@@ -153,7 +153,7 @@ public abstract class AUtimerEntity<T extends AUtimerBuilder> implements ITipsEn
     }
 
     protected DateTime getLifeCycleTime(){
-        return createTime;
+        return null;//todo
     }
 
     protected void toMakeEntityOk(){
