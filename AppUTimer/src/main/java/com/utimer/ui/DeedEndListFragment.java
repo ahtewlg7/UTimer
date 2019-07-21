@@ -39,7 +39,8 @@ public class DeedEndListFragment extends ADeedListFragment implements BaseDeedLi
     public void onViewCreated(View inflateView) {
         super.onViewCreated(inflateView);
 
-        workState = new DeedState[]{DONE, TRASH};
+        showLifeInfo    = false;
+        workState       = new DeedState[]{DONE, TRASH};
     }
     /**********************************************AToolbarBkFragment**********************************************/
     @Override
