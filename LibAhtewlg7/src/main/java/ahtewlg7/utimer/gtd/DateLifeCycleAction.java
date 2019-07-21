@@ -22,7 +22,9 @@ public class DateLifeCycleAction {
         if(dateTime == null)
             return null;
         DateLife actDateTime = null;
-        if(isToday(dateTime))
+        if(inPast(dateTime))
+            actDateTime = DateLife.PAST;
+        else if(isToday(dateTime))
             actDateTime = DateLife.TODAY;
         else if(isTomorrow(dateTime))
             actDateTime = DateLife.TOMORROW;
@@ -43,6 +45,11 @@ public class DateLifeCycleAction {
         return actDateTime;
     }
 
+    public boolean inPast(DateTime dateTime){
+        if(dateTime == null)
+            return false;
+        return dateTimeAction.isInPast(dateTime);
+    }
     public boolean isToday(DateTime dateTime){
         if(dateTime == null)
             return false;
@@ -92,6 +99,9 @@ public class DateLifeCycleAction {
     public String getLifeDetail(DateLife actLife){
         String detail = null;
         switch (actLife){
+            case PAST:
+                detail = MyRInfo.getStringByID(R.string.prompt_action_life_overdue);
+                break;
             case TODAY:
                 detail = MyRInfo.getStringByID(R.string.prompt_action_life_today);
                 break;
