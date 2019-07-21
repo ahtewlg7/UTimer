@@ -13,7 +13,6 @@ import com.google.common.collect.Multimap;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
-import org.reactivestreams.Publisher;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +26,7 @@ import ahtewlg7.utimer.nlp.NlpAction;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by lw on 2019/3/13.
@@ -128,45 +128,31 @@ public class GtdDeedByUuidFactory extends ABaseLruCacheFactory<String, GtdDeedEn
         }
     }
 
-    @Deprecated
-    public Flowable<GtdDeedEntity> getEntityByState(){
-        return Flowable.fromIterable(DeedState.getActiveAll()).flatMap(new Function<DeedState, Publisher<GtdDeedEntity>>() {
-            @Override
-            public Publisher<GtdDeedEntity> apply(DeedState actState) throws Exception {
-                return getEntityByState(actState);
-            }
-        });
-    }
-
     public Flowable<LocalDate> getScheduleDate(){
-        return Flowable.fromIterable(wraningDateUuidMultiMap.keySet());
-    }
-    public Flowable<GtdDeedEntity> getEntityByDate(@NonNull LocalDate localDate){
-        return Flowable.fromIterable(getEntityByUuid(new ArrayList<String>(wraningDateUuidMultiMap.get(localDate))));
+        return Flowable.fromIterable(wraningDateUuidMultiMap.keySet()).subscribeOn(Schedulers.computation());
     }
     public Flowable<List<GtdDeedEntity>> getEntityByDate(@NonNull LocalDate... localDate){
         return Flowable.fromArray(localDate).map(new Function<LocalDate, List<GtdDeedEntity>>() {
-            @Override
-            public List<GtdDeedEntity> apply(LocalDate localDate) throws Exception {
-                return getEntityByDate(localDate).toList().blockingGet();
-            }
-        });
+                    @Override
+                    public List<GtdDeedEntity> apply(LocalDate localDate) throws Exception {
+                        return getEntityByUuid(new ArrayList<String>(wraningDateUuidMultiMap.get(localDate)));
+                    }
+                })
+                .subscribeOn(Schedulers.computation());
     }
 
-    public Flowable<GtdDeedEntity> getEntityByState(@NonNull DeedState actState){
-        return Flowable.fromIterable(getEntityByUuid(new ArrayList<String>(stateUuidMultiMap.get(actState))));
-    }
     public Flowable<List<GtdDeedEntity>> getEntityByState(@NonNull DeedState... actStates){
         return Flowable.fromArray(actStates).map(new Function<DeedState, List<GtdDeedEntity>>() {
-            @Override
-            public List<GtdDeedEntity> apply(DeedState state) throws Exception {
-                return getEntityByState(state).toList().blockingGet();
-            }
-        });
+                    @Override
+                    public List<GtdDeedEntity> apply(DeedState state) throws Exception {
+                        return getEntityByUuid(new ArrayList<String>(stateUuidMultiMap.get(state)));
+                    }
+                })
+                .subscribeOn(Schedulers.computation());
     }
 
     public Flowable<GtdDeedEntity> getEntityByLife(){
-        return Flowable.fromIterable(getAll());
+        return Flowable.fromIterable(getAll()).subscribeOn(Schedulers.computation());
         }
 
     public Flowable<GtdDeedEntity> getEntityByLife(@NonNull final DateLife actLife){
