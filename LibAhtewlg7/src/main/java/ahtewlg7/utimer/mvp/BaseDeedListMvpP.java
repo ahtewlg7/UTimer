@@ -46,6 +46,7 @@ public class BaseDeedListMvpP {
         mvpM       = new BaseDeedMvpM();
         stateGraph = new DeedStateGraph();
     }
+
     public Set<DeedState> getNextState(@NonNull GtdDeedEntity deedEntity){
         return stateGraph.getNextNodeList(deedEntity.getDeedState());
     }

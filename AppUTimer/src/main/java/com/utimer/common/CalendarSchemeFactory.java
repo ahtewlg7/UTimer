@@ -4,7 +4,10 @@ import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.base.Optional;
+import com.haibin.calendarview.Calendar;
 import com.utimer.entity.CalendarSchemeInfo;
+
+import org.joda.time.LocalDate;
 
 /**
  * Created by lw on 2019/7/20.
@@ -29,5 +32,16 @@ public class CalendarSchemeFactory {
             e.printStackTrace();
         }
         return json;
+    }
+
+    public LocalDate getLocalDate(Calendar calendar){
+        return new LocalDate(calendar.getYear(), calendar.getMonth(), calendar.getDay());
+    }
+    public Calendar getCalendar(LocalDate localDate){
+        Calendar calendar = new Calendar();
+        calendar.setYear(localDate.getYear());
+        calendar.setMonth(localDate.getMonthOfYear());
+        calendar.setDay(localDate.getDayOfMonth());
+        return calendar;
     }
 }

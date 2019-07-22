@@ -6,16 +6,15 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.common.collect.LinkedHashMultimap;
-import com.google.common.collect.Multimap;
+import com.google.common.collect.Maps;
 import com.haibin.calendarview.Calendar;
 import com.haibin.calendarview.CalendarLayout;
 import com.haibin.calendarview.CalendarView;
 import com.utimer.R;
+import com.utimer.common.CalendarSchemeFactory;
 import com.utimer.mvp.ScheduleDeedListMvpP;
 import com.utimer.view.SimpleDeedRecyclerView;
 
-import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
 import java.util.List;
@@ -27,6 +26,8 @@ import ahtewlg7.utimer.mvp.BaseDeedListMvpP;
 import ahtewlg7.utimer.util.MyRInfo;
 import butterknife.BindView;
 
+import static ahtewlg7.utimer.enumtype.DeedState.INBOX;
+import static ahtewlg7.utimer.enumtype.DeedState.MAYBE;
 import static ahtewlg7.utimer.enumtype.DeedState.SCHEDULE;
 
 public class DeedScheduleListFragment extends ADeedListFragment
@@ -41,7 +42,8 @@ public class DeedScheduleListFragment extends ADeedListFragment
     SimpleDeedRecyclerView recyclerView;
 
     private DeedState[] workState;
-    private Multimap<LocalDate, GtdDeedEntity> dateDeedMap;
+    private Map<String, Calendar> deedCalendarMap;
+    private CalendarSchemeFactory calendarSchemeFactory;
 
     public static DeedScheduleListFragment newInstance() {
         Bundle args = new Bundle();
@@ -59,9 +61,10 @@ public class DeedScheduleListFragment extends ADeedListFragment
         mCalendarView.scrollToCurrent();
         mCalendarView.setOnCalendarSelectListener(this);
 
-        showLifeInfo    = false;
-        workState       = new DeedState[]{SCHEDULE};
-        dateDeedMap     = LinkedHashMultimap.create();
+        showLifeInfo            = false;
+        deedCalendarMap         = Maps.newHashMap();
+        workState               = new DeedState[]{SCHEDULE,INBOX, MAYBE};
+        calendarSchemeFactory   = new CalendarSchemeFactory();
     }
 
     @Override
@@ -74,7 +77,7 @@ public class DeedScheduleListFragment extends ADeedListFragment
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if(!hidden)
-            listMvpP.toLoadDeedByDate(DateTime.now().toLocalDate());
+            listMvpP.toLoadDeedByDate(LocalDate.now());
     }
 
     /**********************************************AToolbarBkFragment**********************************************/
@@ -118,24 +121,31 @@ public class DeedScheduleListFragment extends ADeedListFragment
 
     @Override
     public void onCalendarSelect(Calendar calendar, boolean isClick) {
-        LocalDate localDate = new LocalDate(calendar.getYear(), calendar.getMonth(), calendar.getDay());
-        listMvpP.toLoadDeedByDate(localDate);
+        listMvpP.toLoadDeedByDate(calendarSchemeFactory.getLocalDate(calendar));
     }
 
     /**********************************************IScheduleMvpV**********************************************/
     @Override
-    public void onScheduleDateGetStart() {
-
+    public void onScheduleDateLoadStart() {
+        deedCalendarMap.clear();
     }
 
     @Override
-    public void onScheduleDateGetSucc(Map<String, Calendar> calendarMap) {
-        mCalendarView.setSchemeDate(calendarMap);
-        listMvpP.toLoadDeedByDate(DateTime.now().toLocalDate());
+    public void onScheduleDateLoadSucc() {
+        mCalendarView.setSchemeDate(deedCalendarMap);
+        if(mCalendarView.getSelectedCalendar() == null)
+            listMvpP.toLoadDeedByDate(LocalDate.now());
+        else
+            listMvpP.toLoadDeedByDate(calendarSchemeFactory.getLocalDate(mCalendarView.getSelectedCalendar()));
     }
 
     @Override
-    public void onScheduleDateGetErr(Throwable err) {
+    public void onScheduleDateLoadErr(Throwable err) {
+    }
 
+    @Override
+    public void onScheduleDateAdd(Calendar calendar) {
+        if(!deedCalendarMap.containsValue(calendar))
+            deedCalendarMap.put(calendar.toString(), calendar);
     }
 }

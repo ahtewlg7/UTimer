@@ -97,6 +97,9 @@ public class GtdDeedByUuidFactory extends ABaseLruCacheFactory<String, GtdDeedEn
         stateUuidMultiMap.clear();
         wraningDateUuidMultiMap.clear();
     }
+    public boolean ifInCalendar(GtdDeedEntity deedEntity){
+        return deedEntity != null && deedEntity.ifValid() && wraningDateUuidMultiMap.containsValue(deedEntity.getUuid());
+    }
     public Optional<GtdDeedEntity> create(String msg){
         return create(msg, msg, null);
     }
