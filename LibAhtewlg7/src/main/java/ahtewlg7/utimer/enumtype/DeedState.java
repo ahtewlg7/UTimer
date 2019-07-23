@@ -13,7 +13,7 @@ public enum DeedState {
     ONE_QUARTER(5, 1),
     PROJECT(6, 4),
     DEFER(7, 2),
-    CALENDAR(8, 10),
+    CALENDAR(8, 10),//Deprecated： it is not used
     DELEGATE(9, 3),
     DONE(3, 7),
     USELESS(11, 8),

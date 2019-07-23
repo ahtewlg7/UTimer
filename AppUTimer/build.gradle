@@ -9,8 +9,8 @@ android {
         applicationId "com.utimer"
         minSdkVersion 24
 //        targetSdkVersion 25
-        versionCode 22
-        versionName "0.01.04"
+        versionCode 23
+        versionName "0.01.05"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
