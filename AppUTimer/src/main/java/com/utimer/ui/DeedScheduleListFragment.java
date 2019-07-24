@@ -30,7 +30,10 @@ import ahtewlg7.utimer.mvp.BaseDeedListMvpP;
 import ahtewlg7.utimer.util.MyRInfo;
 import butterknife.BindView;
 
+import static ahtewlg7.utimer.enumtype.DeedState.INBOX;
+import static ahtewlg7.utimer.enumtype.DeedState.MAYBE;
 import static ahtewlg7.utimer.enumtype.DeedState.SCHEDULE;
+import static ahtewlg7.utimer.enumtype.DeedState.TRASH;
 import static com.utimer.common.TagInfoFactory.INVALID_TAG_RID;
 
 public class DeedScheduleListFragment extends ADeedListFragment
@@ -68,7 +71,7 @@ public class DeedScheduleListFragment extends ADeedListFragment
         showLifeInfo            = false;
         deedEntitySet           = Sets.newHashSet();
         deedCalendarMap         = Maps.newHashMap();
-        workState               = new DeedState[]{SCHEDULE};
+        workState               = new DeedState[]{SCHEDULE, INBOX, MAYBE};
         calendarSchemeFactory   = new CalendarSchemeFactory();
     }
 
@@ -138,7 +141,10 @@ public class DeedScheduleListFragment extends ADeedListFragment
     }
     @Override
     public void onTagSucc(GtdDeedEntity entity, DeedState toState, int position) {
-        getRecyclerView().resetData(position, entity);
+        if(toState == TRASH)
+            getRecyclerView().removeData(entity);
+        else
+            getRecyclerView().resetData(position, entity);
         int strRid = tagInfoFactory.getTagDetailRid(toState);
         if(strRid != INVALID_TAG_RID)
             ToastUtils.showShort(strRid);
@@ -156,7 +162,6 @@ public class DeedScheduleListFragment extends ADeedListFragment
             listMvpP.toLoadDeedByDate(LocalDate.now());
     }
 
-    @Override
     public void onScheduleDateLoadErr(Throwable err) {
     }
 
