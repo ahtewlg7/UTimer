@@ -8,6 +8,8 @@ import ahtewlg7.utimer.entity.AUtimerEntity;
 import ahtewlg7.utimer.entity.BaseEventBusBean;
 import ahtewlg7.utimer.enumtype.DeedState;
 
+import static ahtewlg7.utimer.enumtype.DeedState.SCHEDULE;
+
 /**
  * Created by lw on 2019/4/6.
  */
@@ -15,6 +17,11 @@ public class DeedInboxState extends DeedBaseState {
 
     DeedInboxState(GtdMachine gtdMachine) {
         super(gtdMachine);
+    }
+
+    @Override
+    public Optional<BaseEventBusBean> toBeScheduleJob(@NonNull AUtimerEntity entity){
+        return updateState(SCHEDULE, entity);
     }
 
     @Override

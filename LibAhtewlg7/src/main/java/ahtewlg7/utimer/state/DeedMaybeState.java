@@ -34,6 +34,14 @@ public class DeedMaybeState extends DeedBaseState {
     }
 
     @Override
+    public Optional<BaseEventBusBean> toBeScheduleJob(@NonNull AUtimerEntity entity){
+        if(!ifGtdable(entity))
+            return Optional.absent();
+        updateState(INBOX, entity);
+        return getGtdMachine().getWorkState().toBeScheduleJob(entity);
+    }
+
+    @Override
     public Optional<BaseEventBusBean> toBeDone(@NonNull AUtimerEntity entity) {
         if(!ifGtdable(entity))
             return Optional.absent();

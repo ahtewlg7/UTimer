@@ -40,6 +40,7 @@ public class DeedStateGraph {
                 .allowsSelfLoops(true)
                 .build();
         initMaybeNode();
+        initScheduleNode();
         initInboxNode();
         initCalendarNode();
         initDeferNode();
@@ -77,6 +78,13 @@ public class DeedStateGraph {
         graph.putEdge(MAYBE, DONE);
         graph.putEdge(MAYBE, USELESS);
         graph.putEdge(MAYBE, TRASH);
+    }
+    private void initScheduleNode(){
+        graph.putEdge(SCHEDULE, DEFER);
+        graph.putEdge(SCHEDULE, WISH);
+        graph.putEdge(SCHEDULE, DONE);
+        graph.putEdge(SCHEDULE, USELESS);
+        graph.putEdge(SCHEDULE, TRASH);
     }
     private void initInboxNode(){
         graph.putEdge(INBOX, SCHEDULE);

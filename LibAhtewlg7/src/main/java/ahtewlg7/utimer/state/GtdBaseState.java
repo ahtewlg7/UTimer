@@ -50,6 +50,10 @@ public class GtdBaseState {
     public Optional<BaseEventBusBean> toBeReference(@NonNull AUtimerEntity entity){
         return Optional.absent();
     }
+    //it must be done in 24 hour from now
+    public Optional<BaseEventBusBean> toBeScheduleJob(@NonNull AUtimerEntity entity){
+        return Optional.absent();
+    }
     //it will be done in 2 mins
     public Optional<BaseEventBusBean> toBeQuarterJob(@NonNull AUtimerEntity entity){
         return Optional.absent();
