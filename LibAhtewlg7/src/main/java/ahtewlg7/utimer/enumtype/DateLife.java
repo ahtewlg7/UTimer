@@ -2,6 +2,7 @@ package ahtewlg7.utimer.enumtype;
 
 public enum DateLife {
     PAST,
+    HOUR24,
     TODAY,
     TOMORROW,
     WEEK,

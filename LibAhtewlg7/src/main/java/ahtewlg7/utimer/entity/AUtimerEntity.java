@@ -33,7 +33,7 @@ public abstract class AUtimerEntity<T extends AUtimerBuilder> implements ITipsEn
     protected DateTime lastModifyTime;
     protected AAttachFile attachFile;
 
-    protected DateLifeCycleAction lifeCycleAction;
+    protected DateLifeCycleAction dateLifeCycleAction;
 
     protected AUtimerEntity(@Nonnull T t){
         //update first
@@ -47,6 +47,7 @@ public abstract class AUtimerEntity<T extends AUtimerBuilder> implements ITipsEn
             attachFile = t.attachFile;
             updateAttachFileInfo(attachFile);
         }
+        dateLifeCycleAction = new DateLifeCycleAction();
     }
 
     public boolean ifValid() {
@@ -110,17 +111,6 @@ public abstract class AUtimerEntity<T extends AUtimerBuilder> implements ITipsEn
         this.detail = detail;
     }
 
-    public DateLife getGtdLife() {
-        if(lifeCycleAction == null)
-            lifeCycleAction = new DateLifeCycleAction();
-        return lifeCycleAction.getLife(getLifeCycleTime());
-    }
-    public Optional<String> getGtdLifeDetail() {
-        if(getGtdLife() == null)
-            return Optional.absent();
-        return Optional.fromNullable(lifeCycleAction.getLifeDetail(getGtdLife()));
-    }
-
     public DateTime getLastAccessTime() {
         return lastAccessTime;
     }
@@ -135,6 +125,13 @@ public abstract class AUtimerEntity<T extends AUtimerBuilder> implements ITipsEn
 
     public void setLastModifyTime(DateTime lastModifyTime) {
         this.lastModifyTime = lastModifyTime;
+    }
+
+    public DateLife getCreateDateLife(){
+        return dateLifeCycleAction.getLife(createTime);
+    }
+    public String getCreateLifeDetail(){
+        return dateLifeCycleAction.getLifeDetail(getCreateDateLife());
     }
 
     public void updateAttachFileInfo(AAttachFile attachFile){
@@ -152,10 +149,6 @@ public abstract class AUtimerEntity<T extends AUtimerBuilder> implements ITipsEn
             lastModifyTime = attachFile.getLassModifyTime();
     }
 
-    protected DateTime getLifeCycleTime(){
-        return null;//todo
-    }
-
     protected void toMakeEntityOk(){
         if(TextUtils.isEmpty(uuid))
             uuid = new IdAction().getUUId();
@@ -171,8 +164,6 @@ public abstract class AUtimerEntity<T extends AUtimerBuilder> implements ITipsEn
             builder.append(",title=").append(title);
         if(getDetail().isPresent() && !TextUtils.isEmpty(getDetail().get()))
             builder.append(",detail=").append(getDetail().get());
-        if(getGtdLife() != null)
-            builder.append(",gtdLife=").append(getGtdLife().name());
         if(createTime != null)
             builder.append(",createTime=").append(createTime.toString());
         if(lastAccessTime != null)

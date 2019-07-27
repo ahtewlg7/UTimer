@@ -18,33 +18,6 @@ public class DateLifeCycleAction {
         dateTimeAction = new DateTimeAction();
     }
 
-    public DateLife getLife(DateTime dateTime){
-        if(dateTime == null)
-            return null;
-        DateLife actDateTime = null;
-        if(inPast(dateTime))
-            actDateTime = DateLife.PAST;
-        else if(isToday(dateTime))
-            actDateTime = DateLife.TODAY;
-        else if(isTomorrow(dateTime))
-            actDateTime = DateLife.TOMORROW;
-        else if(ifThisWeek(dateTime))
-            actDateTime = DateLife.WEEK;
-        else if(ifNextWeek(dateTime))
-            actDateTime = DateLife.NEXT_WEEK;
-        else if(ifThisMonth(dateTime))
-            actDateTime = DateLife.MONTH;
-        else if(ifNextMonth(dateTime))
-            actDateTime = DateLife.NEXT_MONTH;
-        else if(ifThisQuarter(dateTime))
-            actDateTime = DateLife.QUARTER_YEAR;
-        else if(ifThisYear(dateTime))
-            actDateTime = DateLife.YEAR;
-        else if(ifHalfYear(dateTime))
-            actDateTime = DateLife.HALF_YEAR;
-        return actDateTime;
-    }
-
     public boolean inPast(DateTime dateTime){
         if(dateTime == null)
             return false;
@@ -94,6 +67,33 @@ public class DateLifeCycleAction {
         if (dateTime == null)
             return false;
         return dateTimeAction.isInYear(dateTime);
+    }
+
+    public DateLife getLife(DateTime dateTime){
+        if(dateTime == null)
+            return null;
+        DateLife actDateTime = null;
+        if(inPast(dateTime))
+            actDateTime = DateLife.PAST;
+        else if(isToday(dateTime))
+            actDateTime = DateLife.TODAY;
+        else if(isTomorrow(dateTime))
+            actDateTime = DateLife.TOMORROW;
+        else if(ifThisWeek(dateTime))
+            actDateTime = DateLife.WEEK;
+        else if(ifNextWeek(dateTime))
+            actDateTime = DateLife.NEXT_WEEK;
+        else if(ifThisMonth(dateTime))
+            actDateTime = DateLife.MONTH;
+        else if(ifNextMonth(dateTime))
+            actDateTime = DateLife.NEXT_MONTH;
+        else if(ifThisQuarter(dateTime))
+            actDateTime = DateLife.QUARTER_YEAR;
+        else if(ifThisYear(dateTime))
+            actDateTime = DateLife.YEAR;
+        else if(ifHalfYear(dateTime))
+            actDateTime = DateLife.HALF_YEAR;
+        return actDateTime;
     }
 
     public String getLifeDetail(DateLife actLife){

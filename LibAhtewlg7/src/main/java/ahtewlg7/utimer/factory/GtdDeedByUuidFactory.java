@@ -162,7 +162,7 @@ public class GtdDeedByUuidFactory extends ABaseLruCacheFactory<String, GtdDeedEn
         return getEntityByLife().filter(new Predicate<GtdDeedEntity>() {
                     @Override
                     public boolean test(GtdDeedEntity entity) throws Exception {
-                        return entity.getGtdLife() == actLife;
+                        return entity.getCreateDateLife() == actLife;
                     }
                 });
     }

@@ -22,6 +22,7 @@ import ahtewlg7.utimer.entity.w5h2.W5h2What;
 import ahtewlg7.utimer.entity.w5h2.W5h2When;
 import ahtewlg7.utimer.entity.w5h2.W5h2Where;
 import ahtewlg7.utimer.entity.w5h2.W5h2Who;
+import ahtewlg7.utimer.enumtype.DateLife;
 import ahtewlg7.utimer.enumtype.DeedState;
 import ahtewlg7.utimer.enumtype.GtdType;
 import ahtewlg7.utimer.util.DateTimeAction;
@@ -30,6 +31,7 @@ import ahtewlg7.utimer.util.DateTimeAction;
 public class GtdDeedEntity extends AGtdUtimerEntity<GtdDeedBuilder>
         implements Serializable {
     private DeedState deedState;
+    private DateTime scheduleDate;
     private List<DateTime> warningTimeList;
 
     protected GtdDeedEntity(@Nonnull GtdDeedBuilder builder) {
@@ -41,13 +43,6 @@ public class GtdDeedEntity extends AGtdUtimerEntity<GtdDeedBuilder>
         if(builder.deedState != null)
             this.deedState = builder.deedState;
         toMakeEntityOk();
-    }
-
-    @Override
-    protected DateTime getLifeCycleTime() {
-        if(getFirstWorkTime().isPresent())
-            return getFirstWorkTime().get();
-        return super.getLifeCycleTime();
     }
 
     @Override
@@ -90,11 +85,32 @@ public class GtdDeedEntity extends AGtdUtimerEntity<GtdDeedBuilder>
         this.warningTimeList = warningTimeList;
     }
 
+    public DateLife getWorkDateLife(){
+        Optional<DateTime> dateTimeOptional = getFirstWorkTime();
+        if(dateTimeOptional.isPresent())
+            return dateLifeCycleAction.getLife(dateTimeOptional.get());
+        return null;
+    }
+
+    public String getWorkDateLifeDetail(){
+        if(getWorkDateLife() == null)
+            return null;
+        return dateLifeCycleAction.getLifeDetail(getWorkDateLife());
+    }
+
     public DeedState getDeedState() {
         return deedState;
     }
     public void setDeedState(DeedState deedState) {
         this.deedState = deedState;
+    }
+
+    public DateTime getScheduleDate() {
+        return scheduleDate;
+    }
+
+    public void setScheduleDate(DateTime scheduleDate) {
+        this.scheduleDate = scheduleDate;
     }
 
     //todo

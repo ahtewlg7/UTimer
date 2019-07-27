@@ -87,7 +87,7 @@ public class NoteByUuidFactory extends ABaseLruCacheFactory<String, NoteEntity> 
         return getAllLifeEntity().filter(new Predicate<NoteEntity>() {
                     @Override
                     public boolean test(NoteEntity entity) throws Exception {
-                        return entity.getGtdLife() == actLife;
+                        return entity.getCreateDateLife() == actLife;
                     }
                 });
     }

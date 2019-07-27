@@ -4,8 +4,11 @@ import androidx.annotation.NonNull;
 
 import com.google.common.base.Optional;
 
+import org.joda.time.DateTime;
+
 import ahtewlg7.utimer.entity.AUtimerEntity;
 import ahtewlg7.utimer.entity.BaseEventBusBean;
+import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
 import ahtewlg7.utimer.enumtype.DeedState;
 
 import static ahtewlg7.utimer.enumtype.DeedState.SCHEDULE;
@@ -21,7 +24,10 @@ public class DeedInboxState extends DeedBaseState {
 
     @Override
     public Optional<BaseEventBusBean> toBeScheduleJob(@NonNull AUtimerEntity entity){
-        return updateState(SCHEDULE, entity);
+        Optional<BaseEventBusBean> eventBusBeanOptional = updateState(SCHEDULE, entity);
+        if(eventBusBeanOptional.isPresent())
+            ((GtdDeedEntity)entity).setScheduleDate(DateTime.now());
+        return eventBusBeanOptional;
     }
 
     @Override

@@ -84,7 +84,7 @@ public class ShortHandByUuidFactory extends ABaseLruCacheFactory<String, ShortHa
         return getAllLifeEntity().filter(new Predicate<ShortHandEntity>() {
                     @Override
                     public boolean test(ShortHandEntity entity) throws Exception {
-                        return entity.getGtdLife() == actLife && entity.getAttachFileRPath().isPresent()
+                        return entity.getCreateDateLife() == actLife && entity.getAttachFileRPath().isPresent()
                                 && shorHandFileList.contains(entity.getAttachFileRPath().get());
                     }
                 });

@@ -42,52 +42,20 @@ public class BaseDeedListMvpP {
     protected DeedStateGraph stateGraph;
 
     public BaseDeedListMvpP(IBaseDeedMvpV mvpV){
-        this.mvpV  = mvpV;
-        mvpM       = new BaseDeedMvpM();
-        stateGraph = new DeedStateGraph();
+        this.mvpV           = mvpV;
+        mvpM                = new BaseDeedMvpM();
+        stateGraph          = new DeedStateGraph();
     }
 
     public Set<DeedState> getNextState(@NonNull GtdDeedEntity deedEntity){
         return stateGraph.getNextNodeList(deedEntity.getDeedState());
     }
+
     public void toLoadDeedByState(final DeedState... deedState){
         toLoad(mvpM.toLoad(deedState));
     }
     public void toLoadDeedByDate(final LocalDate... localDates){
         toLoad(mvpM.toLoad(localDates));
-    }
-    public void toLoad(@NonNull Flowable<List<GtdDeedEntity>> loadRx){
-        loadRx.compose(((RxFragment)mvpV.getRxLifeCycleBindView()).<List<GtdDeedEntity>>bindUntilEvent(FragmentEvent.DESTROY))
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(new MySafeSubscriber<List<GtdDeedEntity>>() {
-                List<GtdDeedEntity> allEntity = Lists.newArrayList();
-                @Override
-                public void onSubscribe(Subscription s) {
-                    super.onSubscribe(s);
-                    if(mvpV != null)
-                        mvpV.onLoadStart();
-                }
-
-                @Override
-                public void onNext(List<GtdDeedEntity> entityList) {
-                    super.onNext(entityList);
-                    allEntity.addAll(entityList);
-                }
-
-                @Override
-                public void onError(Throwable t) {
-                    super.onError(t);
-                    if(mvpV != null)
-                        mvpV.onLoadErr(t);
-                }
-
-                @Override
-                public void onComplete() {
-                    super.onComplete();
-                    if(mvpV != null)
-                        mvpV.onLoadSucc(allEntity);
-                }
-            });
     }
 
     public void toTagDeed(final GtdDeedEntity deedEntity, final DeedState deedState, final int position){
@@ -142,6 +110,40 @@ public class BaseDeedListMvpP {
             && (busEvent.getDeedEntity().getDeedState() == DeedState.MAYBE
             || busEvent.getDeedEntity().getDeedState() == DeedState.INBOX)))
             toLoadDeedByState(state);
+    }
+
+    protected void toLoad(@NonNull Flowable<List<GtdDeedEntity>> loadRx){
+        loadRx.compose(((RxFragment)mvpV.getRxLifeCycleBindView()).<List<GtdDeedEntity>>bindUntilEvent(FragmentEvent.DESTROY))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new MySafeSubscriber<List<GtdDeedEntity>>() {
+                    List<GtdDeedEntity> allEntity = Lists.newArrayList();
+                    @Override
+                    public void onSubscribe(Subscription s) {
+                        super.onSubscribe(s);
+                        if(mvpV != null)
+                            mvpV.onLoadStart();
+                    }
+
+                    @Override
+                    public void onNext(List<GtdDeedEntity> entityList) {
+                        super.onNext(entityList);
+                        allEntity.addAll(entityList);
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+                        super.onError(t);
+                        if(mvpV != null)
+                            mvpV.onLoadErr(t);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        super.onComplete();
+                        if(mvpV != null)
+                            mvpV.onLoadSucc(allEntity);
+                    }
+                });
     }
 
     public class BaseDeedMvpM{
@@ -209,6 +211,7 @@ public class BaseDeedListMvpP {
         public @NonNull LifecycleProvider getRxLifeCycleBindView();
         public void onLoadStart();
         public void onLoadSucc(List<GtdDeedEntity> entityList);
+        public void onLoadSucc(GtdDeedEntity entity);
         public void onLoadErr(Throwable err);
 
         public void onTagStart(GtdDeedEntity entity,DeedState toState);
