@@ -23,7 +23,6 @@ import ahtewlg7.utimer.entity.busevent.DeedDoneBusEvent;
 import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
 import ahtewlg7.utimer.enumtype.DeedState;
 import ahtewlg7.utimer.enumtype.GtdBusEventType;
-import ahtewlg7.utimer.factory.EventBusFatory;
 import ahtewlg7.utimer.factory.GtdDeedByUuidFactory;
 import ahtewlg7.utimer.state.DeedStateGraph;
 import ahtewlg7.utimer.state.GtdBaseState;
@@ -198,13 +197,13 @@ public class BaseDeedListMvpP {
                 case TRASH:
                     busBean = currState.toTrash(entity);
             }
-            return Flowable.just(busBean).doOnNext(new Consumer<Optional<BaseEventBusBean>>() {
+            return Flowable.just(busBean)/*.doOnNext(new Consumer<Optional<BaseEventBusBean>>() {
                 @Override
                 public void accept(Optional<BaseEventBusBean> eventBusBeanOptional) throws Exception {
                     if(eventBusBeanOptional.isPresent())
                         EventBusFatory.getInstance().getDefaultEventBus().postSticky(eventBusBeanOptional.get());
                 }
-            });
+            })*/;
         }
     }
     public interface IBaseDeedMvpV extends IRxLifeCycleBindView{

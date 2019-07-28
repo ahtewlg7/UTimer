@@ -24,7 +24,7 @@ public class DeedInboxState extends DeedBaseState {
 
     @Override
     public Optional<BaseEventBusBean> toBeScheduleJob(@NonNull AUtimerEntity entity){
-        Optional<BaseEventBusBean> eventBusBeanOptional = updateState(SCHEDULE, entity);
+        Optional<BaseEventBusBean> eventBusBeanOptional = updateAndPostState(SCHEDULE, entity);
         if(eventBusBeanOptional.isPresent())
             ((GtdDeedEntity)entity).setScheduleDate(DateTime.now());
         return eventBusBeanOptional;
@@ -32,44 +32,44 @@ public class DeedInboxState extends DeedBaseState {
 
     @Override
     public Optional<BaseEventBusBean> toBeDone(@NonNull AUtimerEntity entity) {
-        return updateState(DeedState.DONE, entity);
+        return updateAndPostState(DeedState.DONE, entity);
     }
     @Override
     public Optional<BaseEventBusBean> toBeReference(@NonNull AUtimerEntity entity){
-        return updateState(DeedState.REFERENCE, entity);
+        return updateAndPostState(DeedState.REFERENCE, entity);
     }
     @Override
     public Optional<BaseEventBusBean> toBeQuarterJob(@NonNull AUtimerEntity entity) {
-        return updateState(DeedState.ONE_QUARTER, entity);
+        return updateAndPostState(DeedState.ONE_QUARTER, entity);
     }
     @Override
     public Optional<BaseEventBusBean> toBeDeferJob(@NonNull AUtimerEntity entity){
-        return updateState(DeedState.DEFER, entity);
+        return updateAndPostState(DeedState.DEFER, entity);
     }
     @Override
     public Optional<BaseEventBusBean> toBeDelegateJob(@NonNull AUtimerEntity entity){
-        return updateState(DeedState.DELEGATE, entity);
+        return updateAndPostState(DeedState.DELEGATE, entity);
     }
     @Override
     public Optional<BaseEventBusBean> toBeProject(@NonNull AUtimerEntity entity){
-        return updateState(DeedState.PROJECT, entity);
+        return updateAndPostState(DeedState.PROJECT, entity);
     }
     @Override
     public Optional<BaseEventBusBean> toBeCalendarJob(@NonNull AUtimerEntity entity){
-        return updateState(DeedState.CALENDAR, entity);
+        return updateAndPostState(DeedState.CALENDAR, entity);
     }
     @Override
     public Optional<BaseEventBusBean> toBeWishJob(@NonNull AUtimerEntity entity){
-        return updateState(DeedState.WISH, entity);
+        return updateAndPostState(DeedState.WISH, entity);
     }
 
     @Override
     public Optional<BaseEventBusBean> toBeUseless(@NonNull AUtimerEntity entity) {
-        return updateState(DeedState.USELESS, entity);
+        return updateAndPostState(DeedState.USELESS, entity);
     }
 
     @Override
     public Optional<BaseEventBusBean> toTrash(@NonNull AUtimerEntity entity) {
-        return updateState(DeedState.TRASH, entity);
+        return updateAndPostState(DeedState.TRASH, entity);
     }
 }

@@ -20,7 +20,7 @@ public class DeedEndState extends DeedBaseState {
 
     @Override
     public Optional<BaseEventBusBean> toTrash(@NonNull AUtimerEntity entity) {
-        return updateState(DeedState.TRASH, entity);
+        return updateAndPostState(DeedState.TRASH, entity);
     }
 
     @Override

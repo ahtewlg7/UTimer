@@ -30,7 +30,7 @@ public class DeedMaybeState extends DeedBaseState {
     public Optional<BaseEventBusBean> toActive(@NonNull AUtimerEntity entity) {
         if(!ifGtdable((GtdDeedEntity)entity))
             return Optional.absent();
-        return updateState(INBOX, entity);
+        return updateAndPostState(INBOX, entity);
     }
 
     @Override

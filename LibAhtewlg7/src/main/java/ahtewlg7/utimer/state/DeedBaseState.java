@@ -31,8 +31,7 @@ class DeedBaseState extends GtdBaseState {
             GtdDeedByUuidFactory.getInstance().remove(entity.getUuid());
         return eventOptional;
     }
-
-    protected Optional<BaseEventBusBean> updateState(@NonNull DeedState state , @NonNull AUtimerEntity entity){
+    protected Optional<BaseEventBusBean> updateAndPostState(@NonNull DeedState state , @NonNull AUtimerEntity entity){
         if(!ifGtdable(entity))
             return Optional.absent();
         DeedState preState =  ((GtdDeedEntity) entity).getDeedState();
@@ -42,6 +41,13 @@ class DeedBaseState extends GtdBaseState {
         if(eventOptional.isPresent())
             GtdDeedByUuidFactory.getInstance().updateState(preState, (GtdDeedEntity) entity);
         return eventOptional;
+    }
+    protected void updateState(@NonNull DeedState state , @NonNull AUtimerEntity entity){
+        if(!ifGtdable(entity))
+            return;
+        DeedState preState =  ((GtdDeedEntity) entity).getDeedState();
+        ((GtdDeedEntity) entity).setDeedState(state);
+        GtdDeedByUuidFactory.getInstance().updateState(preState, (GtdDeedEntity) entity);
     }
 
     protected Optional<BaseEventBusBean> toPostEvent(AUtimerEntity entity, BaseEventBusBean busEvent){
