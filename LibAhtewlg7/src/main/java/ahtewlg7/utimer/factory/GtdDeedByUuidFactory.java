@@ -71,7 +71,7 @@ public class GtdDeedByUuidFactory extends ABaseLruCacheFactory<String, GtdDeedEn
         if(result && deedEntity.getDeedState() != null)
             stateUuidMultiMap.put(deedEntity.getDeedState(), deedEntity.getUuid());
         //todo: firstWorkTime to multiWorkTime
-        if(result && deedEntity.getFirstWorkTime().isPresent())
+        if(result && deedEntity.getFirstWorkTime().isPresent() && deedEntity.getDeedState() != DeedState.TRASH)
             wraningDateUuidMultiMap.put(deedEntity.getFirstWorkTime().get().toLocalDate(), deedEntity.getUuid());
         return result;
     }
@@ -128,9 +128,12 @@ public class GtdDeedByUuidFactory extends ABaseLruCacheFactory<String, GtdDeedEn
         if(preState != null && deedEntity != null && deedEntity.ifValid()) {
             stateUuidMultiMap.remove(preState, deedEntity.getUuid());
             stateUuidMultiMap.put(deedEntity.getDeedState(), deedEntity.getUuid());
+            if(deedEntity.getDeedState() == DeedState.TRASH && deedEntity.getWarningTimeList() != null) {
+                for(DateTime date : deedEntity.getWarningTimeList())
+                    wraningDateUuidMultiMap.remove(date.toLocalDate(), deedEntity.getUuid());
+            }
         }
     }
-
     public Flowable<LocalDate> getScheduleDate(){
         return Flowable.fromIterable(wraningDateUuidMultiMap.keySet()).subscribeOn(Schedulers.computation());
     }

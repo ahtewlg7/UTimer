@@ -120,6 +120,10 @@ public abstract class ADeedListFragment extends AButterKnifeFragment
     }
 
     @Override
+    public void onLoadSucc(GtdDeedEntity entity) {
+    }
+
+    @Override
     public void onLoadErr(Throwable err) {
     }
 
@@ -207,8 +211,8 @@ public abstract class ADeedListFragment extends AButterKnifeFragment
         Optional<String> currTagOptional = tagInfoFactory.getTagTitle(item.getDeedState());
         if(currTagOptional.isPresent())
             multiSpanTag.appendTag(currTagOptional.get());
-        if(item.getGtdLifeDetail().isPresent() && showLifeInfo)
-            multiSpanTag.appendTag(item.getGtdLifeDetail().get());
+        if(item.getWorkDateLifeDetail() != null && showLifeInfo)
+            multiSpanTag.appendTag(item.getWorkDateLifeDetail());
         return multiSpanTag;
     }
 
