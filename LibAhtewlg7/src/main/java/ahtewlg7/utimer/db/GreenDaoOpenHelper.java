@@ -68,7 +68,17 @@ class GreenDaoOpenHelper extends DatabaseOpenHelper {
             db.execSQL("ALTER TABLE " + DeedEntityGdBeanDao.TABLENAME + " ADD COLUMN " + DeedEntityGdBeanDao.Properties.CreateTime.columnName + " TEXT");
             db.execSQL("ALTER TABLE " + DeedEntityGdBeanDao.TABLENAME + " ADD COLUMN " + DeedEntityGdBeanDao.Properties.StartTime.columnName + " TEXT");
             db.execSQL("ALTER TABLE " + DeedEntityGdBeanDao.TABLENAME + " ADD COLUMN " + DeedEntityGdBeanDao.Properties.EndTime.columnName + " TEXT");
-            db.execSQL("CREATE TABLE tmp AS SELECT " + DeedEntityGdBeanDao.Properties.Id.columnName + ", " + DeedEntityGdBeanDao.Properties.Uuid.columnName
+            db.execSQL("CREATE TABLE IF NOT EXISTS tmp( " + DeedEntityGdBeanDao.Properties.Id.columnName + " INTEGER PRIMARY KEY AUTOINCREMENT ,"
+                    + DeedEntityGdBeanDao.Properties.Uuid.columnName + " TEXT NOT NULL , "
+                    + DeedEntityGdBeanDao.Properties.Title.columnName + " TEXT NOT NULL , "
+                    + DeedEntityGdBeanDao.Properties.Detail.columnName + " TEXT NOT NULL ,"
+                    + DeedEntityGdBeanDao.Properties.AttachFileRPath.columnName + " TEXT, "
+                    + DeedEntityGdBeanDao.Properties.ActionState.columnName + " INTEGER, "
+                    + DeedEntityGdBeanDao.Properties.CreateTime.columnName + " INTEGER, "
+                    + DeedEntityGdBeanDao.Properties.StartTime.columnName + " INTEGER, "
+                    + DeedEntityGdBeanDao.Properties.EndTime.columnName + " INTEGER, "
+                    + DeedEntityGdBeanDao.Properties.WarningTimeList.columnName + " TEXT);");
+            db.execSQL("INSERT INTO tmp SELECT " + DeedEntityGdBeanDao.Properties.Id.columnName + ", " + DeedEntityGdBeanDao.Properties.Uuid.columnName
                     + ", " + DeedEntityGdBeanDao.Properties.Title.columnName + ", " + DeedEntityGdBeanDao.Properties.Detail.columnName
                     + ", " + DeedEntityGdBeanDao.Properties.AttachFileRPath.columnName + ", " + DeedEntityGdBeanDao.Properties.ActionState.columnName
                     + ", " + DeedEntityGdBeanDao.Properties.CreateTime.columnName + ", " + DeedEntityGdBeanDao.Properties.StartTime.columnName
@@ -76,6 +86,7 @@ class GreenDaoOpenHelper extends DatabaseOpenHelper {
                     + " FROM " + DeedEntityGdBeanDao.TABLENAME);
             db.execSQL("DROP TABLE IF EXISTS " + DeedEntityGdBeanDao.TABLENAME);
             db.execSQL("ALTER TABLE tmp RENAME TO " + DeedEntityGdBeanDao.TABLENAME);
+            db.execSQL("CREATE UNIQUE INDEX " + DeedEntityGdBeanDao.TABLENAME + "IDX_DEED_UUID ON \"DEED\"" + " (\"UUID\" ASC);");
         }
     }
 }

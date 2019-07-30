@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 
 import com.google.common.base.Optional;
 
+import org.joda.time.DateTime;
+
 import ahtewlg7.utimer.db.dao.DeedEntityDaoAction;
 import ahtewlg7.utimer.db.dao.NoteEntityDaoAction;
 import ahtewlg7.utimer.db.dao.ShortHandEntityDaoAction;
@@ -62,7 +64,7 @@ public class DbActionFacade {
         return eventFlowable.map(new Function<NoteEntity, Boolean>() {
             @Override
             public Boolean apply(NoteEntity entityOptional) throws Exception {
-                NoteEntityGdBean bean = mapNoteToGdBean(entityOptional);
+                NoteEntityGdBean bean = mapToGdBean(entityOptional);
                 NoteEntityDaoAction.getInstance().delete(bean);
                 return true;
             }
@@ -73,7 +75,7 @@ public class DbActionFacade {
         return eventFlowable.map(new Function<NoteEntity, Boolean>() {
             @Override
             public Boolean apply(NoteEntity entityOptional) throws Exception {
-                NoteEntityGdBean bean = mapNoteToGdBean(entityOptional);
+                NoteEntityGdBean bean = mapToGdBean(entityOptional);
                 long index = NoteEntityDaoAction.getInstance().insert(bean);
                 return index >= 0;
             }
@@ -134,7 +136,7 @@ public class DbActionFacade {
         return Flowable.empty();
     }
     /*******************************************Action**************************************************/
-    public Flowable<GtdDeedEntity> loadAllActionEntity() {
+    public Flowable<GtdDeedEntity> loadAllDeedEntity() {
         return Flowable.fromIterable(DeedEntityDaoAction.getInstance().loadAll())
                 .map(new Function<DeedEntityGdBean, GtdDeedEntity>() {
                     @Override
@@ -157,7 +159,7 @@ public class DbActionFacade {
         return Flowable.empty();
     }
 
-    public Flowable<Boolean> deleteActionEntity(@NonNull Flowable<GtdDeedEntity> eventFlowable){
+    public Flowable<Boolean> deleteDeedEntity(@NonNull Flowable<GtdDeedEntity> eventFlowable){
         return eventFlowable.map(new Function<GtdDeedEntity, Boolean>() {
             @Override
             public Boolean apply(GtdDeedEntity eventEntity) throws Exception {
@@ -166,11 +168,11 @@ public class DbActionFacade {
         });
     }
 
-    public Flowable<Boolean> saveActionEntity(Flowable<GtdDeedEntity> eventFlowable) {
+    public Flowable<Boolean> saveDeedEntity(Flowable<GtdDeedEntity> eventFlowable) {
         return eventFlowable.map(new Function<GtdDeedEntity, Boolean>() {
             @Override
             public Boolean apply(GtdDeedEntity eventEntity) throws Exception {
-                DeedEntityGdBean bean = mapActionToGdBean(eventEntity);
+                DeedEntityGdBean bean = mapToGdBean(eventEntity);
                 long index = DeedEntityDaoAction.getInstance().insert(bean);
                 return index >= 0;
             }
@@ -221,7 +223,7 @@ public class DbActionFacade {
         return eventFlowable.map(new Function<ShortHandEntity, Boolean>() {
             @Override
             public Boolean apply(ShortHandEntity entityOptional) throws Exception {
-                ShortHandEntityGdBean bean = mapShorthandToGdBean(entityOptional);
+                ShortHandEntityGdBean bean = mapToGdBean(entityOptional);
                 long index = ShortHandEntityDaoAction.getInstance().insert(bean);
                 return index >= 0;
             }
@@ -229,16 +231,23 @@ public class DbActionFacade {
     }
 
     /***********************************************************************************************/
-    private DeedEntityGdBean mapActionToGdBean(@NonNull GtdDeedEntity entity){
+    private DeedEntityGdBean mapToGdBean(@NonNull GtdDeedEntity entity){
         DeedEntityGdBean bean = new DeedEntityGdBean();
         bean.setUuid(entity.getUuid());
         bean.setTitle(entity.getTitle());
         bean.setActionState(entity.getDeedState());
+        if(entity.getCreateTime() != null)
+            bean.setCreateTime(entity.getCreateTime());
+        else
+            bean.setCreateTime(DateTime.now());
+        if(entity.getStartTime() != null)
+            bean.setStartTime(entity.getStartTime());
+        if(entity.getEndTime() != null)
+            bean.setEndTime(entity.getEndTime());
         if(entity.getWarningTimeList() != null)
             bean.setWarningTimeList(entity.getWarningTimeList());
         if(entity.getDetail().isPresent())
             bean.setDetail(entity.getDetail().get());
-
         /*if(entity.getW5h2Entity() != null && entity.getW5h2Entity().getWhat() != null)
             bean.setW5h2What(entity.getW5h2Entity().getWhat());
         if(entity.getW5h2Entity() != null && entity.getW5h2Entity().getWhen() != null)
@@ -247,7 +256,7 @@ public class DbActionFacade {
             bean.setW5h2HowMuch(entity.getW5h2Entity().getHowMuch());*/
         return bean;
     }
-    private ShortHandEntityGdBean mapShorthandToGdBean(@NonNull ShortHandEntity entity){
+    private ShortHandEntityGdBean mapToGdBean(@NonNull ShortHandEntity entity){
         ShortHandEntityGdBean bean = new ShortHandEntityGdBean();
         bean.setUuid(entity.getUuid());
         bean.setTitle(entity.getTitle());
@@ -259,7 +268,7 @@ public class DbActionFacade {
             bean.setAttachFileRPath(entity.getAttachFileRPath().get());
         return bean;
     }
-    private NoteEntityGdBean mapNoteToGdBean(@NonNull NoteEntity entity){
+    private NoteEntityGdBean mapToGdBean(@NonNull NoteEntity entity){
         NoteEntityGdBean bean = new NoteEntityGdBean();
         bean.setUuid(entity.getUuid());
         bean.setTitle(entity.getTitle());
