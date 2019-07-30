@@ -13,6 +13,8 @@ import ahtewlg7.utimer.db.autogen.ShortHandEntityGdBeanDao;
 
 /**
  * Created by lw on 2016/9/8.
+ * if you want to upgrade db by greendao , you just need to ALTER TABLE in "onUpgrade",
+ * no need to modify the schemaVersion of greendao in build.gradle
  */
 class GreenDaoOpenHelper extends DatabaseOpenHelper {
     private static final int DBV_0_0_12   = 3;

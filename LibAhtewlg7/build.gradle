@@ -1,6 +1,10 @@
 apply plugin: 'com.android.library'
 apply plugin: 'org.greenrobot.greendao'
 
+/*
+* if you want to upgrade db by greendao , you just need to ALTER TABLE in "onUpgrade",
+* no need to modify the schemaVersion of greendao in build.gradle
+*/
 greendao {
     schemaVersion 5
     daoPackage 'ahtewlg7.utimer.db.autogen'
