@@ -25,7 +25,8 @@ import ahtewlg7.utimer.util.DateTimeAction;
 public class GtdDeedEntity extends AUtimerEntity<GtdDeedBuilder>
         implements Serializable {
     private DeedState deedState;
-    private DateTime scheduleDate;
+    private DateTime startTime;
+    private DateTime endTime;
     private List<DateTime> warningTimeList;
 
     protected GtdDeedEntity(@Nonnull GtdDeedBuilder builder) {
@@ -98,12 +99,20 @@ public class GtdDeedEntity extends AUtimerEntity<GtdDeedBuilder>
         this.deedState = deedState;
     }
 
-    public DateTime getScheduleDate() {
-        return scheduleDate;
+    public DateTime getStartTime() {
+        return startTime;
     }
 
-    public void setScheduleDate(DateTime scheduleDate) {
-        this.scheduleDate = scheduleDate;
+    public void setStartTime(DateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public DateTime getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(DateTime endTime) {
+        this.endTime = endTime;
     }
 
     //todo
@@ -140,6 +149,9 @@ public class GtdDeedEntity extends AUtimerEntity<GtdDeedBuilder>
         title           = gdBean.getTitle();
         detail          = gdBean.getDetail();
         deedState       = gdBean.getActionState();
+        createTime      = gdBean.getCreateTime();
+        startTime       = gdBean.getStartTime();
+        endTime         = gdBean.getEndTime();
         warningTimeList = gdBean.getWarningTimeList();
 
         /*if(w5h2Entity  == null)

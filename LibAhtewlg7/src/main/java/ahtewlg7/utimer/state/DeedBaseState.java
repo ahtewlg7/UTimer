@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 
 import com.google.common.base.Optional;
 
+import org.joda.time.DateTime;
+
 import ahtewlg7.utimer.entity.AUtimerEntity;
 import ahtewlg7.utimer.entity.BaseEventBusBean;
 import ahtewlg7.utimer.entity.busevent.DeedBusEvent;
@@ -34,8 +36,7 @@ class DeedBaseState extends GtdBaseState {
     protected Optional<BaseEventBusBean> updateAndPostState(@NonNull DeedState state , @NonNull AUtimerEntity entity){
         if(!ifGtdable(entity))
             return Optional.absent();
-        DeedState preState =  ((GtdDeedEntity) entity).getDeedState();
-        ((GtdDeedEntity) entity).setDeedState(state);
+        DeedState preState = toResetState((GtdDeedEntity) entity, state);
         DeedBusEvent busEvent = new DeedBusEvent(GtdBusEventType.SAVE, (GtdDeedEntity) entity);
         Optional<BaseEventBusBean> eventOptional = toPostEvent(entity, busEvent);
         if(eventOptional.isPresent())
@@ -45,8 +46,7 @@ class DeedBaseState extends GtdBaseState {
     protected void updateState(@NonNull DeedState state , @NonNull AUtimerEntity entity){
         if(!ifGtdable(entity))
             return;
-        DeedState preState =  ((GtdDeedEntity) entity).getDeedState();
-        ((GtdDeedEntity) entity).setDeedState(state);
+        DeedState preState =  toResetState((GtdDeedEntity) entity, state);
         GtdDeedByUuidFactory.getInstance().updateState(preState, (GtdDeedEntity) entity);
     }
 
@@ -71,5 +71,14 @@ class DeedBaseState extends GtdBaseState {
     protected boolean ifGtdable(AUtimerEntity entity){
         return entity != null && entity.ifValid()
                 && entity.getClass().isAssignableFrom(GtdDeedEntity.class) ;
+    }
+    protected DeedState toResetState(@NonNull GtdDeedEntity entity, @NonNull DeedState state){
+        DeedState preState =  entity.getDeedState();
+        entity.setDeedState(state);
+        if(state == DeedState.SCHEDULE)
+            entity.setStartTime(DateTime.now());
+        else if(state == DeedState.DONE || state == DeedState.TRASH)
+            entity.setEndTime(DateTime.now());
+        return preState;
     }
 }

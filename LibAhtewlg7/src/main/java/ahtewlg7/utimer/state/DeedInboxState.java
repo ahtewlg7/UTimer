@@ -26,7 +26,7 @@ public class DeedInboxState extends DeedBaseState {
     public Optional<BaseEventBusBean> toBeScheduleJob(@NonNull AUtimerEntity entity){
         Optional<BaseEventBusBean> eventBusBeanOptional = updateAndPostState(SCHEDULE, entity);
         if(eventBusBeanOptional.isPresent())
-            ((GtdDeedEntity)entity).setScheduleDate(DateTime.now());
+            ((GtdDeedEntity)entity).setStartTime(DateTime.now());
         return eventBusBeanOptional;
     }
 

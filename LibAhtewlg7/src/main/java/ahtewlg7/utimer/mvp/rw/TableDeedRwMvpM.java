@@ -16,16 +16,16 @@ class TableDeedRwMvpM extends AUtimerRwMvpM<GtdDeedEntity> {
 
     @Override
     public Flowable<Boolean> toSave(@NonNull Flowable<GtdDeedEntity> entityRx) {
-        return dbActionFacade.saveActionEntity(entityRx);
+        return dbActionFacade.saveDeedEntity(entityRx);
     }
 
     @Override
     public Flowable<Boolean> toDel(@NonNull Flowable<GtdDeedEntity> entityRx) {
-        return dbActionFacade.deleteActionEntity(entityRx);
+        return dbActionFacade.deleteDeedEntity(entityRx);
     }
 
     @Override
     public Flowable<GtdDeedEntity> loadAll() {
-        return dbActionFacade.loadAllActionEntity();
+        return dbActionFacade.loadAllDeedEntity();
     }
 }

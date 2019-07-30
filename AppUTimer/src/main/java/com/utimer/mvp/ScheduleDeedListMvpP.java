@@ -145,7 +145,7 @@ public class ScheduleDeedListMvpP extends BaseDeedListMvpP {
                 result = input.getCreateDateLife() == DateLife.TODAY;
                 break;
             case SCHEDULE:
-                result = dateTimeAction.isIn24Hour(input.getScheduleDate());
+                result = dateTimeAction.isIn24Hour(input.getStartTime());
                 break;
         }
         return result;

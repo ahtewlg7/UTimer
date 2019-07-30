@@ -42,7 +42,10 @@ public abstract class AUtimerEntity<T extends AUtimerBuilder> implements ITipsEn
         title      = t.title;
         detail     = t.detail;
         uuid       = TextUtils.isEmpty(t.uuid) ? new IdAction().getUUId() : t.uuid;
-        createTime = t.createTime;
+        if(t.createTime != null)
+            createTime = t.createTime;
+        else
+            createTime = DateTime.now();
         if(t.attachFile != null){
             attachFile = t.attachFile;
             updateAttachFileInfo(attachFile);
