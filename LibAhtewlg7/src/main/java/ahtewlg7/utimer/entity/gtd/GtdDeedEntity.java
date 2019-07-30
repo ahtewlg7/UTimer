@@ -13,22 +13,16 @@ import javax.annotation.Nonnull;
 
 import ahtewlg7.utimer.common.FileSystemAction;
 import ahtewlg7.utimer.db.entity.DeedEntityGdBean;
-import ahtewlg7.utimer.entity.AGtdUtimerEntity;
+import ahtewlg7.utimer.entity.AUtimerEntity;
 import ahtewlg7.utimer.entity.IMergerEntity;
 import ahtewlg7.utimer.entity.material.DirAttachFile;
-import ahtewlg7.utimer.entity.w5h2.BaseW5h2Entity;
-import ahtewlg7.utimer.entity.w5h2.W5h2HowMuch;
-import ahtewlg7.utimer.entity.w5h2.W5h2What;
-import ahtewlg7.utimer.entity.w5h2.W5h2When;
-import ahtewlg7.utimer.entity.w5h2.W5h2Where;
-import ahtewlg7.utimer.entity.w5h2.W5h2Who;
 import ahtewlg7.utimer.enumtype.DateLife;
 import ahtewlg7.utimer.enumtype.DeedState;
 import ahtewlg7.utimer.enumtype.GtdType;
 import ahtewlg7.utimer.util.DateTimeAction;
 
 
-public class GtdDeedEntity extends AGtdUtimerEntity<GtdDeedBuilder>
+public class GtdDeedEntity extends AUtimerEntity<GtdDeedBuilder>
         implements Serializable {
     private DeedState deedState;
     private DateTime scheduleDate;
@@ -72,11 +66,10 @@ public class GtdDeedEntity extends AGtdUtimerEntity<GtdDeedBuilder>
             deedState = DeedState.MAYBE;
     }
 
-    @Override
     public Optional<DateTime> getFirstWorkTime() {
         if(warningTimeList != null && !warningTimeList.isEmpty())
             return Optional.of(warningTimeList.get(0));
-        return super.getFirstWorkTime();
+        return Optional.absent();
     }
     public List<DateTime> getWarningTimeList() {
         return warningTimeList;
@@ -116,13 +109,13 @@ public class GtdDeedEntity extends AGtdUtimerEntity<GtdDeedBuilder>
     //todo
     @Override
     public void update(IMergerEntity entity) {
-        super.update(entity);
+        /*super.update(entity);
         BaseW5h2Entity baseW5h2Entity = ((GtdDeedEntity)entity).getW5h2Entity();
         updateWhen(baseW5h2Entity.getWhen());
         updateWhat(baseW5h2Entity.getWhat());
         updateHowMuch(baseW5h2Entity.getHowMuch());
         updateWho(baseW5h2Entity.getWho());
-        updateWhere(baseW5h2Entity.getWhere());
+        updateWhere(baseW5h2Entity.getWhere());*/
     }
 
     @Override
@@ -149,13 +142,13 @@ public class GtdDeedEntity extends AGtdUtimerEntity<GtdDeedBuilder>
         deedState       = gdBean.getActionState();
         warningTimeList = gdBean.getWarningTimeList();
 
-        if(w5h2Entity  == null)
+        /*if(w5h2Entity  == null)
             w5h2Entity  = new BaseW5h2Entity();
         updateWhen(gdBean.getW5h2When());
         updateWhat(gdBean.getW5h2What());
-        updateHowMuch(gdBean.getW5h2HowMuch());
+        updateHowMuch(gdBean.getW5h2HowMuch());*/
     }
-    private void updateWhat(W5h2What what){
+    /*private void updateWhat(W5h2What what){
         if(what != null)
             w5h2Entity.setWhat(what);
     }
@@ -177,5 +170,5 @@ public class GtdDeedEntity extends AGtdUtimerEntity<GtdDeedBuilder>
     private void updateWhere(W5h2Where where){
         if(where != null)
             w5h2Entity.setWhere(where);
-    }
+    }*/
 }

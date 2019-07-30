@@ -239,12 +239,12 @@ public class DbActionFacade {
         if(entity.getDetail().isPresent())
             bean.setDetail(entity.getDetail().get());
 
-        if(entity.getW5h2Entity() != null && entity.getW5h2Entity().getWhat() != null)
+        /*if(entity.getW5h2Entity() != null && entity.getW5h2Entity().getWhat() != null)
             bean.setW5h2What(entity.getW5h2Entity().getWhat());
         if(entity.getW5h2Entity() != null && entity.getW5h2Entity().getWhen() != null)
             bean.setW5h2When(entity.getW5h2Entity().getWhen());
         if(entity.getW5h2Entity() != null && entity.getW5h2Entity().getHowMuch() != null)
-            bean.setW5h2HowMuch(entity.getW5h2Entity().getHowMuch());
+            bean.setW5h2HowMuch(entity.getW5h2Entity().getHowMuch());*/
         return bean;
     }
     private ShortHandEntityGdBean mapShorthandToGdBean(@NonNull ShortHandEntity entity){

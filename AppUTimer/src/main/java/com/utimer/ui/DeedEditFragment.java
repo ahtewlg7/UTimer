@@ -18,7 +18,6 @@ import org.joda.time.DateTime;
 import ahtewlg7.utimer.common.IdAction;
 import ahtewlg7.utimer.entity.gtd.GtdDeedBuilder;
 import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
-import ahtewlg7.utimer.entity.w5h2.BaseW5h2Entity;
 import ahtewlg7.utimer.enumtype.DeedState;
 import ahtewlg7.utimer.mvp.un.DeedEditMvpP;
 import ahtewlg7.utimer.util.MyRInfo;
@@ -169,7 +168,7 @@ public class DeedEditFragment extends ATxtEditFragment
     public void onParseEnd() {
         onNlpEnd();
         StringBuilder builder = new StringBuilder();
-        BaseW5h2Entity w5h2Entity = getUTimerEntity().getW5h2Entity();
+        /*BaseW5h2Entity w5h2Entity = getUTimerEntity().getW5h2Entity();
         if(w5h2Entity != null){
             if(w5h2Entity.getWho() != null && w5h2Entity.getWho().toTips().isPresent())
                 builder.append(w5h2Entity.getWho().toTips().get()).append("\n");
@@ -179,7 +178,7 @@ public class DeedEditFragment extends ATxtEditFragment
                 builder.append(w5h2Entity.getWhen().toTips().get()).append("\n");
             if(w5h2Entity.getWhere() != null && w5h2Entity.getWhere().toTips().isPresent())
                 builder.append(w5h2Entity.getWhere().toTips().get()).append("\n");
-        }else if(getUTimerEntity().getWarningTimeList() != null) {
+        }else*/ if(getUTimerEntity().getWarningTimeList() != null) {
             builder.append(getUTimerEntity().getWarningTimeList().toString());
         }else{
             builder.append("Null");

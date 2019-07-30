@@ -7,13 +7,13 @@ import org.joda.time.DateTime;
 import java.util.List;
 
 import ahtewlg7.utimer.db.entity.DeedEntityGdBean;
-import ahtewlg7.utimer.entity.AGtdUtimerBuilder;
+import ahtewlg7.utimer.entity.AUtimerBuilder;
 import ahtewlg7.utimer.enumtype.DeedState;
 
 /**
  * Created by lw on 2018/10/26.
  */
-public class GtdDeedBuilder extends AGtdUtimerBuilder<GtdDeedEntity, GtdDeedBuilder> {
+public class GtdDeedBuilder extends AUtimerBuilder<GtdDeedEntity, GtdDeedBuilder> {
     public static final String TAG = GtdDeedBuilder.class.getSimpleName();
 
     protected DeedState deedState;
