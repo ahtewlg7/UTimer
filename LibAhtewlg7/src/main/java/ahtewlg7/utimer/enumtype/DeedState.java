@@ -1,23 +1,19 @@
 package ahtewlg7.utimer.enumtype;
 
-import com.google.common.collect.Lists;
-
-import java.util.List;
-
 public enum DeedState {
-    MAYBE(0, 12),//it may be parse by ai，but sometime it is not correct.
-    TRASH(1, 9),
-    INBOX(2,11),
-    REFERENCE(10, 6),
-    WISH(4, 5),
-    ONE_QUARTER(5, 1),
-    PROJECT(6, 4),
-    DEFER(7, 2),
-    CALENDAR(8, 10),//Deprecated： it is not used
-    DELEGATE(9, 3),
-    DONE(3, 7),
-    USELESS(11, 8),
-    SCHEDULE(12, 0);
+    MAYBE(0, 1),//it may be parse by ai，but sometime it is not correct.
+    TRASH(1, 11),
+    INBOX(2,0),
+    REFERENCE(10, 8),
+    WISH(4, 7),
+    ONE_QUARTER(5, 3),
+    PROJECT(6, 6),
+    DEFER(7, 4),
+    CALENDAR(8, 12),//Deprecated： it is not used
+    DELEGATE(9, 5),
+    DONE(3, 9),
+    USELESS(11, 10),
+    SCHEDULE(12, 2);
 
     private int value;
     private int order;
@@ -79,43 +75,43 @@ public enum DeedState {
         switch (index){
             default:
             case 0:
-                tmp = SCHEDULE;
-                break;
-            case 1:
-                tmp = ONE_QUARTER;
-                break;
-            case 2:
-                tmp = DEFER;
-                break;
-            case 3:
-                tmp = DELEGATE;
-                break;
-            case 4:
-                tmp = PROJECT;
-                break;
-            case 5:
-                tmp = WISH;
-                break;
-            case 6:
-                tmp = REFERENCE;
-                break;
-            case 7:
-                tmp = DONE;
-                break;
-            case 8:
-                tmp = USELESS;
-                break;
-            case 9:
-                tmp = TRASH;
-                break;
-            case 10:
-                tmp = CALENDAR;
-                break;
-            case 11:
                 tmp = INBOX;
                 break;
-            case 12:
+            case 1:
                 tmp = MAYBE;
+                break;
+            case 2:
+                tmp = SCHEDULE;
+                break;
+            case 3:
+                tmp = ONE_QUARTER;
+                break;
+            case 4:
+                tmp = DEFER;
+                break;
+            case 5:
+                tmp = DELEGATE;
+                break;
+            case 6:
+                tmp = PROJECT;
+                break;
+            case 7:
+                tmp = WISH;
+                break;
+            case 8:
+                tmp = REFERENCE;
+                break;
+            case 9:
+                tmp = DONE;
+                break;
+            case 10:
+                tmp = USELESS;
+                break;
+            case 11:
+                tmp = TRASH;
+                break;
+            case 12:
+                tmp = CALENDAR;
                 break;
         }
         return tmp;
@@ -127,17 +123,5 @@ public enum DeedState {
 
     public int order() {
         return order;
-    }
-
-    public static List<DeedState> getActiveAll(){
-        List<DeedState> list = Lists.newArrayList();
-        list.add(INBOX);
-        list.add(WISH);
-        list.add(ONE_QUARTER);
-        list.add(PROJECT);
-        list.add(DEFER);
-        list.add(CALENDAR);
-        list.add(DELEGATE);
-        return list;
     }
 }

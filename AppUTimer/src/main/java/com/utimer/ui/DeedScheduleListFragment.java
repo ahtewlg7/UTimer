@@ -14,7 +14,6 @@ import com.haibin.calendarview.Calendar;
 import com.haibin.calendarview.CalendarLayout;
 import com.haibin.calendarview.CalendarView;
 import com.utimer.R;
-import com.utimer.common.CalendarSchemeFactory;
 import com.utimer.mvp.ScheduleDeedListMvpP;
 import com.utimer.view.SimpleDeedRecyclerView;
 
@@ -26,14 +25,11 @@ import java.util.Set;
 
 import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
 import ahtewlg7.utimer.enumtype.DeedState;
+import ahtewlg7.utimer.factory.GtdDeedByUuidFactory;
 import ahtewlg7.utimer.mvp.BaseDeedListMvpP;
 import ahtewlg7.utimer.util.MyRInfo;
 import butterknife.BindView;
 
-import static ahtewlg7.utimer.enumtype.DeedState.INBOX;
-import static ahtewlg7.utimer.enumtype.DeedState.MAYBE;
-import static ahtewlg7.utimer.enumtype.DeedState.SCHEDULE;
-import static ahtewlg7.utimer.enumtype.DeedState.TRASH;
 import static com.utimer.common.TagInfoFactory.INVALID_TAG_RID;
 
 public class DeedScheduleListFragment extends ADeedListFragment
@@ -47,10 +43,8 @@ public class DeedScheduleListFragment extends ADeedListFragment
     @BindView(R.id.fragment_deed_calendar_simple_list_recycler_view)
     SimpleDeedRecyclerView recyclerView;
 
-    private DeedState[] workState;
     private Set<GtdDeedEntity> deedEntitySet;
     private Map<String, Calendar> deedCalendarMap;
-    private CalendarSchemeFactory calendarSchemeFactory;
 
     public static DeedScheduleListFragment newInstance() {
         Bundle args = new Bundle();
@@ -69,10 +63,8 @@ public class DeedScheduleListFragment extends ADeedListFragment
         mCalendarView.setOnCalendarSelectListener(this);
 
         showLifeInfo            = false;
-        deedEntitySet           = Sets.newHashSet();
         deedCalendarMap         = Maps.newHashMap();
-        workState               = new DeedState[]{SCHEDULE, MAYBE, INBOX};
-        calendarSchemeFactory   = new CalendarSchemeFactory();
+        deedEntitySet           = Sets.newLinkedHashSet();
     }
 
     @Override
@@ -86,9 +78,9 @@ public class DeedScheduleListFragment extends ADeedListFragment
         if(hidden)
             return;
         if(mCalendarView.getSelectedCalendar() != null)
-            listMvpP.toLoadDeedByDate(calendarSchemeFactory.getLocalDate(mCalendarView.getSelectedCalendar()));
-        if(mCalendarView.getSelectedCalendar().equals(LocalDate.now()))
-            listMvpP.toLoadDeedByState(workState);
+            ((ScheduleDeedListMvpP)listMvpP).toLoadDeedByDate(mCalendarView.getSelectedCalendar());
+        else
+            listMvpP.toLoadDeedByDate(LocalDate.now());
     }
 
     /**********************************************AToolbarBkFragment**********************************************/
@@ -103,10 +95,9 @@ public class DeedScheduleListFragment extends ADeedListFragment
         return MyRInfo.getStringByID(R.string.title_deed_list_schedule);
     }
     /**********************************************ADeedListFragment**********************************************/
-    @NonNull
     @Override
     protected DeedState[] getLoadDeedState() {
-        return workState;
+        return null;
     }
 
     @NonNull
@@ -129,12 +120,16 @@ public class DeedScheduleListFragment extends ADeedListFragment
     @Override
     public void onCalendarSelect(Calendar calendar, boolean isClick) {
         deedEntitySet.clear();
-        listMvpP.toLoadDeedByDate(calendarSchemeFactory.getLocalDate(calendar));
-        if(calendarSchemeFactory.getCalendar(LocalDate.now()).equals(calendar))
-            listMvpP.toLoadDeedByState(workState);
+        ((ScheduleDeedListMvpP)listMvpP).toLoadDeedByDate(calendar);
     }
 
+
     /**********************************************IBaseDeedMvpV**********************************************/
+    @Override
+    public Calendar getCurrCalendar() {
+        return mCalendarView.getSelectedCalendar();
+    }
+
     @Override
     public void onLoadSucc(List<GtdDeedEntity> entityList) {
         deedEntitySet.addAll(entityList);
@@ -143,19 +138,16 @@ public class DeedScheduleListFragment extends ADeedListFragment
 
     @Override
     public void onLoadSucc(GtdDeedEntity entity) {
-        if(entity.getDeedState() != TRASH)
-            deedEntitySet.add(entity);
-        else
-            deedEntitySet.remove(entity);
+        deedEntitySet.add(entity);
         getRecyclerView().resetData(Lists.newArrayList(deedEntitySet));
     }
 
     @Override
     public void onTagSucc(GtdDeedEntity entity, DeedState toState, int position) {
-        if(toState == TRASH) {
-            getRecyclerView().removeData(entity);
+        if(toState == DeedState.TRASH && !GtdDeedByUuidFactory.getInstance().ifExist(entity)){
             deedEntitySet.remove(entity);
-        }else
+            getRecyclerView().removeData(entity);
+        } else
             getRecyclerView().resetData(position, entity);
         int strRid = tagInfoFactory.getTagDetailRid(toState);
         if(strRid != INVALID_TAG_RID)
@@ -168,23 +160,21 @@ public class DeedScheduleListFragment extends ADeedListFragment
     }
 
     @Override
-    public void onScheduleDateLoadSucc() {
-        mCalendarView.setSchemeDate(deedCalendarMap);
-        if(mCalendarView.getSelectedCalendar() != null)
-            listMvpP.toLoadDeedByDate(calendarSchemeFactory.getLocalDate(mCalendarView.getSelectedCalendar()));
-        if(mCalendarView.getSelectedCalendar().equals(LocalDate.now()))
-            listMvpP.toLoadDeedByState(workState);
+    public void onScheduleDateAdd(Calendar calendar, boolean add) {
+        if(!deedCalendarMap.containsValue(calendar) && add)
+            deedCalendarMap.put(calendar.toString(), calendar);
+        else if(!add)
+            deedCalendarMap.remove(calendar.toString());
     }
 
+    @Override
     public void onScheduleDateLoadErr(Throwable err) {
     }
 
     @Override
-    public void onScheduleDateAdd(Calendar calendar, boolean add) {
-        if(!deedCalendarMap.containsValue(calendar) && add)
-            deedCalendarMap.put(calendar.toString(), calendar);
-        //todo: if all deedCalendar is empty , to remove it
-        /*else
-            deedCalendarMap.remove(calendar.toString());*/
+    public void onScheduleDateLoadSucc() {
+        mCalendarView.setSchemeDate(deedCalendarMap);
+        if(mCalendarView.getSelectedCalendar() != null)
+            ((ScheduleDeedListMvpP)listMvpP).toLoadDeedByDate(mCalendarView.getSelectedCalendar());
     }
 }
