@@ -111,8 +111,6 @@ public class DeedScheduleListFragment extends ADeedListFragment
         deedEntitySet.clear();
         ((ScheduleDeedListMvpP)listMvpP).toLoadDeedByDate(calendar);
     }
-
-
     /**********************************************IBaseDeedMvpV**********************************************/
     @Override
     public Calendar getCurrCalendar() {

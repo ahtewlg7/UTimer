@@ -6,12 +6,14 @@ import androidx.annotation.NonNull;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.BiMap;
+import com.google.common.collect.Collections2;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 
+import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeComparator;
 import org.joda.time.LocalDate;
@@ -157,7 +159,7 @@ public class GtdDeedByUuidFactory extends ABaseLruCacheFactory<String, GtdDeedEn
     public Flowable<LocalDate> getCatalogueDate(){
         return Flowable.fromIterable(catalogueDateUuidMultiMap.keySet()).subscribeOn(Schedulers.computation());
     }
-    public Flowable<List<GtdDeedEntity>> getCatalogueEntityByDate(@NonNull LocalDate... localDate){
+    public Flowable<List<GtdDeedEntity>> getEntityByCatalogueDate(@NonNull LocalDate... localDate){
         return Flowable.fromArray(localDate).map(new Function<LocalDate, List<GtdDeedEntity>>() {
                     @Override
                     public List<GtdDeedEntity> apply(LocalDate localDate) throws Exception {
@@ -168,7 +170,7 @@ public class GtdDeedByUuidFactory extends ABaseLruCacheFactory<String, GtdDeedEn
                 })
                 .subscribeOn(Schedulers.computation());
     }
-    public Flowable<List<GtdDeedEntity>> getWorkEntityByDate(@NonNull LocalDate... localDate){
+    public Flowable<List<GtdDeedEntity>> getEntityByWorkDate(@NonNull LocalDate... localDate){
         return Flowable.fromArray(localDate).map(new Function<LocalDate, List<GtdDeedEntity>>() {
                     @Override
                     public List<GtdDeedEntity> apply(LocalDate localDate) throws Exception {
@@ -187,6 +189,15 @@ public class GtdDeedByUuidFactory extends ABaseLruCacheFactory<String, GtdDeedEn
                         Set<GtdDeedEntity> dateDeedSet = Sets.newHashSet();
                         dateDeedSet.addAll(getEntityByUuid(new ArrayList<String>(workDateUuidMultiMap.get(localDate))));
                         dateDeedSet.addAll(getEntityByUuid(new ArrayList<String>(catalogueDateUuidMultiMap.get(localDate))));
+                        if(localDate.equals(LocalDate.now())){
+                            List<GtdDeedEntity> yesterdayScheduleDeed = getEntityByUuid(new ArrayList<String>(catalogueDateUuidMultiMap.get(localDate.minusDays(1))));
+                            dateDeedSet.addAll(Collections2.filter(yesterdayScheduleDeed, new com.google.common.base.Predicate<GtdDeedEntity>() {
+                                @Override
+                                public boolean apply(@NullableDecl GtdDeedEntity input) {
+                                    return input.getDeedState() == DeedState.SCHEDULE;
+                                }
+                            }));
+                        }
                         List<GtdDeedEntity> deedList = Lists.newArrayList(dateDeedSet);
                         Collections.sort(deedList, new DeedEntityStateOrderComparator().getAscOrder());
                         return deedList;
