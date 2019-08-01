@@ -3,7 +3,7 @@ package ahtewlg7.utimer.comparator;
 
 import com.google.common.base.Optional;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 import java.util.Comparator;
 
@@ -13,13 +13,13 @@ import ahtewlg7.utimer.enumtype.ComparatorType;
  * Created by lw on 2017/11/15.
  */
 
-public abstract class ADateTimeComparator<T> {
+public abstract class ALocalDateComparator<T> {
     protected Comparator<T> ascOrder;
     protected Comparator<T> descOrder;
 
-    protected abstract Optional<DateTime> getComparatorTime(T t);
+    protected abstract Optional<LocalDate> getComparatorTime(T t);
 
-    protected ADateTimeComparator(){
+    protected ALocalDateComparator(){
         ascOrder    = new AscOrder();
         descOrder   = new DescOrder();
     }
@@ -56,11 +56,11 @@ public abstract class ADateTimeComparator<T> {
     class AscOrder implements Comparator<T>{
         @Override
         public int compare(T o1, T o2) {
-            int result = ComparatorType.TH1_FIRST.value();
+            int result = ComparatorType.TH2_FIRST.value();
             if(!getComparatorTime(o1).isPresent() && getComparatorTime(o2).isPresent())
-                result = ComparatorType.TH1_FIRST.value();
-            else if(getComparatorTime(o1).isPresent() && !getComparatorTime(o2).isPresent())
                 result = ComparatorType.TH2_FIRST.value();
+            else if(getComparatorTime(o1).isPresent() && !getComparatorTime(o2).isPresent())
+                result = ComparatorType.TH1_FIRST.value();
             else if(!getComparatorTime(o1).isPresent() && !getComparatorTime(o2).isPresent())
                 result = ComparatorType.NO_MATTER.value();
             else{
