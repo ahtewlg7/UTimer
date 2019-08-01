@@ -86,8 +86,8 @@ public abstract class ADeedListFragment extends AButterKnifeFragment
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        if(!hidden && getLoadDeedState() != null)
-            listMvpP.toLoadDeedByState(getLoadDeedState());
+        if(!hidden)
+            toLoadDeedOnShow();
     }
 
     @Override
@@ -162,7 +162,6 @@ public abstract class ADeedListFragment extends AButterKnifeFragment
         if(bottomSheetDialog.isShowing())
             bottomSheetDialog.dismiss();
     }
-
     /**********************************************IGtdActionListMvpV**********************************************//*
     @Override
     public void onItemCreate(GtdDeedEntity data) {
@@ -176,18 +175,6 @@ public abstract class ADeedListFragment extends AButterKnifeFragment
     }
 
     */
-    /**********************************************IGtdActionListMvpV**********************************************/
-    /*
-    @Override
-    public void resetView(List<GtdDeedEntity> dataList) {
-        recyclerView.resetData(dataList);
-    }
-
-    @Override
-    public void resetView(int index, GtdDeedEntity entity) {
-        recyclerView.resetData(index, entity);
-    }*/
-
     /**********************************************IDeedSpanner**********************************************/
     @NonNull
     @Override
@@ -214,6 +201,11 @@ public abstract class ADeedListFragment extends AButterKnifeFragment
         if(item.getWorkDateLifeDetail() != null && showLifeInfo)
             multiSpanTag.appendTag(item.getWorkDateLifeDetail());
         return multiSpanTag;
+    }
+
+    protected void toLoadDeedOnShow(){
+        if(getLoadDeedState() != null)
+            listMvpP.toLoadDeedByState(getLoadDeedState());
     }
 
     /**********************************************EventBus**********************************************/
@@ -246,7 +238,7 @@ public abstract class ADeedListFragment extends AButterKnifeFragment
             listMvpP.toTagDeed((GtdDeedEntity) getRecyclerView().getAdapter().getItem(position), targetState, position);
         }
     }
-    private void createBottomSheet(int position){
+    protected void createBottomSheet(int position){
         if(position < 0 || position >= getRecyclerView().getAdapter().getItemCount()) {
             Logcat.d("Warning","createBottomSheet failed");
             return;

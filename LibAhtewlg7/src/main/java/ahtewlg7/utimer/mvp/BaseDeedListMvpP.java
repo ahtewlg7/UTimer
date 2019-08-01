@@ -50,8 +50,11 @@ public class BaseDeedListMvpP {
         return stateGraph.getNextNodeList(deedEntity.getDeedState());
     }
 
-    public void toLoadDeedByState(final DeedState... deedState){
+    public void toLoadDeedByState(DeedState... deedState){
         toLoad(mvpM.toLoad(deedState));
+    }
+    public void toLoadDeedByState(boolean ascOrder, DeedState... deedState){
+        toLoad(mvpM.toLoad(ascOrder, deedState));
     }
     public void toLoadDeedByDate(final LocalDate... localDates){
         toLoad(mvpM.toLoad(localDates));
@@ -150,11 +153,18 @@ public class BaseDeedListMvpP {
             return GtdDeedByUuidFactory.getInstance().getCatalogueDate();
         }
         public Flowable<List<GtdDeedEntity>> toLoad(DeedState... state) {
+            return toLoad(true, state);
+        }
+        public Flowable<List<GtdDeedEntity>> toLoad(final boolean ascOrder, DeedState... state) {
             return GtdDeedByUuidFactory.getInstance().getEntityByState(state)
                     .doOnNext(new Consumer<List<GtdDeedEntity>>() {
                         @Override
                         public void accept(List<GtdDeedEntity> entityList) throws Exception {
-                            Collections.sort(entityList, new DeedWarningTimeComparator().getAscOrder());
+                            if(ascOrder)
+                                Collections.sort(entityList, new DeedWarningTimeComparator().getAscOrder());
+                            else
+                                Collections.sort(entityList, new DeedWarningTimeComparator().getDescOrder());
+
                         }
                     });
         }

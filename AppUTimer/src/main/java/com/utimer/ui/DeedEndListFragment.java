@@ -42,6 +42,7 @@ public class DeedEndListFragment extends ADeedListFragment implements BaseDeedLi
         showLifeInfo    = false;
         workState       = new DeedState[]{DONE, TRASH};
     }
+
     /**********************************************AToolbarBkFragment**********************************************/
     @Override
     public int getLayoutRid() {
@@ -65,7 +66,6 @@ public class DeedEndListFragment extends ADeedListFragment implements BaseDeedLi
             ToastUtils.showShort(strRid);
     }
     /**********************************************ADeedListFragment**********************************************/
-    @NonNull
     @Override
     protected DeedState[] getLoadDeedState() {
         return workState;
@@ -81,5 +81,11 @@ public class DeedEndListFragment extends ADeedListFragment implements BaseDeedLi
     @Override
     protected SimpleDeedRecyclerView getRecyclerView() {
         return recyclerView;
+    }
+
+    @Override
+    protected void toLoadDeedOnShow() {
+        if(getLoadDeedState() != null)
+            listMvpP.toLoadDeedByState(false, getLoadDeedState());
     }
 }

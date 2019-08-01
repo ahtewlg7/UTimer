@@ -72,17 +72,6 @@ public class DeedScheduleListFragment extends ADeedListFragment
         super.onLazyInitView(savedInstanceState);
         ((ScheduleDeedListMvpP)listMvpP).toLoadScheduleDate();
     }
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        if(hidden)
-            return;
-        if(mCalendarView.getSelectedCalendar() != null)
-            ((ScheduleDeedListMvpP)listMvpP).toLoadDeedByDate(mCalendarView.getSelectedCalendar());
-        else
-            listMvpP.toLoadDeedByDate(LocalDate.now());
-    }
-
     /**********************************************AToolbarBkFragment**********************************************/
 
     @Override
@@ -176,5 +165,13 @@ public class DeedScheduleListFragment extends ADeedListFragment
         mCalendarView.setSchemeDate(deedCalendarMap);
         if(mCalendarView.getSelectedCalendar() != null)
             ((ScheduleDeedListMvpP)listMvpP).toLoadDeedByDate(mCalendarView.getSelectedCalendar());
+    }
+
+    @Override
+    protected void toLoadDeedOnShow() {
+        if(mCalendarView.getSelectedCalendar() != null)
+            ((ScheduleDeedListMvpP)listMvpP).toLoadDeedByDate(mCalendarView.getSelectedCalendar());
+        else
+            listMvpP.toLoadDeedByDate(LocalDate.now());
     }
 }

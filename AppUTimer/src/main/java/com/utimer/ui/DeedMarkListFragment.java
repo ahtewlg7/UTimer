@@ -82,7 +82,6 @@ public class DeedMarkListFragment extends ADeedListFragment implements BaseDeedL
         listMvpP.toHandleBusEvent(eventBus, workState);
     }
     /**********************************************IGtdActionListMvpV**********************************************/
-    @NonNull
     @Override
     protected DeedState[] getLoadDeedState() {
         return workState;
