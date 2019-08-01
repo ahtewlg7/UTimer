@@ -115,6 +115,16 @@ public class GtdDeedEntity extends AUtimerEntity<GtdDeedBuilder>
         this.endTime = endTime;
     }
 
+    public DateTime getWorkTime(){
+        DateTime workTime = createTime;
+        if(endTime != null)
+           workTime = endTime;
+        else if(startTime != null)
+            workTime = startTime;
+        return workTime;
+
+    }
+
     //todo
     @Override
     public void update(IMergerEntity entity) {

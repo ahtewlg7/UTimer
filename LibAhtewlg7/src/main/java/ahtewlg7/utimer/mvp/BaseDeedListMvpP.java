@@ -146,8 +146,8 @@ public class BaseDeedListMvpP {
     }
 
     public class BaseDeedMvpM{
-        public Flowable<LocalDate> loadScheduleDate(){
-            return GtdDeedByUuidFactory.getInstance().getScheduleDate();
+        public Flowable<LocalDate> loadCatalogueDate(){
+            return GtdDeedByUuidFactory.getInstance().getCatalogueDate();
         }
         public Flowable<List<GtdDeedEntity>> toLoad(DeedState... state) {
             return GtdDeedByUuidFactory.getInstance().getEntityByState(state)
@@ -197,13 +197,7 @@ public class BaseDeedListMvpP {
                 case TRASH:
                     busBean = currState.toTrash(entity);
             }
-            return Flowable.just(busBean)/*.doOnNext(new Consumer<Optional<BaseEventBusBean>>() {
-                @Override
-                public void accept(Optional<BaseEventBusBean> eventBusBeanOptional) throws Exception {
-                    if(eventBusBeanOptional.isPresent())
-                        EventBusFatory.getInstance().getDefaultEventBus().postSticky(eventBusBeanOptional.get());
-                }
-            })*/;
+            return Flowable.just(busBean);
         }
     }
     public interface IBaseDeedMvpV extends IRxLifeCycleBindView{

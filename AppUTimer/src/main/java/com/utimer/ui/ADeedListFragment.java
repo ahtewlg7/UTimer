@@ -42,7 +42,7 @@ public abstract class ADeedListFragment extends AButterKnifeFragment
         implements BaseDeedListMvpP.IBaseDeedMvpV , SimpleDeedRecyclerView.IDeedSpanner {
     public static final int INIT_POSITION = -1;
 
-    protected abstract @NonNull DeedState[] getLoadDeedState();
+    protected abstract DeedState[] getLoadDeedState();
     protected abstract @NonNull BaseDeedListMvpP getDeedMvpP();
     protected abstract @NonNull SimpleDeedRecyclerView getRecyclerView();
 
@@ -86,7 +86,7 @@ public abstract class ADeedListFragment extends AButterKnifeFragment
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        if(!hidden)
+        if(!hidden && getLoadDeedState() != null)
             listMvpP.toLoadDeedByState(getLoadDeedState());
     }
 
@@ -134,9 +134,9 @@ public abstract class ADeedListFragment extends AButterKnifeFragment
 
     @Override
     public void onTagSucc(GtdDeedEntity entity, DeedState toState, int position) {
-        if(Arrays.asList(getLoadDeedState()).contains(toState))
+        if(getLoadDeedState() != null && Arrays.asList(getLoadDeedState()).contains(toState))
             getRecyclerView().resetData(position, entity);
-        else
+        else if(getLoadDeedState() != null)
             getRecyclerView().removeData(entity);
         int strRid = tagInfoFactory.getTagDetailRid(toState);
         if(strRid != INVALID_TAG_RID)
@@ -219,11 +219,13 @@ public abstract class ADeedListFragment extends AButterKnifeFragment
     /**********************************************EventBus**********************************************/
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDeedBusEvent(DeedBusEvent eventBus) {
-        listMvpP.toHandleBusEvent(eventBus, getLoadDeedState());
+        if(getLoadDeedState() != null)
+            listMvpP.toHandleBusEvent(eventBus, getLoadDeedState());
     }
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDeedDoneBusEvent(DeedDoneBusEvent eventBus) {
-        listMvpP.toHandleBusEvent(eventBus, getLoadDeedState());
+        if(getLoadDeedState() != null)
+            listMvpP.toHandleBusEvent(eventBus, getLoadDeedState());
     }
 
     /**********************************************IGtdActionListMvpV**********************************************/
