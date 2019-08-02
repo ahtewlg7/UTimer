@@ -21,7 +21,6 @@ import org.joda.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import ahtewlg7.utimer.common.IdAction;
 import ahtewlg7.utimer.comparator.DeedEntityStateOrderComparator;
@@ -186,21 +185,20 @@ public class GtdDeedByUuidFactory extends ABaseLruCacheFactory<String, GtdDeedEn
         return Flowable.fromArray(localDate).sorted(DateTimeComparator.getDateOnlyInstance()).map(new Function<LocalDate, List<GtdDeedEntity>>() {
                     @Override
                     public List<GtdDeedEntity> apply(LocalDate localDate) throws Exception {
-                        Set<GtdDeedEntity> dateDeedSet = Sets.newHashSet();
-                        dateDeedSet.addAll(getEntityByUuid(new ArrayList<String>(workDateUuidMultiMap.get(localDate))));
-                        dateDeedSet.addAll(getEntityByUuid(new ArrayList<String>(catalogueDateUuidMultiMap.get(localDate))));
+                        List<GtdDeedEntity> dateDeedList = Lists.newArrayList();
+                        dateDeedList.addAll(getEntityByUuid(new ArrayList<String>(workDateUuidMultiMap.get(localDate))));
+                        dateDeedList.addAll(getEntityByUuid(new ArrayList<String>(catalogueDateUuidMultiMap.get(localDate))));
                         if(localDate.equals(LocalDate.now())){
-                            List<GtdDeedEntity> yesterdayScheduleDeed = getEntityByUuid(new ArrayList<String>(catalogueDateUuidMultiMap.get(localDate.minusDays(1))));
-                            dateDeedSet.addAll(Collections2.filter(yesterdayScheduleDeed, new com.google.common.base.Predicate<GtdDeedEntity>() {
+                            List<GtdDeedEntity> yesterdayScheduleDeed = getEntityByUuid(new ArrayList<String>(workDateUuidMultiMap.get(localDate.minusDays(1))));
+                            dateDeedList.addAll(Collections2.filter(yesterdayScheduleDeed, new com.google.common.base.Predicate<GtdDeedEntity>() {
                                 @Override
                                 public boolean apply(@NullableDecl GtdDeedEntity input) {
                                     return input.getDeedState() == DeedState.SCHEDULE;
                                 }
                             }));
                         }
-                        List<GtdDeedEntity> deedList = Lists.newArrayList(dateDeedSet);
-                        Collections.sort(deedList, new DeedEntityStateOrderComparator().getAscOrder());
-                        return deedList;
+                        Collections.sort(dateDeedList, new DeedEntityStateOrderComparator().getAscOrder());
+                        return Lists.newArrayList(Sets.newLinkedHashSet(dateDeedList));
                     }
                 })
                 .subscribeOn(Schedulers.computation());
