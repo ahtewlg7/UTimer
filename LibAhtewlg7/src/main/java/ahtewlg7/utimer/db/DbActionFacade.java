@@ -19,7 +19,9 @@ import ahtewlg7.utimer.entity.gtd.NoteEntity;
 import ahtewlg7.utimer.entity.gtd.ShortHandBuilder;
 import ahtewlg7.utimer.entity.gtd.ShortHandEntity;
 import ahtewlg7.utimer.entity.gtd.un.GtdTaskEntity;
+import ahtewlg7.utimer.enumtype.DeedState;
 import io.reactivex.Flowable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
@@ -138,6 +140,28 @@ public class DbActionFacade {
     /*******************************************Action**************************************************/
     public Flowable<GtdDeedEntity> loadAllDeedEntity() {
         return Flowable.fromIterable(DeedEntityDaoAction.getInstance().loadAll())
+                .doOnNext(new Consumer<DeedEntityGdBean>() {
+                    @Override
+                    public void accept(DeedEntityGdBean deedEntityGdBean) throws Exception {
+                        boolean ifAutoFill = false;
+                        if(deedEntityGdBean.getCreateTime() == null) {
+                            deedEntityGdBean.setCreateTime(DateTime.now());
+                            ifAutoFill = true;
+                        }
+                        if(deedEntityGdBean.getStartTime() == null &&
+                            (deedEntityGdBean.getActionState() == DeedState.DONE || deedEntityGdBean.getActionState() == DeedState.TRASH)){
+                            deedEntityGdBean.setStartTime(DateTime.now());
+                            ifAutoFill = true;
+                        }
+                        if(deedEntityGdBean.getEndTime() == null  &&
+                            (deedEntityGdBean.getActionState() == DeedState.DONE || deedEntityGdBean.getActionState() == DeedState.TRASH)){
+                            deedEntityGdBean.setEndTime(DateTime.now());
+                            ifAutoFill = true;
+                        }
+                        if(ifAutoFill)
+                            DeedEntityDaoAction.getInstance().insert(deedEntityGdBean);
+                    }
+                })
                 .map(new Function<DeedEntityGdBean, GtdDeedEntity>() {
                     @Override
                     public GtdDeedEntity apply(DeedEntityGdBean actionEntityGdBean) throws Exception {
@@ -145,18 +169,6 @@ public class DbActionFacade {
                     }
                 })
                 .subscribeOn(Schedulers.io());
-    }
-    public Flowable<Optional<GtdDeedEntity>> getUndoActionEntity(@NonNull Flowable<String> nameFlowable) {
-        /*return nameFlowable.map(new Function<String, Optional<GtdDeedEntity>>() {
-            @Override
-            public Optional<GtdDeedEntity> apply(String name) throws Exception {
-                Optional<IdKeyEntityBean> beanOptional = DeedEntityDaoAction.getInstance().queryByKey(name);
-                if(beanOptional.isPresent())
-                    return Optional.fromNullable(JSON.parseObject(beanOptional.get().getValue(), GtdDeedEntity.class));
-                return Optional.absent();
-            }
-        });*/
-        return Flowable.empty();
     }
 
     public Flowable<Boolean> deleteDeedEntity(@NonNull Flowable<GtdDeedEntity> eventFlowable){
@@ -242,18 +254,16 @@ public class DbActionFacade {
             bean.setCreateTime(DateTime.now());
         if(entity.getStartTime() != null)
             bean.setStartTime(entity.getStartTime());
+        else if(entity.getDeedState() == DeedState.DONE || entity.getDeedState() == DeedState.TRASH)
+            bean.setStartTime(DateTime.now());
         if(entity.getEndTime() != null)
             bean.setEndTime(entity.getEndTime());
+        else if(entity.getDeedState() == DeedState.DONE || entity.getDeedState() == DeedState.TRASH)
+            bean.setEndTime(DateTime.now());
         if(entity.getWarningTimeList() != null)
             bean.setWarningTimeList(entity.getWarningTimeList());
         if(entity.getDetail().isPresent())
             bean.setDetail(entity.getDetail().get());
-        /*if(entity.getW5h2Entity() != null && entity.getW5h2Entity().getWhat() != null)
-            bean.setW5h2What(entity.getW5h2Entity().getWhat());
-        if(entity.getW5h2Entity() != null && entity.getW5h2Entity().getWhen() != null)
-            bean.setW5h2When(entity.getW5h2Entity().getWhen());
-        if(entity.getW5h2Entity() != null && entity.getW5h2Entity().getHowMuch() != null)
-            bean.setW5h2HowMuch(entity.getW5h2Entity().getHowMuch());*/
         return bean;
     }
     private ShortHandEntityGdBean mapToGdBean(@NonNull ShortHandEntity entity){
@@ -280,13 +290,4 @@ public class DbActionFacade {
             bean.setAttachFileRPath(entity.getAttachFileRPath().get());
         return bean;
     }
-
-    /*private TaskEntityGdBean mapTaskToGdBean(@NonNull GtdTaskEntity entity){
-        TaskEntityGdBean gtdEventEntityGdBean = new TaskEntityGdBean();
-        gtdEventEntityGdBean.setTitle(entity.getTitle());
-        gtdEventEntityGdBean.setActive(entity.isActive());
-        gtdEventEntityGdBean.setValue(entity.toJson());
-        return gtdEventEntityGdBean;
-    }
-    */
 }
