@@ -88,21 +88,19 @@ public class ScheduleDeedListMvpP extends BaseDeedListMvpP {
             return;
         Calendar currCalendar = ((IScheduleMvpV) mvpV).getCurrCalendar();
 
-        Optional<Boolean> ifInCurrCalendar = currCalendar == null ? Optional.absent() : Optional.of(false);
+        Optional<Boolean> ifAtCurrCalendar = currCalendar == null ? Optional.absent() : Optional.of(false);
         DateTime workDateTime = busEvent.getDeedEntity().getWorkTime();
-        if(ifInCurrCalendar.isPresent() && workDateTime != null)
-            ifInCurrCalendar = Optional.of(currCalendar.equals(calendarSchemeFactory.getCalendar(workDateTime.toLocalDate())));
+        if(ifAtCurrCalendar.isPresent() && workDateTime != null)
+            ifAtCurrCalendar = Optional.of(currCalendar.equals(calendarSchemeFactory.getCalendar(workDateTime.toLocalDate())));
 
         List<DateTime> warningDateTime = busEvent.getDeedEntity().getWarningTimeList();
         if(warningDateTime != null)
             for(DateTime date : warningDateTime) {
                 ((IScheduleMvpV) mvpV).onScheduleDateAdd(getSchemeCalendar(date.toLocalDate()), GtdDeedByUuidFactory.getInstance().getCatalogueDeedNum(date.toLocalDate()) > 0);
-                if(ifInCurrCalendar.isPresent() && !ifInCurrCalendar.get())
-                    ifInCurrCalendar = Optional.of(currCalendar.equals(calendarSchemeFactory.getCalendar(date.toLocalDate())));
+                if(ifAtCurrCalendar.isPresent() && !ifAtCurrCalendar.get())
+                    ifAtCurrCalendar = Optional.of(currCalendar.equals(calendarSchemeFactory.getCalendar(date.toLocalDate())));
             }
-         ((IScheduleMvpV) mvpV).onScheduleDateLoadSucc();
-
-        if(ifInCurrCalendar.isPresent() && ifInCurrCalendar.get())
+        if(ifAtCurrCalendar.isPresent() && ifAtCurrCalendar.get())
             mvpV.onLoadSucc(busEvent.getDeedEntity());
     }
     private Calendar getSchemeCalendar(LocalDate localDate){
