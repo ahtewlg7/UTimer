@@ -7,11 +7,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.blankj.utilcode.util.ToastUtils;
-import com.google.common.base.Predicates;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.haibin.calendarview.Calendar;
 import com.haibin.calendarview.CalendarLayout;
 import com.haibin.calendarview.CalendarView;
@@ -129,13 +127,13 @@ public class DeedScheduleListFragment extends ADeedListFragment
     @Override
     public void onLoadSucc(List<GtdDeedEntity> entityList) {
         deedEntityList.addAll(entityList);
-        getRecyclerView().resetData(ImmutableSet.copyOf(Iterables.filter(deedEntityList, Predicates.not(Predicates.isNull()))).asList());
+        getRecyclerView().resetData(Lists.newArrayList(Sets.newLinkedHashSet(deedEntityList)));
     }
 
     @Override
     public void onLoadSucc(GtdDeedEntity entity) {
         deedEntityList.add(0, entity);
-        getRecyclerView().resetData(ImmutableSet.copyOf(Iterables.filter(deedEntityList, Predicates.not(Predicates.isNull()))).asList());
+        getRecyclerView().resetData(Lists.newArrayList(Sets.newLinkedHashSet(deedEntityList)));
     }
 
     @Override
