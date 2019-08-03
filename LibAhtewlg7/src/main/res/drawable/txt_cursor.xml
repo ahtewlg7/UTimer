@@ -4,5 +4,5 @@
 
     <size android:width="2dp" />
 
-    <solid android:color="@android:color/white" />
+    <solid android:color="@color/colorPrimaryDark" />
 </shape>
