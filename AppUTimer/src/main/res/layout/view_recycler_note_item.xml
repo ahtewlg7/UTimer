@@ -21,19 +21,19 @@
             android:id="@+id/view_recycler_note_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/txt_color"
+            android:textColor="@color/colorAccent"
             android:textStyle="bold"/>
         <TextView
             android:id="@+id/view_recycler_note_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/txt_color"
+            android:textColor="@color/colorAccent"
             android:textStyle="bold"/>
         <TextView
             android:id="@+id/view_recycler_note_detail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/txt_color"
+            android:textColor="@color/colorAccent"
             android:textStyle="bold"/>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

@@ -19,6 +19,8 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="64dp"
+        app:menu_colorNormal="@color/colorAccent"
+        app:menu_labels_colorNormal="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:menu_backgroundColor="@android:color/transparent"
@@ -29,6 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_edit"
+            app:fab_colorNormal="@color/colorAccent"
             app:fab_label="@string/create_shorthand"
             app:fab_size="mini" />
         <com.github.clans.fab.FloatingActionButton
@@ -36,6 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_edit"
+            app:fab_colorNormal="@color/colorAccent"
             app:fab_label="@string/create_deed"
             app:fab_size="mini" />
     </com.github.clans.fab.FloatingActionMenu>

@@ -1,6 +1,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/color_stand_c2"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -22,7 +23,6 @@
         android:id="@+id/fragment_utimer_main_func_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@android:color/holo_blue_dark"
         android:clipChildren="false"
         android:clipToPadding="false"
         android:divider="@android:color/transparent"

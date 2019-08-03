@@ -5,7 +5,7 @@
     <ahtewlg7.utimer.view.md.MdEditText
         android:id="@+id/view_md_edit_tv"
         android:background="@null"
-        android:textColor="@android:color/white"
+        android:textColor="@color/colorPrimary"
         android:textSize="16sp"
         android:textCursorDrawable="@drawable/txt_cursor"
         android:textColorHighlight="#30ffffff"

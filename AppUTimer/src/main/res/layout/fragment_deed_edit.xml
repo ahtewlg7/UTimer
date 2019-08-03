@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment_action_container"
+    android:background="@color/color_stand_c2"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -25,20 +26,20 @@
         android:id="@+id/fragment_action_edit_raw"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/holo_blue_dark"
+        android:background="@android:color/white"
         android:gravity="top"
         android:minHeight="200dp"
-        android:textColor="@android:color/white"
+        android:textColor="@android:color/black"
         app:layout_constraintTop_toBottomOf="@+id/fragment_action_appbarlayout" />
 
     <EditText
         android:id="@+id/fragment_action_edit_w5h2_hint"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/holo_blue_dark"
+        android:background="@android:color/white"
         android:gravity="top"
         android:text="@string/prompt_w5h2"
-        android:textColor="@android:color/white"
+        android:textColor="@android:color/black"
         app:layout_constraintTop_toBottomOf="@+id/fragment_action_edit_raw" />
 
     <EditText
@@ -46,10 +47,10 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="1dp"
-        android:background="@android:color/holo_blue_dark"
+        android:background="@android:color/white"
         android:gravity="top"
         android:minHeight="200dp"
-        android:textColor="@android:color/white"
+        android:textColor="@android:color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fragment_action_edit_w5h2_hint"
         app:layout_constraintVertical_bias="0.415"
