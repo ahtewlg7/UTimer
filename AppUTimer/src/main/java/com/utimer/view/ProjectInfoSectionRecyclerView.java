@@ -1,17 +1,17 @@
 package com.utimer.view;
 
 import android.content.Context;
-import android.graphics.Color;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 
-import com.amulyakhare.textdrawable.TextDrawable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.utimer.R;
+import com.utimer.common.TextImageFactory;
 import com.utimer.entity.ProjectInfoSectionViewEntity;
 
 import java.util.List;
@@ -81,7 +81,7 @@ public class ProjectInfoSectionRecyclerView extends ABaseSectionRecyclerView<Pro
                 detailBuilder.append(item.getDetail().get());
             helper.setText(R.id.view_shorthand_list_item_title, titleBuilder.toString())
                 .setText(R.id.view_shorthand_list_item_detail, detailBuilder.toString())
-                .setImageDrawable(R.id.view_shorthand_list_item_image, TextDrawable.builder().buildRect("S", Color.parseColor("#177bbd")));
+                .setImageDrawable(R.id.view_shorthand_list_item_image, TextImageFactory.getInstance().getShortHandImage());
         }
     }
 }

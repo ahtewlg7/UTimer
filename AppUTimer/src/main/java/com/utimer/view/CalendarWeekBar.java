@@ -1,7 +1,6 @@
 package com.utimer.view;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.widget.TextView;
 
@@ -16,7 +15,6 @@ public class CalendarWeekBar extends WeekBar {
     public CalendarWeekBar(Context context) {
         super(context);
         LayoutInflater.from(context).inflate(R.layout.view_calendar_week_bar, this, true);
-        setTextColor(Color.WHITE);
     }
 
     @Override

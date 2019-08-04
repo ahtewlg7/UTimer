@@ -78,7 +78,7 @@ public class CalendarWeekView extends WeekView {
         mTextPaint.setFakeBoldText(true);
 
 
-        mSolarTermTextPaint.setColor(Color.DKGRAY);
+        mSolarTermTextPaint.setColor(MyRInfo.getColorByID(R.color.color_600));
         mSolarTermTextPaint.setAntiAlias(true);
         mSolarTermTextPaint.setTextAlign(Paint.Align.CENTER);
 
