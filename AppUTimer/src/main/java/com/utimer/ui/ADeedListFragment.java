@@ -1,8 +1,10 @@
 package com.utimer.ui;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -185,7 +187,9 @@ public abstract class ADeedListFragment extends AButterKnifeFragment
 
         Spanny spanny = new Spanny();
         if(multiSpanTag.getTagTitle().isPresent())
-            spanny.append(multiSpanTag.getTagTitle().get(), new ForegroundColorSpan(MyRInfo.getColorByID(R.color.colorPrimary)));
+            spanny.append(multiSpanTag.getTagTitle().get(),
+                    new ForegroundColorSpan(MyRInfo.getColorByID(R.color.colorPrimary)),
+                    new StyleSpan(Typeface.BOLD));
         spanny.append(item.getTitle().trim(), new TextClickableSpan(item, mySpanClickListener, MyRInfo.getColorByID(R.color.colorPrimary),false, position));
         if(moreTag.getTagTitle().isPresent())
             spanny.append(moreTag.getTagTitle().get(), new TextClickableSpan(moreTag, mySpanClickListener, MyRInfo.getColorByID(R.color.colorAccent),false, position));
