@@ -40,6 +40,7 @@ public class GtdMachine {
             case MAYBE:
                 state = maybeState;
                 break;
+            case REFERENCE:
             case SCHEDULE:
             case INBOX:
             case ONE_QUARTER:
