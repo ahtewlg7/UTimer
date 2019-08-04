@@ -132,8 +132,10 @@ public class DeedScheduleListFragment extends ADeedListFragment
 
     @Override
     public void onLoadSucc(GtdDeedEntity entity) {
-        deedEntityList.add(0, entity);
-        getRecyclerView().resetData(Lists.newArrayList(Sets.newLinkedHashSet(deedEntityList)));
+        if(!deedEntityList.contains(entity)) {
+            deedEntityList.add(0, entity);
+            getRecyclerView().resetData(Lists.newArrayList(Sets.newLinkedHashSet(deedEntityList)));
+        }
     }
 
     @Override

@@ -79,7 +79,7 @@ public class DeedEditFragment extends ATxtEditFragment
 
     @Override
     public int getLayoutRid() {
-        return R.layout.fragment_deed;
+        return R.layout.fragment_deed_edit;
     }
 
 

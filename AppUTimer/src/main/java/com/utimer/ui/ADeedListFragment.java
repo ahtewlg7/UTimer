@@ -1,6 +1,5 @@
 package com.utimer.ui;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
@@ -78,8 +77,8 @@ public abstract class ADeedListFragment extends AButterKnifeFragment
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onDestroy() {
+        super.onDestroy();
         EventBusFatory.getInstance().getDefaultEventBus().unregister(this);
     }
 
@@ -186,10 +185,10 @@ public abstract class ADeedListFragment extends AButterKnifeFragment
 
         Spanny spanny = new Spanny();
         if(multiSpanTag.getTagTitle().isPresent())
-            spanny.append(multiSpanTag.getTagTitle().get(), new ForegroundColorSpan(Color.GREEN));
-        spanny.append(item.getTitle().trim(), new TextClickableSpan(item, mySpanClickListener, Color.WHITE,false, position));
+            spanny.append(multiSpanTag.getTagTitle().get(), new ForegroundColorSpan(MyRInfo.getColorByID(R.color.colorPrimary)));
+        spanny.append(item.getTitle().trim(), new TextClickableSpan(item, mySpanClickListener, MyRInfo.getColorByID(R.color.colorPrimary),false, position));
         if(moreTag.getTagTitle().isPresent())
-            spanny.append(moreTag.getTagTitle().get(), new TextClickableSpan(moreTag, mySpanClickListener, MyRInfo.getColorByID(R.color.pink),false, position));
+            spanny.append(moreTag.getTagTitle().get(), new TextClickableSpan(moreTag, mySpanClickListener, MyRInfo.getColorByID(R.color.colorAccent),false, position));
         return spanny;
     }
 

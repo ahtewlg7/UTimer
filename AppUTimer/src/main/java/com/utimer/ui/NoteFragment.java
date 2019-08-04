@@ -2,9 +2,10 @@ package com.utimer.ui;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.View;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
-import android.view.View;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.common.collect.Lists;
@@ -86,7 +87,6 @@ public class NoteFragment extends AToolbarBkFragment {
         Drawable projectDrawable = TextImageFactory.getInstance().getProjectImage();
         String projectTitle      = getResources().getString(R.string.title_project);
         UtimerFuncRecyclerView.FuncViewEntity projectViewEntity = new UtimerFuncRecyclerView.FuncViewEntity(projectDrawable, projectTitle);
-
 
         funcViewEntityList.add(shorthandViewEntity);
         funcViewEntityList.add(projectViewEntity);

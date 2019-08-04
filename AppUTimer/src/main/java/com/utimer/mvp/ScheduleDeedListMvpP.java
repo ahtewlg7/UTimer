@@ -1,8 +1,6 @@
 package com.utimer.mvp;
 
 
-import android.graphics.Color;
-
 import com.google.common.base.Optional;
 import com.haibin.calendarview.Calendar;
 import com.trello.rxlifecycle3.android.FragmentEvent;
@@ -105,7 +103,7 @@ public class ScheduleDeedListMvpP extends BaseDeedListMvpP {
     }
     private Calendar getSchemeCalendar(LocalDate localDate){
         Calendar calendar = calendarSchemeFactory.getCalendar(localDate);
-        calendar.setSchemeColor(Color.GREEN);//如果单独标记颜色、则会使用这个颜色
+        calendar.setSchemeColor(MyRInfo.getColorByID(R.color.colorAccent));//如果单独标记颜色、则会使用这个颜色
 
         CalendarSchemeInfo schemeInfo = new CalendarSchemeInfo();
         schemeInfo.setTip(MyRInfo.getStringByID(R.string.title_calendar_scheme));
