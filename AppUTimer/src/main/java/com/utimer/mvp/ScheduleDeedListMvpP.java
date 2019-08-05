@@ -71,7 +71,7 @@ public class ScheduleDeedListMvpP extends BaseDeedListMvpP {
                 public void onComplete() {
                     super.onComplete();
                     if(mvpV != null)
-                        ((IScheduleMvpV)mvpV).onScheduleDateLoadSucc();
+                        ((IScheduleMvpV)mvpV).onScheduleDateLoadSucc(true);
                 }
             });
     }
@@ -92,12 +92,17 @@ public class ScheduleDeedListMvpP extends BaseDeedListMvpP {
             ifAtCurrCalendar = Optional.of(currCalendar.equals(calendarSchemeFactory.getCalendar(workDateTime.toLocalDate())));
 
         List<DateTime> warningDateTime = busEvent.getDeedEntity().getWarningTimeList();
-        if(warningDateTime != null)
-            for(DateTime date : warningDateTime) {
+        boolean ifAddScheduleDate = false;
+        if(warningDateTime != null) {
+            for (DateTime date : warningDateTime) {
                 ((IScheduleMvpV) mvpV).onScheduleDateAdd(getSchemeCalendar(date.toLocalDate()), GtdDeedByUuidFactory.getInstance().getCatalogueDeedNum(date.toLocalDate()) > 0);
-                if(ifAtCurrCalendar.isPresent() && !ifAtCurrCalendar.get())
+                ifAddScheduleDate = true;
+                if (ifAtCurrCalendar.isPresent() && !ifAtCurrCalendar.get())
                     ifAtCurrCalendar = Optional.of(currCalendar.equals(calendarSchemeFactory.getCalendar(date.toLocalDate())));
             }
+            if(ifAddScheduleDate)
+                ((IScheduleMvpV) mvpV).onScheduleDateLoadSucc(false);
+        }
         if(ifAtCurrCalendar.isPresent() && ifAtCurrCalendar.get())
             mvpV.onLoadSucc(busEvent.getDeedEntity());
     }
@@ -116,7 +121,7 @@ public class ScheduleDeedListMvpP extends BaseDeedListMvpP {
         public void onScheduleDateLoadStart();
         public void onScheduleDateAdd(Calendar calendar, boolean add);
         public void onScheduleDateLoadErr(Throwable err);
-        public void onScheduleDateLoadSucc();
+        public void onScheduleDateLoadSucc(boolean loadSelectedDeed);
 
         public Calendar getCurrCalendar();
     }

@@ -168,9 +168,9 @@ public class DeedScheduleListFragment extends ADeedListFragment
     }
 
     @Override
-    public void onScheduleDateLoadSucc() {
+    public void onScheduleDateLoadSucc(boolean loadSelectedDeed) {
         mCalendarView.setSchemeDate(deedCalendarMap);
-        if(mCalendarView.getSelectedCalendar() != null)
+        if(loadSelectedDeed && mCalendarView.getSelectedCalendar() != null)
             ((ScheduleDeedListMvpP)listMvpP).toLoadDeedByDate(mCalendarView.getSelectedCalendar());
     }
 
