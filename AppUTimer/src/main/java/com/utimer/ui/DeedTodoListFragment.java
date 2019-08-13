@@ -18,6 +18,7 @@ import static ahtewlg7.utimer.enumtype.DeedState.DELEGATE;
 import static ahtewlg7.utimer.enumtype.DeedState.INBOX;
 import static ahtewlg7.utimer.enumtype.DeedState.MAYBE;
 import static ahtewlg7.utimer.enumtype.DeedState.ONE_QUARTER;
+import static ahtewlg7.utimer.enumtype.DeedState.SCHEDULE;
 
 public class DeedTodoListFragment extends ADeedListFragment implements BaseDeedListMvpP.IBaseDeedMvpV {
     @BindView(R.id.fragment_deed_simple_list_recycler_view)
@@ -37,7 +38,7 @@ public class DeedTodoListFragment extends ADeedListFragment implements BaseDeedL
     public void onViewCreated(View inflateView) {
         super.onViewCreated(inflateView);
 
-        workState       = new DeedState[]{INBOX, MAYBE, ONE_QUARTER, DEFER, DELEGATE};
+        workState       = new DeedState[]{SCHEDULE, INBOX, MAYBE, ONE_QUARTER, DEFER, DELEGATE};
     }
     /**********************************************AToolbarBkFragment**********************************************/
     @Override
