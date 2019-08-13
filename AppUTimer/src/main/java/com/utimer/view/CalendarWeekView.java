@@ -14,11 +14,11 @@ import com.haibin.calendarview.Calendar;
 import com.haibin.calendarview.WeekView;
 import com.utimer.R;
 import com.utimer.common.CalendarSchemeFactory;
-import com.utimer.entity.CalendarSchemeInfo;
+import ahtewlg7.utimer.entity.gtd.DeedSchemeInfo;
 
 import ahtewlg7.utimer.util.MyRInfo;
 
-import static com.utimer.entity.CalendarSchemeInfo.INVALID_PROGRESS;
+import static ahtewlg7.utimer.entity.gtd.DeedSchemeInfo.INVALID_PROGRESS;
 
 public class CalendarWeekView extends WeekView {
 
@@ -145,7 +145,7 @@ public class CalendarWeekView extends WeekView {
 
     @Override
     protected void onDrawScheme(Canvas canvas, Calendar calendar, int x) {
-        Optional<CalendarSchemeInfo> calendarInfoOptional = calendarInfoFactory.toObject(calendar.getScheme());
+        Optional<DeedSchemeInfo> calendarInfoOptional = calendarInfoFactory.toObject(calendar.getScheme());
         if(!calendarInfoOptional.isPresent() || calendarInfoOptional.get().getProgress() == INVALID_PROGRESS)
             return;
 
@@ -172,7 +172,7 @@ public class CalendarWeekView extends WeekView {
             canvas.drawCircle(cx, cy, mRadius, mCurrentDayPaint);
         }
 
-        Optional<CalendarSchemeInfo> calendarInfoOptional = calendarInfoFactory.toObject(calendar.getScheme());
+        Optional<DeedSchemeInfo> calendarInfoOptional = calendarInfoFactory.toObject(calendar.getScheme());
         if (hasScheme && calendarInfoOptional.isPresent()) {
             mTextPaint.setColor(calendar.getSchemeColor());
             canvas.drawText(calendarInfoOptional.get().getTip(), x + mItemWidth - mPadding - mCircleRadius, mPadding + mSchemeBaseLine, mTextPaint);

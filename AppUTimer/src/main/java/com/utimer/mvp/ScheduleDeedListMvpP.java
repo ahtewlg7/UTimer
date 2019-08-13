@@ -1,13 +1,14 @@
 package com.utimer.mvp;
 
 
+import androidx.annotation.NonNull;
+
 import com.google.common.base.Optional;
 import com.haibin.calendarview.Calendar;
 import com.trello.rxlifecycle3.android.FragmentEvent;
 import com.trello.rxlifecycle3.components.support.RxFragment;
 import com.utimer.R;
 import com.utimer.common.CalendarSchemeFactory;
-import com.utimer.entity.CalendarSchemeInfo;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -16,6 +17,7 @@ import org.reactivestreams.Subscription;
 import java.util.List;
 
 import ahtewlg7.utimer.entity.busevent.DeedDoneBusEvent;
+import ahtewlg7.utimer.entity.gtd.DeedSchemeInfo;
 import ahtewlg7.utimer.enumtype.DeedState;
 import ahtewlg7.utimer.enumtype.GtdBusEventType;
 import ahtewlg7.utimer.factory.GtdDeedByUuidFactory;
@@ -36,7 +38,7 @@ public class ScheduleDeedListMvpP extends BaseDeedListMvpP {
         calendarSchemeFactory = new CalendarSchemeFactory();
     }
     public void toLoadScheduleDate(){
-        mvpM.loadCatalogueDate()
+        mvpM.loadWorkDate()
             .map(new Function<LocalDate, Calendar>() {
                 @Override
                 public Calendar apply(LocalDate localDate) throws Exception {
@@ -80,6 +82,18 @@ public class ScheduleDeedListMvpP extends BaseDeedListMvpP {
         toLoadDeedByDate(calendarSchemeFactory.getLocalDate(calendars));
     }
 
+    public Calendar toCalendar(LocalDate localDate){
+        return calendarSchemeFactory.getCalendar(localDate);
+    }
+    public LocalDate toLocalDate(Calendar calendar){
+        return calendarSchemeFactory.getLocalDate(calendar);
+    }
+    public long toInstant(Calendar calendar){
+        return calendarSchemeFactory.getInstant(calendar);
+    }
+    public Calendar toCalendar(long instant){
+        return calendarSchemeFactory.getCalendar(instant);
+    }
     @Override
     public void toHandleBusEvent(DeedDoneBusEvent busEvent, DeedState... state){
         if(mvpV == null || busEvent == null || !busEvent.ifValid() || busEvent.getEventType() != GtdBusEventType.SAVE)
@@ -95,7 +109,8 @@ public class ScheduleDeedListMvpP extends BaseDeedListMvpP {
         boolean ifAddScheduleDate = false;
         if(warningDateTime != null) {
             for (DateTime date : warningDateTime) {
-                ((IScheduleMvpV) mvpV).onScheduleDateAdd(getSchemeCalendar(date.toLocalDate()), GtdDeedByUuidFactory.getInstance().getCatalogueDeedNum(date.toLocalDate()) > 0);
+                boolean showScheme = busEvent.getDeedEntity().getDeedState() != DeedState.TRASH && (GtdDeedByUuidFactory.getInstance().getCalendarDeedNum(date.toLocalDate()) > 0);
+                ((IScheduleMvpV) mvpV).onScheduleDateAdd(getSchemeCalendar(date.toLocalDate()), showScheme);
                 ifAddScheduleDate = true;
                 if (ifAtCurrCalendar.isPresent() && !ifAtCurrCalendar.get())
                     ifAtCurrCalendar = Optional.of(currCalendar.equals(calendarSchemeFactory.getCalendar(date.toLocalDate())));
@@ -106,20 +121,25 @@ public class ScheduleDeedListMvpP extends BaseDeedListMvpP {
         if(ifAtCurrCalendar.isPresent() && ifAtCurrCalendar.get())
             mvpV.onLoadSucc(busEvent.getDeedEntity());
     }
-    private Calendar getSchemeCalendar(LocalDate localDate){
+    public Calendar getSchemeCalendar(@NonNull LocalDate localDate){
+        return getSchemeCalendar(localDate , true);
+    }
+    public Calendar getSchemeCalendar(@NonNull LocalDate localDate,boolean showScheme){
         Calendar calendar = calendarSchemeFactory.getCalendar(localDate);
         calendar.setSchemeColor(MyRInfo.getColorByID(R.color.colorAccent));//如果单独标记颜色、则会使用这个颜色
 
-        CalendarSchemeInfo schemeInfo = new CalendarSchemeInfo();
-        schemeInfo.setTip(MyRInfo.getStringByID(R.string.title_calendar_scheme));
-        Optional<String> scheme = calendarSchemeFactory.toJsonStr(schemeInfo);
-        if(scheme.isPresent())
-            calendar.setScheme(scheme.get());
+        if(showScheme) {
+            DeedSchemeInfo schemeInfo = new DeedSchemeInfo();
+            schemeInfo.setTip(MyRInfo.getStringByID(R.string.title_calendar_scheme));
+            Optional<String> scheme = calendarSchemeFactory.toJsonStr(schemeInfo);
+            if (scheme.isPresent())
+                calendar.setScheme(scheme.get());
+        }
         return calendar;
     }
     public interface IScheduleMvpV extends IBaseDeedMvpV{
         public void onScheduleDateLoadStart();
-        public void onScheduleDateAdd(Calendar calendar, boolean add);
+        public void onScheduleDateAdd(@NonNull Calendar calendar, boolean add);
         public void onScheduleDateLoadErr(Throwable err);
         public void onScheduleDateLoadSucc(boolean loadSelectedDeed);
 

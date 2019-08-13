@@ -2,6 +2,8 @@
 <resources>
     <string name="app_name">时间管理</string>
 
+    <string name="title_calendar_scheme">事</string>
+
     <string name="prompt_action_life_overdue">逾期</string>
     <string name="prompt_action_life_today">今日</string>
     <string name="prompt_action_life_tomorrow">明日</string>

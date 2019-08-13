@@ -7,8 +7,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.blankj.utilcode.util.ToastUtils;
+import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Multiset;
 import com.google.common.collect.Sets;
 import com.haibin.calendarview.Calendar;
 import com.haibin.calendarview.CalendarLayout;
@@ -23,6 +25,7 @@ import org.joda.time.LocalDate;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import ahtewlg7.utimer.entity.busevent.DeedDoneBusEvent;
 import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
@@ -46,7 +49,7 @@ public class DeedScheduleListFragment extends ADeedListFragment
     SimpleDeedRecyclerView recyclerView;
 
     private List<GtdDeedEntity> deedEntityList;
-    private Map<String, Calendar> deedCalendarMap;
+    private Multiset<Calendar> deedCalendarCountSet;
 
     public static DeedScheduleListFragment newInstance() {
         Bundle args = new Bundle();
@@ -65,8 +68,8 @@ public class DeedScheduleListFragment extends ADeedListFragment
         mCalendarView.setOnCalendarSelectListener(this);
 
         showLifeInfo            = false;
-        deedCalendarMap         = Maps.newHashMap();
         deedEntityList          = Lists.newArrayList();
+        deedCalendarCountSet    = HashMultiset.create();
     }
 
     @Override
@@ -152,15 +155,18 @@ public class DeedScheduleListFragment extends ADeedListFragment
     /**********************************************IScheduleMvpV**********************************************/
     @Override
     public void onScheduleDateLoadStart() {
-        deedCalendarMap.clear();
+        deedCalendarCountSet.clear();
     }
 
     @Override
-    public void onScheduleDateAdd(Calendar calendar, boolean add) {
-        if(!deedCalendarMap.containsValue(calendar) && add)
-            deedCalendarMap.put(calendar.toString(), calendar);
-        else if(!add)
-            deedCalendarMap.remove(calendar.toString());
+    public void onScheduleDateAdd(@NonNull Calendar calendar, boolean add) {
+        if(add)
+            deedCalendarCountSet.add(calendar);
+        else
+            deedCalendarCountSet.remove(calendar);
+        if(deedCalendarCountSet.count(calendar) == 0)
+            mCalendarView.removeSchemeDate(calendar);
+//        mCalendarView.setSchemeDate(getScheduleDate());
     }
 
     @Override
@@ -169,7 +175,7 @@ public class DeedScheduleListFragment extends ADeedListFragment
 
     @Override
     public void onScheduleDateLoadSucc(boolean loadSelectedDeed) {
-        mCalendarView.setSchemeDate(deedCalendarMap);
+        mCalendarView.setSchemeDate(getScheduleDate());
         if(loadSelectedDeed && mCalendarView.getSelectedCalendar() != null)
             ((ScheduleDeedListMvpP)listMvpP).toLoadDeedByDate(mCalendarView.getSelectedCalendar());
     }
@@ -178,5 +184,29 @@ public class DeedScheduleListFragment extends ADeedListFragment
     protected void toLoadDeedOnShow() {
         mCalendarView.scrollToCurrent();
         listMvpP.toLoadDeedByDate(LocalDate.now());
+    }
+    private Map<String, Calendar> getScheduleDate(){
+        Map<String, Calendar> scheduleDateMap = Maps.newHashMap();
+        Set<Calendar> calendarSet = deedCalendarCountSet.elementSet();
+        for(Calendar calendar : calendarSet)
+            scheduleDateMap.put(calendar.toString(), calendar);
+        return scheduleDateMap;
+    }
+    class MyCalendar{
+        private Calendar calendar;
+
+        public MyCalendar(@NonNull Calendar calendar) {
+            this.calendar = calendar;
+        }
+        public String getName(){
+            return calendar.toString();
+        }
+        public long getMilliTime (){
+            return calendar.getTimeInMillis();
+        }
+
+        public Calendar getCalendar() {
+            return calendar;
+        }
     }
 }
