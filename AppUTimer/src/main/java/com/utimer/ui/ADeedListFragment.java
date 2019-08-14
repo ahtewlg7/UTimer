@@ -186,10 +186,16 @@ public abstract class ADeedListFragment extends AButterKnifeFragment
         moreTag.setShowBracket(true);
 
         Spanny spanny = new Spanny();
-        if(multiSpanTag.getTagTitle().isPresent())
-            spanny.append(multiSpanTag.getTagTitle().get(),
-                    new ForegroundColorSpan(MyRInfo.getColorByID(R.color.colorPrimary)),
-                    new StyleSpan(Typeface.BOLD));
+        if(multiSpanTag.getTagTitle().isPresent()){
+            if(item.getDeedState() != DeedState.DONE && item.getDeedState() != DeedState.TRASH && item.getDeedState() != DeedState.USELESS)
+                spanny.append(multiSpanTag.getTagTitle().get(),
+                        new ForegroundColorSpan(MyRInfo.getColorByID(R.color.colorPrimary)),
+                        new StyleSpan(Typeface.BOLD));
+            else
+                spanny.append(multiSpanTag.getTagTitle().get(),
+                        new ForegroundColorSpan(MyRInfo.getColorByID(R.color.colorPrimary)));
+        }
+
         spanny.append(item.getTitle().trim(), new TextClickableSpan(item, mySpanClickListener, MyRInfo.getColorByID(R.color.colorPrimary),false, position));
         if(moreTag.getTagTitle().isPresent())
             spanny.append(moreTag.getTagTitle().get(), new TextClickableSpan(moreTag, mySpanClickListener, MyRInfo.getColorByID(R.color.colorAccent),false, position));
