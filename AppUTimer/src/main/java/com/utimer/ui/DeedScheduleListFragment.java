@@ -119,7 +119,7 @@ public class DeedScheduleListFragment extends ADeedListFragment
     @Override
     public void onCalendarSelect(Calendar calendar, boolean isClick) {
         deedEntityList.clear();
-        ((ScheduleDeedListMvpP)listMvpP).toLoadDeedByDate(calendarSchemeFactory.getLocalDate(calendar));
+        listMvpP.toLoadDeedByDate(calendarSchemeFactory.getLocalDate(calendar));
     }
     /**********************************************IBaseDeedMvpV**********************************************/
     @Override
