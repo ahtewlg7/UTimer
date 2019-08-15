@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import ahtewlg7.utimer.comparator.DeedEntityStateOrderComparator;
 import ahtewlg7.utimer.comparator.DeedWarningTimeComparator;
 import ahtewlg7.utimer.entity.BaseEventBusBean;
 import ahtewlg7.utimer.entity.busevent.DeedBusEvent;
@@ -65,6 +66,7 @@ public class BaseDeedListMvpP {
                     @Override
                     public List<GtdDeedEntity> apply(List<GtdDeedEntity> dateTimeGtdDeedEntityList, List<GtdDeedEntity> dateTimeGtdDeedEntityList2) throws Exception {
                         dateTimeGtdDeedEntityList.addAll(dateTimeGtdDeedEntityList2);
+                        Collections.sort(dateTimeGtdDeedEntityList, new DeedEntityStateOrderComparator().getAscOrder());
                         return dateTimeGtdDeedEntityList;
                     }
                 }).toFlowable());
