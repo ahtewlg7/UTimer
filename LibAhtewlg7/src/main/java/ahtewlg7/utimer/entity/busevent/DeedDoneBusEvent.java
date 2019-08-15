@@ -24,4 +24,8 @@ public class DeedDoneBusEvent extends BaseEventBusBean {
         return deedEntity;
     }
 
+    @Override
+    public boolean ifValid() {
+        return eventType != null && deedEntity != null ;
+    }
 }

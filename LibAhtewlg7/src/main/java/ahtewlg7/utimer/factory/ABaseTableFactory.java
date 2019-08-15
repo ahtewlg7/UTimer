@@ -28,19 +28,19 @@ public abstract class ABaseTableFactory<K, M, V> {
     }
 
     public Flowable<Table.Cell<K, M , V>> getAllCell(){
-        return tableAction.getAllCell();
+        return Flowable.fromIterable(tableAction.getAllCell());
     }
 
     public Flowable<K> getRowKey(){
-        return tableAction.getRowKey();
+        return Flowable.fromIterable(tableAction.getRowKey());
     }
 
     public Flowable<M> getColumnKey(){
-        return tableAction.getColumnKey();
+        return Flowable.fromIterable(tableAction.getColumnKey());
     }
 
     public Flowable<V> getValue(){
-        return tableAction.getValue();
+        return Flowable.fromIterable(tableAction.getValue());
     }
 
     public V getValue(K k, M m){

@@ -1,10 +1,12 @@
 package ahtewlg7.utimer.util;
 
+import androidx.annotation.NonNull;
+
 import com.google.common.collect.Table;
 
+import java.util.Collection;
 import java.util.Map;
-
-import io.reactivex.Flowable;
+import java.util.Set;
 
 /**
  * Created by lw on 2019/4/2.
@@ -12,7 +14,7 @@ import io.reactivex.Flowable;
 public class TableAction<R, C, V> {
     private Table<R, C, V> table;
 
-    public TableAction(Table<R, C, V> table){
+    public TableAction(@NonNull Table<R, C, V> table){
         this.table = table;
     }
 
@@ -20,27 +22,34 @@ public class TableAction<R, C, V> {
         return table.size();
     }
 
-    public Flowable<Table.Cell<R, C, V>> getAllCell(){
-        return Flowable.fromIterable(table.cellSet());
+    public Set<Table.Cell<R, C, V>> getAllCell(){
+        return table.cellSet();
     }
 
-    public Flowable<R> getRowKey(){
-        return Flowable.fromIterable(table.rowKeySet());
+    public Set<R> getRowKey(){
+        return table.rowKeySet();
     }
 
-    public Flowable<C> getColumnKey(){
-        return Flowable.fromIterable(table.columnKeySet());
+    public Set<C> getColumnKey(){
+        return table.columnKeySet();
     }
 
-    public Flowable<V> getValue(){
-        return Flowable.fromIterable(table.values());
+    public Collection<V> getValue(){
+        return table.values();
     }
 
-    public Flowable<Map.Entry<C,V>> getRow(R r){
-        return Flowable.fromIterable(table.row(r).entrySet());
+    public Set<Map.Entry<C,V>> getRowValues(R r){
+        return table.row(r).entrySet();
     }
-    public Flowable<Map.Entry<R,V>> getColumn(C c){
-        return Flowable.fromIterable(table.column(c).entrySet());
+    public Set<Map.Entry<R,V>> getColumnValues(C c){
+        return table.column(c).entrySet();
+    }
+
+    public Map<C,V> getRow(R r){
+        return table.row(r);
+    }
+    public Map<R,V> getColumn(C c){
+        return table.column(c);
     }
 
     public Map<R,Map<C,V>> getAllRow(){
@@ -59,6 +68,9 @@ public class TableAction<R, C, V> {
     }
     public boolean containsRow(R r){
         return table.containsRow(r);
+    }
+    public boolean containsValue(V v){
+        return table.containsValue(v);
     }
 
     public void putValue(R r, C c, V v){
