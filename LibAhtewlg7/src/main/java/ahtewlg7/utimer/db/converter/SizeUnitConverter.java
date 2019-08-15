@@ -9,8 +9,6 @@ import org.greenrobot.greendao.converter.PropertyConverter;
  * Created by lw on 2016/9/6.
  */
 public class SizeUnitConverter implements PropertyConverter<SizeUnit,Long> {
-    public static final String TAG = SizeUnitConverter.class.getSimpleName();
-
     public static final long SIZE_UNIT_B             = 1;
     public static final long SIZE_UNIT_KB            = 1024;
     public static final long SIZE_UNIT_MB            = 1024 * 1024;

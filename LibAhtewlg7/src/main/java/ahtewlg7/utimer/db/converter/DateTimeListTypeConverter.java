@@ -13,8 +13,6 @@ import java.util.List;
  * Created by lw on 2016/9/6.
  */
 public class DateTimeListTypeConverter implements PropertyConverter<List<DateTime>,String> {
-    public static final String TAG = DateTimeListTypeConverter.class.getSimpleName();
-
     public static final String DATE_TIME_SPLIT          = ";";
 
     @Override

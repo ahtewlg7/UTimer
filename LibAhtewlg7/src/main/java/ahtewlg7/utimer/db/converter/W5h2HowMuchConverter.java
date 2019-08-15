@@ -11,8 +11,6 @@ import ahtewlg7.utimer.entity.w5h2.W5h2HowMuch;
  * Created by lw on 2016/9/6.
  */
 public class W5h2HowMuchConverter implements PropertyConverter<W5h2HowMuch,String> {
-    public static final String TAG = W5h2HowMuchConverter.class.getSimpleName();
-
     @Override
     public W5h2HowMuch convertToEntityProperty(String databaseValue) {
         return JSON.parseObject(databaseValue, W5h2HowMuch.class);

@@ -8,8 +8,6 @@ import org.joda.time.DateTime;
  * Created by lw on 2016/9/6.
  */
 public class DateTimeTypeConverter implements PropertyConverter<DateTime,Long> {
-    public static final String TAG = DateTimeTypeConverter.class.getSimpleName();
-
     @Override
     public DateTime convertToEntityProperty(Long databaseValue) {
         return new DateTime(databaseValue);

@@ -15,7 +15,6 @@ import ahtewlg7.utimer.json.DateTimeFastjson;
  * Created by lw on 2016/9/6.
  */
 public class W5h2WhenConverter implements PropertyConverter<W5h2When,String> {
-
     public W5h2WhenConverter(){
         SerializeConfig.getGlobalInstance().put(DateTime.class, new DateTimeFastjson());
         ParserConfig.getGlobalInstance().putDeserializer(DateTime.class, new DateTimeFastjson());
