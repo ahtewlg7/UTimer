@@ -4,11 +4,9 @@ package com.utimer.mvp;
 import androidx.annotation.NonNull;
 
 import com.google.common.base.Optional;
-import com.haibin.calendarview.Calendar;
+import com.google.common.collect.Lists;
 import com.trello.rxlifecycle3.android.FragmentEvent;
 import com.trello.rxlifecycle3.components.support.RxFragment;
-import com.utimer.R;
-import com.utimer.common.CalendarSchemeFactory;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -18,131 +16,107 @@ import java.util.List;
 
 import ahtewlg7.utimer.entity.busevent.DeedDoneBusEvent;
 import ahtewlg7.utimer.entity.gtd.DeedSchemeInfo;
+import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
 import ahtewlg7.utimer.enumtype.DeedState;
 import ahtewlg7.utimer.enumtype.GtdBusEventType;
-import ahtewlg7.utimer.factory.GtdDeedByUuidFactory;
+import ahtewlg7.utimer.factory.DeedSchemeEntityFactory;
 import ahtewlg7.utimer.mvp.BaseDeedListMvpP;
-import ahtewlg7.utimer.util.MyRInfo;
 import ahtewlg7.utimer.util.MySafeSubscriber;
+import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Function;
 
 /**
  * Created by lw on 2019/7/19.
  */
 public class ScheduleDeedListMvpP extends BaseDeedListMvpP {
-    private CalendarSchemeFactory calendarSchemeFactory;
-
     public ScheduleDeedListMvpP(IScheduleMvpV mvpV) {
         super(mvpV);
-        calendarSchemeFactory = new CalendarSchemeFactory();
     }
+
     public void toLoadScheduleDate(){
-        mvpM.loadWorkDate()
-            .map(new Function<LocalDate, Calendar>() {
-                @Override
-                public Calendar apply(LocalDate localDate) throws Exception {
-                    return getSchemeCalendar(localDate);
-                }
-            })
-            .compose(((RxFragment)mvpV.getRxLifeCycleBindView()).<Calendar>bindUntilEvent(FragmentEvent.DESTROY))
+        toLoadScheme(mvpM.toLoadScheme());
+    }
+    protected void toLoadScheme(@NonNull Flowable<DeedSchemeInfo> loadRx){
+        loadRx.compose(((RxFragment)mvpV.getRxLifeCycleBindView()).<DeedSchemeInfo>bindUntilEvent(FragmentEvent.DESTROY))
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(new MySafeSubscriber<Calendar>() {
+            .subscribe(new MySafeSubscriber<DeedSchemeInfo>() {
                 @Override
                 public void onSubscribe(Subscription s) {
                     super.onSubscribe(s);
                     if(mvpV != null)
-                        ((IScheduleMvpV)mvpV).onScheduleDateLoadStart();
+                        ((IScheduleMvpV)mvpV).onSchemeLoadStart();
                 }
 
                 @Override
-                public void onNext(Calendar calendar) {
-                    super.onNext(calendar);
+                public void onNext(DeedSchemeInfo schemeInfo) {
+                    super.onNext(schemeInfo);
                     if(mvpV != null)
-                        ((IScheduleMvpV)mvpV).onScheduleDateAdd(calendar, true);
+                        ((IScheduleMvpV)mvpV).onSchemeLoadSucc(schemeInfo, true);
                 }
 
                 @Override
                 public void onError(Throwable t) {
                     super.onError(t);
                     if(mvpV != null)
-                        ((IScheduleMvpV)mvpV).onScheduleDateLoadErr(t);
+                        ((IScheduleMvpV)mvpV).onSchemeLoadErr(t);
                 }
 
                 @Override
                 public void onComplete() {
                     super.onComplete();
                     if(mvpV != null)
-                        ((IScheduleMvpV)mvpV).onScheduleDateLoadSucc(true);
+                        ((IScheduleMvpV)mvpV).onSchemeLoadEnd();
                 }
             });
     }
 
-    public void toLoadDeedByDate(final Calendar calendars){
-        toLoadDeedByDate(calendarSchemeFactory.getLocalDate(calendars));
-    }
-
-    public Calendar toCalendar(LocalDate localDate){
-        return calendarSchemeFactory.getCalendar(localDate);
-    }
-    public LocalDate toLocalDate(Calendar calendar){
-        return calendarSchemeFactory.getLocalDate(calendar);
-    }
-    public long toInstant(Calendar calendar){
-        return calendarSchemeFactory.getInstant(calendar);
-    }
-    public Calendar toCalendar(long instant){
-        return calendarSchemeFactory.getCalendar(instant);
-    }
     @Override
     public void toHandleBusEvent(DeedDoneBusEvent busEvent, DeedState... state){
-        if(mvpV == null || busEvent == null || !busEvent.ifValid() || busEvent.getEventType() != GtdBusEventType.SAVE)
+        if(mvpV == null || busEvent == null || !busEvent.ifValid() ||
+            (busEvent.getEventType() != GtdBusEventType.SAVE && busEvent.getEventType() != GtdBusEventType.DELETE))
             return;
-        Calendar currCalendar = ((IScheduleMvpV) mvpV).getCurrCalendar();
+        GtdDeedEntity deedEntity = busEvent.getDeedEntity();
 
-        Optional<Boolean> ifAtCurrCalendar = currCalendar == null ? Optional.absent() : Optional.of(false);
-        DateTime workDateTime = busEvent.getDeedEntity().getWorkTime();
-        if(ifAtCurrCalendar.isPresent() && workDateTime != null)
-            ifAtCurrCalendar = Optional.of(currCalendar.equals(calendarSchemeFactory.getCalendar(workDateTime.toLocalDate())));
+        List<LocalDate> deedDate = Lists.newArrayList();
+        if(deedEntity.getStartTime() != null)
+            deedDate.add(deedEntity.getStartTime().toLocalDate());
 
-        List<DateTime> warningDateTime = busEvent.getDeedEntity().getWarningTimeList();
-        boolean ifAddScheduleDate = false;
+        Optional<Boolean> ifAtCurrCalendar = ((IScheduleMvpV) mvpV).ifAtSelectedDay(deedEntity.getWorkTime().toLocalDate());
+        List<DateTime> warningDateTime = deedEntity.getWarningTimeList();
         if(warningDateTime != null) {
             for (DateTime date : warningDateTime) {
-                boolean showScheme = busEvent.getDeedEntity().getDeedState() != DeedState.TRASH && (GtdDeedByUuidFactory.getInstance().getCalendarDeedNum(date.toLocalDate()) > 0);
-                ((IScheduleMvpV) mvpV).onScheduleDateAdd(getSchemeCalendar(date.toLocalDate()), showScheme);
-                ifAddScheduleDate = true;
+                deedDate.add(date.toLocalDate());
                 if (ifAtCurrCalendar.isPresent() && !ifAtCurrCalendar.get())
-                    ifAtCurrCalendar = Optional.of(currCalendar.equals(calendarSchemeFactory.getCalendar(date.toLocalDate())));
+                    ifAtCurrCalendar = ((IScheduleMvpV) mvpV).ifAtSelectedDay(date.toLocalDate());
             }
-            if(ifAddScheduleDate)
-                ((IScheduleMvpV) mvpV).onScheduleDateLoadSucc(false);
         }
         if(ifAtCurrCalendar.isPresent() && ifAtCurrCalendar.get())
             mvpV.onLoadSucc(busEvent.getDeedEntity());
-    }
-    public Calendar getSchemeCalendar(@NonNull LocalDate localDate){
-        return getSchemeCalendar(localDate , true);
-    }
-    public Calendar getSchemeCalendar(@NonNull LocalDate localDate,boolean showScheme){
-        Calendar calendar = calendarSchemeFactory.getCalendar(localDate);
-        calendar.setSchemeColor(MyRInfo.getColorByID(R.color.colorAccent));//如果单独标记颜色、则会使用这个颜色
 
-        if(showScheme) {
-            DeedSchemeInfo schemeInfo = new DeedSchemeInfo();
-            schemeInfo.setTip(MyRInfo.getStringByID(R.string.title_calendar_scheme));
-            Optional<String> scheme = calendarSchemeFactory.toJsonStr(schemeInfo);
-            if (scheme.isPresent())
-                calendar.setScheme(scheme.get());
-        }
-        return calendar;
+        toReloadSchem(deedDate);
     }
-    public interface IScheduleMvpV extends IBaseDeedMvpV{
-        public void onScheduleDateLoadStart();
-        public void onScheduleDateAdd(@NonNull Calendar calendar, boolean add);
-        public void onScheduleDateLoadErr(Throwable err);
-        public void onScheduleDateLoadSucc(boolean loadSelectedDeed);
 
-        public Calendar getCurrCalendar();
+    private void toReloadSchem(List<LocalDate> updateDateList){
+        if(updateDateList == null || updateDateList.isEmpty())
+            return;
+        DeedSchemeEntityFactory.getInstacne().toLoadDateScheme(Flowable.fromIterable(updateDateList))
+                .compose(((RxFragment)mvpV.getRxLifeCycleBindView()).<DeedSchemeInfo>bindUntilEvent(FragmentEvent.DESTROY))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new MySafeSubscriber<DeedSchemeInfo>() {
+                    @Override
+                    public void onNext(DeedSchemeInfo schemeInfo) {
+                        super.onNext(schemeInfo);
+                        if(mvpV != null)
+                            ((IScheduleMvpV)mvpV).onSchemeLoadSucc(schemeInfo, true);
+                    }
+                });
+    }
+    public interface IScheduleMvpV extends BaseDeedListMvpP.IBaseDeedMvpV {
+        public void onSchemeLoadStart();
+        public void onSchemeLoadSucc(DeedSchemeInfo schemeInfo, boolean add);
+        public void onSchemeLoadErr(Throwable err);
+        public void onSchemeLoadEnd();
+
+        public Optional<Boolean> ifAtSelectedDay(LocalDate localDate);
     }
 }

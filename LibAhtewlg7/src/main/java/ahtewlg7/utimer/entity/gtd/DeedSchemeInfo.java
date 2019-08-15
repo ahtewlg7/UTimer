@@ -1,31 +1,35 @@
 package ahtewlg7.utimer.entity.gtd;
 
 
-import ahtewlg7.utimer.R;
-import ahtewlg7.utimer.util.MyRInfo;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import org.joda.time.LocalDate;
+
+import java.util.List;
 
 /**
  * Created by lw on 2019/7/20.
  */
-public class DeedSchemeInfo {
-    public static final int INVALID_PROGRESS = -1;
+public class DeedSchemeInfo{
+    private LocalDate localDate;
+    private List<DeedSchemeEntity> deedSchemeEntityList;
 
-    private int progress =  INVALID_PROGRESS;
-    private String tip   = MyRInfo.getStringByID(R.string.title_calendar_scheme);
-
-    public void setProgress(int progress) {
-        this.progress = progress;
+    public DeedSchemeInfo(@NonNull LocalDate localDate, List<DeedSchemeEntity> deedSchemeEntityList) {
+        this.localDate = localDate;
+        this.deedSchemeEntityList = deedSchemeEntityList;
     }
 
-    public int getProgress() {
-        return progress;
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        return obj instanceof DeedSchemeInfo && localDate == ((DeedSchemeInfo) obj).getLocalDate();
     }
 
-    public void setTip(String tip) {
-        this.tip = tip;
+    public LocalDate getLocalDate() {
+        return localDate;
     }
 
-    public String getTip() {
-        return tip;
+    public List<DeedSchemeEntity> getDeedSchemeEntityList() {
+        return deedSchemeEntityList;
     }
 }

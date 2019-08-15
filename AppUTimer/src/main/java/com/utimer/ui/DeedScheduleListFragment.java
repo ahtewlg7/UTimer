@@ -7,15 +7,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.blankj.utilcode.util.ToastUtils;
-import com.google.common.collect.HashMultiset;
+import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Multiset;
 import com.google.common.collect.Sets;
 import com.haibin.calendarview.Calendar;
 import com.haibin.calendarview.CalendarLayout;
 import com.haibin.calendarview.CalendarView;
 import com.utimer.R;
+import com.utimer.common.CalendarSchemeFactory;
 import com.utimer.mvp.ScheduleDeedListMvpP;
 import com.utimer.view.SimpleDeedRecyclerView;
 
@@ -24,10 +23,10 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.joda.time.LocalDate;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import ahtewlg7.utimer.entity.busevent.DeedDoneBusEvent;
+import ahtewlg7.utimer.entity.gtd.DeedSchemeEntity;
+import ahtewlg7.utimer.entity.gtd.DeedSchemeInfo;
 import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
 import ahtewlg7.utimer.enumtype.DeedState;
 import ahtewlg7.utimer.factory.GtdDeedByUuidFactory;
@@ -39,6 +38,7 @@ import static com.utimer.common.TagInfoFactory.INVALID_TAG_RID;
 
 public class DeedScheduleListFragment extends ADeedListFragment
         implements ScheduleDeedListMvpP.IScheduleMvpV,CalendarView.OnCalendarSelectListener {
+
     @BindView(R.id.fragment_deed_calendar_calendarLayout)
     CalendarLayout mCalendarLayout;
 
@@ -49,7 +49,7 @@ public class DeedScheduleListFragment extends ADeedListFragment
     SimpleDeedRecyclerView recyclerView;
 
     private List<GtdDeedEntity> deedEntityList;
-    private Multiset<Calendar> deedCalendarCountSet;
+    private CalendarSchemeFactory calendarSchemeFactory;
 
     public static DeedScheduleListFragment newInstance() {
         Bundle args = new Bundle();
@@ -69,7 +69,7 @@ public class DeedScheduleListFragment extends ADeedListFragment
 
         showLifeInfo            = false;
         deedEntityList          = Lists.newArrayList();
-        deedCalendarCountSet    = HashMultiset.create();
+        calendarSchemeFactory   = new CalendarSchemeFactory();
     }
 
     @Override
@@ -119,12 +119,16 @@ public class DeedScheduleListFragment extends ADeedListFragment
     @Override
     public void onCalendarSelect(Calendar calendar, boolean isClick) {
         deedEntityList.clear();
-        ((ScheduleDeedListMvpP)listMvpP).toLoadDeedByDate(calendar);
+        ((ScheduleDeedListMvpP)listMvpP).toLoadDeedByDate(calendarSchemeFactory.getLocalDate(calendar));
     }
     /**********************************************IBaseDeedMvpV**********************************************/
     @Override
-    public Calendar getCurrCalendar() {
-        return mCalendarView.getSelectedCalendar();
+    public Optional<Boolean> ifAtSelectedDay(LocalDate localDate) {
+        Optional<Boolean> ifAtSelectedDay = mCalendarView.getSelectedCalendar() == null ? Optional.absent() : Optional.of(false);
+        if(ifAtSelectedDay.isPresent() && localDate != null)
+            ifAtSelectedDay = Optional.of(mCalendarView.getSelectedCalendar().equals(calendarSchemeFactory.getCalendar(localDate)));
+
+        return ifAtSelectedDay;
     }
 
     @Override
@@ -152,32 +156,29 @@ public class DeedScheduleListFragment extends ADeedListFragment
         if(strRid != INVALID_TAG_RID)
             ToastUtils.showShort(strRid);
     }
+
     /**********************************************IScheduleMvpV**********************************************/
     @Override
-    public void onScheduleDateLoadStart() {
-        deedCalendarCountSet.clear();
+    public void onSchemeLoadStart() {
     }
 
     @Override
-    public void onScheduleDateAdd(@NonNull Calendar calendar, boolean add) {
-        if(add)
-            deedCalendarCountSet.add(calendar);
-        else
-            deedCalendarCountSet.remove(calendar);
-        if(deedCalendarCountSet.count(calendar) == 0)
+    public void onSchemeLoadSucc(DeedSchemeInfo schemeInfo, boolean add) {
+        Calendar calendar = getSchemeCalendar(schemeInfo);
+        if(calendar.getSchemes() == null || calendar.getSchemes().isEmpty())
             mCalendarView.removeSchemeDate(calendar);
-//        mCalendarView.setSchemeDate(getScheduleDate());
+        else
+            mCalendarView.addSchemeDate(calendar);
     }
 
     @Override
-    public void onScheduleDateLoadErr(Throwable err) {
+    public void onSchemeLoadErr(Throwable err) {
     }
 
     @Override
-    public void onScheduleDateLoadSucc(boolean loadSelectedDeed) {
-        mCalendarView.setSchemeDate(getScheduleDate());
-        if(loadSelectedDeed && mCalendarView.getSelectedCalendar() != null)
-            ((ScheduleDeedListMvpP)listMvpP).toLoadDeedByDate(mCalendarView.getSelectedCalendar());
+    public void onSchemeLoadEnd() {
+        if(mCalendarView.getSelectedCalendar() != null)
+            listMvpP.toLoadDeedByDate(calendarSchemeFactory.getLocalDate(mCalendarView.getSelectedCalendar()));
     }
 
     @Override
@@ -185,28 +186,18 @@ public class DeedScheduleListFragment extends ADeedListFragment
         mCalendarView.scrollToCurrent();
         listMvpP.toLoadDeedByDate(LocalDate.now());
     }
-    private Map<String, Calendar> getScheduleDate(){
-        Map<String, Calendar> scheduleDateMap = Maps.newHashMap();
-        Set<Calendar> calendarSet = deedCalendarCountSet.elementSet();
-        for(Calendar calendar : calendarSet)
-            scheduleDateMap.put(calendar.toString(), calendar);
-        return scheduleDateMap;
-    }
-    class MyCalendar{
-        private Calendar calendar;
-
-        public MyCalendar(@NonNull Calendar calendar) {
-            this.calendar = calendar;
-        }
-        public String getName(){
-            return calendar.toString();
-        }
-        public long getMilliTime (){
-            return calendar.getTimeInMillis();
-        }
-
-        public Calendar getCalendar() {
+    public Calendar getSchemeCalendar(@NonNull DeedSchemeInfo schemeInfo){
+        Calendar calendar = calendarSchemeFactory.getCalendar(schemeInfo.getLocalDate());
+        if(schemeInfo.getDeedSchemeEntityList() == null)
             return calendar;
+        for(DeedSchemeEntity deedSchemeEntity : schemeInfo.getDeedSchemeEntityList()){
+            Calendar.Scheme scheme = new Calendar.Scheme();
+            scheme.setShcemeColor(MyRInfo.getColorByID(R.color.colorAccent));
+            Optional<String> schemeJson = calendarSchemeFactory.toJsonStr(deedSchemeEntity);
+            if (schemeJson.isPresent())
+                scheme.setScheme(schemeJson.get());
+            calendar.addScheme(scheme);
         }
+        return calendar;
     }
 }

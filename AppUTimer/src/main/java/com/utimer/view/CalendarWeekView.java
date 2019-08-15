@@ -14,11 +14,11 @@ import com.haibin.calendarview.Calendar;
 import com.haibin.calendarview.WeekView;
 import com.utimer.R;
 import com.utimer.common.CalendarSchemeFactory;
-import ahtewlg7.utimer.entity.gtd.DeedSchemeInfo;
 
+import ahtewlg7.utimer.entity.gtd.DeedSchemeEntity;
 import ahtewlg7.utimer.util.MyRInfo;
 
-import static ahtewlg7.utimer.entity.gtd.DeedSchemeInfo.INVALID_PROGRESS;
+import static ahtewlg7.utimer.entity.gtd.DeedSchemeEntity.INVALID_PROGRESS;
 
 public class CalendarWeekView extends WeekView {
 
@@ -145,7 +145,9 @@ public class CalendarWeekView extends WeekView {
 
     @Override
     protected void onDrawScheme(Canvas canvas, Calendar calendar, int x) {
-        Optional<DeedSchemeInfo> calendarInfoOptional = calendarInfoFactory.toObject(calendar.getScheme());
+        Optional<DeedSchemeEntity> calendarInfoOptional = Optional.absent();
+        if(calendar.getSchemes() != null && !calendar.getSchemes().isEmpty())
+            calendarInfoOptional = calendarInfoFactory.toObject(calendar.getSchemes().get(0).getScheme());
         if(!calendarInfoOptional.isPresent() || calendarInfoOptional.get().getProgress() == INVALID_PROGRESS)
             return;
 
@@ -154,7 +156,7 @@ public class CalendarWeekView extends WeekView {
 
         int angle = getAngle(calendarInfoOptional.get().getProgress());
 
-        mProgressPaint.setColor(calendar.getSchemeColor());
+        mProgressPaint.setColor(calendar.getSchemes().get(0).getShcemeColor());
         RectF progressRectF = new RectF(cx - mRadius, cy - mRadius, cx + mRadius, cy + mRadius);
         canvas.drawArc(progressRectF, -90, angle, false, mProgressPaint);
 
@@ -172,9 +174,11 @@ public class CalendarWeekView extends WeekView {
             canvas.drawCircle(cx, cy, mRadius, mCurrentDayPaint);
         }
 
-        Optional<DeedSchemeInfo> calendarInfoOptional = calendarInfoFactory.toObject(calendar.getScheme());
-        if (hasScheme && calendarInfoOptional.isPresent()) {
-            mTextPaint.setColor(calendar.getSchemeColor());
+        Optional<DeedSchemeEntity> calendarInfoOptional = Optional.absent();
+        if(calendar.getSchemes() != null && !calendar.getSchemes().isEmpty())
+            calendarInfoOptional = calendarInfoFactory.toObject(calendar.getSchemes().get(0).getScheme());
+        if (hasScheme && calendarInfoOptional.isPresent() && !TextUtils.isEmpty(calendarInfoOptional.get().getTip())) {
+            mTextPaint.setColor(calendar.getSchemes().get(0).getShcemeColor());
             canvas.drawText(calendarInfoOptional.get().getTip(), x + mItemWidth - mPadding - mCircleRadius, mPadding + mSchemeBaseLine, mTextPaint);
         }
 
