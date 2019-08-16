@@ -163,7 +163,7 @@ public class DeedScheduleListFragment extends ADeedListFragment
     }
 
     @Override
-    public void onSchemeLoadSucc(DeedSchemeInfo schemeInfo, boolean add) {
+    public void onSchemeLoadSucc(DeedSchemeInfo schemeInfo) {
         Calendar calendar = getSchemeCalendar(schemeInfo);
         if(calendar.getSchemes() == null || calendar.getSchemes().isEmpty())
             mCalendarView.removeSchemeDate(calendar);

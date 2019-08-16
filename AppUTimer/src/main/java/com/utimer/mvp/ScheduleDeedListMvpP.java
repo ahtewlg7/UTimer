@@ -51,7 +51,7 @@ public class ScheduleDeedListMvpP extends BaseDeedListMvpP {
                 public void onNext(DeedSchemeInfo schemeInfo) {
                     super.onNext(schemeInfo);
                     if(mvpV != null)
-                        ((IScheduleMvpV)mvpV).onSchemeLoadSucc(schemeInfo, true);
+                        ((IScheduleMvpV)mvpV).onSchemeLoadSucc(schemeInfo);
                 }
 
                 @Override
@@ -107,13 +107,13 @@ public class ScheduleDeedListMvpP extends BaseDeedListMvpP {
                     public void onNext(DeedSchemeInfo schemeInfo) {
                         super.onNext(schemeInfo);
                         if(mvpV != null)
-                            ((IScheduleMvpV)mvpV).onSchemeLoadSucc(schemeInfo, true);
+                            ((IScheduleMvpV)mvpV).onSchemeLoadSucc(schemeInfo);
                     }
                 });
     }
     public interface IScheduleMvpV extends BaseDeedListMvpP.IBaseDeedMvpV {
         public void onSchemeLoadStart();
-        public void onSchemeLoadSucc(DeedSchemeInfo schemeInfo, boolean add);
+        public void onSchemeLoadSucc(DeedSchemeInfo schemeInfo);
         public void onSchemeLoadErr(Throwable err);
         public void onSchemeLoadEnd();
 

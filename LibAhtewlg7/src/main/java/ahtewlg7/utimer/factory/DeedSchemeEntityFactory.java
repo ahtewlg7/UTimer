@@ -7,6 +7,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
 import org.joda.time.DateTime;
+import org.joda.time.Hours;
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
@@ -48,7 +49,7 @@ public class DeedSchemeEntityFactory {
 
     public DeedSchemeInfo toLoadDateScheme(LocalDate localDate){
         List<DeedSchemeEntity> schemeEntityList = new ArrayList<DeedSchemeEntity>(dateSchemeMultimap.get(localDate));
-        Collections.sort(schemeEntityList, new DeedSchemeComparator().getAscOrder());
+        Collections.sort(schemeEntityList, new DeedSchemeComparator().getDescOrder());
         return new DeedSchemeInfo(localDate, schemeEntityList);
     }
     public Flowable<DeedSchemeInfo> toLoadDateScheme(){
@@ -104,9 +105,8 @@ public class DeedSchemeEntityFactory {
         else if(DateTime.now().isBefore(deedEntity.getStartTime()))
             deedSchemeEntity.setProgress(0);
         else{
-            Period period = new Period(deedEntity.getStartTime(), DateTime.now(), PeriodType.millis());
-            Period hour24 = new Period(deedEntity.getStartTime(), deedEntity.getStartTime().plusHours(24), PeriodType.millis());
-            int percent  = 100 * period.getMillis() / hour24.getMillis();
+            Period period = new Period(deedEntity.getStartTime(), DateTime.now(), PeriodType.minutes());
+            int percent  = 100 * period.getMinutes() / Hours.hours(24).toStandardMinutes().getMinutes();
             deedSchemeEntity.setProgress(percent);
         }
         deedSchemeEntity.setDateTime(deedEntity.getStartTime());
