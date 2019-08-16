@@ -160,8 +160,8 @@ public class CalendarWeekView extends WeekView {
         RectF progressRectF = new RectF(cx - mRadius, cy - mRadius, cx + mRadius, cy + mRadius);
         canvas.drawArc(progressRectF, -90, angle, false, mProgressPaint);
 
-        RectF noneRectF = new RectF(cx - mRadius, cy - mRadius, cx + mRadius, cy + mRadius);
-        canvas.drawArc(noneRectF, angle - 90, 360 - angle, false, mNoneProgressPaint);
+        /*RectF noneRectF = new RectF(cx - mRadius, cy - mRadius, cx + mRadius, cy + mRadius);
+        canvas.drawArc(noneRectF, angle - 90, 360 - angle, false, mNoneProgressPaint);*/
     }
 
     @Override
