@@ -25,7 +25,8 @@ public class DeedSchemeEntity {
 
     public DeedSchemeEntity() {
     }
-    public DeedSchemeEntity(String uuid) {
+
+    public void setUuid(String uuid) {
         this.uuid = uuid;
     }
 
@@ -60,7 +61,7 @@ public class DeedSchemeEntity {
     @Override
     public boolean equals(@Nullable Object obj) {
         if(obj instanceof DeedSchemeEntity)
-            return TextUtils.isEmpty(uuid) && uuid.equals(((DeedSchemeEntity) obj).getUuid());
+            return !TextUtils.isEmpty(uuid) && uuid.equals(((DeedSchemeEntity) obj).getUuid());
         return false;
     }
 }
