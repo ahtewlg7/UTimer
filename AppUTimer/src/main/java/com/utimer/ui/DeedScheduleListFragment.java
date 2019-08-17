@@ -8,8 +8,10 @@ import androidx.annotation.Nullable;
 
 import com.blankj.utilcode.util.ToastUtils;
 import com.google.common.base.Optional;
+import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.google.common.collect.Table;
 import com.haibin.calendarview.Calendar;
 import com.haibin.calendarview.CalendarLayout;
 import com.haibin.calendarview.CalendarView;
@@ -25,9 +27,9 @@ import org.joda.time.LocalDate;
 import java.util.List;
 
 import ahtewlg7.utimer.entity.busevent.DeedDoneBusEvent;
-import ahtewlg7.utimer.entity.gtd.DeedSchemeEntity;
 import ahtewlg7.utimer.entity.gtd.DeedSchemeInfo;
 import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
+import ahtewlg7.utimer.entity.span.SimpleMultiSpanTag;
 import ahtewlg7.utimer.enumtype.DeedState;
 import ahtewlg7.utimer.factory.GtdDeedByUuidFactory;
 import ahtewlg7.utimer.mvp.BaseDeedListMvpP;
@@ -49,6 +51,8 @@ public class DeedScheduleListFragment extends ADeedListFragment
     SimpleDeedRecyclerView recyclerView;
 
     private List<GtdDeedEntity> deedEntityList;
+    private Table<LocalDate, String, Integer> calendarDeedIndexTable;
+
     private CalendarSchemeFactory calendarSchemeFactory;
 
     public static DeedScheduleListFragment newInstance() {
@@ -69,6 +73,7 @@ public class DeedScheduleListFragment extends ADeedListFragment
 
         showLifeInfo            = false;
         deedEntityList          = Lists.newArrayList();
+        calendarDeedIndexTable  = HashBasedTable.create();
         calendarSchemeFactory   = new CalendarSchemeFactory();
     }
 
@@ -160,11 +165,13 @@ public class DeedScheduleListFragment extends ADeedListFragment
     /**********************************************IScheduleMvpV**********************************************/
     @Override
     public void onSchemeLoadStart() {
+        calendarDeedIndexTable.clear();
+        mCalendarView.clearSchemeDate();
     }
 
     @Override
     public void onSchemeLoadSucc(DeedSchemeInfo schemeInfo) {
-        Calendar calendar = getSchemeCalendar(schemeInfo);
+        Calendar calendar = handleScheme(schemeInfo);
         if(calendar.getSchemes() == null || calendar.getSchemes().isEmpty())
             mCalendarView.removeSchemeDate(calendar);
         else
@@ -186,14 +193,29 @@ public class DeedScheduleListFragment extends ADeedListFragment
         mCalendarView.scrollToCurrent();
         listMvpP.toLoadDeedByDate(LocalDate.now());
     }
-    public Calendar getSchemeCalendar(@NonNull DeedSchemeInfo schemeInfo){
+    protected SimpleMultiSpanTag getTagInfo(@NonNull GtdDeedEntity item){
+        SimpleMultiSpanTag multiSpanTag = new SimpleMultiSpanTag();
+        Optional<String> currTagOptional = tagInfoFactory.getTagTitle(item.getDeedState());
+
+        LocalDate selectedDate    = calendarSchemeFactory.getLocalDate(mCalendarView.getSelectedCalendar());
+        if(calendarDeedIndexTable.contains(selectedDate, item.getUuid()))
+            multiSpanTag.appendTag(String.valueOf(calendarDeedIndexTable.get(selectedDate,item.getUuid())));
+        if(currTagOptional.isPresent())
+            multiSpanTag.appendTag(currTagOptional.get());
+        if(item.getWorkDateLifeDetail() != null && showLifeInfo)
+            multiSpanTag.appendTag(item.getWorkDateLifeDetail());
+        return multiSpanTag;
+    }
+
+    protected Calendar handleScheme(@NonNull DeedSchemeInfo schemeInfo){
         Calendar calendar = calendarSchemeFactory.getCalendar(schemeInfo.getLocalDate());
         if(schemeInfo.getDeedSchemeEntityList() == null)
             return calendar;
-        for(DeedSchemeEntity deedSchemeEntity : schemeInfo.getDeedSchemeEntityList()){
+        for(int index = 0; index < schemeInfo.getDeedSchemeEntityList().size() ; index++){
+            calendarDeedIndexTable.put(schemeInfo.getLocalDate(), schemeInfo.getDeedSchemeEntityList().get(index).getUuid(), index + 1);
             Calendar.Scheme scheme = new Calendar.Scheme();
             scheme.setShcemeColor(MyRInfo.getColorByID(R.color.colorAccent));
-            Optional<String> schemeJson = calendarSchemeFactory.toJsonStr(deedSchemeEntity);
+            Optional<String> schemeJson = calendarSchemeFactory.toJsonStr(schemeInfo.getDeedSchemeEntityList().get(index));
             if (schemeJson.isPresent())
                 scheme.setScheme(schemeJson.get());
             calendar.addScheme(scheme);
