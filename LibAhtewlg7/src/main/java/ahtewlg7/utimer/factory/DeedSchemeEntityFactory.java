@@ -17,7 +17,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import ahtewlg7.utimer.comparator.DeedSchemeComparator;
+import ahtewlg7.utimer.comparator.DeedSchemeProgressComparator;
 import ahtewlg7.utimer.entity.gtd.DeedSchemeEntity;
 import ahtewlg7.utimer.entity.gtd.DeedSchemeInfo;
 import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
@@ -49,7 +49,7 @@ public class DeedSchemeEntityFactory {
 
     public DeedSchemeInfo toLoadDateScheme(LocalDate localDate){
         List<DeedSchemeEntity> schemeEntityList = new ArrayList<DeedSchemeEntity>(dateSchemeMultimap.get(localDate));
-        Collections.sort(schemeEntityList, new DeedSchemeComparator().getDescOrder());
+        Collections.sort(schemeEntityList, new DeedSchemeProgressComparator().getDescOrder());
         return new DeedSchemeInfo(localDate, schemeEntityList);
     }
     public Flowable<DeedSchemeInfo> toLoadDateScheme(){
@@ -86,7 +86,8 @@ public class DeedSchemeEntityFactory {
         if(deedEntity == null || deedEntity.getWarningTimeList() == null || deedEntity.getWarningTimeList().isEmpty())
             return;
         for(DateTime dateTime : deedEntity.getWarningTimeList()) {
-            DeedSchemeEntity deedSchemeEntity = new DeedSchemeEntity(deedEntity.getUuid());
+            DeedSchemeEntity deedSchemeEntity = new DeedSchemeEntity();
+            deedSchemeEntity.setUuid(deedEntity.getUuid());
             deedSchemeEntity.setTip(DEFAULT_SCHEME);
             deedSchemeEntity.setDateTime(dateTime);
             deedSchemeEntity.setProgress(INVALID_PROGRESS);
@@ -95,16 +96,19 @@ public class DeedSchemeEntityFactory {
             deedSchemeMultimap.put(deedEntity.getUuid(), deedSchemeEntity);
         }
     }
-    private void parseScheduleScheme(GtdDeedEntity deedEntity){
-        if(deedEntity.getDeedState() != DeedState.SCHEDULE || deedEntity.getStartTime() == null)
+    private void parseScheduleScheme(GtdDeedEntity deedEntity) {
+        if (deedEntity.getStartTime() == null)
             return;
-        DeedSchemeEntity deedSchemeEntity = new DeedSchemeEntity(deedEntity.getUuid());
+        DeedSchemeEntity deedSchemeEntity = new DeedSchemeEntity();
+        deedSchemeEntity.setUuid(deedEntity.getUuid());
         deedSchemeEntity.setTip(DEFAULT_SCHEME);
-        if(DateTime.now() .isAfter(deedEntity.getStartTime().plusHours(24)))
+        if (deedEntity.getEndTime() != null || deedEntity.getDeedState() != DeedState.SCHEDULE){
+            deedSchemeEntity.setProgress(INVALID_PROGRESS);
+        }else if(DateTime.now() .isAfter(deedEntity.getStartTime().plusHours(24)))
             deedSchemeEntity.setProgress(100);
-        else if(DateTime.now().isBefore(deedEntity.getStartTime()))
+        else if(DateTime.now().isBefore(deedEntity.getStartTime())) {
             deedSchemeEntity.setProgress(0);
-        else{
+        }else{
             Period period = new Period(deedEntity.getStartTime(), DateTime.now(), PeriodType.minutes());
             int percent  = 100 * period.getMinutes() / Hours.hours(24).toStandardMinutes().getMinutes();
             deedSchemeEntity.setProgress(percent);

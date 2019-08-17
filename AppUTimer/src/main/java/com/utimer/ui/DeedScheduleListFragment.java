@@ -1,11 +1,17 @@
 package com.utimer.ui;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.view.View;
 
+import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.binaryfork.spanny.Spanny;
 import com.blankj.utilcode.util.ToastUtils;
 import com.google.common.base.Optional;
 import com.google.common.collect.HashBasedTable;
@@ -17,6 +23,7 @@ import com.haibin.calendarview.CalendarLayout;
 import com.haibin.calendarview.CalendarView;
 import com.utimer.R;
 import com.utimer.common.CalendarSchemeFactory;
+import com.utimer.entity.span.DeedSpanMoreTag;
 import com.utimer.mvp.ScheduleDeedListMvpP;
 import com.utimer.view.SimpleDeedRecyclerView;
 
@@ -27,15 +34,18 @@ import org.joda.time.LocalDate;
 import java.util.List;
 
 import ahtewlg7.utimer.entity.busevent.DeedDoneBusEvent;
+import ahtewlg7.utimer.entity.gtd.DeedSchemeEntity;
 import ahtewlg7.utimer.entity.gtd.DeedSchemeInfo;
 import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
 import ahtewlg7.utimer.entity.span.SimpleMultiSpanTag;
 import ahtewlg7.utimer.enumtype.DeedState;
 import ahtewlg7.utimer.factory.GtdDeedByUuidFactory;
 import ahtewlg7.utimer.mvp.BaseDeedListMvpP;
+import ahtewlg7.utimer.span.TextClickableSpan;
 import ahtewlg7.utimer.util.MyRInfo;
 import butterknife.BindView;
 
+import static ahtewlg7.utimer.entity.gtd.DeedSchemeEntity.INVALID_PROGRESS;
 import static com.utimer.common.TagInfoFactory.INVALID_TAG_RID;
 
 public class DeedScheduleListFragment extends ADeedListFragment
@@ -51,7 +61,7 @@ public class DeedScheduleListFragment extends ADeedListFragment
     SimpleDeedRecyclerView recyclerView;
 
     private List<GtdDeedEntity> deedEntityList;
-    private Table<LocalDate, String, Integer> calendarDeedIndexTable;
+    private Table<LocalDate, String, Integer> calendarDeedIndexTodoTable;
 
     private CalendarSchemeFactory calendarSchemeFactory;
 
@@ -71,10 +81,10 @@ public class DeedScheduleListFragment extends ADeedListFragment
         mCalendarView.scrollToCurrent();
         mCalendarView.setOnCalendarSelectListener(this);
 
-        showLifeInfo            = false;
-        deedEntityList          = Lists.newArrayList();
-        calendarDeedIndexTable  = HashBasedTable.create();
-        calendarSchemeFactory   = new CalendarSchemeFactory();
+        showLifeInfo                = false;
+        deedEntityList              = Lists.newArrayList();
+        calendarDeedIndexTodoTable  = HashBasedTable.create();
+        calendarSchemeFactory       = new CalendarSchemeFactory();
     }
 
     @Override
@@ -165,7 +175,7 @@ public class DeedScheduleListFragment extends ADeedListFragment
     /**********************************************IScheduleMvpV**********************************************/
     @Override
     public void onSchemeLoadStart() {
-        calendarDeedIndexTable.clear();
+        calendarDeedIndexTodoTable.clear();
         mCalendarView.clearSchemeDate();
     }
 
@@ -193,18 +203,47 @@ public class DeedScheduleListFragment extends ADeedListFragment
         mCalendarView.scrollToCurrent();
         listMvpP.toLoadDeedByDate(LocalDate.now());
     }
+
+    @Override
     protected SimpleMultiSpanTag getTagInfo(@NonNull GtdDeedEntity item){
         SimpleMultiSpanTag multiSpanTag = new SimpleMultiSpanTag();
         Optional<String> currTagOptional = tagInfoFactory.getTagTitle(item.getDeedState());
-
-        LocalDate selectedDate    = calendarSchemeFactory.getLocalDate(mCalendarView.getSelectedCalendar());
-        if(calendarDeedIndexTable.contains(selectedDate, item.getUuid()))
-            multiSpanTag.appendTag(String.valueOf(calendarDeedIndexTable.get(selectedDate,item.getUuid())));
         if(currTagOptional.isPresent())
             multiSpanTag.appendTag(currTagOptional.get());
+        LocalDate selectedDate = calendarSchemeFactory.getLocalDate(mCalendarView.getSelectedCalendar());
+        if(calendarDeedIndexTodoTable.contains(selectedDate, item.getUuid()))
+            multiSpanTag.appendTag(calendarDeedIndexTodoTable.get(selectedDate, item.getUuid()) + "%");
         if(item.getWorkDateLifeDetail() != null && showLifeInfo)
             multiSpanTag.appendTag(item.getWorkDateLifeDetail());
         return multiSpanTag;
+    }
+    @NonNull
+    @Override
+    public SpannableStringBuilder toSpan(int position, @NonNull GtdDeedEntity item) {
+        SimpleMultiSpanTag multiSpanTag = getTagInfo(item);
+        DeedSpanMoreTag moreTag         = new DeedSpanMoreTag(item);
+        multiSpanTag.setShowBracket(true);
+        moreTag.setShowBracket(true);
+
+        Spanny spanny = new Spanny();
+        @ColorRes int color = R.color.colorPrimary;
+        if(calendarDeedIndexTodoTable.contains(calendarSchemeFactory.getLocalDate(mCalendarView.getSelectedCalendar()), item.getUuid()))
+            color = R.color.colorAccent;
+
+        if(multiSpanTag.getTagTitle().isPresent()){
+            if(item.getDeedState() != DeedState.DONE && item.getDeedState() != DeedState.TRASH && item.getDeedState() != DeedState.USELESS)
+                spanny.append(multiSpanTag.getTagTitle().get(),
+                        new ForegroundColorSpan(MyRInfo.getColorByID(color)),
+                        new StyleSpan(Typeface.BOLD));
+            else
+                spanny.append(multiSpanTag.getTagTitle().get(),
+                        new ForegroundColorSpan(MyRInfo.getColorByID(color)));
+        }
+
+        spanny.append(item.getTitle().trim(), new TextClickableSpan(item, mySpanClickListener, MyRInfo.getColorByID(color),false, position));
+        if(moreTag.getTagTitle().isPresent())
+            spanny.append(moreTag.getTagTitle().get(), new TextClickableSpan(moreTag, mySpanClickListener, MyRInfo.getColorByID(R.color.colorAccent),false, position));
+        return spanny;
     }
 
     protected Calendar handleScheme(@NonNull DeedSchemeInfo schemeInfo){
@@ -212,10 +251,12 @@ public class DeedScheduleListFragment extends ADeedListFragment
         if(schemeInfo.getDeedSchemeEntityList() == null)
             return calendar;
         for(int index = 0; index < schemeInfo.getDeedSchemeEntityList().size() ; index++){
-            calendarDeedIndexTable.put(schemeInfo.getLocalDate(), schemeInfo.getDeedSchemeEntityList().get(index).getUuid(), index + 1);
+            DeedSchemeEntity deedSchemeEntity = schemeInfo.getDeedSchemeEntityList().get(index);
+            if(deedSchemeEntity.getProgress() != INVALID_PROGRESS)
+                calendarDeedIndexTodoTable.put(schemeInfo.getLocalDate(), deedSchemeEntity.getUuid(), deedSchemeEntity.getProgress());
             Calendar.Scheme scheme = new Calendar.Scheme();
             scheme.setShcemeColor(MyRInfo.getColorByID(R.color.colorAccent));
-            Optional<String> schemeJson = calendarSchemeFactory.toJsonStr(schemeInfo.getDeedSchemeEntityList().get(index));
+            Optional<String> schemeJson = calendarSchemeFactory.toJsonStr(deedSchemeEntity);
             if (schemeJson.isPresent())
                 scheme.setScheme(schemeJson.get());
             calendar.addScheme(scheme);
