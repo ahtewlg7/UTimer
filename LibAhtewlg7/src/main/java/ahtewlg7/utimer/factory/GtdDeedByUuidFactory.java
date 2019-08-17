@@ -146,16 +146,18 @@ public class GtdDeedByUuidFactory extends ABaseLruCacheFactory<String, GtdDeedEn
             DeedSchemeEntityFactory.getInstacne().toParseScheme(deedEntity);
         }
     }
-    public Flowable<List<GtdDeedEntity>> getEntityByDate(final DeedState state, @NonNull LocalDate... localDate){
-        return getEntityByDate(localDate).map(new Function<List<GtdDeedEntity>, List<GtdDeedEntity>>() {
-                @Override
-                public List<GtdDeedEntity> apply(List<GtdDeedEntity> gtdDeedEntities) throws Exception {
-                    List<GtdDeedEntity> dateDeedList = Lists.newArrayList();
-                        for(GtdDeedEntity entity : gtdDeedEntities) {
-                            if (entity.getDeedState() == state)
-                                dateDeedList.add(entity);
+    public Flowable<List<GtdDeedEntity>> getEntityByDate(final DeedState state, @NonNull LocalDate... localDates){
+        return Flowable.fromArray(localDates).map(new Function<LocalDate, List<GtdDeedEntity>>() {
+                    @Override
+                    public List<GtdDeedEntity> apply(LocalDate localDate) throws Exception {
+                        List<GtdDeedEntity> timeDeedMap = Lists.newArrayList();
+                        Collection<String> dateUuidMap  = dateUuidMultimap.get(localDate);
+                        for(String uuid : dateUuidMap){
+                            GtdDeedEntity deedEntity = get(uuid);
+                            if (deedEntity.getDeedState() == state && (state != DeedState.SCHEDULE || localDate.isBefore(deedEntity.getStartTime().plusDays(1).toLocalDate())))
+                                timeDeedMap.add(deedEntity);
                         }
-                        return dateDeedList;
+                        return timeDeedMap;
                     }
                 })
                 .subscribeOn(Schedulers.computation());
