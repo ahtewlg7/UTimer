@@ -21,6 +21,7 @@ import ahtewlg7.utimer.comparator.DeedWarningTimeComparator;
 import ahtewlg7.utimer.entity.BaseEventBusBean;
 import ahtewlg7.utimer.entity.busevent.DeedBusEvent;
 import ahtewlg7.utimer.entity.busevent.DeedDoneBusEvent;
+import ahtewlg7.utimer.entity.gtd.DeedSchemeEntity;
 import ahtewlg7.utimer.entity.gtd.DeedSchemeInfo;
 import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
 import ahtewlg7.utimer.enumtype.DeedState;
@@ -71,7 +72,9 @@ public class BaseDeedListMvpP {
                     }
                 }).toFlowable());
     }
-
+    public void toUpdateScheme(@NonNull DeedSchemeEntity deedSchemeEntity){
+        mvpM.toUpdateScheme(deedSchemeEntity);
+    }
     public void toTagDeed(final GtdDeedEntity deedEntity, final DeedState deedState, final int position){
         mvpM.toTag(deedEntity,deedState)
             .compose(((RxFragment)mvpV.getRxLifeCycleBindView()).<Optional<BaseEventBusBean>>bindUntilEvent(FragmentEvent.DESTROY))
@@ -163,6 +166,12 @@ public class BaseDeedListMvpP {
     public class BaseDeedMvpM{
         public Flowable<DeedSchemeInfo> toLoadScheme(){
             return DeedSchemeEntityFactory.getInstacne().toLoadDateScheme();
+        }
+        public Flowable<DeedSchemeInfo> toLoadScheme(@NonNull Flowable<LocalDate> localDateRx){
+            return DeedSchemeEntityFactory.getInstacne().toLoadDateScheme(localDateRx);
+        }
+        public void toUpdateScheme(@NonNull DeedSchemeEntity deedSchemeEntity){
+            DeedSchemeEntityFactory.getInstacne().toUpdateProgress(deedSchemeEntity);
         }
         public Flowable<List<GtdDeedEntity>> toLoad(DeedState... state) {
             return toLoad(true, state);

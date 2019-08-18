@@ -104,18 +104,34 @@ public class DeedSchemeEntityFactory {
         deedSchemeEntity.setTip(DEFAULT_SCHEME);
         if (deedEntity.getEndTime() != null || deedEntity.getDeedState() != DeedState.SCHEDULE){
             deedSchemeEntity.setProgress(INVALID_PROGRESS);
-        }else if(DateTime.now() .isAfter(deedEntity.getStartTime().plusHours(24)))
-            deedSchemeEntity.setProgress(100);
-        else if(DateTime.now().isBefore(deedEntity.getStartTime())) {
-            deedSchemeEntity.setProgress(0);
         }else{
-            Period period = new Period(deedEntity.getStartTime(), DateTime.now(), PeriodType.minutes());
-            int percent  = 100 * period.getMinutes() / Hours.hours(24).toStandardMinutes().getMinutes();
-            deedSchemeEntity.setProgress(percent);
+            if(DateTime.now() .isAfter(deedEntity.getStartTime().plusHours(24)))
+                deedSchemeEntity.setProgress(100);
+            else if(DateTime.now().isBefore(deedEntity.getStartTime())) {
+                deedSchemeEntity.setProgress(0);
+            }else{
+                Period period = new Period(deedEntity.getStartTime(), DateTime.now(), PeriodType.minutes());
+                int percent  = 100 * period.getMinutes() / Hours.hours(24).toStandardMinutes().getMinutes();
+                deedSchemeEntity.setProgress(percent);
+            }
         }
         deedSchemeEntity.setDateTime(deedEntity.getStartTime());
 
         dateSchemeMultimap.put(deedEntity.getStartTime().toLocalDate(), deedSchemeEntity);
         deedSchemeMultimap.put(deedEntity.getUuid(), deedSchemeEntity);
+    }
+
+    public void toUpdateProgress(DeedSchemeEntity deedSchemeEntity){
+        if (deedSchemeEntity == null || deedSchemeEntity.getProgress() == INVALID_PROGRESS)
+            return;
+        if(DateTime.now() .isAfter(deedSchemeEntity.getDateTime().plusHours(24)))
+            deedSchemeEntity.setProgress(100);
+        else if(DateTime.now().isBefore(deedSchemeEntity.getDateTime())) {
+            deedSchemeEntity.setProgress(0);
+        }else{
+            Period period = new Period(deedSchemeEntity.getDateTime(), DateTime.now(), PeriodType.minutes());
+            int percent  = 100 * period.getMinutes() / Hours.hours(24).toStandardMinutes().getMinutes();
+            deedSchemeEntity.setProgress(percent);
+        }
     }
 }

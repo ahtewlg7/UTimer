@@ -19,7 +19,6 @@ import ahtewlg7.utimer.entity.gtd.DeedSchemeInfo;
 import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
 import ahtewlg7.utimer.enumtype.DeedState;
 import ahtewlg7.utimer.enumtype.GtdBusEventType;
-import ahtewlg7.utimer.factory.DeedSchemeEntityFactory;
 import ahtewlg7.utimer.mvp.BaseDeedListMvpP;
 import ahtewlg7.utimer.util.MySafeSubscriber;
 import io.reactivex.Flowable;
@@ -93,13 +92,13 @@ public class ScheduleDeedListMvpP extends BaseDeedListMvpP {
         if(ifAtCurrCalendar.isPresent() && ifAtCurrCalendar.get())
             mvpV.onLoadSucc(busEvent.getDeedEntity());
 
-        toReloadSchem(deedDate);
+        toReloadScheme(deedDate);
     }
 
-    private void toReloadSchem(List<LocalDate> updateDateList){
+    private void toReloadScheme(List<LocalDate> updateDateList){
         if(updateDateList == null || updateDateList.isEmpty())
             return;
-        DeedSchemeEntityFactory.getInstacne().toLoadDateScheme(Flowable.fromIterable(updateDateList))
+        mvpM.toLoadScheme(Flowable.fromIterable(updateDateList))
                 .compose(((RxFragment)mvpV.getRxLifeCycleBindView()).<DeedSchemeInfo>bindUntilEvent(FragmentEvent.DESTROY))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new MySafeSubscriber<DeedSchemeInfo>() {
