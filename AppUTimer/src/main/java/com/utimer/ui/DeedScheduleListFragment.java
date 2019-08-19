@@ -30,6 +30,7 @@ import com.utimer.view.SimpleDeedRecyclerView;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.joda.time.LocalDate;
+import org.reactivestreams.Subscription;
 
 import java.util.List;
 
@@ -43,7 +44,13 @@ import ahtewlg7.utimer.factory.GtdDeedByUuidFactory;
 import ahtewlg7.utimer.mvp.BaseDeedListMvpP;
 import ahtewlg7.utimer.span.TextClickableSpan;
 import ahtewlg7.utimer.util.MyRInfo;
+import ahtewlg7.utimer.util.MySafeSubscriber;
+import ahtewlg7.utimer.util.TableAction;
 import butterknife.BindView;
+import io.reactivex.Flowable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 import static ahtewlg7.utimer.entity.gtd.DeedSchemeEntity.INVALID_PROGRESS;
 import static com.utimer.common.TagInfoFactory.INVALID_TAG_RID;
@@ -64,6 +71,7 @@ public class DeedScheduleListFragment extends ADeedListFragment
     private Table<LocalDate, String, DeedSchemeEntity> calendarDeedSchemeTodoTable;
 
     private CalendarSchemeFactory calendarSchemeFactory;
+    private TableAction<LocalDate, String, DeedSchemeEntity> tableAction;
 
     public static DeedScheduleListFragment newInstance() {
         Bundle args = new Bundle();
@@ -85,6 +93,7 @@ public class DeedScheduleListFragment extends ADeedListFragment
         deedEntityList              = Lists.newArrayList();
         calendarDeedSchemeTodoTable = HashBasedTable.create();
         calendarSchemeFactory       = new CalendarSchemeFactory();
+        tableAction                 = new TableAction<LocalDate, String, DeedSchemeEntity>(calendarDeedSchemeTodoTable);
     }
 
     @Override
@@ -133,7 +142,6 @@ public class DeedScheduleListFragment extends ADeedListFragment
 
     @Override
     public void onCalendarSelect(Calendar calendar, boolean isClick) {
-        deedEntityList.clear();
         listMvpP.toLoadDeedByDate(calendarSchemeFactory.getLocalDate(calendar));
     }
     /**********************************************IBaseDeedMvpV**********************************************/
@@ -142,8 +150,13 @@ public class DeedScheduleListFragment extends ADeedListFragment
         Optional<Boolean> ifAtSelectedDay = mCalendarView.getSelectedCalendar() == null ? Optional.absent() : Optional.of(false);
         if(ifAtSelectedDay.isPresent() && localDate != null)
             ifAtSelectedDay = Optional.of(mCalendarView.getSelectedCalendar().equals(calendarSchemeFactory.getCalendar(localDate)));
-
         return ifAtSelectedDay;
+    }
+
+    @Override
+    public void onLoadStart() {
+        super.onLoadStart();
+        deedEntityList.clear();
     }
 
     @Override
@@ -200,8 +213,30 @@ public class DeedScheduleListFragment extends ADeedListFragment
 
     @Override
     protected void toLoadDeedOnShow() {
-        mCalendarView.scrollToCurrent();
-        listMvpP.toLoadDeedByDate(LocalDate.now());
+        Flowable.fromIterable(tableAction.getValue())
+            .doOnNext(new Consumer<DeedSchemeEntity>() {
+                @Override
+                public void accept(DeedSchemeEntity deedSchemeEntity) throws Exception {
+                    if(deedSchemeEntity.getProgress() != INVALID_PROGRESS && deedSchemeEntity.getProgress() < 100)
+                        listMvpP.toUpdateScheme(deedSchemeEntity);
+                }
+            })
+            .subscribeOn(Schedulers.computation())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new MySafeSubscriber<DeedSchemeEntity>() {
+                @Override
+                public void onSubscribe(Subscription s) {
+                    super.onSubscribe(s);
+                    mCalendarView.scrollToCurrent();
+                }
+                @Override
+                public void onComplete() {
+                    super.onComplete();
+                    mCalendarView.update();
+                    if(mCalendarView.getSelectedCalendar() != null)
+                        listMvpP.toLoadDeedByDate(calendarSchemeFactory.getLocalDate(mCalendarView.getSelectedCalendar()));
+                }
+            });
     }
 
     @Override
@@ -213,7 +248,6 @@ public class DeedScheduleListFragment extends ADeedListFragment
         LocalDate selectedDate = calendarSchemeFactory.getLocalDate(mCalendarView.getSelectedCalendar());
         if(calendarDeedSchemeTodoTable.contains(selectedDate, item.getUuid())) {
             DeedSchemeEntity schemeEntity = calendarDeedSchemeTodoTable.get(selectedDate, item.getUuid());
-            listMvpP.toUpdateScheme(schemeEntity);
             multiSpanTag.appendTag( schemeEntity.getProgress()+ "%");
         }
         if(item.getWorkDateLifeDetail() != null && showLifeInfo)
@@ -255,8 +289,10 @@ public class DeedScheduleListFragment extends ADeedListFragment
             return calendar;
         for(int index = 0; index < schemeInfo.getDeedSchemeEntityList().size() ; index++){
             DeedSchemeEntity deedSchemeEntity = schemeInfo.getDeedSchemeEntityList().get(index);
-            if(deedSchemeEntity.getProgress() != INVALID_PROGRESS)
+            if(deedSchemeEntity.getProgress() != INVALID_PROGRESS) {
+                listMvpP.toUpdateScheme(deedSchemeEntity);
                 calendarDeedSchemeTodoTable.put(schemeInfo.getLocalDate(), deedSchemeEntity.getUuid(), deedSchemeEntity);
+            }
             Calendar.Scheme scheme = new Calendar.Scheme();
             scheme.setShcemeColor(MyRInfo.getColorByID(R.color.colorAccent));
             Optional<String> schemeJson = calendarSchemeFactory.toJsonStr(deedSchemeEntity);
