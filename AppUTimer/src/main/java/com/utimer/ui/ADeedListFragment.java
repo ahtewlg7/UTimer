@@ -2,7 +2,9 @@ package com.utimer.ui;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.InputType;
 import android.text.SpannableStringBuilder;
+import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.view.View;
@@ -10,6 +12,8 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.binaryfork.spanny.Spanny;
 import com.blankj.utilcode.util.ToastUtils;
 import com.google.common.base.Optional;
@@ -34,6 +38,7 @@ import ahtewlg7.utimer.enumtype.DeedState;
 import ahtewlg7.utimer.factory.EventBusFatory;
 import ahtewlg7.utimer.mvp.BaseDeedListMvpP;
 import ahtewlg7.utimer.span.TextClickableSpan;
+import ahtewlg7.utimer.state.GtdMachine;
 import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MyRInfo;
 
@@ -122,6 +127,14 @@ public abstract class ADeedListFragment extends AButterKnifeFragment
 
     @Override
     public void onLoadSucc(GtdDeedEntity entity) {
+        List<GtdDeedEntity> entityList = getRecyclerView().getAdapter().getData();
+        if(entity != null && !entityList.contains(entity)) {
+            entityList.add(0, entity);
+            getRecyclerView().resetData(entityList);
+        }else{
+            int index = entityList.indexOf(entity);
+            getRecyclerView().resetData(index, entity);
+        }
     }
 
     @Override
@@ -196,7 +209,7 @@ public abstract class ADeedListFragment extends AButterKnifeFragment
                         new ForegroundColorSpan(MyRInfo.getColorByID(R.color.colorPrimary)));
         }
 
-        spanny.append(item.getTitle().trim(), new TextClickableSpan(item, mySpanClickListener, MyRInfo.getColorByID(R.color.colorPrimary),false, position));
+        spanny.append(item.getTitle().trim(), new TextClickableSpan(multiSpanTag, mySpanClickListener, MyRInfo.getColorByID(R.color.colorPrimary),false, position));
         if(moreTag.getTagTitle().isPresent())
             spanny.append(moreTag.getTagTitle().get(), new TextClickableSpan(moreTag, mySpanClickListener, MyRInfo.getColorByID(R.color.colorAccent),false, position));
         return spanny;
@@ -217,6 +230,8 @@ public abstract class ADeedListFragment extends AButterKnifeFragment
             listMvpP.toLoadDeedByState(getLoadDeedState());
     }
 
+    protected void onDeedClick(int position){
+    }
     /**********************************************EventBus**********************************************/
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDeedBusEvent(DeedBusEvent eventBus) {
@@ -236,9 +251,9 @@ public abstract class ADeedListFragment extends AButterKnifeFragment
         //+++++++++++++++++++++++++++++++++++ITextSpanClickListener+++++++++++++++++++++++++++++++
         @Override
         public void onSpanClick(int position, Object o) {
-            /*if(o instanceof GtdDeedEntity)
-                startForResult(DeedEditFragment.newInstance((GtdDeedEntity)o), REQ_EDIT_FRAGMENT);
-            else */if(o instanceof DeedSpanMoreTag)
+            if(o instanceof SimpleMultiSpanTag)
+                onDeedClick(position);
+            else if(o instanceof DeedSpanMoreTag)
                 createBottomSheet(position);
         }
         //+++++++++++++++++++++++++++++++++++OnItemClickListener+++++++++++++++++++++++++++++++
@@ -258,5 +273,33 @@ public abstract class ADeedListFragment extends AButterKnifeFragment
         }
         GtdDeedEntity currEntity = (GtdDeedEntity)getRecyclerView().getAdapter().getItem(position);
         bottomSheetDialog.toShow(listMvpP.getNextState(currEntity), position);
+    }
+    protected void toCreateEditDialog(@NonNull GtdDeedEntity deedEntity){
+        new MaterialDialog.Builder(getContext()).title(R.string.edit)
+                .inputType(InputType.TYPE_CLASS_TEXT)
+                .input("", deedEntity.getTitle().trim(), false, new MaterialDialog.InputCallback() {
+                    @Override
+                    public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
+                        //do nothing
+                    }
+                })
+                .negativeText(R.string.no)
+                .positiveText(R.string.yes)
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
+                })
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        String title = dialog.getInputEditText().getText().toString();
+                        if(TextUtils.isEmpty(title))
+                            ToastUtils.showShort(R.string.prompt_not_be_empty);
+                        else
+                            GtdMachine.getInstance().getCurrState(deedEntity).toEdit(deedEntity,title, title);
+                    }
+                }).show();
     }
 }

@@ -7,5 +7,6 @@ public enum GtdBusEventType {
     LOAD,
     ON_LOAD,
     SAVE,
+    EDIT,
     DELETE;
 }

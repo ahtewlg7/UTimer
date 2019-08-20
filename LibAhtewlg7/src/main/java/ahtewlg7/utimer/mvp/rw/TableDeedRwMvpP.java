@@ -37,6 +37,15 @@ class TableDeedRwMvpP extends AUtimerRwMvpP<GtdDeedEntity, TableDeedRwMvpM> {
                     }
                 }));
                 break;
+            case EDIT:
+                toSave(Flowable.just(actionBusEvent.getDeedEntity()).doOnNext(new Consumer<GtdDeedEntity>() {
+                    @Override
+                    public void accept(GtdDeedEntity entity) throws Exception {
+                        GtdDeedByUuidFactory.getInstance().update(entity.getUuid(), entity);
+                        toPostDoneEvent(GtdBusEventType.EDIT,entity);
+                    }
+                }));
+                break;
             case DELETE:
                 toDel(Flowable.just(actionBusEvent.getDeedEntity()).doOnNext(new Consumer<GtdDeedEntity>() {
                     @Override

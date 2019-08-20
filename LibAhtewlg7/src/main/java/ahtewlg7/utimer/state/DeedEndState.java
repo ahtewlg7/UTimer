@@ -17,7 +17,10 @@ public class DeedEndState extends DeedBaseState {
     DeedEndState(GtdMachine gtdMachine) {
         super(gtdMachine);
     }
-
+    @Override
+    public Optional<BaseEventBusBean> toEdit(@NonNull GtdDeedEntity entity, String title, String detail){
+        return Optional.absent();
+    }
     @Override
     public Optional<BaseEventBusBean> toTrash(@NonNull AUtimerEntity entity) {
         return updateAndPostState(DeedState.TRASH, entity);

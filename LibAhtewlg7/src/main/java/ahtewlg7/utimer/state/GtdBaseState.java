@@ -33,6 +33,15 @@ public class GtdBaseState {
         return Optional.of(actionBusEvent);
     }
 
+    public Optional<BaseEventBusBean> toEdit(@NonNull GtdDeedEntity entity, String title, String detail){
+        Optional<Boolean> deedEntityOptional = GtdDeedByUuidFactory.getInstance().updateContent(entity, title, detail);
+        if(!deedEntityOptional.isPresent() || !deedEntityOptional.get())
+            return Optional.absent();
+        BaseEventBusBean actionBusEvent = new DeedBusEvent(GtdBusEventType.EDIT, entity);
+        EventBusFatory.getInstance().getDefaultEventBus().postSticky(actionBusEvent);
+        return Optional.of(actionBusEvent);
+    }
+
     public Optional<BaseEventBusBean> toTrash(@NonNull AUtimerEntity entity){
         return Optional.absent();
     }

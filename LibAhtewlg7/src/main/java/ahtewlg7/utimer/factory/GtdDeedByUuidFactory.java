@@ -119,7 +119,9 @@ public class GtdDeedByUuidFactory extends ABaseLruCacheFactory<String, GtdDeedEn
     public Optional<GtdDeedEntity> create(String title, String detail){
         return create(title, detail, null);
     }
+
     public Optional<GtdDeedEntity> create(String title, String detail, DeedState state){
+        //the title and detail of Deed must not be null, when save the bean to DB
         if(TextUtils.isEmpty(title) && TextUtils.isEmpty(detail))
             return Optional.absent();
         GtdDeedBuilder builder  = new GtdDeedBuilder()
@@ -129,13 +131,27 @@ public class GtdDeedByUuidFactory extends ABaseLruCacheFactory<String, GtdDeedEn
                 .setTitle(!TextUtils.isEmpty(title) ? title : detail)
                 .setUuid(new IdAction().getUUId());
         GtdDeedEntity gtdActionEntity = builder.build();
-        List<DateTime> dateTimeList = NlpAction.getInstance().toSegTimes(detail);
-        if(dateTimeList == null)
-            dateTimeList = NlpAction.getInstance().toSegTimes(title);
-        gtdActionEntity.setWarningTimeList(dateTimeList);
-        gtdActionEntity.setLastModifyTime(DateTime.now());
-        gtdActionEntity.setLastAccessTime(DateTime.now());
+        updateContent(gtdActionEntity, title, detail);
         return Optional.of(gtdActionEntity);
+    }
+
+    public Optional<Boolean> updateContent(GtdDeedEntity deedEntity, String title, String detail){
+        //the title and detail of Deed must not be null, when save the bean to DB
+        if(deedEntity != null && (!TextUtils.isEmpty(title) || !TextUtils.isEmpty(detail))) {
+            List<DateTime> dateTimeList = NlpAction.getInstance().toSegTimes(title);
+            if(dateTimeList == null)
+                dateTimeList = NlpAction.getInstance().toSegTimes(detail);
+            if(dateTimeList == null)
+                clearDeedWarningCalendar(deedEntity);
+            deedEntity.setTitle(title);
+            deedEntity.setDetail(detail);
+            deedEntity.setWarningTimeList(dateTimeList);
+            deedEntity.setLastModifyTime(DateTime.now());
+            deedEntity.setLastAccessTime(DateTime.now());
+            DeedSchemeEntityFactory.getInstacne().toParseScheme(deedEntity);
+            return Optional.of(true);
+        }
+        return Optional.of(false);
     }
     public void updateState(DeedState preState, GtdDeedEntity deedEntity){
         if(preState != null && deedEntity != null && deedEntity.ifValid()) {
@@ -215,6 +231,10 @@ public class GtdDeedByUuidFactory extends ABaseLruCacheFactory<String, GtdDeedEn
         if(!TextUtils.isEmpty(detail) && titleUuidMap.containsKey(detail))
             return Optional.fromNullable(get(titleUuidMap.get(detail)));
         return Optional.absent();
+    }
+    private void clearDeedWarningCalendar(GtdDeedEntity deedEntity){
+        for(DateTime date : deedEntity.getWarningTimeList())
+            dateUuidMultimap.remove(date.toLocalDate(), deedEntity.getUuid());
     }
     private void updateDeedWarningCalendar(GtdDeedEntity deedEntity, boolean remove){
         if(deedEntity.getWarningTimeList() == null)
