@@ -62,6 +62,7 @@
     <string name="create_deed">new deed</string>
     <string name="create_note">create note</string>
     <string name="add">add</string>
+    <string name="edit">edit</string>
     <string name="del">Delete</string>
     <string name="done">done</string>
     <string name="rename">Rename</string>

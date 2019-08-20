@@ -170,7 +170,7 @@ public class UTimerActivity extends AButterKnifeActivity{
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         String title = dialog.getInputEditText().getText().toString();
-                        GtdMachine.getInstance().getCurrState(null).toInbox(title, null);
+                        GtdMachine.getInstance().getCurrState(null).toInbox(title, title);
                     }
                 }).show();
     }

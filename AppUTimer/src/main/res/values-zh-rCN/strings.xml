@@ -45,6 +45,7 @@
     <string name="create_deed">新建计划</string>
     <string name="create_note">新建笔记</string>
     <string name="add">添加</string>
+    <string name="edit">编辑</string>
     <string name="del">删除</string>
     <string name="done">完成</string>
     <string name="rename">重命名</string>

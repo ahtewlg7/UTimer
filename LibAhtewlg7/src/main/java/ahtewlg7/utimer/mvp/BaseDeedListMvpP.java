@@ -122,11 +122,9 @@ public class BaseDeedListMvpP {
     public void toHandleBusEvent(DeedDoneBusEvent busEvent, DeedState... state){
         if(busEvent == null || !busEvent.ifValid())
             return;
-        if((busEvent.getEventType() == GtdBusEventType.SAVE
-            && Arrays.asList(state).contains(busEvent.getDeedEntity().getDeedState())
-            && (busEvent.getDeedEntity().getDeedState() == DeedState.MAYBE
-            || busEvent.getDeedEntity().getDeedState() == DeedState.INBOX)))
-            toLoadDeedByState(state);
+        if((busEvent.getEventType() == GtdBusEventType.SAVE || busEvent.getEventType() == GtdBusEventType.EDIT)
+            && Arrays.asList(state).contains(busEvent.getDeedEntity().getDeedState()) && mvpV != null)
+            mvpV.onLoadSucc(busEvent.getDeedEntity());
     }
 
     protected void toLoad(@NonNull Flowable<List<GtdDeedEntity>> loadRx){

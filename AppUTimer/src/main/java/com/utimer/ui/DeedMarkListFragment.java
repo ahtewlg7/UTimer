@@ -12,6 +12,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import ahtewlg7.utimer.entity.busevent.DeedBusEvent;
+import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
 import ahtewlg7.utimer.enumtype.DeedState;
 import ahtewlg7.utimer.mvp.BaseDeedListMvpP;
 import ahtewlg7.utimer.util.MyRInfo;
@@ -97,5 +98,12 @@ public class DeedMarkListFragment extends ADeedListFragment implements BaseDeedL
     @Override
     protected SimpleDeedRecyclerView getRecyclerView() {
         return recyclerView;
+    }
+
+    @Override
+    protected void onDeedClick(int position) {
+        GtdDeedEntity deedEntity = (GtdDeedEntity)recyclerView.getAdapter().getItem(position);
+        if(deedEntity != null)
+            toCreateEditDialog(deedEntity);
     }
 }

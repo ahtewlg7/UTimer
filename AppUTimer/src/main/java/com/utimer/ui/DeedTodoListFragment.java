@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import com.utimer.R;
 import com.utimer.view.SimpleDeedRecyclerView;
 
+import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
 import ahtewlg7.utimer.enumtype.DeedState;
 import ahtewlg7.utimer.mvp.BaseDeedListMvpP;
 import ahtewlg7.utimer.util.MyRInfo;
@@ -67,6 +68,13 @@ public class DeedTodoListFragment extends ADeedListFragment implements BaseDeedL
     @Override
     protected SimpleDeedRecyclerView getRecyclerView() {
         return recyclerView;
+    }
+
+    @Override
+    protected void onDeedClick(int position) {
+        GtdDeedEntity deedEntity = (GtdDeedEntity)recyclerView.getAdapter().getItem(position);
+        if(deedEntity != null)
+            toCreateEditDialog(deedEntity);
     }
 
 }
