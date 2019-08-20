@@ -135,6 +135,13 @@ public class DeedScheduleListFragment extends ADeedListFragment
         listMvpP.toHandleBusEvent(eventBus, getLoadDeedState());
     }
 
+    @Override
+    protected void onDeedClick(int position) {
+        GtdDeedEntity deedEntity = (GtdDeedEntity)recyclerView.getAdapter().getItem(position);
+        if(deedEntity != null)
+            toCreateEditDialog(deedEntity);
+    }
+
     /**********************************************OnCalendarSelectListener**********************************************/
     @Override
     public void onCalendarOutOfRange(Calendar calendar) {
@@ -170,6 +177,9 @@ public class DeedScheduleListFragment extends ADeedListFragment
         if(!deedEntityList.contains(entity)) {
             deedEntityList.add(0, entity);
             getRecyclerView().resetData(Lists.newArrayList(Sets.newLinkedHashSet(deedEntityList)));
+        }else{
+            int index = deedEntityList.indexOf(entity);
+            getRecyclerView().resetData(index, entity);
         }
     }
 
@@ -259,6 +269,7 @@ public class DeedScheduleListFragment extends ADeedListFragment
     public SpannableStringBuilder toSpan(int position, @NonNull GtdDeedEntity item) {
         SimpleMultiSpanTag multiSpanTag = getTagInfo(item);
         DeedSpanMoreTag moreTag         = new DeedSpanMoreTag(item);
+
         multiSpanTag.setShowBracket(true);
         moreTag.setShowBracket(true);
 
@@ -277,13 +288,13 @@ public class DeedScheduleListFragment extends ADeedListFragment
                         new ForegroundColorSpan(MyRInfo.getColorByID(color)));
         }
 
-        spanny.append(item.getTitle().trim(), new TextClickableSpan(item, mySpanClickListener, MyRInfo.getColorByID(color),false, position));
+        spanny.append(item.getTitle().trim(), new TextClickableSpan(multiSpanTag, mySpanClickListener, MyRInfo.getColorByID(color),false, position));
         if(moreTag.getTagTitle().isPresent())
             spanny.append(moreTag.getTagTitle().get(), new TextClickableSpan(moreTag, mySpanClickListener, MyRInfo.getColorByID(R.color.colorAccent),false, position));
         return spanny;
     }
 
-    protected Calendar handleScheme(@NonNull DeedSchemeInfo schemeInfo){
+    private Calendar handleScheme(@NonNull DeedSchemeInfo schemeInfo){
         Calendar calendar = calendarSchemeFactory.getCalendar(schemeInfo.getLocalDate());
         if(schemeInfo.getDeedSchemeEntityList() == null)
             return calendar;

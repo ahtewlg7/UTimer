@@ -72,7 +72,7 @@ public class ScheduleDeedListMvpP extends BaseDeedListMvpP {
     @Override
     public void toHandleBusEvent(DeedDoneBusEvent busEvent, DeedState... state){
         if(mvpV == null || busEvent == null || !busEvent.ifValid() ||
-            (busEvent.getEventType() != GtdBusEventType.SAVE && busEvent.getEventType() != GtdBusEventType.DELETE))
+            (busEvent.getEventType() != GtdBusEventType.EDIT && busEvent.getEventType() != GtdBusEventType.SAVE && busEvent.getEventType() != GtdBusEventType.DELETE))
             return;
         GtdDeedEntity deedEntity = busEvent.getDeedEntity();
 
