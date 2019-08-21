@@ -168,9 +168,8 @@ public class CalendarMonthView extends MonthView {
         int cy = y + mItemHeight / 2;
         int top = y - mItemHeight / 6;
 
-        if (calendar.isCurrentDay() && !isSelected) {
+        if (calendar.isCurrentDay() && !isSelected)
             canvas.drawCircle(cx, cy, mRadius, mCurrentDayPaint);
-        }
 
         Optional<DeedSchemeEntity> calendarInfoOptional = Optional.absent();
         if(calendar.getSchemes() != null && !calendar.getSchemes().isEmpty())

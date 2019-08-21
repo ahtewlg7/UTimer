@@ -55,7 +55,7 @@
 
             app:selected_lunar_text_color="@color/colorAccent"
             app:selected_text_color="@color/colorAccent"
-            app:selected_theme_color="#80cfcfcf"
+            app:selected_theme_color="@android:color/white"
 
             app:week_background="@color/color_stand_c1"
             app:week_bar_height="46dp"
