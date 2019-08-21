@@ -102,7 +102,10 @@ public class DeedSchemeEntityFactory {
         }
     }
     private void parseScheduleScheme(GtdDeedEntity deedEntity) {
-        if (deedEntity.getStartTime() == null || deedEntity.getDeedState() == DeedState.TRASH || deedEntity.getDeedState() == DeedState.USELESS)
+        if (deedEntity.getStartTime() == null
+                || deedEntity.getDeedState() == DeedState.DONE
+                || deedEntity.getDeedState() == DeedState.TRASH
+                || deedEntity.getDeedState() == DeedState.USELESS)
             return;
         DeedSchemeEntity deedSchemeEntity = new DeedSchemeEntity();
         deedSchemeEntity.setUuid(deedEntity.getUuid());
