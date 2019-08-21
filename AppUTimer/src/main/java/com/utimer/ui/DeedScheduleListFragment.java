@@ -32,6 +32,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.joda.time.LocalDate;
 import org.reactivestreams.Subscription;
 
+import java.util.Collection;
 import java.util.List;
 
 import ahtewlg7.utimer.entity.busevent.DeedDoneBusEvent;
@@ -40,6 +41,7 @@ import ahtewlg7.utimer.entity.gtd.DeedSchemeInfo;
 import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
 import ahtewlg7.utimer.entity.span.SimpleMultiSpanTag;
 import ahtewlg7.utimer.enumtype.DeedState;
+import ahtewlg7.utimer.factory.DeedSchemeEntityFactory;
 import ahtewlg7.utimer.factory.GtdDeedByUuidFactory;
 import ahtewlg7.utimer.mvp.BaseDeedListMvpP;
 import ahtewlg7.utimer.span.TextClickableSpan;
@@ -174,6 +176,7 @@ public class DeedScheduleListFragment extends ADeedListFragment
 
     @Override
     public void onLoadSucc(GtdDeedEntity entity) {
+        toAddDeedScheme(entity);
         if(!deedEntityList.contains(entity)) {
             deedEntityList.add(0, entity);
             getRecyclerView().resetData(Lists.newArrayList(Sets.newLinkedHashSet(deedEntityList)));
@@ -188,8 +191,10 @@ public class DeedScheduleListFragment extends ADeedListFragment
         if(toState == DeedState.TRASH && !GtdDeedByUuidFactory.getInstance().ifExist(entity)){
             deedEntityList.remove(entity);
             getRecyclerView().removeData(entity);
-        } else
+        } else {
+            toAddDeedScheme(entity);
             getRecyclerView().resetData(position, entity);
+        }
         int strRid = tagInfoFactory.getTagDetailRid(toState);
         if(strRid != INVALID_TAG_RID)
             ToastUtils.showShort(strRid);
@@ -198,7 +203,7 @@ public class DeedScheduleListFragment extends ADeedListFragment
     /**********************************************IScheduleMvpV**********************************************/
     @Override
     public void onSchemeLoadStart() {
-        calendarDeedSchemeTodoTable.clear();
+        tableAction.clearAll();
         mCalendarView.clearSchemeDate();
     }
 
@@ -256,8 +261,8 @@ public class DeedScheduleListFragment extends ADeedListFragment
         if(currTagOptional.isPresent())
             multiSpanTag.appendTag(currTagOptional.get());
         LocalDate selectedDate = calendarSchemeFactory.getLocalDate(mCalendarView.getSelectedCalendar());
-        if(calendarDeedSchemeTodoTable.contains(selectedDate, item.getUuid())) {
-            DeedSchemeEntity schemeEntity = calendarDeedSchemeTodoTable.get(selectedDate, item.getUuid());
+        if(tableAction.contain(selectedDate, item.getUuid())) {
+            DeedSchemeEntity schemeEntity = tableAction.getValue(selectedDate, item.getUuid());
             multiSpanTag.appendTag( schemeEntity.getProgress()+ "%");
         }
         if(item.getWorkDateLifeDetail() != null && showLifeInfo)
@@ -275,7 +280,7 @@ public class DeedScheduleListFragment extends ADeedListFragment
 
         Spanny spanny = new Spanny();
         @ColorRes int color = R.color.colorPrimary;
-        if(calendarDeedSchemeTodoTable.contains(calendarSchemeFactory.getLocalDate(mCalendarView.getSelectedCalendar()), item.getUuid()))
+        if(tableAction.contain(calendarSchemeFactory.getLocalDate(mCalendarView.getSelectedCalendar()), item.getUuid()))
             color = R.color.colorAccent;
 
         if(multiSpanTag.getTagTitle().isPresent()){
@@ -302,7 +307,7 @@ public class DeedScheduleListFragment extends ADeedListFragment
             DeedSchemeEntity deedSchemeEntity = schemeInfo.getDeedSchemeEntityList().get(index);
             if(deedSchemeEntity.getProgress() != INVALID_PROGRESS) {
                 listMvpP.toUpdateScheme(deedSchemeEntity);
-                calendarDeedSchemeTodoTable.put(schemeInfo.getLocalDate(), deedSchemeEntity.getUuid(), deedSchemeEntity);
+                tableAction.putValue(schemeInfo.getLocalDate(), deedSchemeEntity.getUuid(), deedSchemeEntity);
             }
             Calendar.Scheme scheme = new Calendar.Scheme();
             scheme.setShcemeColor(MyRInfo.getColorByID(R.color.colorAccent));
@@ -312,5 +317,14 @@ public class DeedScheduleListFragment extends ADeedListFragment
             calendar.addScheme(scheme);
         }
         return calendar;
+    }
+    private void toAddDeedScheme(GtdDeedEntity deedEntity){
+        if(deedEntity == null || !deedEntity.ifValid() || deedEntity.getDeedState() == DeedState.TRASH || deedEntity.getDeedState() == DeedState.USELESS)
+            return;
+        Collection<DeedSchemeEntity> deedSchemeEntities = DeedSchemeEntityFactory.getInstacne().getDeedScheme(deedEntity);
+        for(DeedSchemeEntity deedSchemeEntity : deedSchemeEntities){
+            if(!tableAction.containsValue(deedSchemeEntity))
+                tableAction.putValue(deedSchemeEntity.getDateTime().toLocalDate(), deedSchemeEntity.getUuid(), deedSchemeEntity);
+        }
     }
 }

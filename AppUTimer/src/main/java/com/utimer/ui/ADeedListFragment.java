@@ -181,13 +181,6 @@ public abstract class ADeedListFragment extends AButterKnifeFragment
     public void onItemCreate(GtdDeedEntity data) {
         listMvpP.onItemCreated(data);
     }
-
-    @Override
-    public void onItemEdit(GtdDeedEntity data) {
-        onDeleteSucc(INVALID_INDEX, data);
-        editIndex = INIT_POSITION;
-    }
-
     */
     /**********************************************IDeedSpanner**********************************************/
     @NonNull
