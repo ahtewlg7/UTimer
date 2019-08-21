@@ -47,7 +47,7 @@ public class DeedSchemeEntityFactory {
         return instacne;
     }
 
-    public DeedSchemeInfo toLoadDateScheme(LocalDate localDate){
+    public DeedSchemeInfo toLoadDateScheme(@NonNull LocalDate localDate){
         List<DeedSchemeEntity> schemeEntityList = new ArrayList<DeedSchemeEntity>(dateSchemeMultimap.get(localDate));
         Collections.sort(schemeEntityList, new DeedSchemeProgressComparator().getDescOrder());
         return new DeedSchemeInfo(localDate, schemeEntityList);
@@ -62,6 +62,10 @@ public class DeedSchemeEntityFactory {
                 return toLoadDateScheme(localDate);
             }
         }).subscribeOn(Schedulers.computation());
+    }
+
+    public Collection<DeedSchemeEntity> getDeedScheme(@NonNull GtdDeedEntity deedEntity){
+        return deedSchemeMultimap.get(deedEntity.getUuid());
     }
 
     void toParseScheme(GtdDeedEntity deedEntity){
@@ -83,7 +87,8 @@ public class DeedSchemeEntityFactory {
     }
 
     private void parseWarningScheme(GtdDeedEntity deedEntity){
-        if(deedEntity == null || deedEntity.getWarningTimeList() == null || deedEntity.getWarningTimeList().isEmpty())
+        if(deedEntity == null || deedEntity.getDeedState() == DeedState.TRASH || deedEntity.getDeedState() == DeedState.USELESS
+                || deedEntity.getWarningTimeList() == null || deedEntity.getWarningTimeList().isEmpty())
             return;
         for(DateTime dateTime : deedEntity.getWarningTimeList()) {
             DeedSchemeEntity deedSchemeEntity = new DeedSchemeEntity();
@@ -97,7 +102,7 @@ public class DeedSchemeEntityFactory {
         }
     }
     private void parseScheduleScheme(GtdDeedEntity deedEntity) {
-        if (deedEntity.getStartTime() == null)
+        if (deedEntity.getStartTime() == null || deedEntity.getDeedState() == DeedState.TRASH || deedEntity.getDeedState() == DeedState.USELESS)
             return;
         DeedSchemeEntity deedSchemeEntity = new DeedSchemeEntity();
         deedSchemeEntity.setUuid(deedEntity.getUuid());
