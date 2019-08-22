@@ -263,7 +263,8 @@ public class DeedScheduleListFragment extends ADeedListFragment
         LocalDate selectedDate = calendarSchemeFactory.getLocalDate(mCalendarView.getSelectedCalendar());
         if(tableAction.contain(selectedDate, item.getUuid())) {
             DeedSchemeEntity schemeEntity = tableAction.getValue(selectedDate, item.getUuid());
-            multiSpanTag.appendTag( schemeEntity.getProgress()+ "%");
+            if(schemeEntity.getProgress() != INVALID_PROGRESS)
+                multiSpanTag.appendTag( schemeEntity.getProgress()+ "%");
         }
         if(item.getWorkDateLifeDetail() != null && showLifeInfo)
             multiSpanTag.appendTag(item.getWorkDateLifeDetail());
@@ -280,7 +281,8 @@ public class DeedScheduleListFragment extends ADeedListFragment
 
         Spanny spanny = new Spanny();
         @ColorRes int color = R.color.colorPrimary;
-        if(tableAction.contain(calendarSchemeFactory.getLocalDate(mCalendarView.getSelectedCalendar()), item.getUuid()))
+        LocalDate selectedDate = calendarSchemeFactory.getLocalDate(mCalendarView.getSelectedCalendar());
+        if(tableAction.contain(selectedDate, item.getUuid()) && tableAction.getValue(selectedDate, item.getUuid()).getProgress() != INVALID_PROGRESS)
             color = R.color.colorAccent;
 
         if(multiSpanTag.getTagTitle().isPresent()){
@@ -319,7 +321,8 @@ public class DeedScheduleListFragment extends ADeedListFragment
         return calendar;
     }
     private void toAddDeedScheme(GtdDeedEntity deedEntity){
-        if(deedEntity == null || !deedEntity.ifValid() || deedEntity.getDeedState() == DeedState.TRASH || deedEntity.getDeedState() == DeedState.USELESS)
+        if(deedEntity == null || !deedEntity.ifValid()
+                || deedEntity.getDeedState() == DeedState.TRASH || deedEntity.getDeedState() == DeedState.USELESS)
             return;
         Collection<DeedSchemeEntity> deedSchemeEntities = DeedSchemeEntityFactory.getInstacne().getDeedScheme(deedEntity);
         for(DeedSchemeEntity deedSchemeEntity : deedSchemeEntities){
