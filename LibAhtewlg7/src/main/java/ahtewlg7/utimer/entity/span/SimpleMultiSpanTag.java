@@ -6,6 +6,8 @@ import com.google.common.collect.Lists;
 
 import java.util.List;
 
+import ahtewlg7.utimer.util.AscII;
+
 /**
  * Created by lw on 2019/7/8.
  */
@@ -28,7 +30,7 @@ public class SimpleMultiSpanTag extends ASpanTag {
             if(TextUtils.isEmpty(tagBuilder))
                 tagBuilder.append(tag);
             else
-                tagBuilder.append((char)44).append(tag);
+                tagBuilder.append(AscII.Space()).append(tag);
         }
         return tagBuilder.toString();
     }

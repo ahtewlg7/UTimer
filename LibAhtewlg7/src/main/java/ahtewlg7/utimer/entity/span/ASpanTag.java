@@ -4,6 +4,8 @@ import android.text.TextUtils;
 
 import com.google.common.base.Optional;
 
+import ahtewlg7.utimer.util.AscII;
+
 /**
  * Created by lw on 2019/7/2.
  */
@@ -25,7 +27,7 @@ public abstract class ASpanTag {
         if(TextUtils.isEmpty(getTagName()))
             return Optional.absent();
         if(showBracket)
-            return Optional.of((char)91 +getTagName() + (char)93);
-        return Optional.of(getTagName());
+            return Optional.of(AscII.LeftSquareBracket() +getTagName() + AscII.RightSquareBracket());
+        return Optional.of(AscII.Space() + getTagName() + AscII.Space());
     }
 }
