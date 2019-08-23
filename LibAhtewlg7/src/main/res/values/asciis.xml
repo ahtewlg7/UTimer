@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name = "Space">32</integer>                                    <!--空格 -->
+    <integer name = "ExclamationMark">33</integer>                          <!--叹号!-->
+    <integer name = "NumberSign">35</integer>                               <!--井号#-->
+    <integer name = "PercentSign">37</integer>                              <!--百分号%-->
+    <integer name = "Ampersand">38</integer>                                <!--和号&-->
+    <integer name = "Asterisk">42</integer>                                 <!--星号*-->
+    <integer name = "PlusSign">43</integer>                                 <!--加号+-->
+    <integer name = "Comma">44</integer>                                    <!--逗号,-->
+    <integer name = "Hyphen">45</integer>                                   <!--破折号_-->
+    <integer name = "LessThanSign">60</integer>                             <!--小于号<-->
+    <integer name = "GreaterThanSign">62</integer>                          <!--大于号<-->
+    <integer name = "QuestionMark">63</integer>                             <!--问号?-->
+    <integer name = "CommercialAtSign">64</integer>                         <!--电子邮件符号@-->
+    <integer name = "LeftSquareBracket">91</integer>                        <!--开方括号[-->
+    <integer name = "RightSquareBracket">93</integer>                       <!--闭方括号]-->
+    <integer name = "Tilde">126</integer>                                   <!--波浪号~-->
+    <integer name = "YuanSign">165</integer>                                <!--人民币¥-->
+    <integer name = "BrokenBar">166</integer>                               <!--竖杠¦-->
+    <integer name = "CopyrightSign">169</integer>                           <!--版权符©-->
+    <integer name = "LeftDoubleAngleQuotationMark">171</integer>            <!--左指双尖引号«-->
+    <integer name = "RegisteredTrademarkSign">174</integer>                 <!--注册商标符®-->
+    <integer name = "DegreeSign">176</integer>                              <!--度符°-->
+    <integer name = "MiddleDot">183</integer>                               <!--黑点符·-->
+    <integer name = "OneQuarter">188</integer>                              <!--1/4-->
+    <integer name = "LatinSmallOWithStroke">248</integer>                   <!--空集符ø-->
+</resources>
