@@ -76,5 +76,4 @@ public class DeedTodoListFragment extends ADeedListFragment implements BaseDeedL
         if(deedEntity != null)
             toCreateEditDialog(deedEntity);
     }
-
 }

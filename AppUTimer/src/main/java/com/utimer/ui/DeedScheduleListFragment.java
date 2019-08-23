@@ -1,17 +1,12 @@
 package com.utimer.ui;
 
-import android.graphics.Typeface;
 import android.os.Bundle;
-import android.text.SpannableStringBuilder;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.StyleSpan;
 import android.view.View;
 
 import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.binaryfork.spanny.Spanny;
 import com.blankj.utilcode.util.ToastUtils;
 import com.google.common.base.Optional;
 import com.google.common.collect.HashBasedTable;
@@ -23,7 +18,6 @@ import com.haibin.calendarview.CalendarLayout;
 import com.haibin.calendarview.CalendarView;
 import com.utimer.R;
 import com.utimer.common.CalendarSchemeFactory;
-import com.utimer.entity.span.DeedSpanMoreTag;
 import com.utimer.mvp.ScheduleDeedListMvpP;
 import com.utimer.view.SimpleDeedRecyclerView;
 
@@ -44,7 +38,7 @@ import ahtewlg7.utimer.enumtype.DeedState;
 import ahtewlg7.utimer.factory.DeedSchemeEntityFactory;
 import ahtewlg7.utimer.factory.GtdDeedByUuidFactory;
 import ahtewlg7.utimer.mvp.BaseDeedListMvpP;
-import ahtewlg7.utimer.span.TextClickableSpan;
+import ahtewlg7.utimer.util.AscII;
 import ahtewlg7.utimer.util.MyRInfo;
 import ahtewlg7.utimer.util.MySafeSubscriber;
 import ahtewlg7.utimer.util.TableAction;
@@ -257,48 +251,29 @@ public class DeedScheduleListFragment extends ADeedListFragment
     @Override
     protected SimpleMultiSpanTag getTagInfo(@NonNull GtdDeedEntity item){
         SimpleMultiSpanTag multiSpanTag = new SimpleMultiSpanTag();
-        Optional<String> currTagOptional = tagInfoFactory.getTagTitle(item.getDeedState());
-        if(currTagOptional.isPresent())
-            multiSpanTag.appendTag(currTagOptional.get());
+        char currTagAscii = tagInfoFactory.getTagIconAscii(item.getDeedState());
+        multiSpanTag.appendTag(String.valueOf(currTagAscii));
+
         LocalDate selectedDate = calendarSchemeFactory.getLocalDate(mCalendarView.getSelectedCalendar());
         if(tableAction.contain(selectedDate, item.getUuid())) {
             DeedSchemeEntity schemeEntity = tableAction.getValue(selectedDate, item.getUuid());
             if(schemeEntity.getProgress() != INVALID_PROGRESS)
-                multiSpanTag.appendTag( schemeEntity.getProgress()+ "%");
+                multiSpanTag.appendTag(String.valueOf(schemeEntity.getProgress()) + AscII.PercentSign());
         }
         if(item.getWorkDateLifeDetail() != null && showLifeInfo)
             multiSpanTag.appendTag(item.getWorkDateLifeDetail());
         return multiSpanTag;
     }
-    @NonNull
+
     @Override
-    public SpannableStringBuilder toSpan(int position, @NonNull GtdDeedEntity item) {
-        SimpleMultiSpanTag multiSpanTag = getTagInfo(item);
-        DeedSpanMoreTag moreTag         = new DeedSpanMoreTag(item);
-
-        multiSpanTag.setShowBracket(true);
-        moreTag.setShowBracket(true);
-
-        Spanny spanny = new Spanny();
-        @ColorRes int color = R.color.colorPrimary;
+    protected @ColorRes int getSpanColor(@NonNull GtdDeedEntity item, @ColorRes int defaultColor){
+        int color = defaultColor;
         LocalDate selectedDate = calendarSchemeFactory.getLocalDate(mCalendarView.getSelectedCalendar());
         if(tableAction.contain(selectedDate, item.getUuid()) && tableAction.getValue(selectedDate, item.getUuid()).getProgress() != INVALID_PROGRESS)
             color = R.color.colorAccent;
-
-        if(multiSpanTag.getTagTitle().isPresent()){
-            if(item.getDeedState() != DeedState.DONE && item.getDeedState() != DeedState.TRASH && item.getDeedState() != DeedState.USELESS)
-                spanny.append(multiSpanTag.getTagTitle().get(),
-                        new ForegroundColorSpan(MyRInfo.getColorByID(color)),
-                        new StyleSpan(Typeface.BOLD));
-            else
-                spanny.append(multiSpanTag.getTagTitle().get(),
-                        new ForegroundColorSpan(MyRInfo.getColorByID(color)));
-        }
-
-        spanny.append(item.getTitle().trim(), new TextClickableSpan(multiSpanTag, mySpanClickListener, MyRInfo.getColorByID(color),false, position));
-        if(moreTag.getTagTitle().isPresent())
-            spanny.append(moreTag.getTagTitle().get(), new TextClickableSpan(moreTag, mySpanClickListener, MyRInfo.getColorByID(R.color.colorAccent),false, position));
-        return spanny;
+        else if(item.getDeedState() == DeedState.DONE || item.getDeedState() == DeedState.TRASH || item.getDeedState() == DeedState.USELESS)
+            color = R.color.color_stand_c5;
+        return color;
     }
 
     private Calendar handleScheme(@NonNull DeedSchemeInfo schemeInfo){

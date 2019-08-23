@@ -23,6 +23,7 @@ import java.util.Set;
 import ahtewlg7.utimer.comparator.ABaseIntComparator;
 import ahtewlg7.utimer.enumtype.DeedState;
 import ahtewlg7.utimer.util.AndrManagerFactory;
+import ahtewlg7.utimer.util.MyRInfo;
 
 /**
  * Created by lw on 2019/7/3.
@@ -99,7 +100,8 @@ public class DeedTagBottomSheetDialog extends BottomSheetDialog {
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
             TagViewEntity entity = mEntityList.get(position);
-            ((TagViewHolder)holder).titleView.setText(entity.getStrRid());
+            String tagTitle      = entity.getIconAssii() + MyRInfo.getStringByID(entity.getStrRid());
+            ((TagViewHolder)holder).titleView.setText(tagTitle);
             ((TagViewHolder)holder).titleView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -126,14 +128,17 @@ public class DeedTagBottomSheetDialog extends BottomSheetDialog {
     class TagViewEntity {
         DeedState deedState;
         @StringRes int strRid;
+        char iconAssii;
 
         TagViewEntity(DeedState deedState) {
             this.deedState = deedState;
             this.strRid    = tagInfoFactory.getTagTitleRid(deedState);
+            this.iconAssii = tagInfoFactory.getTagIconAscii(deedState);
         }
-        TagViewEntity(DeedState deedState, int strRid) {
+        TagViewEntity(DeedState deedState,char iconAssii, int strRid) {
             this.deedState = deedState;
-            this.strRid = strRid;
+            this.strRid    = strRid;
+            this.iconAssii = iconAssii;
         }
 
         DeedState getDeedState() {
@@ -142,6 +147,10 @@ public class DeedTagBottomSheetDialog extends BottomSheetDialog {
 
         @StringRes int getStrRid() {
             return strRid;
+        }
+
+        char getIconAssii() {
+            return iconAssii;
         }
     }
     class TagViewComparator extends ABaseIntComparator<TagViewEntity>{

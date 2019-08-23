@@ -6,9 +6,11 @@ import android.text.InputType;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.view.View;
 
+import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -16,7 +18,6 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.binaryfork.spanny.Spanny;
 import com.blankj.utilcode.util.ToastUtils;
-import com.google.common.base.Optional;
 import com.trello.rxlifecycle3.LifecycleProvider;
 import com.utimer.R;
 import com.utimer.common.TagInfoFactory;
@@ -188,31 +189,43 @@ public abstract class ADeedListFragment extends AButterKnifeFragment
     public SpannableStringBuilder toSpan(int position, @NonNull GtdDeedEntity item) {
         SimpleMultiSpanTag multiSpanTag = getTagInfo(item);
         DeedSpanMoreTag moreTag         = new DeedSpanMoreTag(item);
-        multiSpanTag.setShowBracket(true);
+        multiSpanTag.setShowBracket(false);
         moreTag.setShowBracket(true);
 
+        @ColorRes int contentColor = getSpanColor(item, R.color.colorPrimary);
+        @ColorRes int moreColor    = getSpanColor(item, R.color.colorAccent);
         Spanny spanny = new Spanny();
-        if(multiSpanTag.getTagTitle().isPresent()){
-            if(item.getDeedState() != DeedState.DONE && item.getDeedState() != DeedState.TRASH && item.getDeedState() != DeedState.USELESS)
-                spanny.append(multiSpanTag.getTagTitle().get(),
-                        new ForegroundColorSpan(MyRInfo.getColorByID(R.color.colorPrimary)),
-                        new StyleSpan(Typeface.BOLD));
-            else
-                spanny.append(multiSpanTag.getTagTitle().get(),
-                        new ForegroundColorSpan(MyRInfo.getColorByID(R.color.colorPrimary)));
-        }
+        if(multiSpanTag.getTagTitle().isPresent())
+            spanny.append(multiSpanTag.getTagTitle().get(),
+                    new ForegroundColorSpan(MyRInfo.getColorByID(contentColor)),
+                    new StyleSpan(Typeface.BOLD));
 
-        spanny.append(item.getTitle().trim(), new TextClickableSpan(multiSpanTag, mySpanClickListener, MyRInfo.getColorByID(R.color.colorPrimary),false, position));
+        if(item.getDeedState() != DeedState.TRASH )
+            spanny.append(item.getTitle().trim(),
+                    new TextClickableSpan(multiSpanTag, mySpanClickListener, MyRInfo.getColorByID(contentColor),false, position));
+        else
+            spanny.append(item.getTitle().trim(),
+                    new TextClickableSpan(multiSpanTag, mySpanClickListener, MyRInfo.getColorByID(contentColor),false, position),
+                    new StrikethroughSpan());
+
         if(moreTag.getTagTitle().isPresent())
-            spanny.append(moreTag.getTagTitle().get(), new TextClickableSpan(moreTag, mySpanClickListener, MyRInfo.getColorByID(R.color.colorAccent),false, position));
+            spanny.append(moreTag.getTagTitle().get(),
+                    new TextClickableSpan(moreTag, mySpanClickListener, MyRInfo.getColorByID(moreColor),false, position));
         return spanny;
+    }
+
+    protected @ColorRes int getSpanColor(@NonNull GtdDeedEntity item, @ColorRes int defaultColor){
+        int color = defaultColor;
+        if(item.getDeedState() == DeedState.DONE || item.getDeedState() == DeedState.TRASH || item.getDeedState() == DeedState.USELESS)
+            color = R.color.color_stand_c5;
+        return color;
     }
 
     protected SimpleMultiSpanTag getTagInfo(@NonNull GtdDeedEntity item){
         SimpleMultiSpanTag multiSpanTag = new SimpleMultiSpanTag();
-        Optional<String> currTagOptional = tagInfoFactory.getTagTitle(item.getDeedState());
-        if(currTagOptional.isPresent())
-            multiSpanTag.appendTag(currTagOptional.get());
+        char currTagAscii = tagInfoFactory.getTagIconAscii(item.getDeedState());
+        multiSpanTag.appendTag(String.valueOf(currTagAscii));
+
         if(item.getWorkDateLifeDetail() != null && showLifeInfo)
             multiSpanTag.appendTag(item.getWorkDateLifeDetail());
         return multiSpanTag;

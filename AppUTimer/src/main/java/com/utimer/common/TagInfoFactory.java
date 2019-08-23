@@ -7,6 +7,7 @@ import com.google.common.base.Optional;
 import com.utimer.R;
 
 import ahtewlg7.utimer.enumtype.DeedState;
+import ahtewlg7.utimer.util.AscII;
 import ahtewlg7.utimer.util.MyRInfo;
 
 /**
@@ -92,6 +93,46 @@ public class TagInfoFactory {
                 break;
             case TRASH:
                 tmp = R.string.prompt_deed_tag_trash;
+                break;
+            default:
+                //todo
+                break;
+        }
+        return tmp;
+    }
+
+    public char getTagIconAscii(@NonNull DeedState deedState){
+        char tmp = AscII.MiddleDot();
+        switch(deedState){
+            case SCHEDULE:
+                tmp = AscII.YuanSign();
+                break;
+            case ONE_QUARTER:
+                tmp = AscII.OneQuarter();
+                break;
+            case DEFER:
+                tmp = AscII.LeftDoubleAngleQuotationMark();
+                break;
+            case DELEGATE:
+                tmp = AscII.CommercialAtSign();
+                break;
+            case WISH:
+                tmp = AscII.QuestionMark();
+                break;
+            case REFERENCE:
+                tmp = AscII.CopyrightSign();
+                break;
+            case PROJECT:
+                tmp = AscII.Ampersand();
+                break;
+            case DONE:
+                tmp = AscII.ExclamationMark();
+                break;
+            case USELESS:
+                tmp = AscII.LatinSmallOWithStroke();
+                break;
+            case TRASH:
+                tmp = AscII.Tilde();
                 break;
             default:
                 //todo
