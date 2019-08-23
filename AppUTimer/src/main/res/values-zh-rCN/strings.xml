@@ -11,10 +11,10 @@
     <string name="title_time">时间</string>
     <string name="title_note">笔记</string>
     <string name="title_note_list">笔记清单</string>
-    <string name="title_gtd">计划</string>
+    <string name="title_gtd">简讯</string>
     <string name="title_about">关于</string>
-    <string name="title_shorthand">速写</string>
-    <string name="title_shorthand_list">速写清单</string>
+    <string name="title_shorthand">简讯</string>
+    <string name="title_shorthand_list">简讯清单</string>
     <string name="title_project">工程</string>
     <string name="title_project_list">工程清单</string>
 
@@ -36,13 +36,13 @@
     <string name="title_deed_tag_done">已完成</string>
     <string name="title_deed_tag_useless">已无效</string>
 
-    <string name="title_deed">计划</string>
+    <string name="title_deed">简讯</string>
     <string name="title_notify_fast_inbox">清空大脑</string>
-    <string name="title_notify_action_fast_inbox">速记</string>
+    <string name="title_notify_action_fast_inbox">简讯</string>
 
     <string name="create">new</string>
     <string name="create_shorthand">新建速写</string>
-    <string name="create_deed">新建计划</string>
+    <string name="create_deed">新建简讯</string>
     <string name="create_note">新建笔记</string>
     <string name="add">添加</string>
     <string name="edit">编辑</string>
