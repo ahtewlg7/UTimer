@@ -255,11 +255,13 @@ public class DeedScheduleListFragment extends ADeedListFragment
         char currTagAscii = tagInfoFactory.getTagIconAscii(item.getDeedState());
         multiSpanTag.appendTag(String.valueOf(currTagAscii));
 
-        LocalDate selectedDate = calendarSchemeFactory.getLocalDate(mCalendarView.getSelectedCalendar());
-        if(tableAction.contain(selectedDate, item.getUuid())) {
-            DeedSchemeEntity schemeEntity = tableAction.getValue(selectedDate, item.getUuid());
-            if(schemeEntity.getProgress() != INVALID_PROGRESS)
-                multiSpanTag.appendTag(String.valueOf(schemeEntity.getProgress()) + AscII.PercentSign());
+        if(item.getDeedState() != DeedState.SCHEDULE) {
+            LocalDate selectedDate = calendarSchemeFactory.getLocalDate(mCalendarView.getSelectedCalendar());
+            if (tableAction.contain(selectedDate, item.getUuid())) {
+                DeedSchemeEntity schemeEntity = tableAction.getValue(selectedDate, item.getUuid());
+                if (schemeEntity != null && schemeEntity.getProgress() != INVALID_PROGRESS)
+                    multiSpanTag.appendTag(String.valueOf(schemeEntity.getProgress()) + AscII.PercentSign());
+            }
         }
         if(item.getWorkDateLifeDetail() != null && showLifeInfo)
             multiSpanTag.appendTag(item.getWorkDateLifeDetail());
