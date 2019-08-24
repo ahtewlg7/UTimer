@@ -255,7 +255,7 @@ public class DeedScheduleListFragment extends ADeedListFragment
         char currTagAscii = tagInfoFactory.getTagIconAscii(item.getDeedState());
         multiSpanTag.appendTag(String.valueOf(currTagAscii));
 
-        if(item.getDeedState() != DeedState.SCHEDULE) {
+        if(item.getDeedState() == DeedState.SCHEDULE) {
             LocalDate selectedDate = calendarSchemeFactory.getLocalDate(mCalendarView.getSelectedCalendar());
             if (tableAction.contain(selectedDate, item.getUuid())) {
                 DeedSchemeEntity schemeEntity = tableAction.getValue(selectedDate, item.getUuid());
