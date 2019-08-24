@@ -134,8 +134,9 @@ public class DeedScheduleListFragment extends ADeedListFragment
     @Override
     protected void onDeedClick(int position) {
         GtdDeedEntity deedEntity = (GtdDeedEntity)recyclerView.getAdapter().getItem(position);
-        if(deedEntity != null)
-            toCreateEditDialog(deedEntity);
+        if(deedEntity == null || deedEntity.getDeedState() == DeedState.DONE || deedEntity.getDeedState() == DeedState.TRASH)
+            return;
+        toCreateEditDialog(deedEntity);
     }
 
     /**********************************************OnCalendarSelectListener**********************************************/
