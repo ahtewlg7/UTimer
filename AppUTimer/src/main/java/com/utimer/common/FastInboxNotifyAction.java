@@ -111,9 +111,9 @@ public class FastInboxNotifyAction {
                 String inputStuff = remoteInput.getString(RESULT_KEY_REMOTE_INPUT_INBOX);
                 if(!TextUtils.isEmpty(inputStuff))
                     GtdMachine.getInstance().getCurrState(null).toInbox(inputStuff, inputStuff);
-                toDisableFastInboxNotify();
-                toEnableFastInboxNotify();
             }
+            toDisableFastInboxNotify();
+            toEnableFastInboxNotify();
         }
     }
 }
