@@ -28,6 +28,15 @@ class TableDeedRwMvpP extends AUtimerRwMvpP<GtdDeedEntity, TableDeedRwMvpM> {
         switch (actionBusEvent.getEventType()){
             case LOAD:
                 break;
+            case CREATE:
+                toSave(Flowable.just(actionBusEvent.getDeedEntity()).doOnNext(new Consumer<GtdDeedEntity>() {
+                    @Override
+                    public void accept(GtdDeedEntity entity) throws Exception {
+                        GtdDeedByUuidFactory.getInstance().update(entity.getUuid(), entity);
+                        toPostDoneEvent(GtdBusEventType.CREATE,entity);
+                    }
+                }));
+                break;
             case SAVE:
                 toSave(Flowable.just(actionBusEvent.getDeedEntity()).doOnNext(new Consumer<GtdDeedEntity>() {
                     @Override

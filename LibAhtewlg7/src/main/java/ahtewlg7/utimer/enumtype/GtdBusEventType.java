@@ -6,6 +6,7 @@ package ahtewlg7.utimer.enumtype;
 public enum GtdBusEventType {
     LOAD,
     ON_LOAD,
+    CREATE,
     SAVE,
     EDIT,
     DELETE;

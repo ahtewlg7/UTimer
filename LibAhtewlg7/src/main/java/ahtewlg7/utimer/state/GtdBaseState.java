@@ -28,7 +28,7 @@ public class GtdBaseState {
         Optional<GtdDeedEntity> deedEntityOptional = GtdDeedByUuidFactory.getInstance().create(title, detail, INBOX);
         if(!deedEntityOptional.isPresent())
             return Optional.absent();
-        BaseEventBusBean actionBusEvent = new DeedBusEvent(GtdBusEventType.SAVE, deedEntityOptional.get());
+        BaseEventBusBean actionBusEvent = new DeedBusEvent(GtdBusEventType.CREATE, deedEntityOptional.get());
         EventBusFatory.getInstance().getDefaultEventBus().postSticky(actionBusEvent);
         return Optional.of(actionBusEvent);
     }

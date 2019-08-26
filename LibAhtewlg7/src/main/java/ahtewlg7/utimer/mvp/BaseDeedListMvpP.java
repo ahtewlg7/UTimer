@@ -84,7 +84,7 @@ public class BaseDeedListMvpP {
                 public void onSubscribe(Subscription s) {
                     super.onSubscribe(s);
                     if(mvpV != null)
-                        mvpV.onTagStart(deedEntity,deedState);
+                        mvpV.onTagStart(deedEntity, deedState);
                 }
 
                 @Override
@@ -95,7 +95,7 @@ public class BaseDeedListMvpP {
                     if(busBeanOptional.isPresent())
                         mvpV.onTagSucc(deedEntity, deedState, position);
                     else
-                        mvpV.onTagFail(deedEntity,deedState);
+                        mvpV.onTagFail(deedEntity, deedState);
                 }
 
                 @Override
@@ -122,7 +122,7 @@ public class BaseDeedListMvpP {
     public void toHandleBusEvent(DeedDoneBusEvent busEvent, DeedState... state){
         if(busEvent == null || !busEvent.ifValid())
             return;
-        if((busEvent.getEventType() == GtdBusEventType.SAVE || busEvent.getEventType() == GtdBusEventType.EDIT)
+        if((busEvent.getEventType() == GtdBusEventType.CREATE || busEvent.getEventType() == GtdBusEventType.SAVE || busEvent.getEventType() == GtdBusEventType.EDIT)
             && Arrays.asList(state).contains(busEvent.getDeedEntity().getDeedState()) && mvpV != null)
             mvpV.onLoadSucc(busEvent.getDeedEntity());
     }

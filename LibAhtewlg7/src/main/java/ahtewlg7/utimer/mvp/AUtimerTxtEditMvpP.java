@@ -174,7 +174,7 @@ public abstract class AUtimerTxtEditMvpP<T extends AUtimerEntity> implements IUt
             @Override
             public void onNext(GtdDeedEntity entity) {
                 super.onNext(entity);
-                DeedBusEvent actionBusEvent = new DeedBusEvent(GtdBusEventType.SAVE, entity);
+                DeedBusEvent actionBusEvent = new DeedBusEvent(GtdBusEventType.CREATE, entity);
                 EventBusFatory.getInstance().getDefaultEventBus().postSticky(actionBusEvent);
             }
         });
