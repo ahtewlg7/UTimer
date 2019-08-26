@@ -72,7 +72,8 @@ public class ScheduleDeedListMvpP extends BaseDeedListMvpP {
     @Override
     public void toHandleBusEvent(DeedDoneBusEvent busEvent, DeedState... state){
         if(mvpV == null || busEvent == null || !busEvent.ifValid() ||
-            (busEvent.getEventType() != GtdBusEventType.EDIT && busEvent.getEventType() != GtdBusEventType.SAVE && busEvent.getEventType() != GtdBusEventType.DELETE))
+            (busEvent.getEventType() != GtdBusEventType.CREATE && busEvent.getEventType() != GtdBusEventType.SAVE
+            && busEvent.getEventType() != GtdBusEventType.EDIT && busEvent.getEventType() != GtdBusEventType.DELETE))
             return;
         GtdDeedEntity deedEntity = busEvent.getDeedEntity();
 
@@ -89,9 +90,8 @@ public class ScheduleDeedListMvpP extends BaseDeedListMvpP {
                     ifAtCurrCalendar = ((IScheduleMvpV) mvpV).ifAtSelectedDay(date.toLocalDate());
             }
         }
-        if(ifAtCurrCalendar.isPresent() && ifAtCurrCalendar.get())
+        if(ifAtCurrCalendar.isPresent() && ifAtCurrCalendar.get() && (busEvent.getEventType() == GtdBusEventType.CREATE || busEvent.getEventType() == GtdBusEventType.EDIT))
             mvpV.onLoadSucc(busEvent.getDeedEntity());
-
         toReloadScheme(deedDate);
     }
 

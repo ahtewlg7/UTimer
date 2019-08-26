@@ -175,9 +175,6 @@ public class DeedScheduleListFragment extends ADeedListFragment
         if(!deedEntityList.contains(entity)) {
             deedEntityList.add(0, entity);
             getRecyclerView().resetData(Lists.newArrayList(Sets.newLinkedHashSet(deedEntityList)));
-        }else{
-            int index = deedEntityList.indexOf(entity);
-            getRecyclerView().resetData(index, entity);
         }
     }
 
