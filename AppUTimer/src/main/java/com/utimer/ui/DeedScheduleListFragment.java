@@ -97,6 +97,16 @@ public class DeedScheduleListFragment extends ADeedListFragment
         super.onLazyInitView(savedInstanceState);
         ((ScheduleDeedListMvpP)listMvpP).toLoadScheduleDate();
     }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        if(!hidden){
+            mCalendarView.updateCurrentDate();
+            mCalendarView.update();
+        }
+        super.onHiddenChanged(hidden);
+    }
+
     /**********************************************AToolbarBkFragment**********************************************/
 
     @Override
