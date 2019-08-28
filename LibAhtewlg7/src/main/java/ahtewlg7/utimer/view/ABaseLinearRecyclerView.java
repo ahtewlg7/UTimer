@@ -1,13 +1,14 @@
 package ahtewlg7.utimer.view;
 
 import android.content.Context;
+import android.util.AttributeSet;
+import android.view.View;
+
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.ItemTouchHelper;
-import android.util.AttributeSet;
-import android.view.View;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.chad.library.adapter.base.BaseItemDraggableAdapter;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -89,6 +90,10 @@ public abstract class ABaseLinearRecyclerView<T> extends RecyclerView{
         setAdapter(recyclerViewAdapter);
     }
 
+    public void notifyDataSetChanged(){
+        if(recyclerViewAdapter != null)
+            recyclerViewAdapter.notifyDataSetChanged();
+    }
     public void resetData(List<T> entityList) {
         if(recyclerViewAdapter != null)
             recyclerViewAdapter.setNewData(entityList);
