@@ -14,6 +14,7 @@ import org.reactivestreams.Subscription;
 
 import java.util.List;
 
+import ahtewlg7.utimer.entity.busevent.DeedBusEvent;
 import ahtewlg7.utimer.entity.busevent.DeedDoneBusEvent;
 import ahtewlg7.utimer.entity.gtd.DeedSchemeInfo;
 import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
@@ -68,7 +69,13 @@ public class ScheduleDeedListMvpP extends BaseDeedListMvpP {
                 }
             });
     }
-
+    @Override
+    public void toHandleBusEvent(DeedBusEvent busEvent, DeedState... state){
+        if(busEvent == null || !busEvent.ifValid())
+            return;
+        if(busEvent.getEventType() == GtdBusEventType.LOAD)
+            toLoadScheduleDate();
+    }
     @Override
     public void toHandleBusEvent(DeedDoneBusEvent busEvent, DeedState... state){
         if(mvpV == null || busEvent == null || !busEvent.ifValid() ||
