@@ -66,6 +66,7 @@ public class DeedEndListFragment extends ADeedListFragment implements BaseDeedLi
             ToastUtils.showShort(strRid);
     }
     /**********************************************ADeedListFragment**********************************************/
+    @NonNull
     @Override
     protected DeedState[] getLoadDeedState() {
         return workState;

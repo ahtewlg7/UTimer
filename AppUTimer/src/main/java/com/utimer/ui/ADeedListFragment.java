@@ -241,13 +241,11 @@ public abstract class ADeedListFragment extends AButterKnifeFragment
     /**********************************************EventBus**********************************************/
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDeedBusEvent(DeedBusEvent eventBus) {
-        if(getLoadDeedState() != null)
-            listMvpP.toHandleBusEvent(eventBus, getLoadDeedState());
+        listMvpP.toHandleBusEvent(eventBus, getLoadDeedState());
     }
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDeedDoneBusEvent(DeedDoneBusEvent eventBus) {
-        if(getLoadDeedState() != null)
-            listMvpP.toHandleBusEvent(eventBus, getLoadDeedState());
+        listMvpP.toHandleBusEvent(eventBus, getLoadDeedState());
     }
 
     /**********************************************IGtdActionListMvpV**********************************************/

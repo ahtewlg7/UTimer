@@ -5,7 +5,6 @@ import android.view.View;
 
 import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.blankj.utilcode.util.ToastUtils;
 import com.google.common.base.Optional;
@@ -21,15 +20,12 @@ import com.utimer.common.CalendarSchemeFactory;
 import com.utimer.mvp.ScheduleDeedListMvpP;
 import com.utimer.view.SimpleDeedRecyclerView;
 
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import org.joda.time.LocalDate;
 import org.reactivestreams.Subscription;
 
 import java.util.Collection;
 import java.util.List;
 
-import ahtewlg7.utimer.entity.busevent.DeedDoneBusEvent;
 import ahtewlg7.utimer.entity.gtd.DeedSchemeEntity;
 import ahtewlg7.utimer.entity.gtd.DeedSchemeInfo;
 import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
@@ -93,12 +89,6 @@ public class DeedScheduleListFragment extends ADeedListFragment
     }
 
     @Override
-    public void onLazyInitView(@Nullable Bundle savedInstanceState) {
-        super.onLazyInitView(savedInstanceState);
-        ((ScheduleDeedListMvpP)listMvpP).toLoadScheduleDate();
-    }
-
-    @Override
     public void onHiddenChanged(boolean hidden) {
         if(!hidden){
             mCalendarView.updateCurrentDate();
@@ -134,11 +124,6 @@ public class DeedScheduleListFragment extends ADeedListFragment
     @Override
     protected SimpleDeedRecyclerView getRecyclerView() {
         return recyclerView;
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onDeedDoneBusEvent(DeedDoneBusEvent eventBus) {
-        listMvpP.toHandleBusEvent(eventBus, getLoadDeedState());
     }
 
     @Override
