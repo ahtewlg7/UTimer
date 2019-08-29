@@ -21,7 +21,7 @@ public class FileSystemActionTest {
     @Test
     @RequiresDevice
     public void listSubFile() {
-        File docFile = new File("/sdcard/UTimer/doc/notebook");
+        File docFile = new File("/sdcard/UTimer/doc/notebook/Project/startup");
         Iterable<File> subFile = fileSystemAction.listSubFile(docFile);
         for(File file :subFile)
             System.out.println(file.getAbsolutePath());

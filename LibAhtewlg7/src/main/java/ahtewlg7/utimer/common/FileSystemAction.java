@@ -6,13 +6,19 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 
 import com.google.common.base.Optional;
+import com.google.common.io.Files;
 
 import java.io.File;
 
+import ahtewlg7.utimer.enumtype.GraphOrderType;
 import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.StorageAction;
 import ahtewlg7.utimer.verctrl.BaseConfig;
 import ahtewlg7.utimer.verctrl.VcFactoryBuilder;
+
+import static ahtewlg7.utimer.enumtype.GraphOrderType.BREADTH;
+import static ahtewlg7.utimer.enumtype.GraphOrderType.DEPTH;
+import static ahtewlg7.utimer.enumtype.GraphOrderType.DEPTH_PRE;
 
 
 /**
@@ -37,6 +43,19 @@ public class FileSystemAction {
         if(!ifStorageReady)
             return;
         initAppWorkingFsDir();
+    }
+    public Iterable<File> listSubFile(@NonNull File parentFile){
+        return listSubFile(parentFile, BREADTH);
+    }
+    public Iterable<File> listSubFile(@NonNull File parentFile, @NonNull GraphOrderType orderType){
+        Iterable<File> fileIterable = null;
+        if(orderType == BREADTH)
+            fileIterable = Files.fileTraverser().breadthFirst(parentFile);
+        else if(orderType == DEPTH || orderType ==  DEPTH_PRE)
+            fileIterable = Files.fileTraverser().depthFirstPreOrder(parentFile);
+        else
+            fileIterable = Files.fileTraverser().depthFirstPostOrder(parentFile);
+        return fileIterable;
     }
     public String getRPath(@NonNull File file){
         String path   = file.getAbsolutePath();

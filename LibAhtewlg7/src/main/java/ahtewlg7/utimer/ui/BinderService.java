@@ -84,5 +84,4 @@ public class BinderService extends Service{
             }
         });
     }
-
 }
