@@ -29,12 +29,15 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
  * Created by lw on 2019/7/19.
  */
 public class ScheduleDeedListMvpP extends BaseDeedListMvpP {
+    private boolean isSchemeLoading;
+
     public ScheduleDeedListMvpP(IScheduleMvpV mvpV) {
         super(mvpV);
     }
 
     public void toLoadScheduleDate(){
-        toLoadScheme(mvpM.toLoadScheme());
+        if(!isSchemeLoading)
+            toLoadScheme(mvpM.toLoadScheme());
     }
     protected void toLoadScheme(@NonNull Flowable<DeedSchemeInfo> loadRx){
         loadRx.compose(((RxFragment)mvpV.getRxLifeCycleBindView()).<DeedSchemeInfo>bindUntilEvent(FragmentEvent.DESTROY))
@@ -43,6 +46,7 @@ public class ScheduleDeedListMvpP extends BaseDeedListMvpP {
                 @Override
                 public void onSubscribe(Subscription s) {
                     super.onSubscribe(s);
+                    isSchemeLoading = true;
                     if(mvpV != null)
                         ((IScheduleMvpV)mvpV).onSchemeLoadStart();
                 }
@@ -57,6 +61,7 @@ public class ScheduleDeedListMvpP extends BaseDeedListMvpP {
                 @Override
                 public void onError(Throwable t) {
                     super.onError(t);
+                    isSchemeLoading = false;
                     if(mvpV != null)
                         ((IScheduleMvpV)mvpV).onSchemeLoadErr(t);
                 }
@@ -64,6 +69,7 @@ public class ScheduleDeedListMvpP extends BaseDeedListMvpP {
                 @Override
                 public void onComplete() {
                     super.onComplete();
+                    isSchemeLoading = false;
                     if(mvpV != null)
                         ((IScheduleMvpV)mvpV).onSchemeLoadEnd();
                 }
