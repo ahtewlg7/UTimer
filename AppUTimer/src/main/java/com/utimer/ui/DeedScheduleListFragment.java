@@ -5,6 +5,7 @@ import android.view.View;
 
 import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.blankj.utilcode.util.ToastUtils;
 import com.google.common.base.Optional;
@@ -86,6 +87,12 @@ public class DeedScheduleListFragment extends ADeedListFragment
         calendarDeedSchemeTodoTable = HashBasedTable.create();
         calendarSchemeFactory       = new CalendarSchemeFactory();
         tableAction                 = new TableAction<LocalDate, String, DeedSchemeEntity>(calendarDeedSchemeTodoTable);
+    }
+
+    @Override
+    public void onLazyInitView(@Nullable Bundle savedInstanceState) {
+        super.onLazyInitView(savedInstanceState);
+        ((ScheduleDeedListMvpP)listMvpP).toLoadScheduleDate();
     }
 
     @Override
