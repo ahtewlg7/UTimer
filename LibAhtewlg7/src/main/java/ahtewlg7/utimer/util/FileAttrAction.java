@@ -5,6 +5,9 @@ import android.webkit.MimeTypeMap;
 import org.joda.time.DateTime;
 
 import java.io.File;
+import java.nio.file.FileStore;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.attribute.BasicFileAttributes;
 
@@ -37,23 +40,20 @@ public class FileAttrAction {
         return MimeTypeMap.getSingleton().getMimeTypeFromExtension(getFileExt());
     }
 
+    @Deprecated
     public DateTime getCreateTime(){
         if(file == null || !file.exists() || attr == null)
             return null;
-
         long time = attr.creationTime().toMillis();
         return new DateTime(time);
     }
 
-    //todo:
     public DateTime getLassModifyTime(){
-        if(file == null || !file.exists() || attr == null)
+        if(file == null || !file.exists())
             return null;
-
-        long time = attr.lastModifiedTime().toMillis();
-        return new DateTime(time);
+        return new DateTime(file.lastModified());
     }
-
+    @Deprecated
     public DateTime getLassAccessTime(){
         if(file == null || !file.exists() || attr == null)
             return null;

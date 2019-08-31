@@ -49,10 +49,15 @@ public class BaseDeedListMvpP {
         this.mvpV           = mvpV;
         mvpM                = new BaseDeedMvpM();
         stateGraph          = new DeedStateGraph();
+        stateGraph.initGraph();
+        stateGraph.initNodes();
     }
 
     public Set<DeedState> getNextState(@NonNull GtdDeedEntity deedEntity){
-        return stateGraph.getNextNodeList(deedEntity.getDeedState());
+        Optional<Set<DeedState>> deedStateOptional = stateGraph.getNextNodeList(deedEntity.getDeedState());
+        if(deedStateOptional.isPresent())
+            return deedStateOptional.get();
+        return null;
     }
 
     public void toLoadDeedByState(DeedState... deedState){
