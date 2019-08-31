@@ -30,6 +30,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import ahtewlg7.utimer.entity.busevent.DeedBusEvent;
 import ahtewlg7.utimer.entity.busevent.DeedDoneBusEvent;
@@ -271,12 +272,16 @@ public abstract class ADeedListFragment extends AButterKnifeFragment
             Logcat.d("Warning","createBottomSheet failed");
             return;
         }
+        GtdDeedEntity currEntity = (GtdDeedEntity)getRecyclerView().getAdapter().getItem(position);
+        Set<DeedState> deedStateSet = listMvpP.getNextState(currEntity);
+        if(deedStateSet == null)
+            return;
+
         if (bottomSheetDialog == null) {
             bottomSheetDialog = new DeedTagBottomSheetDialog(getContext());
             bottomSheetDialog.setOnItemClickListener(mySpanClickListener);
         }
-        GtdDeedEntity currEntity = (GtdDeedEntity)getRecyclerView().getAdapter().getItem(position);
-        bottomSheetDialog.toShow(listMvpP.getNextState(currEntity), position);
+        bottomSheetDialog.toShow(deedStateSet, position);
     }
     protected void toCreateEditDialog(@NonNull GtdDeedEntity deedEntity){
         new MaterialDialog.Builder(getContext()).title(R.string.edit)
