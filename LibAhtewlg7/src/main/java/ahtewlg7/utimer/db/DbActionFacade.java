@@ -18,7 +18,6 @@ import ahtewlg7.utimer.entity.gtd.NoteBuilder;
 import ahtewlg7.utimer.entity.gtd.NoteEntity;
 import ahtewlg7.utimer.entity.gtd.ShortHandBuilder;
 import ahtewlg7.utimer.entity.gtd.ShortHandEntity;
-import ahtewlg7.utimer.entity.gtd.un.GtdTaskEntity;
 import ahtewlg7.utimer.enumtype.DeedState;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
@@ -84,59 +83,6 @@ public class DbActionFacade {
         });
     }
 
-    /*******************************************Task**************************************************/
-    public Flowable<Optional<GtdTaskEntity>> loadAllTaskEntity() {
-        /*return Flowable.fromIterable(TaskEntityDaoAction.getInstance().loadAll())
-                .map(new Function<TaskEntityGdBean, Optional<GtdTaskEntity>>() {
-                    @Override
-                    public Optional<GtdTaskEntity> apply(TaskEntityGdBean taskEntityGdBean) throws Exception {
-                        return Optional.fromNullable(JSON.parseObject(taskEntityGdBean.getValue(), GtdTaskEntity.class));
-                    }
-                })
-                .subscribeOn(Schedulers.io());*/
-        return Flowable.empty();
-    }
-    public Flowable<Optional<GtdTaskEntity>> getTaskEntity(@NonNull Flowable<String> nameFlowable) {
-        /*return nameFlowable.map(new Function<String, Optional<GtdTaskEntity>>() {
-            @Override
-            public Optional<GtdTaskEntity> apply(String name) throws Exception {
-                Optional<TaskEntityGdBean> beanOptional = TaskEntityDaoAction.getInstance().queryByKey(name);
-                if(beanOptional.isPresent())
-                    return Optional.fromNullable(JSON.parseObject(beanOptional.get().getValue(), GtdTaskEntity.class));
-                return Optional.absent();
-            }
-        });*/
-        return Flowable.empty();
-    }
-
-    public Flowable<Boolean> deleteTaskEntity(@NonNull Flowable<Optional<GtdTaskEntity>> eventFlowable){
-        /*return eventFlowable.map(new Function<Optional<GtdTaskEntity>, Boolean>() {
-            @Override
-            public Boolean apply(Optional<GtdTaskEntity> gtdEventEntityOptional) throws Exception {
-                if(gtdEventEntityOptional.isPresent()){
-                    TaskEntityGdBean bean = mapTaskToGdBean(gtdEventEntityOptional.get());
-                    Logcat.i(TAG,"deleteTaskEntity ：" + bean.toString());
-                    TaskEntityDaoAction.getInstance().delete(bean);
-                    return true;
-                }
-                return false;
-            }
-        });*/
-        return Flowable.empty();
-    }
-
-    public Flowable<Boolean> saveTaskEntity(Flowable<GtdTaskEntity> eventFlowable) {
-        /*return eventFlowable.map(new Function<GtdTaskEntity, Boolean>() {
-            @Override
-            public Boolean apply(GtdTaskEntity eventEntity) throws Exception {
-                TaskEntityGdBean bean = mapTaskToGdBean(eventEntity);
-                Logcat.i(TAG,"saveTaskEntity : " + bean.toString());
-                long index = TaskEntityDaoAction.getInstance().insert(bean);
-                return index >= 0;
-            }
-        });*/
-        return Flowable.empty();
-    }
     /*******************************************Action**************************************************/
     public Flowable<GtdDeedEntity> loadAllDeedEntity() {
         return Flowable.fromIterable(DeedEntityDaoAction.getInstance().loadAll())

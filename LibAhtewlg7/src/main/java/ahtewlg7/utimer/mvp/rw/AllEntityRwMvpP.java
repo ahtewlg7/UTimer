@@ -1,8 +1,8 @@
 package ahtewlg7.utimer.mvp.rw;
 
 import ahtewlg7.utimer.entity.BaseEventBusBean;
-import ahtewlg7.utimer.entity.busevent.DeedBusEvent;
 import ahtewlg7.utimer.entity.busevent.ActivityBusEvent;
+import ahtewlg7.utimer.entity.busevent.DeedBusEvent;
 import ahtewlg7.utimer.entity.busevent.UTimerBusEvent;
 import ahtewlg7.utimer.enumtype.GtdType;
 
@@ -10,19 +10,19 @@ import ahtewlg7.utimer.enumtype.GtdType;
  * Created by lw on 2019/4/13.
  */
 public class AllEntityRwMvpP {
-    private TableDeedRwMvpP actionMvpP;
+    private TableDeedRwMvpP deedMvpP;
     private NoteRwMvpP noteRwMvpP;
     private ShortHandRwMvpP shortHandMvpP;
 
     public AllEntityRwMvpP(AUtimerRwMvpP.IDbMvpV actionMvpV, AUtimerRwMvpP.IDbMvpV shortHandMvpV,
                            AUtimerRwMvpP.IDbMvpV noteMvpV){
-        actionMvpP      = new TableDeedRwMvpP(actionMvpV);
+        deedMvpP        = new TableDeedRwMvpP(actionMvpV);
         shortHandMvpP   = new ShortHandRwMvpP(shortHandMvpV);
         noteRwMvpP      = new NoteRwMvpP(noteMvpV);
     }
 
     public void toLoadAll(){
-        actionMvpP.toLoadAll();
+        deedMvpP.toLoadAll();
         shortHandMvpP.toLoadAll();
     }
 
@@ -41,7 +41,7 @@ public class AllEntityRwMvpP {
 //            nextIdMvpP.toSaveAll();
     }
     private void toHandleBusEvent(DeedBusEvent busEvent){
-        actionMvpP.toHandleBusEvent(busEvent);
+        deedMvpP.toHandleBusEvent(busEvent);
     }
     private void toHandleBusEvent(UTimerBusEvent busEvent){
         if(busEvent.getEntity() == null)//todo

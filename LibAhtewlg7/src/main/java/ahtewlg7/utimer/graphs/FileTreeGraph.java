@@ -3,6 +3,7 @@ package ahtewlg7.utimer.graphs;
 import androidx.annotation.NonNull;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.Maps;
 import com.google.common.graph.ElementOrder;
 import com.google.common.graph.MutableValueGraph;
 import com.google.common.graph.ValueGraph;
@@ -11,6 +12,8 @@ import com.google.common.graph.ValueGraphBuilder;
 import org.joda.time.DateTime;
 
 import java.io.File;
+import java.util.Collection;
+import java.util.Map;
 import java.util.Set;
 
 import ahtewlg7.utimer.common.FileSystemAction;
@@ -22,14 +25,23 @@ import ahtewlg7.utimer.util.FileAttrAction;
 public class FileTreeGraph implements IGraph<File> {
     private File rootFile;
     private ValueGraph graph;
+    private Map<String, File> leafFileMap;
 
     public FileTreeGraph(File rootFile){
         this.rootFile  = rootFile;
+        leafFileMap = Maps.newHashMap();
         initGraph();
     }
 
     public ValueGraph getGraph(){
         return graph;
+    }
+
+    public Collection<File> getAllLeafFile(){
+        return leafFileMap.values();
+    }
+    public File getLeafFile(String fileName){
+        return leafFileMap.get(fileName);
     }
 
     @Override
@@ -64,11 +76,21 @@ public class FileTreeGraph implements IGraph<File> {
     public void initNodes() {
         if(rootFile == null)
             return;
+        leafFileMap.clear();
         Iterable<File> fileIterable = new FileSystemAction().listSubFile(rootFile);
-        for(File file : fileIterable){
-            DateTime createTime = new FileAttrAction(file).getLassModifyTime();
-            if(createTime != null)
-                ((MutableValueGraph)graph).putEdgeValue(file.getParentFile(), file, createTime );
+        for(File file : fileIterable) {
+            boolean result = updateEdge(file);
+            if(result && file.isFile())
+                leafFileMap.put(file.getName(), file);
         }
+    }
+
+    private boolean updateEdge(File file){
+        if(graph == null || file == null || !file.exists() || file.equals(rootFile))
+            return false;
+        DateTime createTime = new FileAttrAction(file).getLassModifyTime();
+        if(createTime != null)
+            ((MutableValueGraph)graph).putEdgeValue(file.getParentFile(), file, createTime );
+        return true;
     }
 }

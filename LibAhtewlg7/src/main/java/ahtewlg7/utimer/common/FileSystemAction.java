@@ -286,7 +286,6 @@ public class FileSystemAction {
         //======================================/UTimer/Doc/========================================
         StorageAction.getInstance().createExRelDir(getTrashDocAbsPath());
         StorageAction.getInstance().createExRelDir(getNoteDocAbsPath());
-        StorageAction.getInstance().createExRelDir(getNoteDocAbsPath());
         StorageAction.getInstance().createExRelDir(getGtdDocAbsPath());
         StorageAction.getInstance().createExRelDir(getShorthandNoteAbsPath());
         StorageAction.getInstance().createExRelDir(getProjectNoteAbsPath());
