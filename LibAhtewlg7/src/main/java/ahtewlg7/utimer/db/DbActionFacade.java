@@ -1,5 +1,7 @@
 package ahtewlg7.utimer.db;
 
+import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
 
 import com.google.common.base.Optional;
@@ -7,13 +9,17 @@ import com.google.common.base.Optional;
 import org.joda.time.DateTime;
 
 import ahtewlg7.utimer.db.dao.DeedEntityDaoAction;
+import ahtewlg7.utimer.db.dao.MaterialEntityDaoAction;
 import ahtewlg7.utimer.db.dao.NoteEntityDaoAction;
 import ahtewlg7.utimer.db.dao.ShortHandEntityDaoAction;
 import ahtewlg7.utimer.db.entity.DeedEntityGdBean;
+import ahtewlg7.utimer.db.entity.MaterialEntityGdBean;
 import ahtewlg7.utimer.db.entity.NoteEntityGdBean;
 import ahtewlg7.utimer.db.entity.ShortHandEntityGdBean;
 import ahtewlg7.utimer.entity.gtd.GtdDeedBuilder;
 import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
+import ahtewlg7.utimer.entity.gtd.MaterialBuilder;
+import ahtewlg7.utimer.entity.gtd.MaterialEntity;
 import ahtewlg7.utimer.entity.gtd.NoteBuilder;
 import ahtewlg7.utimer.entity.gtd.NoteEntity;
 import ahtewlg7.utimer.entity.gtd.ShortHandBuilder;
@@ -30,6 +36,55 @@ import io.reactivex.schedulers.Schedulers;
 
 public class DbActionFacade {
     /*******************************************note**************************************************/
+    public Flowable<MaterialEntity> loadAllMaterialEntity() {
+        return Flowable.fromIterable(MaterialEntityDaoAction.getInstance().loadAll())
+                .map(new Function<MaterialEntityGdBean, MaterialEntity>() {
+                    @Override
+                    public MaterialEntity apply(MaterialEntityGdBean entityGdBean) throws Exception {
+                        return new MaterialBuilder().setGbBean(entityGdBean).build();
+                    }
+                })
+                .subscribeOn(Schedulers.io());
+    }
+    public Flowable<Optional<MaterialEntity>> getMaterialEntityByAbsPath(@NonNull final Flowable<String> rPathRx) {
+        return rPathRx.map(new Function<String, Optional<MaterialEntity>>() {
+            @Override
+            public Optional<MaterialEntity> apply(String absPath) throws Exception {
+                Optional<MaterialEntityGdBean> beanOptional = null;
+                try{
+                    beanOptional = MaterialEntityDaoAction.getInstance().queryByAbsFilePath(absPath);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                if(beanOptional == null || !beanOptional.isPresent())
+                    return Optional.absent();
+                MaterialEntity e = (MaterialEntity)new MaterialBuilder().setGbBean(beanOptional.get()).build();
+                return Optional.of(e);
+            }
+        }).subscribeOn(Schedulers.io());
+    }
+    public Flowable<Boolean> deleteMaterialEntity(@NonNull Flowable<MaterialEntity> eventFlowable){
+        return eventFlowable.map(new Function<MaterialEntity, Boolean>() {
+            @Override
+            public Boolean apply(MaterialEntity entityOptional) throws Exception {
+                MaterialEntityGdBean bean = mapToGdBean(entityOptional);
+                MaterialEntityDaoAction.getInstance().delete(bean);
+                return true;
+            }
+        });
+    }
+
+    public Flowable<Boolean> saveMaterialEntity(Flowable<NoteEntity> eventFlowable) {
+        return eventFlowable.map(new Function<NoteEntity, Boolean>() {
+            @Override
+            public Boolean apply(NoteEntity entityOptional) throws Exception {
+                NoteEntityGdBean bean = mapToGdBean(entityOptional);
+                long index = NoteEntityDaoAction.getInstance().insert(bean);
+                return index >= 0;
+            }
+        });
+    }
+    /*******************************************note**************************************************/
     public Flowable<NoteEntity> loadAllNoteEntity() {
         return Flowable.fromIterable(NoteEntityDaoAction.getInstance().loadAll())
                 .map(new Function<NoteEntityGdBean, NoteEntity>() {
@@ -40,15 +95,15 @@ public class DbActionFacade {
                 })
                 .subscribeOn(Schedulers.io());
     }
-    public Flowable<Optional<NoteEntity>> getNoteEntityByRPath(@NonNull final Flowable<String> rPathRx) {
+    public Flowable<Optional<NoteEntity>> getEntityByAbsPath(@NonNull final Flowable<String> rPathRx) {
         return rPathRx.map(new Function<String, Optional<NoteEntity>>() {
             @Override
             public Optional<NoteEntity> apply(String rPath) throws Exception {
-                return getNoteEntityByRPath(rPath);
+                return getEntityByAbsPath(rPath);
             }
         }).subscribeOn(Schedulers.io());
     }
-    public Optional<NoteEntity> getNoteEntityByRPath(@NonNull final String rPath) {
+    public Optional<NoteEntity> getEntityByAbsPath(@NonNull final String rPath) {
         Optional<NoteEntityGdBean> beanOptional = null;
         try{
             beanOptional = NoteEntityDaoAction.getInstance().queryByRPath(rPath);
@@ -83,7 +138,7 @@ public class DbActionFacade {
         });
     }
 
-    /*******************************************Action**************************************************/
+    /*******************************************Deed**************************************************/
     public Flowable<GtdDeedEntity> loadAllDeedEntity() {
         return Flowable.fromIterable(DeedEntityDaoAction.getInstance().loadAll())
                 .doOnNext(new Consumer<DeedEntityGdBean>() {
@@ -234,6 +289,18 @@ public class DbActionFacade {
         bean.setLastAccessTime(entity.getLastAccessTime());
         if(entity.getAttachFileRPath().isPresent())
             bean.setAttachFileRPath(entity.getAttachFileRPath().get());
+        return bean;
+    }
+    private MaterialEntityGdBean mapToGdBean(@NonNull MaterialEntity entity){
+        MaterialEntityGdBean bean = new MaterialEntityGdBean();
+        bean.setUuid(entity.getUuid());
+        bean.setTitle(entity.getTitle());
+        if(entity.getDetail().isPresent())
+            bean.setDetail(entity.getDetail().get());
+        bean.setCreateTime(entity.getCreateTime());
+        bean.setLastAccessTime(entity.getLastAccessTime());
+        if(!TextUtils.isEmpty(entity.getAbsPath()))
+            bean.setAbsFilePath(entity.getAbsPath());
         return bean;
     }
 }
