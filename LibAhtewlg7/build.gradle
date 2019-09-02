@@ -88,4 +88,6 @@ dependencies {
     implementation project(':LibTimeNLP')
 
     implementation "ch.acra:acra-core:5.3.0"
+
+    implementation 'com.tencent:mmkv:1.0.22'
 }
