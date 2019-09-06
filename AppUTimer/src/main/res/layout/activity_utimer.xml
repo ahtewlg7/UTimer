@@ -26,14 +26,14 @@
         app:menu_backgroundColor="@android:color/transparent"
         app:menu_labels_ellipsize="end"
         app:menu_labels_singleLine="true">
-        <com.github.clans.fab.FloatingActionButton
+        <!--<com.github.clans.fab.FloatingActionButton
             android:id="@+id/activity_utimer_fragment_bn_shorthand"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_edit"
             app:fab_colorNormal="@color/colorAccent"
             app:fab_label="@string/create_shorthand"
-            app:fab_size="mini" />
+            app:fab_size="mini" />-->
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/activity_utimer_fragment_bn_deed"
             android:layout_width="wrap_content"

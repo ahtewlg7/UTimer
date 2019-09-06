@@ -13,8 +13,6 @@
     <string name="title_note_list">笔记清单</string>
     <string name="title_gtd">简讯</string>
     <string name="title_about">关于</string>
-    <string name="title_shorthand">速写</string>
-    <string name="title_shorthand_list">速写清单</string>
     <string name="title_project">工程</string>
     <string name="title_project_list">工程清单</string>
 
@@ -41,9 +39,7 @@
     <string name="title_notify_action_fast_inbox">简讯</string>
 
     <string name="create">new</string>
-    <string name="create_shorthand">新建速写</string>
     <string name="create_deed">新建简讯</string>
-    <string name="create_note">新建笔记</string>
     <string name="add">添加</string>
     <string name="edit">编辑</string>
     <string name="del">删除</string>
@@ -54,8 +50,6 @@
     <string name="prompt_note_rename_succ">重命名成功</string>
     <string name="prompt_note_rename_fail">重命名失败</string>
 
-    <string name="prompt_note_func">速写是单个小而短的笔记\n工程是多个归类在一起的，长而专的笔记集合</string>
-    <string name="prompt_gtd_func">Maybe是由AI解析的计划，但它并不一定总是正确\nTodo是亟待处理的确定计划工作</string>
     <string name="prompt_inbox_msg">请简洁记录下所有需要您用脑的信息</string>
     <string name="prompt_fast_inbox">请花5—10秒快速的完成记录</string>
 

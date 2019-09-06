@@ -33,8 +33,8 @@ public class UTimerActivity extends AButterKnifeActivity{
 
     @BindView(R.id.activity_utimer_fragment_menu)
     FloatingActionMenu floatingActionMenu;
-    @BindView(R.id.activity_utimer_fragment_bn_shorthand)
-    FloatingActionButton shortHandActionButton;
+    /*@BindView(R.id.activity_utimer_fragment_bn_shorthand)
+    FloatingActionButton shortHandActionButton;*/
     @BindView(R.id.activity_utimer_fragment_bn_deed)
     FloatingActionButton deedActionButton;
 
@@ -50,7 +50,8 @@ public class UTimerActivity extends AButterKnifeActivity{
         initFloatMenu();
 
         if (findFragment(MainFragment.class) == null)
-            loadRootFragment(R.id.activity_utimer_fragment_container, MainFragment.newInstance());
+            loadRootFragment(R.id.activity_utimer_fragment_container, DeedsFragment.newInstance());
+//            loadRootFragment(R.id.activity_utimer_fragment_container, MainFragment.newInstance());
     }
 
     @Override
@@ -111,7 +112,7 @@ public class UTimerActivity extends AButterKnifeActivity{
 
     private void initFloatMenu(){
         menuButtonClickListener = new MenuButtonClickListener();
-        shortHandActionButton.setOnClickListener(menuButtonClickListener);
+//        shortHandActionButton.setOnClickListener(menuButtonClickListener);
         deedActionButton.setOnClickListener(menuButtonClickListener);
 
         floatingActionMenu.setClosedOnTouchOutside(true);
@@ -121,13 +122,11 @@ public class UTimerActivity extends AButterKnifeActivity{
         @Override
         public void onClick(View v) {
             switch (v.getId()){
-                case R.id.activity_utimer_fragment_bn_shorthand:
+                /*case R.id.activity_utimer_fragment_bn_shorthand:
                     if(findFragment(MainFragment.class) != null)
                         findFragment(MainFragment.class).toNewShortHand();
-                    break;
+                    break;*/
                 case R.id.activity_utimer_fragment_bn_deed:
-                    /*if(findFragment(MainFragment.class) != null)
-                        findFragment(MainFragment.class).toNewDeed();*/
                     toShowFloatMenu(false);
                     toCreateInboxDialog();
                     break;

@@ -20,11 +20,10 @@ import java.util.ArrayList;
 import ahtewlg7.utimer.util.MyRInfo;
 import butterknife.BindView;
 
-import static com.utimer.common.Constants.REQ_NEW_FRAGMENT;
-import static com.utimer.ui.DeedsFragment.DEED_INDEX.SCHEDULE;
 import static com.utimer.ui.DeedsFragment.DEED_INDEX.END;
-import static com.utimer.ui.DeedsFragment.DEED_INDEX.TODO;
 import static com.utimer.ui.DeedsFragment.DEED_INDEX.MARK;
+import static com.utimer.ui.DeedsFragment.DEED_INDEX.SCHEDULE;
+import static com.utimer.ui.DeedsFragment.DEED_INDEX.TODO;
 
 public class DeedsFragment extends AToolbarBkFragment{
     @BindView(R.id.fragment_deeds_toolbar)
@@ -114,7 +113,7 @@ public class DeedsFragment extends AToolbarBkFragment{
         boolean result = false;
         switch (item.getItemId()) {
             case R.id.tool_menu_add:
-                startForResult(ShortHandEditFragment.newInstance(null), REQ_NEW_FRAGMENT);
+//                startForResult(ShortHandEditFragment.newInstance(null), REQ_NEW_FRAGMENT);
                 break;
             default:
                 result = super.onOptionsItemSelected(item);

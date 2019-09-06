@@ -1,12 +1,13 @@
 package com.utimer.ui;
 
-import androidx.annotation.NonNull;
 import android.view.View;
+
+import androidx.annotation.NonNull;
 
 import com.blankj.utilcode.util.ToastUtils;
 import com.utimer.R;
 
-import ahtewlg7.utimer.entity.AUtimerEntity;
+import ahtewlg7.utimer.entity.ABaseEntity;
 
 /**
  * Created by lw on 2018/11/8.
@@ -18,7 +19,7 @@ public abstract class AEditFragment extends AToolbarBkFragment{
     public static final int WORK_AS_EDIT            = 2;
 
     protected boolean ifEnvReady;
-    protected abstract @NonNull AUtimerEntity getUTimerEntity();
+    protected abstract @NonNull ABaseEntity getUTimerEntity();
     protected abstract void onEnvReady(View inflateView);
 
     @Override

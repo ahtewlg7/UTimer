@@ -68,8 +68,6 @@
     <string name="rename">Rename</string>
     <string name="wait">Wait</string>
 
-    <string name="prompt_note_func">ShortHand is a single note \nProject is a set of note for one purpose</string>
-    <string name="prompt_gtd_func">Maybe is parse by AI, but sometime it may be not correct \nTodo is the job need to deal with</string>
     <string name="prompt_done">Have you done this job?</string>
     <string name="prompt_del">Sure to delete it?</string>
     <string name="prompt_del_cancel">It may be very important, please go to sdcard and delete it manually!</string>
