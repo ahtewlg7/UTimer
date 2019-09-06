@@ -4,13 +4,12 @@ import com.google.common.base.Optional;
 
 import java.util.List;
 
-import ahtewlg7.utimer.entity.IValidEntity;
 import ahtewlg7.utimer.enumtype.ElementEditType;
 
 /**
  * Created by lw on 2018/10/21.
  */
-public class EditMementoBean implements IValidEntity {
+public class EditMementoBean {
     public static final String TAG = EditMementoBean.class.getSimpleName();
 
     private int size;
@@ -30,7 +29,6 @@ public class EditMementoBean implements IValidEntity {
         initDocTxt();
     }
 
-    @Override
     public boolean ifValid() {
         return index >= 0 && editType != null && elementList != null && !elementList.isEmpty();
     }

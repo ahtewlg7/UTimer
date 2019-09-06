@@ -30,7 +30,7 @@ import java.util.concurrent.TimeUnit;
 
 import ahtewlg7.utimer.R;
 import ahtewlg7.utimer.common.UTimerRawReadAction;
-import ahtewlg7.utimer.entity.AUtimerEntity;
+import ahtewlg7.utimer.entity.ABaseMaterialEntity;
 import ahtewlg7.utimer.entity.md.EditElement;
 import ahtewlg7.utimer.enumtype.EditMode;
 import ahtewlg7.utimer.enumtype.ElementEditType;
@@ -64,7 +64,7 @@ public class BaseUtimerEditView extends ABaseLinearRecyclerView<EditElement>{
     protected int preEditPosition       = INIT_POSITION;
     protected boolean isTxtChanged      = false;
 
-    protected AUtimerEntity utimerEntity;
+    protected ABaseMaterialEntity utimerEntity;
     protected List<EditElement> editElementList;
     protected Table<Integer, Integer, EditElement> editElementTable;
 
@@ -121,11 +121,11 @@ public class BaseUtimerEditView extends ABaseLinearRecyclerView<EditElement>{
         return super.onTouchEvent(e);
     }
 
-    public AUtimerEntity getUTimerEntity() {
+    public ABaseMaterialEntity getUTimerEntity() {
         return utimerEntity;
     }
 
-    public void setUTimerEntity(AUtimerEntity utimerEntity) {
+    public void setUTimerEntity(ABaseMaterialEntity utimerEntity) {
         this.utimerEntity = utimerEntity;
     }
 

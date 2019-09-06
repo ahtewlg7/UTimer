@@ -3,7 +3,7 @@ package ahtewlg7.utimer.entity;
 /**
  * Created by lw on 2019/3/13.
  */
-public class BaseEventBusBean implements IValidEntity {
+public class BaseEventBusBean {
     private boolean perform;
 
     public boolean isPerform() {
@@ -14,7 +14,6 @@ public class BaseEventBusBean implements IValidEntity {
         this.perform = perform;
     }
 
-    @Override
     public boolean ifValid() {
         return true;
     }

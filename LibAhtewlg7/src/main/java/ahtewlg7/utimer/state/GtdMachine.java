@@ -1,7 +1,7 @@
 package ahtewlg7.utimer.state;
 
 
-import ahtewlg7.utimer.entity.AUtimerEntity;
+import ahtewlg7.utimer.entity.BaseGtdEntity;
 import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
 import ahtewlg7.utimer.enumtype.DeedState;
 import ahtewlg7.utimer.enumtype.GtdType;
@@ -31,7 +31,7 @@ public class GtdMachine {
         return instance;
     }
 
-    public GtdBaseState getCurrState(AUtimerEntity entity){
+    public GtdBaseState getCurrState(BaseGtdEntity entity){
         if(entity == null || entity.getGtdType() != GtdType.DEED)
             return baseState;
         GtdBaseState state = baseState;

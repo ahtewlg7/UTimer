@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import java.io.File;
 
 import ahtewlg7.utimer.R;
+import ahtewlg7.utimer.entity.AAttachFile;
 import ahtewlg7.utimer.enumtype.StorageType;
 import ahtewlg7.utimer.util.MyRInfo;
 

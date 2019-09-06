@@ -4,14 +4,14 @@ import android.text.TextUtils;
 
 import com.google.common.io.CharSink;
 
-import ahtewlg7.utimer.entity.AUtimerEntity;
+import ahtewlg7.utimer.entity.ABaseMaterialEntity;
 import ahtewlg7.utimer.util.FileIOAction;
 import ahtewlg7.utimer.util.Logcat;
 
 /**
  * Created by lw on 2018/12/9.
  */
-public class BaseTxtEditAction<T extends AUtimerEntity>  extends AEditAction<T> {
+public class BaseTxtEditAction<T extends ABaseMaterialEntity>  extends AEditAction<T> {
     private FileIOAction fileIOAction;
 
     public BaseTxtEditAction(T t) {

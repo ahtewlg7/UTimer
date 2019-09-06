@@ -31,8 +31,8 @@ public class BinderService extends Service{
     public void onCreate() {
         super.onCreate();
 
-        eventBusRx      = PublishSubject.create();
-        entityRwMvpP    = new AllEntityRwMvpP(null, null,null);
+        eventBusRx              = PublishSubject.create();
+        entityRwMvpP            = new AllEntityRwMvpP(null, null,null);
 
         EventBusFatory.getInstance().getDefaultEventBus().register(this);
         toListenEventBus();

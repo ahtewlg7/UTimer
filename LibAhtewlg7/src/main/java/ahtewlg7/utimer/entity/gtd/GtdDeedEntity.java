@@ -11,19 +11,13 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import ahtewlg7.utimer.common.FileSystemAction;
 import ahtewlg7.utimer.db.entity.DeedEntityGdBean;
-import ahtewlg7.utimer.entity.AUtimerEntity;
-import ahtewlg7.utimer.entity.IMergerEntity;
-import ahtewlg7.utimer.entity.material.DirAttachFile;
+import ahtewlg7.utimer.entity.BaseGtdEntity;
 import ahtewlg7.utimer.enumtype.DateLife;
 import ahtewlg7.utimer.enumtype.DeedState;
-import ahtewlg7.utimer.enumtype.GtdType;
-import ahtewlg7.utimer.util.DateTimeAction;
 
 
-public class GtdDeedEntity extends AUtimerEntity<GtdDeedBuilder>
-        implements Serializable {
+public class GtdDeedEntity extends BaseGtdEntity<GtdDeedBuilder> implements Serializable {
     private DeedState deedState;
     private DateTime startTime;
     private DateTime endTime;
@@ -43,16 +37,6 @@ public class GtdDeedEntity extends AUtimerEntity<GtdDeedBuilder>
     @Override
     public boolean ifValid() {
         return super.ifValid() && deedState != null && !TextUtils.isEmpty(detail);
-    }
-
-    @Override
-    public GtdType getGtdType() {
-        return GtdType.DEED;
-    }
-
-    @Override
-    public Optional<String> toTips() {
-        return Optional.absent();
     }
 
     @Override
@@ -123,28 +107,6 @@ public class GtdDeedEntity extends AUtimerEntity<GtdDeedBuilder>
             workTime = startTime;
         return workTime;
 
-    }
-
-    //todo
-    @Override
-    public void update(IMergerEntity entity) {
-        /*super.update(entity);
-        BaseW5h2Entity baseW5h2Entity = ((GtdDeedEntity)entity).getW5h2Entity();
-        updateWhen(baseW5h2Entity.getWhen());
-        updateWhat(baseW5h2Entity.getWhat());
-        updateHowMuch(baseW5h2Entity.getHowMuch());
-        updateWho(baseW5h2Entity.getWho());
-        updateWhere(baseW5h2Entity.getWhere());*/
-    }
-
-    @Override
-    public boolean ensureAttachFileExist() {
-        if(attachFile == null){
-            String fileName = !TextUtils.isEmpty(getTitle()) ? getTitle() : new DateTimeAction().toFormatNow().toString();
-            String filePath = new FileSystemAction().getProjectNoteAbsPath();
-            attachFile = new DirAttachFile(filePath, fileName);
-        }
-        return attachFile.createOrExist();
     }
 
     @Override

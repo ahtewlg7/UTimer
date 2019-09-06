@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 
 import java.io.File;
 
+import ahtewlg7.utimer.entity.AAttachFile;
 import ahtewlg7.utimer.enumtype.StorageType;
 
 /**

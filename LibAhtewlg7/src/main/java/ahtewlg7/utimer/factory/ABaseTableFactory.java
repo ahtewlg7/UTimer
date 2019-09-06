@@ -3,7 +3,7 @@ package ahtewlg7.utimer.factory;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 
-import ahtewlg7.utimer.entity.material.AAttachFile;
+import ahtewlg7.utimer.entity.AAttachFile;
 import ahtewlg7.utimer.util.TableAction;
 import io.reactivex.Flowable;
 

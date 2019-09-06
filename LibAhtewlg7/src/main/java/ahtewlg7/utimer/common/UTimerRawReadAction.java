@@ -5,8 +5,8 @@ import com.google.common.io.Files;
 
 import java.util.List;
 
-import ahtewlg7.utimer.entity.AUtimerEntity;
-import ahtewlg7.utimer.enumtype.GtdType;
+import ahtewlg7.utimer.entity.ABaseMaterialEntity;
+import ahtewlg7.utimer.enumtype.StorageType;
 import ahtewlg7.utimer.exception.UtimerEditException;
 import ahtewlg7.utimer.util.MySafeFlowableOnSubscribe;
 import io.reactivex.BackpressureStrategy;
@@ -22,19 +22,19 @@ import static ahtewlg7.utimer.enumtype.errcode.NoteEditErrCode.ERR_EDIT_ENTITY_N
  */
 public class UTimerRawReadAction {
 
-    public Flowable<String> toReadRaw(AUtimerEntity entity){
-        if(entity.getGtdType() == GtdType.SHORTHAND || entity.getGtdType() == GtdType.NOTE)
+    public Flowable<String> toReadRaw(ABaseMaterialEntity entity){
+        if(entity.getStorageType() == StorageType.TXT|| entity.getStorageType() == StorageType.MD)
             return toReadTxt(entity);
         return Flowable.empty();
     }
 
-    private Flowable<String> toReadDb(final AUtimerEntity entity){
-        if(entity.getGtdType() != GtdType.DEED)
+    private Flowable<String> toReadDb(final ABaseMaterialEntity entity){
+        if(entity.getStorageType() == StorageType.TXT|| entity.getStorageType() == StorageType.MD)
             return Flowable.empty();
         return Flowable.empty();
     }
-    private Flowable<String> toReadTxt(final AUtimerEntity entity){
-        if(entity.getGtdType() != GtdType.SHORTHAND && entity.getGtdType() != GtdType.NOTE)
+    private Flowable<String> toReadTxt(final ABaseMaterialEntity entity){
+        if(entity.getStorageType() == StorageType.TXT|| entity.getStorageType() == StorageType.MD)
             return Flowable.empty();
         return Flowable.create(new MySafeFlowableOnSubscribe<String>() {
             @Override
@@ -57,10 +57,10 @@ public class UTimerRawReadAction {
         }, BackpressureStrategy.MISSING).subscribeOn(Schedulers.io());
     }
 
-    private boolean ifEntityReady(AUtimerEntity utimerEntity){
+    private boolean ifEntityReady(ABaseMaterialEntity utimerEntity){
         return utimerEntity != null && utimerEntity.ifValid();
     }
-    private boolean ifAttachFileReady(AUtimerEntity utimerEntity){
+    private boolean ifAttachFileReady(ABaseMaterialEntity utimerEntity){
         return ifEntityReady(utimerEntity) && utimerEntity.ifRawReadable();
     }
 }

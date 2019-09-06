@@ -14,7 +14,7 @@ import com.trello.rxlifecycle3.components.support.RxFragment;
 import java.util.List;
 
 import ahtewlg7.utimer.R;
-import ahtewlg7.utimer.entity.AUtimerEntity;
+import ahtewlg7.utimer.entity.ABaseMaterialEntity;
 import ahtewlg7.utimer.entity.md.EditElement;
 import ahtewlg7.utimer.enumtype.MdEditOperateType;
 import ahtewlg7.utimer.md.IMdEditListener;
@@ -41,7 +41,7 @@ public class MdEditView extends FrameLayout {
     protected BaseUtimerEditView.IUtimerAttachEditView attachEditView;
 
     protected boolean toastEnable;
-    protected AUtimerEntity utimerEntity;
+    protected ABaseMaterialEntity utimerEntity;
     protected PublishSubject<MdEditOperateType> mdEditOperateRx;
 
     public MdEditView(Context context) {
@@ -58,11 +58,11 @@ public class MdEditView extends FrameLayout {
         editRecyclerView.setAttachEditView(attachEditView);
     }
 
-    public AUtimerEntity getUTimerEntity() {
+    public ABaseMaterialEntity getUTimerEntity() {
         return utimerEntity;
     }
 
-    public void setUTimerEntity(AUtimerEntity utimerEntity) {
+    public void setUTimerEntity(ABaseMaterialEntity utimerEntity) {
         this.utimerEntity = utimerEntity;
     }
 

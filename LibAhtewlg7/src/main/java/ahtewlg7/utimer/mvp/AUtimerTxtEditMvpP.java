@@ -12,7 +12,7 @@ import org.reactivestreams.Subscription;
 import java.util.List;
 import java.util.Map;
 
-import ahtewlg7.utimer.entity.AUtimerEntity;
+import ahtewlg7.utimer.entity.ABaseMaterialEntity;
 import ahtewlg7.utimer.entity.busevent.DeedBusEvent;
 import ahtewlg7.utimer.entity.busevent.UTimerBusEvent;
 import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
@@ -23,7 +23,6 @@ import ahtewlg7.utimer.entity.md.EditMementoOriginator;
 import ahtewlg7.utimer.enumtype.GtdBusEventType;
 import ahtewlg7.utimer.factory.EventBusFatory;
 import ahtewlg7.utimer.factory.GtdDeedByUuidFactory;
-import ahtewlg7.utimer.gtd.GtdDeedParser;
 import ahtewlg7.utimer.util.MySafeFlowableOnSubscribe;
 import ahtewlg7.utimer.util.MySafeSubscriber;
 import ahtewlg7.utimer.util.MySimpleObserver;
@@ -39,7 +38,7 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * Created by lw on 2018/10/20.
  */
-public abstract class AUtimerTxtEditMvpP<T extends AUtimerEntity> implements IUtimerEditMvpP{
+public abstract class AUtimerTxtEditMvpP<T extends ABaseMaterialEntity> {
     protected abstract AUtimerEditMvpM getEditMvpM(T t);
 
     protected Disposable insertDisplose;
@@ -47,7 +46,7 @@ public abstract class AUtimerTxtEditMvpP<T extends AUtimerEntity> implements IUt
 
     protected T t;
 
-    protected GtdDeedParser gtdActParser;
+//    protected GtdDeedParser gtdActParser;
     protected IUtimerEditMvpV editMvpV;
     protected AUtimerEditMvpM editMvpM;
     protected EditMementoOriginator mdMementoOriginator;
@@ -57,7 +56,7 @@ public abstract class AUtimerTxtEditMvpP<T extends AUtimerEntity> implements IUt
         this.t = t;
         this.editMvpV = editMvpV;
         editMvpM      = getEditMvpM(t);
-        gtdActParser  = new GtdDeedParser();
+//        gtdActParser  = new GtdDeedParser();
     }
 
     public boolean toRedo(){
@@ -142,7 +141,8 @@ public abstract class AUtimerTxtEditMvpP<T extends AUtimerEntity> implements IUt
                     for(int i = 0 ; i < rowMap.size() ; i++) {
                         Map<Integer, EditElement> columnMap = rowMap.get(i);
                         EditElement eLast = columnMap.get(columnMap.size() - 1);
-                        Optional<GtdDeedEntity> gtdActionOptional = gtdActParser.toParseAction(eLast.getMdCharSequence().toString());
+//                        Optional<GtdDeedEntity> gtdActionOptional = gtdActParser.toParseAction(eLast.getMdCharSequence().toString());
+                        Optional<GtdDeedEntity> gtdActionOptional = Optional.absent();
                         if (!gtdActionOptional.isPresent())
                             continue;
                         EditElement eFirst = columnMap.get(0);
@@ -155,7 +155,7 @@ public abstract class AUtimerTxtEditMvpP<T extends AUtimerEntity> implements IUt
                         } else if (columnMap.size() > 1) {
                             if (firstGtdActionOptional.isPresent() && !eLast.getRawText().equals(eFirst.getMdCharSequence().toString())) {
                                 //means : action is edit
-                                firstGtdActionOptional.get().update(gtdActionOptional.get());
+//                                firstGtdActionOptional.get().update(gtdActionOptional.get());
                                 e.onNext(firstGtdActionOptional.get());
                             } else {
                                 //new

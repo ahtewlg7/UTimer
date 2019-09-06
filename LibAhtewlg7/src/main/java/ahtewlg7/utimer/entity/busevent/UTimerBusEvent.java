@@ -1,6 +1,6 @@
 package ahtewlg7.utimer.entity.busevent;
 
-import ahtewlg7.utimer.entity.AUtimerEntity;
+import ahtewlg7.utimer.entity.ABaseEntity;
 import ahtewlg7.utimer.entity.BaseEventBusBean;
 import ahtewlg7.utimer.enumtype.GtdBusEventType;
 
@@ -10,12 +10,12 @@ import ahtewlg7.utimer.enumtype.GtdBusEventType;
 public class UTimerBusEvent extends BaseEventBusBean{
 
     private GtdBusEventType eventType;
-    private AUtimerEntity entity;
+    private ABaseEntity entity;
 
     public UTimerBusEvent(GtdBusEventType eventType){
         this.eventType      = eventType;
     }
-    public UTimerBusEvent(GtdBusEventType eventType, AUtimerEntity entity) {
+    public UTimerBusEvent(GtdBusEventType eventType, ABaseEntity entity) {
         this.eventType  = eventType;
         this.entity     = entity;
     }
@@ -29,7 +29,7 @@ public class UTimerBusEvent extends BaseEventBusBean{
         return eventType;
     }
 
-    public AUtimerEntity getEntity() {
+    public ABaseEntity getEntity() {
         return entity;
     }
 }

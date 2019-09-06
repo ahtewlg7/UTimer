@@ -15,7 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 
-import ahtewlg7.utimer.entity.material.AAttachFile;
+import ahtewlg7.utimer.entity.AAttachFile;
 
 /**
  * Created by lw on 2018/10/26.

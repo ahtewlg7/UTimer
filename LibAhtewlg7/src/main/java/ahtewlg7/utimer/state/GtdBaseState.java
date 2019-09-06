@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 
 import com.google.common.base.Optional;
 
-import ahtewlg7.utimer.entity.AUtimerEntity;
+import ahtewlg7.utimer.entity.BaseGtdEntity;
 import ahtewlg7.utimer.entity.BaseEventBusBean;
 import ahtewlg7.utimer.entity.busevent.DeedBusEvent;
 import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
@@ -42,48 +42,48 @@ public class GtdBaseState {
         return Optional.of(actionBusEvent);
     }
 
-    public Optional<BaseEventBusBean> toTrash(@NonNull AUtimerEntity entity){
+    public Optional<BaseEventBusBean> toTrash(@NonNull BaseGtdEntity entity){
         return Optional.absent();
     }
 
-    public Optional<BaseEventBusBean> toActive(@NonNull AUtimerEntity entity){
+    public Optional<BaseEventBusBean> toActive(@NonNull BaseGtdEntity entity){
         return Optional.absent();
     }
-    public Optional<BaseEventBusBean> toBeDone(@NonNull AUtimerEntity entity){
+    public Optional<BaseEventBusBean> toBeDone(@NonNull BaseGtdEntity entity){
         return Optional.absent();
     }
-    public Optional<BaseEventBusBean> toBeUseless(@NonNull AUtimerEntity entity){
+    public Optional<BaseEventBusBean> toBeUseless(@NonNull BaseGtdEntity entity){
         return Optional.absent();
     }
-    public Optional<BaseEventBusBean> toBeReference(@NonNull AUtimerEntity entity){
+    public Optional<BaseEventBusBean> toBeReference(@NonNull BaseGtdEntity entity){
         return Optional.absent();
     }
     //it must be done in 24 hour from now
-    public Optional<BaseEventBusBean> toBeScheduleJob(@NonNull AUtimerEntity entity){
+    public Optional<BaseEventBusBean> toBeScheduleJob(@NonNull BaseGtdEntity entity){
         return Optional.absent();
     }
     //it will be done in 2 mins
-    public Optional<BaseEventBusBean> toBeQuarterJob(@NonNull AUtimerEntity entity){
+    public Optional<BaseEventBusBean> toBeQuarterJob(@NonNull BaseGtdEntity entity){
         return Optional.absent();
     }
     //it is a multi-step job
-    public Optional<BaseEventBusBean> toBeProject(@NonNull AUtimerEntity entity){
+    public Optional<BaseEventBusBean> toBeProject(@NonNull BaseGtdEntity entity){
         return Optional.absent();
     }
     //it could be reminder by calendar
-    public Optional<BaseEventBusBean> toBeCalendarJob(@NonNull AUtimerEntity entity){
+    public Optional<BaseEventBusBean> toBeCalendarJob(@NonNull BaseGtdEntity entity){
         return Optional.absent();
     }
     //it will be not fixed, but it is useful
-    public Optional<BaseEventBusBean> toBeWishJob(@NonNull AUtimerEntity entity){
+    public Optional<BaseEventBusBean> toBeWishJob(@NonNull BaseGtdEntity entity){
         return Optional.absent();
     }
     //it will be fix by me as soon as I can
-    public Optional<BaseEventBusBean> toBeDeferJob(@NonNull AUtimerEntity entity){
+    public Optional<BaseEventBusBean> toBeDeferJob(@NonNull BaseGtdEntity entity){
         return Optional.absent();
     }
     //it will be fix by someone else
-    public Optional<BaseEventBusBean> toBeDelegateJob(@NonNull AUtimerEntity entity){
+    public Optional<BaseEventBusBean> toBeDelegateJob(@NonNull BaseGtdEntity entity){
         return Optional.absent();
     }
 

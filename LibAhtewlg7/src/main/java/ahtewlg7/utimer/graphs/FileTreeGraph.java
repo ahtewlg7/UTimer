@@ -3,7 +3,9 @@ package ahtewlg7.utimer.graphs;
 import androidx.annotation.NonNull;
 
 import com.google.common.base.Optional;
-import com.google.common.collect.Maps;
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Table;
 import com.google.common.graph.ElementOrder;
 import com.google.common.graph.MutableValueGraph;
 import com.google.common.graph.ValueGraph;
@@ -12,8 +14,7 @@ import com.google.common.graph.ValueGraphBuilder;
 import org.joda.time.DateTime;
 
 import java.io.File;
-import java.util.Collection;
-import java.util.Map;
+import java.util.List;
 import java.util.Set;
 
 import ahtewlg7.utimer.common.FileSystemAction;
@@ -25,23 +26,35 @@ import ahtewlg7.utimer.util.FileAttrAction;
 public class FileTreeGraph implements IGraph<File> {
     private File rootFile;
     private ValueGraph graph;
-    private Map<String, File> leafFileMap;
+    private List<File> leafFileList;
+    private Table<File,File, DateTime> fileTreeTable;
 
     public FileTreeGraph(File rootFile){
         this.rootFile  = rootFile;
-        leafFileMap = Maps.newHashMap();
+        leafFileList   = Lists.newArrayList();
+        fileTreeTable  = HashBasedTable.create();
         initGraph();
+    }
+
+    public File getRootFile() {
+        return rootFile;
     }
 
     public ValueGraph getGraph(){
         return graph;
     }
 
-    public Collection<File> getAllLeafFile(){
-        return leafFileMap.values();
+    public List<File> getAllLeafFile(){
+        return leafFileList;
     }
-    public File getLeafFile(String fileName){
-        return leafFileMap.get(fileName);
+
+    public void initNodes(Table<File,File, DateTime> table){
+        if(table == null)
+            return;
+        fileTreeTable = table;
+        Set<Table.Cell<File,File,DateTime>> cellset = fileTreeTable.cellSet();
+        for(Table.Cell<File,File,DateTime> cell : cellset)
+            ((MutableValueGraph) graph).putEdgeValue(cell.getRowKey(), cell.getColumnKey(), cell.getValue());
     }
 
     @Override
@@ -76,12 +89,12 @@ public class FileTreeGraph implements IGraph<File> {
     public void initNodes() {
         if(rootFile == null)
             return;
-        leafFileMap.clear();
+        leafFileList.clear();
         Iterable<File> fileIterable = new FileSystemAction().listSubFile(rootFile);
         for(File file : fileIterable) {
             boolean result = updateEdge(file);
             if(result && file.isFile())
-                leafFileMap.put(file.getName(), file);
+                leafFileList.add(file);
         }
     }
 
@@ -89,8 +102,10 @@ public class FileTreeGraph implements IGraph<File> {
         if(graph == null || file == null || !file.exists() || file.equals(rootFile))
             return false;
         DateTime createTime = new FileAttrAction(file).getLassModifyTime();
-        if(createTime != null)
-            ((MutableValueGraph)graph).putEdgeValue(file.getParentFile(), file, createTime );
+        if(createTime != null) {
+            ((MutableValueGraph) graph).putEdgeValue(file.getParentFile(), file, createTime);
+            fileTreeTable.put(file.getParentFile(), file, createTime);
+        }
         return true;
     }
 }

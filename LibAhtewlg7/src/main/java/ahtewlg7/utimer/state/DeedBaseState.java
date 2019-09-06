@@ -6,7 +6,7 @@ import com.google.common.base.Optional;
 
 import org.joda.time.DateTime;
 
-import ahtewlg7.utimer.entity.AUtimerEntity;
+import ahtewlg7.utimer.entity.BaseGtdEntity;
 import ahtewlg7.utimer.entity.BaseEventBusBean;
 import ahtewlg7.utimer.entity.busevent.DeedBusEvent;
 import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
@@ -24,7 +24,7 @@ class DeedBaseState extends GtdBaseState {
         super(gtdMachine);
     }
 
-    protected Optional<BaseEventBusBean> removeState(@NonNull AUtimerEntity entity){
+    protected Optional<BaseEventBusBean> removeState(@NonNull BaseGtdEntity entity){
         if(!ifTrashable(entity))
             return Optional.absent();
         DeedBusEvent busEvent = new DeedBusEvent(GtdBusEventType.DELETE, (GtdDeedEntity) entity);
@@ -33,7 +33,7 @@ class DeedBaseState extends GtdBaseState {
             GtdDeedByUuidFactory.getInstance().remove(entity.getUuid());
         return eventOptional;
     }
-    protected Optional<BaseEventBusBean> updateAndPostState(@NonNull DeedState state , @NonNull AUtimerEntity entity){
+    protected Optional<BaseEventBusBean> updateAndPostState(@NonNull DeedState state , @NonNull BaseGtdEntity entity){
         if(!ifGtdable(entity))
             return Optional.absent();
         DeedState preState = toResetState((GtdDeedEntity) entity, state);
@@ -43,14 +43,14 @@ class DeedBaseState extends GtdBaseState {
             GtdDeedByUuidFactory.getInstance().updateState(preState, (GtdDeedEntity) entity);
         return eventOptional;
     }
-    protected void updateState(@NonNull DeedState state , @NonNull AUtimerEntity entity){
+    protected void updateState(@NonNull DeedState state , @NonNull BaseGtdEntity entity){
         if(!ifGtdable(entity))
             return;
         DeedState preState =  toResetState((GtdDeedEntity) entity, state);
         GtdDeedByUuidFactory.getInstance().updateState(preState, (GtdDeedEntity) entity);
     }
 
-    protected Optional<BaseEventBusBean> toPostEvent(AUtimerEntity entity, BaseEventBusBean busEvent){
+    protected Optional<BaseEventBusBean> toPostEvent(BaseGtdEntity entity, BaseEventBusBean busEvent){
         if(entity == null || busEvent == null)
             return Optional.absent();
         if(!ifHandlable(entity))
@@ -61,14 +61,14 @@ class DeedBaseState extends GtdBaseState {
         }
         return Optional.of(busEvent);
     }
-    protected boolean ifHandlable(AUtimerEntity entity){
+    protected boolean ifHandlable(BaseGtdEntity entity){
         return entity != null && entity.ifValid();
     }
 
-    protected boolean ifTrashable(AUtimerEntity entity){
+    protected boolean ifTrashable(BaseGtdEntity entity){
         return true;
     }
-    protected boolean ifGtdable(AUtimerEntity entity){
+    protected boolean ifGtdable(BaseGtdEntity entity){
         return entity != null && entity.ifValid()
                 && entity.getClass().isAssignableFrom(GtdDeedEntity.class) ;
     }

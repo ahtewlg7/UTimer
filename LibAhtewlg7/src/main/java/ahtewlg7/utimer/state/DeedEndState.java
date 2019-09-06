@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 
 import com.google.common.base.Optional;
 
-import ahtewlg7.utimer.entity.AUtimerEntity;
+import ahtewlg7.utimer.entity.BaseGtdEntity;
 import ahtewlg7.utimer.entity.BaseEventBusBean;
 import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
 import ahtewlg7.utimer.enumtype.DeedState;
@@ -22,12 +22,12 @@ public class DeedEndState extends DeedBaseState {
         return Optional.absent();
     }
     @Override
-    public Optional<BaseEventBusBean> toTrash(@NonNull AUtimerEntity entity) {
+    public Optional<BaseEventBusBean> toTrash(@NonNull BaseGtdEntity entity) {
         return updateAndPostState(DeedState.TRASH, entity);
     }
 
     @Override
-    protected boolean ifTrashable(AUtimerEntity entity) {
+    protected boolean ifTrashable(BaseGtdEntity entity) {
         return super.ifTrashable(entity)
                 && (((GtdDeedEntity)entity).getDeedState() == DeedState.DONE
                     || ((GtdDeedEntity)entity).getDeedState() == DeedState.USELESS);
