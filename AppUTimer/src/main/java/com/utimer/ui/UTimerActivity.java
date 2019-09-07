@@ -47,12 +47,13 @@ public class UTimerActivity extends AButterKnifeActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        rxPermissions = new RxPermissions(this);
+        rxPermissions  = new RxPermissions(this);
         initFileSystem();
         initFloatMenu();
 
         if (findFragment(MainFragment.class) == null)
-            loadRootFragment(R.id.activity_utimer_fragment_container, MainFragment.newInstance());
+            loadRootFragment(R.id.activity_utimer_fragment_container, DeedsFragment.newInstance());
+//            loadRootFragment(R.id.activity_utimer_fragment_container, MainFragment.newInstance());
     }
 
     @Override
@@ -100,6 +101,10 @@ public class UTimerActivity extends AButterKnifeActivity{
         return deedActionButton;
     }
 
+    public RxPermissions getRxPermissions(){
+        return rxPermissions;
+    }
+
     public void toShowFloatMenu(boolean show){
         if(!show)
             floatingActionMenu.close(false);
@@ -117,22 +122,6 @@ public class UTimerActivity extends AButterKnifeActivity{
         deedActionButton.setOnClickListener(menuButtonClickListener);
 
         floatingActionMenu.setClosedOnTouchOutside(true);
-    }
-
-    class MenuButtonClickListener implements  View.OnClickListener{
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()){
-                /*case R.id.activity_utimer_fragment_bn_shorthand:
-                    if(findFragment(MainFragment.class) != null)
-                        findFragment(MainFragment.class).toNewShortHand();
-                    break;*/
-                case R.id.activity_utimer_fragment_bn_deed:
-                    toShowFloatMenu(false);
-                    toCreateInboxDialog();
-                    break;
-            }
-        }
     }
 
     private void initFileSystem(){
@@ -172,5 +161,21 @@ public class UTimerActivity extends AButterKnifeActivity{
                         GtdMachine.getInstance().getCurrState(null).toInbox(title, title);
                     }
                 }).show();
+    }
+
+    class MenuButtonClickListener implements  View.OnClickListener{
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()){
+                /*case R.id.activity_utimer_fragment_bn_shorthand:
+                    if(findFragment(MainFragment.class) != null)
+                        findFragment(MainFragment.class).toNewShortHand();
+                    break;*/
+                case R.id.activity_utimer_fragment_bn_deed:
+                    toShowFloatMenu(false);
+                    toCreateInboxDialog();
+                    break;
+            }
+        }
     }
 }

@@ -14,7 +14,6 @@ import org.acra.annotation.AcraCore;
 import org.acra.data.StringFormat;
 
 import ahtewlg7.utimer.BuildConfig;
-import ahtewlg7.utimer.db.GreenDaoAction;
 import ahtewlg7.utimer.log.AcraReportSenderFactory;
 import ahtewlg7.utimer.ui.BinderService;
 import ahtewlg7.utimer.util.AppInfoAction;
@@ -39,7 +38,6 @@ public abstract class MyApplication extends Application {
 		if (!TextUtils.isEmpty(currProcessName) && currProcessName.equalsIgnoreCase(this.getPackageName())) {
 			initLogSystem();
 			initVcFactory();//it is very important
-            initDatabase();
 			toStartBinderService();
 		}
 	}
@@ -58,10 +56,6 @@ public abstract class MyApplication extends Application {
 		VcFactoryBuilder.getInstance().setBaseConfigFactory(getConfigFactory());
 	}
 
-	protected void initDatabase(){
-		GreenDaoAction.getInstance().init();
-	}
-
 	protected void toStartBinderService(){
 		ServiceUtils.startService(BinderService.class);
 	}
@@ -71,5 +65,4 @@ public abstract class MyApplication extends Application {
 				.stackViewMode(Fragmentation.NONE)
 				.debug(BuildConfig.DEBUG);
 	}
-
 }
