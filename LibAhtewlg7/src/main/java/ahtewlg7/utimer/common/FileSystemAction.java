@@ -165,104 +165,6 @@ public class FileSystemAction {
     }
 
     //========================================DOC=================================================
-    public String getNoteDocRPath(){
-        return getWorkingDocRPath() + baseConfig.getWorkingNoteDir() + File.separator;
-    }
-    public String getNoteDocAbsPath(){
-        return getSdcardPath() + getNoteDocRPath();
-    }
-    public String getShorthandNoteRPath(){
-        return getNoteDocRPath() + baseConfig.getShorthandNoteDir() + File.separator;
-    }
-    public String getShorthandNoteAbsPath(){
-        return getSdcardPath() + getShorthandNoteRPath();
-    }
-
-    public String getProjectNoteRPath(){
-        return getNoteDocRPath() + baseConfig.getProjectNoteDir() + File.separator;
-    }
-    public String getProjectNoteAbsPath(){
-        return getSdcardPath() + getProjectNoteRPath();
-    }
-
-    public String getGtdDocRPath(){
-        return getWorkingDocRPath() + baseConfig.getGtdNoteDir() + File.separator;
-    }
-    public String getGtdDocAbsPath(){
-        return getSdcardPath() + getGtdDocRPath();
-    }
-
-
-    public String getTrashDocRPath(){
-        return getWorkingDocRPath() + baseConfig.getTrashNoteDir() + File.separator;
-    }
-    public String getTrashDocAbsPath(){
-        return getSdcardPath() + getTrashDocRPath();
-    }
-    //========================================GTD================================================
-    public String getInboxGtdRPath(){
-        return getGtdDocRPath() + baseConfig.getInboxNoteDir() + File.separator;
-    }
-    public String getInboxGtdAbsPath(){
-        return getSdcardPath() + getInboxGtdRPath();
-    }
-
-    public String getProjectGtdRPath(){
-        return getGtdDocRPath() + baseConfig.getProjectNoteDir() + File.separator;
-    }
-    public String getProjectGtdAbsPath(){
-        return getSdcardPath() + getProjectGtdRPath();
-    }
-
-    public String getReferenceGtdRPath(){
-        return getGtdDocRPath() + baseConfig.getReferenceNoteDir() + File.separator;
-    }
-    public String getReferenceGtdAbsPath(){
-        return getSdcardPath() + getReferenceGtdRPath();
-    }
-
-    public String getIncubatorGtdRPath(){
-        return getGtdDocRPath() + baseConfig.getIncubatorNoteDir() + File.separator;
-    }
-    public String getIncubatorGtdAbsPath(){
-        return getSdcardPath() + getIncubatorGtdRPath();
-    }
-
-    public String getDoneGtdRPath(){
-        return getGtdDocRPath() + baseConfig.getDoneNoteDir() + File.separator;
-    }
-    public String getDoneGtdAbsPath(){
-        return getSdcardPath() + getDoneGtdRPath();
-    }
-
-    public String getDoItNowGtdRPath(){
-        return getGtdDocRPath() + baseConfig.getDoItNowNoteDir() + File.separator;
-    }
-    public String getDoItNowGtdAbsPath(){
-        return getSdcardPath() + getDoItNowGtdRPath();
-    }
-
-    public String getDelegateGtdRPath(){
-        return getGtdDocRPath() + baseConfig.getDelegateNoteDir() + File.separator;
-    }
-    public String getDelegateGtdAbsPath(){
-        return getSdcardPath() + getDelegateGtdRPath();
-    }
-
-    public String getDateBookGtdRPath(){
-        return getGtdDocRPath() + baseConfig.getDateBookNoteDir() + File.separator;
-    }
-    public String getDateBookGtdAbsPath(){
-        return getSdcardPath() + getDateBookGtdRPath();
-    }
-
-    public String getToDoListGtdRPath(){
-        return getGtdDocRPath() + baseConfig.getToDoListNoteDir() + File.separator;
-    }
-    public String getToDoListGtdAbsPath(){
-        return getSdcardPath() + getToDoListGtdRPath();
-    }
-
     //============================================================================================
 
     private void initAppWorkingFsDir(){
@@ -284,14 +186,5 @@ public class FileSystemAction {
         StorageAction.getInstance().createExRelDir(getPluginDataAbsPath());
 
         //======================================/UTimer/Doc/========================================
-        StorageAction.getInstance().createExRelDir(getTrashDocAbsPath());
-        StorageAction.getInstance().createExRelDir(getNoteDocAbsPath());
-        StorageAction.getInstance().createExRelDir(getGtdDocAbsPath());
-        StorageAction.getInstance().createExRelDir(getShorthandNoteAbsPath());
-        StorageAction.getInstance().createExRelDir(getProjectNoteAbsPath());
-
-        //======================================/UTimer/Doc/GTD====================================
-        StorageAction.getInstance().createExRelDir(getInboxGtdAbsPath());
-        StorageAction.getInstance().createExRelDir(getProjectGtdAbsPath());
     }
 }

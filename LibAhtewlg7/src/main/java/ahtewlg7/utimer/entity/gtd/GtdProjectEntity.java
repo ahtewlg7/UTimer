@@ -39,7 +39,7 @@ public class GtdProjectEntity extends ABaseMaterialEntity<GtdProjectBuilder> imp
     public boolean ensureAttachFileExist() {
         if(attachFile == null){
             String fileName = !TextUtils.isEmpty(getTitle()) ? getTitle() : new DateTimeAction().toFormatNow();
-            String filePath = new FileSystemAction().getNoteDocAbsPath();
+            String filePath = new FileSystemAction().getWorkingDocAbsPath();
             attachFile = new DirAttachFile(filePath, fileName);
         }
         return attachFile.createOrExist();

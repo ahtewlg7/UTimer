@@ -57,7 +57,7 @@ public class MaterialRwMvpM extends AUtimerRwMvpM<MaterialEntity> {
 
     @Override
     public Flowable<MaterialEntity> loadAll() {
-        return loadAll(new File(fileSystemAction.getGtdDocAbsPath()));
+        return loadAll(new File(fileSystemAction.getWorkingDocAbsPath()));
     }
     public Flowable<MaterialEntity> loadAll(@NonNull File rootFile) {
         return filterInvalidEntity(getMaterialEntity(

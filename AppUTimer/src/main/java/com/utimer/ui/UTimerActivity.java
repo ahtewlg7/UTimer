@@ -19,6 +19,8 @@ import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.trello.rxlifecycle3.android.ActivityEvent;
 import com.utimer.R;
 
+import ahtewlg7.utimer.common.LibContextInit;
+import ahtewlg7.utimer.db.GreenDaoAction;
 import ahtewlg7.utimer.entity.busevent.ActivityBusEvent;
 import ahtewlg7.utimer.factory.EventBusFatory;
 import ahtewlg7.utimer.state.GtdMachine;
@@ -46,12 +48,11 @@ public class UTimerActivity extends AButterKnifeActivity{
         super.onCreate(savedInstanceState);
 
         rxPermissions = new RxPermissions(this);
-//        initFileSystem();
+        initFileSystem();
         initFloatMenu();
 
         if (findFragment(MainFragment.class) == null)
-            loadRootFragment(R.id.activity_utimer_fragment_container, DeedsFragment.newInstance());
-//            loadRootFragment(R.id.activity_utimer_fragment_container, MainFragment.newInstance());
+            loadRootFragment(R.id.activity_utimer_fragment_container, MainFragment.newInstance());
     }
 
     @Override
@@ -135,16 +136,15 @@ public class UTimerActivity extends AButterKnifeActivity{
     }
 
     private void initFileSystem(){
-        rxPermissions.request(Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE)
-//          .observeOn(AndroidSchedulers.mainThread())
+        rxPermissions.request(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
             .subscribe(new MySimpleObserver<Boolean>(){
                 @Override
                 public void onNext(Boolean aBoolean) {
                     super.onNext(aBoolean);
-                    /*if(aBoolean) {
+                    if(aBoolean) {
                         LibContextInit.initWorkingFileSystem();
                         GreenDaoAction.getInstance().init();
-                    }*/
+                    }
                 }
             });
     }

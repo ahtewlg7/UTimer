@@ -34,7 +34,7 @@ public class MaterialEntity extends ABaseMaterialEntity<MaterialEntityBuilder>
         if(builder.projectEntity != null)
             initByProjectEntity(builder.projectEntity);
         if(!TextUtils.isEmpty(title) && attachFile == null){
-            String filePath = new FileSystemAction().getNoteDocAbsPath();
+            String filePath = new FileSystemAction().getWorkingDocAbsPath();
             attachFile      = new MdAttachFile(filePath, title);
         }
     }
@@ -76,10 +76,10 @@ public class MaterialEntity extends ABaseMaterialEntity<MaterialEntityBuilder>
             return;
         }
         if(TextUtils.isEmpty(title))
-            title = new DateTimeAction().toFormatNow().toString();
+            title = new DateTimeAction().toFormatNow();
 
         if(attachFile == null){
-            String filePath = new FileSystemAction().getProjectNoteAbsPath() + projectEntity.getTitle();
+            String filePath = new FileSystemAction().getWorkingDocAbsPath() + projectEntity.getTitle();
             attachFile      = new MdAttachFile(filePath, title);
         }
     }

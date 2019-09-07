@@ -34,9 +34,6 @@ public class BaseConfig {
     public String getWorkingDbDir(){
         return MyRInfo.getStringByID(R.string.configs_app_working_dir_db);
     }
-    public String getWorkingNoteDir(){
-        return MyRInfo.getStringByID(R.string.configs_app_working_dir_note);
-    }
     public String getWorkingBackupDir(){
         return MyRInfo.getStringByID(R.string.configs_app_working_dir_backup);
     }
@@ -61,45 +58,8 @@ public class BaseConfig {
     public String getWorkingCacheDir(){
         return MyRInfo.getStringByID(R.string.configs_app_working_dir_cache);
     }
-
     public String getDocNoteDir(){
         return MyRInfo.getStringByID(R.string.config_note_doc_dir_name);
-    }
-    public String getGtdNoteDir(){
-        return MyRInfo.getStringByID(R.string.config_note_gtd_dir_name);
-    }
-    public String getInboxNoteDir(){
-        return MyRInfo.getStringByID(R.string.config_note_inbox_dir_name);
-    }
-    public String getShorthandNoteDir(){
-        return MyRInfo.getStringByID(R.string.config_note_shorthand_dir_name);
-    }
-    public String getProjectNoteDir(){
-        return MyRInfo.getStringByID(R.string.config_note_project_dir_name);
-    }
-    public String getTrashNoteDir(){
-        return MyRInfo.getStringByID(R.string.config_note_trash_dir_name);
-    }
-    public String getReferenceNoteDir(){
-        return MyRInfo.getStringByID(R.string.config_note_reference_dir_name);
-    }
-    public String getIncubatorNoteDir(){
-        return MyRInfo.getStringByID(R.string.config_note_incubator_dir_name);
-    }
-    public String getDoneNoteDir(){
-        return MyRInfo.getStringByID(R.string.config_note_done_dir_name);
-    }
-    public String getDoItNowNoteDir(){
-        return MyRInfo.getStringByID(R.string.config_note_doitnow_dir_name);
-    }
-    public String getDelegateNoteDir(){
-        return MyRInfo.getStringByID(R.string.config_note_delegate_dir_name);
-    }
-    public String getDateBookNoteDir(){
-        return MyRInfo.getStringByID(R.string.config_note_datebook_dir_name);
-    }
-    public String getToDoListNoteDir(){
-        return MyRInfo.getStringByID(R.string.config_note_todolist_dir_name);
     }
 
     public boolean ifMdEditToastable(){

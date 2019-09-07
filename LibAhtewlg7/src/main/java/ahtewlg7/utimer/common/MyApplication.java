@@ -37,7 +37,7 @@ public abstract class MyApplication extends Application {
 		Utils.init(MyApplication.this);
 		String currProcessName = ProcessAction.getProcessName(android.os.Process.myPid());
 		if (!TextUtils.isEmpty(currProcessName) && currProcessName.equalsIgnoreCase(this.getPackageName())) {
-			initLibContext();
+			initLogSystem();
 			initVcFactory();//it is very important
             initDatabase();
 			toStartBinderService();
@@ -50,9 +50,8 @@ public abstract class MyApplication extends Application {
 		ACRA.init(this);
 	}
 
-	protected void initLibContext(){
+	protected void initLogSystem(){
         LibContextInit.initLog(AppInfoAction.ifDebug(), false);
-		LibContextInit.initWorkingFileSystem();
 	}
 
 	protected void initVcFactory(){
