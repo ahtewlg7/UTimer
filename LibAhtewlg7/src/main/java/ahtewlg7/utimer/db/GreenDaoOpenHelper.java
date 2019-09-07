@@ -7,6 +7,7 @@ import org.greenrobot.greendao.database.Database;
 import org.greenrobot.greendao.database.DatabaseOpenHelper;
 
 import ahtewlg7.utimer.db.autogen.DeedEntityGdBeanDao;
+import ahtewlg7.utimer.util.Logcat;
 
 
 /**
@@ -36,9 +37,12 @@ class GreenDaoOpenHelper extends DatabaseOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         DeedEntityGdBeanDao.createTable(wrap(db),true);
+        /*MaterialEntityGdBeanDao.createTable(wrap(db),true);
+        ProjectEntityGdBeanDao.createTable(wrap(db),true);*/
     }
     @Override
     public void onUpgrade(Database db, int oldVersion, int newVersion) {
+        Logcat.d("onUpgrade","onUpgrade oldVersion = " + oldVersion + ", newVersion =" +newVersion);
         if(oldVersion >= newVersion){
             return;
         }
@@ -52,7 +56,7 @@ class GreenDaoOpenHelper extends DatabaseOpenHelper {
             oldVersion = DBV_0_0_14;
         }
         if(oldVersion == DBV_0_0_14){
-            db.execSQL("delete from SHORTHAND ");
+            db.execSQL("delete from SHORTHAND");
             db.execSQL("delete from NOTE");
             oldVersion = DBV_0_0_17;
         }
