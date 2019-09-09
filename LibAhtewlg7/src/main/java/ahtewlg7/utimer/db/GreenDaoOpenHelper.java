@@ -7,6 +7,8 @@ import org.greenrobot.greendao.database.Database;
 import org.greenrobot.greendao.database.DatabaseOpenHelper;
 
 import ahtewlg7.utimer.db.autogen.DeedEntityGdBeanDao;
+import ahtewlg7.utimer.db.autogen.MaterialEntityGdBeanDao;
+import ahtewlg7.utimer.db.autogen.ProjectEntityGdBeanDao;
 import ahtewlg7.utimer.util.Logcat;
 
 
@@ -22,9 +24,10 @@ class GreenDaoOpenHelper extends DatabaseOpenHelper {
     private static final int DBV_0_0_17   = 6;
     private static final int DBV_0_0_18   = 7;
     private static final int DBV_0_01_07  = 8;
+    private static final int DBV_0_02_01  = 9;
 
     //the DB_VERSION must be same with schemaVersion of greenDao in LibAhtewlg7 build.gradle
-    public static int DB_VERSION = DBV_0_01_07;
+    public static int DB_VERSION = DBV_0_02_01;
 
     public GreenDaoOpenHelper(Context context, String name) {
         super(context, name, DB_VERSION);
@@ -37,8 +40,8 @@ class GreenDaoOpenHelper extends DatabaseOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         DeedEntityGdBeanDao.createTable(wrap(db),true);
-        /*MaterialEntityGdBeanDao.createTable(wrap(db),true);
-        ProjectEntityGdBeanDao.createTable(wrap(db),true);*/
+        MaterialEntityGdBeanDao.createTable(wrap(db),true);
+        ProjectEntityGdBeanDao.createTable(wrap(db),true);
     }
     @Override
     public void onUpgrade(Database db, int oldVersion, int newVersion) {
@@ -87,6 +90,14 @@ class GreenDaoOpenHelper extends DatabaseOpenHelper {
             db.execSQL("DROP TABLE IF EXISTS " + DeedEntityGdBeanDao.TABLENAME);
             db.execSQL("ALTER TABLE tmp RENAME TO " + DeedEntityGdBeanDao.TABLENAME);
             db.execSQL("CREATE UNIQUE INDEX " + DeedEntityGdBeanDao.TABLENAME + "IDX_DEED_UUID ON \"DEED\"" + " (\"UUID\" ASC);");
+            oldVersion = DBV_0_01_07;
+        }
+        if(oldVersion == DBV_0_01_07){
+            db.execSQL("DROP TABLE IF EXISTS SHORTHAND");
+            db.execSQL("DROP TABLE IF EXISTS NOTE");
+            MaterialEntityGdBeanDao.createTable(wrap((SQLiteDatabase) db.getRawDatabase()),true);
+            ProjectEntityGdBeanDao.createTable(wrap((SQLiteDatabase) db.getRawDatabase()),true);
+            oldVersion = DBV_0_02_01;
         }
     }
 }
