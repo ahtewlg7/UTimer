@@ -8,6 +8,8 @@ import androidx.annotation.NonNull;
 import com.google.common.base.Optional;
 import com.google.common.io.Files;
 
+import org.joda.time.DateTime;
+
 import java.io.File;
 
 import ahtewlg7.utimer.enumtype.GraphOrderType;
@@ -165,6 +167,12 @@ public class FileSystemAction {
     }
 
     //========================================DOC=================================================
+    public String getDefaultProjectDocRPath(){
+        return getWorkingDocRPath() + DateTime.now().getYear() + File.separator;
+    }
+    public String getDefaultProjectDocAbsPath(){
+        return getSdcardPath() +  getDefaultProjectDocRPath() ;
+    }
     //============================================================================================
 
     private void initAppWorkingFsDir(){
@@ -186,5 +194,6 @@ public class FileSystemAction {
         StorageAction.getInstance().createExRelDir(getPluginDataAbsPath());
 
         //======================================/UTimer/Doc/========================================
+        StorageAction.getInstance().createExRelDir(getDefaultProjectDocAbsPath());
     }
 }

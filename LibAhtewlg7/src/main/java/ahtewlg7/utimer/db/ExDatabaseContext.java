@@ -18,7 +18,7 @@ import ahtewlg7.utimer.util.StorageAction;
  * Created by lw on 2018/1/5.
  */
 
-public class ExDatabaseContext extends ContextWrapper {
+class ExDatabaseContext extends ContextWrapper {
     public static final String TAG = ExDatabaseContext.class.getSimpleName();
 
     public ExDatabaseContext() {
