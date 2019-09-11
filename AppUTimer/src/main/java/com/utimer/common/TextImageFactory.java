@@ -9,14 +9,10 @@ import ahtewlg7.utimer.util.MyRInfo;
  * Created by lw on 2019/3/12.
  */
 public class TextImageFactory {
-    private static TextImageFactory instance;
-
     private TextImageFactory(){}
 
     public static TextImageFactory getInstance() {
-        if(instance == null)
-            instance = new TextImageFactory();
-        return instance;
+        return TextImageHolder.INSTANCE;
     }
 
     public TextDrawable getGtdActionImage(){
@@ -44,5 +40,9 @@ public class TextImageFactory {
 
     public TextDrawable getProjectImage(){
         return TextDrawable.builder().buildRect("P", MyRInfo.getColorByID(R.color.colorPrimary));
+    }
+
+    private static class TextImageHolder{
+        private static final TextImageFactory INSTANCE = new TextImageFactory();
     }
 }
