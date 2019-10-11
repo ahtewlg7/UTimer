@@ -33,6 +33,7 @@ import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by lw on 2019/3/13.
+ * @key is uuid
  */
 public class GtdDeedByUuidFactory extends ABaseLruCacheFactory<String, GtdDeedEntity> {
     private static GtdDeedByUuidFactory instance;

@@ -174,7 +174,6 @@ public class FileSystemAction {
         return getSdcardPath() +  getDefaultProjectDocRPath() ;
     }
     //============================================================================================
-
     private void initAppWorkingFsDir(){
         //==========================================/UTimer========================================
         StorageAction.getInstance().createExRelDir(getAppWorkingAbsPath());
@@ -194,6 +193,5 @@ public class FileSystemAction {
         StorageAction.getInstance().createExRelDir(getPluginDataAbsPath());
 
         //======================================/UTimer/Doc/========================================
-        StorageAction.getInstance().createExRelDir(getDefaultProjectDocAbsPath());
     }
 }

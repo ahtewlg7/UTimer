@@ -42,7 +42,10 @@ public class GtdProjectEntity extends ABaseMaterialEntity<GtdProjectBuilder> imp
             String filePath = new FileSystemAction().getWorkingDocAbsPath();
             attachFile = new DirAttachFile(filePath, fileName);
         }
-        return attachFile.createOrExist();
+        boolean result = attachFile.createOrExist();
+        if(result)
+            updateAttachFileInfo(attachFile);
+        return result;
     }
 
     private void  initByGbBean(ProjectEntityGdBean gdBean) {

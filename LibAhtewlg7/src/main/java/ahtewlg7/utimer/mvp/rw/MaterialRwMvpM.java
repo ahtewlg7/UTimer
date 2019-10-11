@@ -4,17 +4,23 @@ import androidx.annotation.NonNull;
 
 import com.blankj.utilcode.util.FileUtils;
 import com.google.common.base.Optional;
+import com.google.common.collect.Lists;
 
 import org.reactivestreams.Publisher;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.List;
 
 import ahtewlg7.utimer.common.FileSystemAction;
+import ahtewlg7.utimer.entity.AAttachFile;
+import ahtewlg7.utimer.entity.gtd.GtdProjectEntity;
 import ahtewlg7.utimer.entity.gtd.MaterialEntity;
 import ahtewlg7.utimer.entity.gtd.MaterialEntityBuilder;
 import ahtewlg7.utimer.entity.material.MdAttachFile;
 import ahtewlg7.utimer.factory.MaterialEntityByUuidFactory;
 import ahtewlg7.utimer.factory.ProjectFileTreeGraphFactory;
+import ahtewlg7.utimer.graphs.FileTreeGraph;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
@@ -122,6 +128,36 @@ public class MaterialRwMvpM extends AUtimerRwMvpM<MaterialEntity> {
                 return Optional.absent();
             }
         });
+    }
+
+    public Flowable<List<MaterialEntity>> toLoadProjectMaterial(@NonNull Flowable<GtdProjectEntity> projectRx){
+        return projectRx.map(new Function<GtdProjectEntity, List<MaterialEntity>>() {
+            @Override
+            public List<MaterialEntity> apply(GtdProjectEntity gtdProjectEntity) throws Exception {
+                AAttachFile aAttachRootFile = gtdProjectEntity.getAttachFile();
+                if(aAttachRootFile == null || !aAttachRootFile.ifValid())
+                    throw new FileNotFoundException("Project file is missing");
+                Optional<FileTreeGraph> fileTreeGraphOptional =  ProjectFileTreeGraphFactory.getInstance().addFileTreeGraph(aAttachRootFile.getFile());
+                if(!fileTreeGraphOptional.isPresent())
+                    return Lists.newArrayList();
+                List<MaterialEntity> materialEntityList = Lists.newArrayList();
+                List<File> materialFileList             = fileTreeGraphOptional.get().getAllLeafFile();
+                for(File file : materialFileList){
+                    Optional<MaterialEntity> materialEntityOptional = dbActionFacade.getMaterialEntityByAbsPath(file.getAbsolutePath());
+                    if(materialEntityOptional.isPresent())
+                        materialEntityList.add(materialEntityOptional.get());
+                }
+                return materialEntityList;
+            }
+        }).subscribeOn(Schedulers.io());
+    }
+    public Flowable<Optional<MaterialEntity>> toLoadMaterial(@NonNull Flowable<File> materialFileRx){
+        return materialFileRx.map(new Function<File, Optional<MaterialEntity>>() {
+            @Override
+            public Optional<MaterialEntity> apply(File file) throws Exception {
+                return dbActionFacade.getMaterialEntityByAbsPath(file.getAbsolutePath());
+            }
+        }).subscribeOn(Schedulers.io());
     }
     private boolean toDelEntity(MaterialEntity entity) {
         boolean result = false;

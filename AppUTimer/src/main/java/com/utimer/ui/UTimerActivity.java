@@ -53,7 +53,7 @@ public class UTimerActivity extends AButterKnifeActivity{
 
         if (findFragment(MainFragment.class) == null)
             loadRootFragment(R.id.activity_utimer_fragment_container, DeedsFragment.newInstance());
-//            loadRootFragment(R.id.activity_utimer_fragment_container, MainFragment.newInstance());
+//            loadRootFragment(R.id.activity_utimer_fragment_container, MainFragment.newInstance());//todo
     }
 
     @Override

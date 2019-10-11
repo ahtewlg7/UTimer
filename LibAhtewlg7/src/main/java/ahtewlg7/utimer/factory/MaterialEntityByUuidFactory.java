@@ -10,10 +10,10 @@ import ahtewlg7.utimer.entity.gtd.MaterialEntity;
 public class MaterialEntityByUuidFactory extends ABaseLruCacheFactory<String, MaterialEntity>{
     private static MaterialEntityByUuidFactory instance;
 
-    private BiMap<String, String> pathUuidMap;
+    private BiMap<String, String> absPathUuidMap;
 
     private MaterialEntityByUuidFactory(){
-        pathUuidMap  = HashBiMap.create();
+        absPathUuidMap = HashBiMap.create();
     }
 
     public static MaterialEntityByUuidFactory getInstance(){
@@ -37,10 +37,10 @@ public class MaterialEntityByUuidFactory extends ABaseLruCacheFactory<String, Ma
         boolean result = false;
         if(entity != null && entity.ifValid()
             && entity.getAttachFileRPath().isPresent()
-            && !pathUuidMap.containsKey(entity.getAttachFileRPath().get())) {
+            && !absPathUuidMap.containsKey(entity.getAttachFileRPath().get())) {
             result = super.add(s, entity);
             if (result)
-                pathUuidMap.put(entity.getAttachFileRPath().get(), entity.getUuid());
+                absPathUuidMap.put(entity.getAbsPath(), entity.getUuid());
         }
         return result;
     }
@@ -49,13 +49,13 @@ public class MaterialEntityByUuidFactory extends ABaseLruCacheFactory<String, Ma
     public MaterialEntity remove(String s) {
         MaterialEntity entity = super.remove(s);
         if(entity != null)
-            pathUuidMap.inverse().remove(entity.getUuid());
+            absPathUuidMap.inverse().remove(entity.getUuid());
         return entity;
     }
 
     @Override
     public void clearAll() {
         super.clearAll();
-        pathUuidMap.clear();
+        absPathUuidMap.clear();
     }
 }

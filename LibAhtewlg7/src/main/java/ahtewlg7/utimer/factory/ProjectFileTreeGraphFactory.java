@@ -1,5 +1,6 @@
 package ahtewlg7.utimer.factory;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
 
 import java.io.File;
@@ -22,13 +23,16 @@ public class ProjectFileTreeGraphFactory{
         return instance;
     }
 
-    public void addFileTreeGraph(File rootFile){
+    public Optional<FileTreeGraph> addFileTreeGraph(File rootFile){
+        Optional optional = Optional.absent();
         if(rootFile != null && rootFile.exists()){
             FileTreeGraph fileTreeGraph = new FileTreeGraph(rootFile);
             fileTreeGraph.initGraph();
             fileTreeGraph.initNodes();
             fileFileTreeGraphMap.put(rootFile, fileTreeGraph);
+            optional = Optional.of(fileTreeGraph);
         }
+        return optional;
     }
 
     public FileTreeGraph getFileTreeGraph(File rootFile){
