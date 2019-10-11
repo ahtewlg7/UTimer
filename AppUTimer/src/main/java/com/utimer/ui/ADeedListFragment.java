@@ -1,10 +1,12 @@
 package com.utimer.ui;
 
+import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.style.BackgroundColorSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
@@ -18,6 +20,7 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.binaryfork.spanny.Spanny;
 import com.blankj.utilcode.util.ToastUtils;
+import com.google.common.base.Optional;
 import com.trello.rxlifecycle3.LifecycleProvider;
 import com.utimer.R;
 import com.utimer.common.TagInfoFactory;
@@ -145,7 +148,7 @@ public abstract class ADeedListFragment extends AButterKnifeFragment
 
 
     @Override
-    public void onTagStart(GtdDeedEntity entity, DeedState toState) {
+    public void onTagStart(GtdDeedEntity entity, DeedState toState, int position) {
     }
 
     @Override
@@ -160,21 +163,20 @@ public abstract class ADeedListFragment extends AButterKnifeFragment
     }
 
     @Override
-    public void onTagFail(GtdDeedEntity entity, DeedState toState) {
+    public void onTagFail(GtdDeedEntity entity, DeedState toState, int position) {
+        ToastUtils.showShort(R.string.prompt_tag_fail);
+    }
+
+    @Override
+    public void onTagErr(GtdDeedEntity entity, DeedState toState, int position, Throwable err) {
         ToastUtils.showShort(R.string.prompt_tag_fail);
         if(bottomSheetDialog.isShowing())
             bottomSheetDialog.dismiss();
     }
 
     @Override
-    public void onTagErr(GtdDeedEntity entity, DeedState toState, Throwable err) {
-        ToastUtils.showShort(R.string.prompt_tag_fail);
-        if(bottomSheetDialog.isShowing())
-            bottomSheetDialog.dismiss();
-    }
-
-    @Override
-    public void onTagEnd(GtdDeedEntity entity, DeedState toState) {
+    public void onTagEnd(GtdDeedEntity entity, DeedState toState, int position) {
+        getRecyclerView().toHighLight(Optional.absent());
         if(bottomSheetDialog.isShowing())
             bottomSheetDialog.dismiss();
     }
@@ -187,7 +189,7 @@ public abstract class ADeedListFragment extends AButterKnifeFragment
     /**********************************************IDeedSpanner**********************************************/
     @NonNull
     @Override
-    public SpannableStringBuilder toSpan(int position, @NonNull GtdDeedEntity item) {
+    public SpannableStringBuilder toSpan(int position, boolean highLight, @NonNull GtdDeedEntity item) {
         SimpleMultiSpanTag multiSpanTag = getTagInfo(item);
         DeedSpanMoreTag moreTag         = new DeedSpanMoreTag(item);
         multiSpanTag.setShowBracket(false);
@@ -195,20 +197,28 @@ public abstract class ADeedListFragment extends AButterKnifeFragment
 
         @ColorRes int contentColor = getSpanColor(item, R.color.colorPrimary);
         @ColorRes int moreColor    = getSpanColor(item, R.color.colorAccent);
+        int bgColor                = MyRInfo.getColorByID(R.color.color_600);
         Spanny spanny = new Spanny();
         if(multiSpanTag.getTagTitle().isPresent())
             spanny.append(multiSpanTag.getTagTitle().get(),
                     new ForegroundColorSpan(MyRInfo.getColorByID(contentColor)),
                     new StyleSpan(Typeface.BOLD));
-
-        if(item.getDeedState() != DeedState.TRASH )
+        if(item.getDeedState() != DeedState.TRASH && highLight)
+            spanny.append(item.getTitle().trim(),
+                    new TextClickableSpan(multiSpanTag, mySpanClickListener, MyRInfo.getColorByID(contentColor),false, position),
+                    new BackgroundColorSpan(bgColor));
+        else if(item.getDeedState() != DeedState.TRASH)
             spanny.append(item.getTitle().trim(),
                     new TextClickableSpan(multiSpanTag, mySpanClickListener, MyRInfo.getColorByID(contentColor),false, position));
+        else if(highLight)
+            spanny.append(item.getTitle().trim(),
+                    new TextClickableSpan(multiSpanTag, mySpanClickListener, MyRInfo.getColorByID(contentColor),false, position),
+                    new BackgroundColorSpan(bgColor),
+                    new StrikethroughSpan());
         else
             spanny.append(item.getTitle().trim(),
                     new TextClickableSpan(multiSpanTag, mySpanClickListener, MyRInfo.getColorByID(contentColor),false, position),
                     new StrikethroughSpan());
-
         if(moreTag.getTagTitle().isPresent())
             spanny.append(moreTag.getTagTitle().get(),
                     new TextClickableSpan(moreTag, mySpanClickListener, MyRInfo.getColorByID(moreColor),false, position));
@@ -252,7 +262,7 @@ public abstract class ADeedListFragment extends AButterKnifeFragment
     /**********************************************IGtdActionListMvpV**********************************************/
 
     class MyClickListener implements TextClickableSpan.ITextSpanClickListener,
-            DeedTagBottomSheetDialog.OnItemClickListener {
+            DeedTagBottomSheetDialog.OnItemClickListener, DeedTagBottomSheetDialog.OnDismissListener {
         //+++++++++++++++++++++++++++++++++++ITextSpanClickListener+++++++++++++++++++++++++++++++
         @Override
         public void onSpanClick(int position, Object o) {
@@ -265,6 +275,11 @@ public abstract class ADeedListFragment extends AButterKnifeFragment
         @Override
         public void onTagClick(int position, DeedState targetState) {
             listMvpP.toTagDeed((GtdDeedEntity) getRecyclerView().getAdapter().getItem(position), targetState, position);
+        }
+        //+++++++++++++++++++++++++++++++++++OnDismissListener+++++++++++++++++++++++++++++++
+        @Override
+        public void onDismiss(DialogInterface dialog) {
+            getRecyclerView().toHighLight(Optional.absent());
         }
     }
     protected void createBottomSheet(int position){
@@ -280,7 +295,9 @@ public abstract class ADeedListFragment extends AButterKnifeFragment
         if (bottomSheetDialog == null) {
             bottomSheetDialog = new DeedTagBottomSheetDialog(getContext());
             bottomSheetDialog.setOnItemClickListener(mySpanClickListener);
+            bottomSheetDialog.setOnDismissListener(mySpanClickListener);
         }
+        getRecyclerView().toHighLight(Optional.of(position));
         bottomSheetDialog.toShow(deedStateSet, position);
     }
     protected void toCreateEditDialog(@NonNull GtdDeedEntity deedEntity){

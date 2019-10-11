@@ -89,7 +89,7 @@ public class BaseDeedListMvpP {
                 public void onSubscribe(Subscription s) {
                     super.onSubscribe(s);
                     if(mvpV != null)
-                        mvpV.onTagStart(deedEntity, deedState);
+                        mvpV.onTagStart(deedEntity, deedState, position);
                 }
 
                 @Override
@@ -100,21 +100,21 @@ public class BaseDeedListMvpP {
                     if(busBeanOptional.isPresent())
                         mvpV.onTagSucc(deedEntity, deedState, position);
                     else
-                        mvpV.onTagFail(deedEntity, deedState);
+                        mvpV.onTagFail(deedEntity, deedState, position);
                 }
 
                 @Override
                 public void onError(Throwable t) {
                     super.onError(t);
                     if(mvpV != null)
-                        mvpV.onTagErr(deedEntity,deedState, t);
+                        mvpV.onTagErr(deedEntity,deedState, position, t);
                 }
 
                 @Override
                 public void onComplete() {
                     super.onComplete();
                     if(mvpV != null)
-                        mvpV.onTagEnd(deedEntity,deedState);
+                        mvpV.onTagEnd(deedEntity,deedState, position);
                 }
             });
     }
@@ -244,10 +244,10 @@ public class BaseDeedListMvpP {
         public void onLoadSucc(GtdDeedEntity entity);
         public void onLoadErr(Throwable err);
 
-        public void onTagStart(GtdDeedEntity entity,DeedState toState);
+        public void onTagStart(GtdDeedEntity entity,DeedState toState, int position);
         public void onTagSucc(GtdDeedEntity entity, DeedState toState, int position);
-        public void onTagFail(GtdDeedEntity entity, DeedState toState);
-        public void onTagErr(GtdDeedEntity entity,  DeedState toState, Throwable err);
-        public void onTagEnd(GtdDeedEntity entity,  DeedState toState);
+        public void onTagFail(GtdDeedEntity entity, DeedState toState, int position);
+        public void onTagErr(GtdDeedEntity entity,  DeedState toState, int position, Throwable err);
+        public void onTagEnd(GtdDeedEntity entity,  DeedState toState, int position);
     }
 }

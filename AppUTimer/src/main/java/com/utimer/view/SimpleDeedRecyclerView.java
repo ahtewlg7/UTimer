@@ -14,6 +14,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chad.library.adapter.base.listener.OnItemDragListener;
 import com.chad.library.adapter.base.listener.OnItemSwipeListener;
+import com.google.common.base.Optional;
 import com.utimer.R;
 
 import java.util.List;
@@ -23,6 +24,7 @@ import ahtewlg7.utimer.view.ABaseLinearRecyclerView;
 
 public class SimpleDeedRecyclerView extends ABaseLinearRecyclerView<GtdDeedEntity> {
     private IDeedSpanner spanner;
+    private Optional<Integer> highLightPosition;
 
     public SimpleDeedRecyclerView(Context context) {
         super(context);
@@ -63,6 +65,11 @@ public class SimpleDeedRecyclerView extends ABaseLinearRecyclerView<GtdDeedEntit
         this.spanner = spanner;
     }
 
+    public void toHighLight(Optional<Integer> highLightPosition) {
+        this.highLightPosition = highLightPosition;
+        notifyDataSetChanged();
+    }
+
     class SimpleDeedItemAdapter extends BaseItemAdapter<GtdDeedEntity>{
         SimpleDeedItemAdapter(List<GtdDeedEntity> dataList){
             super(dataList);
@@ -74,13 +81,17 @@ public class SimpleDeedRecyclerView extends ABaseLinearRecyclerView<GtdDeedEntit
 
             int position  = helper.getLayoutPosition();
             SpannableStringBuilder tmp = new SpannableStringBuilder(item.getTitle().trim());
-            if(spanner != null)
-                tmp = spanner.toSpan(position, item);
+            if(spanner != null){
+                if(highLightPosition != null && highLightPosition.isPresent() && highLightPosition.get() == position)
+                    tmp = spanner.toSpan(position, true, item);
+                else
+                    tmp = spanner.toSpan(position, false, item);
+            }
             helper.setText(R.id.view_recycler_simple_deed_title, tmp);
         }
     }
 
     public interface IDeedSpanner{
-        public @NonNull SpannableStringBuilder toSpan(int position, @NonNull GtdDeedEntity item);
+        public @NonNull SpannableStringBuilder toSpan(int position, boolean highLight,  @NonNull GtdDeedEntity item);
     }
 }
