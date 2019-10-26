@@ -14,6 +14,7 @@ import java.util.Arrays;
 import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
 import ahtewlg7.utimer.enumtype.DeedState;
 import ahtewlg7.utimer.mvp.BaseDeedListMvpP;
+import ahtewlg7.utimer.mvp.EndDeedListMvpP;
 import ahtewlg7.utimer.util.MyRInfo;
 import butterknife.BindView;
 
@@ -75,7 +76,7 @@ public class DeedEndListFragment extends ADeedListFragment implements BaseDeedLi
     @NonNull
     @Override
     protected BaseDeedListMvpP getDeedMvpP() {
-        return new BaseDeedListMvpP(this);
+        return new EndDeedListMvpP(this);
     }
 
     @NonNull
