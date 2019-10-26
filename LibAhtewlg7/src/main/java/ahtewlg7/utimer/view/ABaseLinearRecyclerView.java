@@ -4,11 +4,8 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 
-import androidx.annotation.LayoutRes;
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.chad.library.adapter.base.BaseItemDraggableAdapter;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -26,11 +23,8 @@ import java.util.List;
  * S : The SectionView Entity
  */
 
-public abstract class ABaseLinearRecyclerView<T> extends RecyclerView{
-    protected BaseItemAdapter<T> recyclerViewAdapter;
-
-    public abstract @LayoutRes int getViewItemLayout();
-    public abstract @NonNull BaseItemAdapter<T> createAdapter(List<T> entityList);
+public abstract class ABaseLinearRecyclerView<T,K extends BaseViewHolder> extends ABaseDeedRecyclerView<T,K> {
+    protected BaseItemAdapter recyclerViewAdapter;
 
     public ABaseLinearRecyclerView(Context context) {
         super(context);
@@ -48,10 +42,11 @@ public abstract class ABaseLinearRecyclerView<T> extends RecyclerView{
     public BaseItemAdapter getAdapter() {
         return (BaseItemAdapter)super.getAdapter();
     }
-
+    @Override
     public void init(Context context, List<T> entityList) {
         init(context,entityList,null,null,null,null,null,null,null);
     }
+    @Override
     public void init(Context context, List<T> entityList,
                      BaseQuickAdapter.OnItemClickListener itemClickListener,
                      BaseQuickAdapter.OnItemChildClickListener itemChildClickListener,
@@ -59,7 +54,7 @@ public abstract class ABaseLinearRecyclerView<T> extends RecyclerView{
                      BaseQuickAdapter.OnItemChildLongClickListener itemChildLongClickListener,
                      OnItemSwipeListener itemSwipeListener,
                      OnItemDragListener itemDragListener) {
-        recyclerViewAdapter = createAdapter(entityList);
+        recyclerViewAdapter = (BaseItemAdapter)createAdapter(entityList);
         recyclerViewAdapter.toSetOnItemClickListener(itemClickListener);
         recyclerViewAdapter.toSetOnItemChildClickListener(itemChildClickListener);
         recyclerViewAdapter.toSetOnItemLongClickListener(itemLongClickListener);
@@ -69,7 +64,6 @@ public abstract class ABaseLinearRecyclerView<T> extends RecyclerView{
         recyclerViewAdapter.bindToRecyclerView(this);
         setAdapter(recyclerViewAdapter);
     }
-
     public void init(Context context, List<T> entityList,
                      BaseQuickAdapter.OnItemClickListener itemClickListener,
                      BaseQuickAdapter.OnItemChildClickListener itemChildClickListener,
@@ -78,7 +72,7 @@ public abstract class ABaseLinearRecyclerView<T> extends RecyclerView{
                      IOnItemTouchListener itemTouchListener,
                      OnItemSwipeListener itemSwipeListener,
                      OnItemDragListener itemDragListener) {
-        recyclerViewAdapter = createAdapter(entityList);
+        recyclerViewAdapter = (BaseItemAdapter)createAdapter(entityList);
         recyclerViewAdapter.toSetOnItemClickListener(itemClickListener);
         recyclerViewAdapter.toSetOnItemChildClickListener(itemChildClickListener);
         recyclerViewAdapter.toSetOnItemLongClickListener(itemLongClickListener);
@@ -90,49 +84,66 @@ public abstract class ABaseLinearRecyclerView<T> extends RecyclerView{
         setAdapter(recyclerViewAdapter);
     }
 
+    @Override
+    public List<T> getData() {
+        if(recyclerViewAdapter == null)
+            return null;
+        return recyclerViewAdapter.getData();
+    }
+
+    @Override
+    public T getItem(int index) {
+        if(recyclerViewAdapter == null)
+            return null;
+        return recyclerViewAdapter.getItem(index);
+    }
+
+    @Override
     public void notifyDataSetChanged(){
         if(recyclerViewAdapter != null)
             recyclerViewAdapter.notifyDataSetChanged();
     }
+    @Override
     public void resetData(List<T> entityList) {
         if(recyclerViewAdapter != null)
             recyclerViewAdapter.setNewData(entityList);
     }
-
+    @Override
     public void resetData(int index, T entity) {
         if(recyclerViewAdapter != null)
             recyclerViewAdapter.setData(index, entity);
     }
-
+    @Override
     public void resetData(int index, List<T> entityList) {
         if(recyclerViewAdapter != null){
             recyclerViewAdapter.remove(index);
             recyclerViewAdapter.addData(index, entityList);
         }
     }
-
+    @Override
     public void removeData(int index) {
         if(recyclerViewAdapter != null)
             recyclerViewAdapter.remove(index);
     }
+    @Override
     public void removeData(T t) {
         if(recyclerViewAdapter != null)
             recyclerViewAdapter.remove(t);
     }
 
-    public abstract class BaseItemAdapter<K> extends BaseItemDraggableAdapter<K,BaseViewHolder> {
+    public abstract class BaseItemAdapter extends BaseItemDraggableAdapter<T,K> {
         protected ItemTouchHelper mItemTouchHelper;
         protected IOnItemTouchListener mItemTouchListener;
         protected ItemDragAndSwipeCallback mItemDragAndSwipeCallback;
 
-        public BaseItemAdapter(List<K> dataList){
+        public BaseItemAdapter(List<T> dataList){
             super(getViewItemLayout(), dataList);
         }
 
-        public void remove(K k){
-            List<K> dataList = getData();
-            if(dataList.contains(k))
-                remove(dataList.indexOf(k));
+        public void remove(T t){
+            List<T> dataList = getData();
+            if(dataList.contains(t))
+                remove(dataList.indexOf(t));
         }
 
         public void toSetOnItemClickListener(BaseQuickAdapter.OnItemClickListener itemClickListener){

@@ -3,12 +3,13 @@ package com.utimer.view;
 import android.content.Context;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.util.AttributeSet;
+import android.view.View;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import android.util.AttributeSet;
-import android.view.View;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -20,7 +21,7 @@ import java.util.List;
 
 import ahtewlg7.utimer.view.ABaseLinearRecyclerView;
 
-public class UtimerFuncRecyclerView extends ABaseLinearRecyclerView<UtimerFuncRecyclerView.FuncViewEntity> {
+public class UtimerFuncRecyclerView extends ABaseLinearRecyclerView<UtimerFuncRecyclerView.FuncViewEntity, BaseViewHolder> {
     public static final String TAG = UtimerFuncRecyclerView.class.getSimpleName();
 
     public UtimerFuncRecyclerView(Context context) {
@@ -42,7 +43,7 @@ public class UtimerFuncRecyclerView extends ABaseLinearRecyclerView<UtimerFuncRe
 
     @NonNull
     @Override
-    public BaseItemAdapter<FuncViewEntity> createAdapter(List<FuncViewEntity> entityList) {
+    public BaseQuickAdapter<FuncViewEntity, BaseViewHolder> createAdapter(List<FuncViewEntity> entityList) {
         return new UtimerFuncItemAdapter(entityList);
     }
 
@@ -53,7 +54,7 @@ public class UtimerFuncRecyclerView extends ABaseLinearRecyclerView<UtimerFuncRe
         setLayoutManager(new GridLayoutManager(context, 2));
     }
 
-    class UtimerFuncItemAdapter extends BaseItemAdapter<FuncViewEntity> {
+    class UtimerFuncItemAdapter extends BaseItemAdapter{
         UtimerFuncItemAdapter(List<FuncViewEntity> dataList) {
             super(dataList);
         }

@@ -20,6 +20,7 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.binaryfork.spanny.Spanny;
 import com.blankj.utilcode.util.ToastUtils;
+import com.chad.library.adapter.base.BaseViewHolder;
 import com.google.common.base.Optional;
 import com.trello.rxlifecycle3.LifecycleProvider;
 import com.utimer.R;
@@ -46,16 +47,18 @@ import ahtewlg7.utimer.span.TextClickableSpan;
 import ahtewlg7.utimer.state.GtdMachine;
 import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MyRInfo;
+import ahtewlg7.utimer.view.ABaseDeedRecyclerView;
+import ahtewlg7.utimer.view.ABaseLinearRecyclerView;
 
 import static com.utimer.common.TagInfoFactory.INVALID_TAG_RID;
 
 public abstract class ADeedListFragment extends AButterKnifeFragment
-        implements BaseDeedListMvpP.IBaseDeedMvpV , SimpleDeedRecyclerView.IDeedSpanner {
+        implements BaseDeedListMvpP.IBaseDeedMvpV , SimpleDeedRecyclerView.IDeedSpanner<GtdDeedEntity> {
     public static final int INIT_POSITION = -1;
 
     protected abstract DeedState[] getLoadDeedState();
     protected abstract @NonNull BaseDeedListMvpP getDeedMvpP();
-    protected abstract @NonNull SimpleDeedRecyclerView getRecyclerView();
+    protected abstract @NonNull ABaseDeedRecyclerView getRecyclerView();
 
     protected int editIndex = -1;
     protected boolean showLifeInfo = true;
@@ -132,7 +135,7 @@ public abstract class ADeedListFragment extends AButterKnifeFragment
 
     @Override
     public void onLoadSucc(GtdDeedEntity entity) {
-        List<GtdDeedEntity> entityList = getRecyclerView().getAdapter().getData();
+        List<GtdDeedEntity> entityList = getRecyclerView().getData();
         if(entity != null && !entityList.contains(entity)) {
             entityList.add(0, entity);
             getRecyclerView().resetData(entityList);
@@ -277,12 +280,12 @@ public abstract class ADeedListFragment extends AButterKnifeFragment
         //+++++++++++++++++++++++++++++++++++OnItemClickListener+++++++++++++++++++++++++++++++
         @Override
         public void onTagClick(int position, DeedState targetState) {
-            listMvpP.toTagDeed((GtdDeedEntity) getRecyclerView().getAdapter().getItem(position), targetState, position);
+            listMvpP.toTagDeed((GtdDeedEntity) getRecyclerView().getItem(position), targetState, position);
         }
         //+++++++++++++++++++++++++++++++++++OnDismissListener+++++++++++++++++++++++++++++++
         @Override
         public void onDismiss(DialogInterface dialog) {
-            getRecyclerView().toHighLight(Optional.absent());
+            ((ABaseLinearRecyclerView<GtdDeedEntity, BaseViewHolder>)getRecyclerView()).toHighLight(Optional.absent());
         }
     }
     protected void createBottomSheet(int position){
@@ -290,7 +293,7 @@ public abstract class ADeedListFragment extends AButterKnifeFragment
             Logcat.d("Warning","createBottomSheet failed");
             return;
         }
-        GtdDeedEntity currEntity = (GtdDeedEntity)getRecyclerView().getAdapter().getItem(position);
+        GtdDeedEntity currEntity = (GtdDeedEntity)getRecyclerView().getItem(position);
         Set<DeedState> deedStateSet = listMvpP.getNextState(currEntity);
         if(deedStateSet == null)
             return;
@@ -300,7 +303,7 @@ public abstract class ADeedListFragment extends AButterKnifeFragment
             bottomSheetDialog.setOnItemClickListener(mySpanClickListener);
             bottomSheetDialog.setOnDismissListener(mySpanClickListener);
         }
-        getRecyclerView().toHighLight(Optional.of(position));
+        ((ABaseLinearRecyclerView<GtdDeedEntity, BaseViewHolder>)getRecyclerView()).toHighLight(Optional.of(position));
         bottomSheetDialog.toShow(deedStateSet, position);
     }
     protected void toCreateEditDialog(@NonNull GtdDeedEntity deedEntity){

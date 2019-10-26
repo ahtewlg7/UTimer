@@ -57,7 +57,7 @@ import static ahtewlg7.utimer.enumtype.errcode.NoteEditErrCode.ERR_EDIT_ATTACH_V
 /**
  * Created by lw on 2019/2/3.
  */
-public class BaseUtimerEditView extends ABaseLinearRecyclerView<EditElement>{
+public class BaseUtimerEditView extends ABaseLinearRecyclerView<EditElement, BaseViewHolder>{
     public static final int INIT_POSITION = -1;
 
     protected int lastAccessPosition    = INIT_POSITION;
@@ -110,7 +110,7 @@ public class BaseUtimerEditView extends ABaseLinearRecyclerView<EditElement>{
 
     @NonNull
     @Override
-    public BaseItemAdapter<EditElement> createAdapter(List<EditElement> entityList) {
+    public BaseQuickAdapter<EditElement, BaseViewHolder> createAdapter(List<EditElement> entityList) {
         return new BaseUtimerEditItemAdapter(entityList);
     }
 
@@ -425,7 +425,7 @@ public class BaseUtimerEditView extends ABaseLinearRecyclerView<EditElement>{
         return new Bypass.Options().setHruleColor(Color.BLACK);
     }
 
-    class BaseUtimerEditItemAdapter extends BaseItemAdapter<EditElement>{
+    class BaseUtimerEditItemAdapter extends BaseItemAdapter{
         public BaseUtimerEditItemAdapter(List<EditElement> dataList){
             super(dataList);
         }
