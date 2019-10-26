@@ -15,6 +15,9 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
+import com.luck.picture.lib.PictureSelector;
+import com.luck.picture.lib.config.PictureConfig;
+import com.luck.picture.lib.config.PictureMimeType;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.trello.rxlifecycle3.android.ActivityEvent;
 import com.utimer.R;
@@ -35,8 +38,12 @@ public class UTimerActivity extends AButterKnifeActivity{
 
     @BindView(R.id.activity_utimer_fragment_menu)
     FloatingActionMenu floatingActionMenu;
-    /*@BindView(R.id.activity_utimer_fragment_bn_shorthand)
-    FloatingActionButton shortHandActionButton;*/
+    @BindView(R.id.activity_utimer_fragment_bn_video)
+    FloatingActionButton videoActionButton;
+    @BindView(R.id.activity_utimer_fragment_bn_audio)
+    FloatingActionButton audioActionButton;
+    @BindView(R.id.activity_utimer_fragment_bn_picture)
+    FloatingActionButton pictureActionButton;
     @BindView(R.id.activity_utimer_fragment_bn_deed)
     FloatingActionButton deedActionButton;
 
@@ -118,7 +125,9 @@ public class UTimerActivity extends AButterKnifeActivity{
 
     private void initFloatMenu(){
         menuButtonClickListener = new MenuButtonClickListener();
-//        shortHandActionButton.setOnClickListener(menuButtonClickListener);
+        videoActionButton.setOnClickListener(menuButtonClickListener);
+        audioActionButton.setOnClickListener(menuButtonClickListener);
+        pictureActionButton.setOnClickListener(menuButtonClickListener);
         deedActionButton.setOnClickListener(menuButtonClickListener);
 
         floatingActionMenu.setClosedOnTouchOutside(true);
@@ -167,10 +176,18 @@ public class UTimerActivity extends AButterKnifeActivity{
         @Override
         public void onClick(View v) {
             switch (v.getId()){
-                /*case R.id.activity_utimer_fragment_bn_shorthand:
-                    if(findFragment(MainFragment.class) != null)
-                        findFragment(MainFragment.class).toNewShortHand();
-                    break;*/
+                case R.id.activity_utimer_fragment_bn_video:
+                    break;
+                case R.id.activity_utimer_fragment_bn_audio:
+                    break;
+                case R.id.activity_utimer_fragment_bn_picture:
+                    /*if(findFragment(MainFragment.class) != null)
+                        findFragment(MainFragment.class).toNewShortHand();*/
+//                    PictureSelector.create(UTimerActivity.this).themeStyle(R.style.picture_default_style).openExternalPreview(position, selectList);
+                    PictureSelector.create(UTimerActivity.this).openGallery(PictureMimeType.ofImage())
+                            .isGif(true).enablePreviewAudio(true)
+                            .forResult(PictureConfig.CHOOSE_REQUEST);
+                    break;
                 case R.id.activity_utimer_fragment_bn_deed:
                     toShowFloatMenu(false);
                     toCreateInboxDialog();

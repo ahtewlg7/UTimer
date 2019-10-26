@@ -1,0 +1,1 @@
+adb push C:\Users\lw\Desktop\transaction /sdcard/UTimer/data/db

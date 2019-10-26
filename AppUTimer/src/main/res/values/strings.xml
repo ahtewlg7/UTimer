@@ -58,7 +58,9 @@
     <string name="title_notify_action_fast_inbox">inbox</string>
 
     <string name="create">new</string>
-    <string name="create_shorthand">new shorthand</string>
+    <string name="add_video">Add Video</string>
+    <string name="add_audio">Add Audio</string>
+    <string name="add_picture">Add Picture</string>
     <string name="create_deed">new deed</string>
     <string name="create_note">create note</string>
     <string name="add">add</string>

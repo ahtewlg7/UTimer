@@ -39,6 +39,9 @@
     <string name="title_notify_action_fast_inbox">简讯</string>
 
     <string name="create">new</string>
+    <string name="add_video">添加视频</string>
+    <string name="add_audio">添加语音</string>
+    <string name="add_picture">添加图片</string>
     <string name="create_deed">新建简讯</string>
     <string name="add">添加</string>
     <string name="edit">编辑</string>
