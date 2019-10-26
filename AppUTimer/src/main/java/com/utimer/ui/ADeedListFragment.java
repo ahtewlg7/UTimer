@@ -198,6 +198,7 @@ public abstract class ADeedListFragment extends AButterKnifeFragment
         @ColorRes int contentColor = getSpanColor(item, R.color.colorPrimary);
         @ColorRes int moreColor    = getSpanColor(item, R.color.colorAccent);
         int bgColor                = MyRInfo.getColorByID(R.color.color_600);
+        int fgColor                = MyRInfo.getColorByID(R.color.color_stand_c3);
         Spanny spanny = new Spanny();
         if(multiSpanTag.getTagTitle().isPresent())
             spanny.append(multiSpanTag.getTagTitle().get(),
@@ -206,7 +207,8 @@ public abstract class ADeedListFragment extends AButterKnifeFragment
         if(item.getDeedState() != DeedState.TRASH && highLight)
             spanny.append(item.getTitle().trim(),
                     new TextClickableSpan(multiSpanTag, mySpanClickListener, MyRInfo.getColorByID(contentColor),false, position),
-                    new BackgroundColorSpan(bgColor));
+                    new BackgroundColorSpan(bgColor),
+                    new ForegroundColorSpan(fgColor));
         else if(item.getDeedState() != DeedState.TRASH)
             spanny.append(item.getTitle().trim(),
                     new TextClickableSpan(multiSpanTag, mySpanClickListener, MyRInfo.getColorByID(contentColor),false, position));
@@ -214,6 +216,7 @@ public abstract class ADeedListFragment extends AButterKnifeFragment
             spanny.append(item.getTitle().trim(),
                     new TextClickableSpan(multiSpanTag, mySpanClickListener, MyRInfo.getColorByID(contentColor),false, position),
                     new BackgroundColorSpan(bgColor),
+                    new ForegroundColorSpan(fgColor),
                     new StrikethroughSpan());
         else
             spanny.append(item.getTitle().trim(),
