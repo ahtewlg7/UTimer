@@ -48,7 +48,7 @@ import io.reactivex.schedulers.Schedulers;
 import static ahtewlg7.utimer.entity.gtd.DeedSchemeEntity.INVALID_PROGRESS;
 import static com.utimer.common.TagInfoFactory.INVALID_TAG_RID;
 
-public class DeedScheduleListFragment extends ADeedListFragment
+public class DeedScheduleListFragment extends ABaseDeedListFragment
         implements ScheduleDeedListMvpP.IScheduleMvpV,CalendarView.OnCalendarSelectListener {
 
     @BindView(R.id.fragment_deed_calendar_calendarLayout)

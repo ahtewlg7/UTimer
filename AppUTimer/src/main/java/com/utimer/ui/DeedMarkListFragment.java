@@ -22,7 +22,7 @@ import static ahtewlg7.utimer.enumtype.DeedState.REFERENCE;
 import static ahtewlg7.utimer.enumtype.DeedState.USELESS;
 import static ahtewlg7.utimer.enumtype.DeedState.WISH;
 
-public class DeedMarkListFragment extends ADeedListFragment implements BaseDeedListMvpP.IBaseDeedMvpV {
+public class DeedMarkListFragment extends ABaseDeedListFragment implements BaseDeedListMvpP.IBaseDeedMvpV {
     @BindView(R.id.fragment_deed_simple_list_recycler_view)
     SimpleDeedRecyclerView recyclerView;
 

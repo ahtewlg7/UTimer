@@ -21,7 +21,7 @@ import static ahtewlg7.utimer.enumtype.DeedState.MAYBE;
 import static ahtewlg7.utimer.enumtype.DeedState.ONE_QUARTER;
 import static ahtewlg7.utimer.enumtype.DeedState.SCHEDULE;
 
-public class DeedTodoListFragment extends ADeedListFragment implements BaseDeedListMvpP.IBaseDeedMvpV {
+public class DeedTodoListFragment extends ABaseDeedListFragment implements BaseDeedListMvpP.IBaseDeedMvpV {
     @BindView(R.id.fragment_deed_simple_list_recycler_view)
     SimpleDeedRecyclerView recyclerView;
 

@@ -6,27 +6,34 @@ import android.view.View;
 import androidx.annotation.NonNull;
 
 import com.blankj.utilcode.util.ToastUtils;
+import com.google.common.collect.Lists;
 import com.utimer.R;
-import com.utimer.view.SimpleDeedRecyclerView;
+import com.utimer.mvp.EndDeedListMvpP;
+import com.utimer.view.EndDeedRecyclerView;
 
-import java.util.Arrays;
+import org.joda.time.DateTime;
+
+import java.util.List;
 
 import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
+import ahtewlg7.utimer.entity.view.BaseSectionEntity;
+import ahtewlg7.utimer.enumtype.DATE_MONTH;
 import ahtewlg7.utimer.enumtype.DeedState;
-import ahtewlg7.utimer.mvp.BaseDeedListMvpP;
-import ahtewlg7.utimer.mvp.EndDeedListMvpP;
 import ahtewlg7.utimer.util.MyRInfo;
 import butterknife.BindView;
+import io.reactivex.disposables.Disposable;
 
 import static ahtewlg7.utimer.enumtype.DeedState.DONE;
 import static ahtewlg7.utimer.enumtype.DeedState.TRASH;
 import static com.utimer.common.TagInfoFactory.INVALID_TAG_RID;
 
-public class DeedEndListFragment extends ADeedListFragment implements BaseDeedListMvpP.IBaseDeedMvpV {
-    @BindView(R.id.fragment_deed_simple_list_recycler_view)
-    SimpleDeedRecyclerView recyclerView;
+public class DeedEndListFragment extends ABaseDeedSectionListFragment implements EndDeedListMvpP.IEndDeedMvpV {
+    @BindView(R.id.fragment_deed_section_list_recycler_view)
+    EndDeedRecyclerView recyclerView;
 
+    private Disposable disposable;
     private DeedState[] workState;
+    private List<BaseSectionEntity> showSectionList;
 
     public static DeedEndListFragment newInstance() {
         Bundle args = new Bundle();
@@ -40,14 +47,15 @@ public class DeedEndListFragment extends ADeedListFragment implements BaseDeedLi
     public void onViewCreated(View inflateView) {
         super.onViewCreated(inflateView);
 
-        showLifeInfo    = false;
-        workState       = new DeedState[]{DONE, TRASH};
+        showLifeInfo        = false;
+        workState           = new DeedState[]{DONE, TRASH};
+        showSectionList     = Lists.newArrayList();
     }
 
     /**********************************************AToolbarBkFragment**********************************************/
     @Override
     public int getLayoutRid() {
-        return R.layout.fragment_deed_simple_list;
+        return R.layout.fragment_deed_section_list;
     }
 
     @Override
@@ -57,15 +65,36 @@ public class DeedEndListFragment extends ADeedListFragment implements BaseDeedLi
 
     /**********************************************IBaseDeedMvpV**********************************************/
     @Override
+    public void onSectionLoad(BaseSectionEntity<GtdDeedEntity> sectionEntity) {
+    }
+
+    @Override
+    public void onSectionLoadSucc() {
+        List<BaseSectionEntity> sectionList = ((EndDeedListMvpP)listMvpP).getSectionEntity(DATE_MONTH.valueOf(DateTime.now().getMonthOfYear()));
+        recyclerView.resetData(sectionList);
+    }
+
+    @Override
+    public void onLoadStart() {
+        showSectionList.clear();
+    }
+
+    @Override
+    public void onLoadErr(Throwable err) {
+        if(disposable != null && !disposable.isDisposed())
+            disposable.dispose();
+    }
+
+    /*@Override
     public void onTagSucc(GtdDeedEntity entity, DeedState toState, int position) {
-        if(toState != TRASH &&  Arrays.asList(workState).contains(toState))
+        *//*if(toState != TRASH &&  Arrays.asList(workState).contains(toState))
             recyclerView.resetData(position, entity);
         else
-            recyclerView.removeData(entity);
+            recyclerView.removeData(entity);*//*
         int strRid = tagInfoFactory.getTagDetailRid(toState);
         if(strRid != INVALID_TAG_RID)
             ToastUtils.showShort(strRid);
-    }
+    }*/
     /**********************************************ADeedListFragment**********************************************/
     @NonNull
     @Override
@@ -75,19 +104,19 @@ public class DeedEndListFragment extends ADeedListFragment implements BaseDeedLi
 
     @NonNull
     @Override
-    protected BaseDeedListMvpP getDeedMvpP() {
+    protected EndDeedListMvpP getDeedMvpP() {
         return new EndDeedListMvpP(this);
     }
 
     @NonNull
     @Override
-    protected SimpleDeedRecyclerView getRecyclerView() {
+    protected EndDeedRecyclerView getRecyclerView() {
         return recyclerView;
     }
 
     @Override
     protected void toLoadDeedOnShow() {
         if(getLoadDeedState() != null)
-            listMvpP.toLoadDeedByState(false, getLoadDeedState());
+            ((EndDeedListMvpP)listMvpP).toLoadDeedByWeek(false, getLoadDeedState());
     }
 }
