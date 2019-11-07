@@ -16,6 +16,8 @@ import com.google.common.base.Optional;
 
 import java.util.List;
 
+import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
+
 /**
  * Created by lw on 2018/3/12.
  *
@@ -68,7 +70,7 @@ public abstract class ABaseDeedRecyclerView<T,K extends BaseViewHolder> extends 
         this.highLightPosition = highLightPosition;
         notifyDataSetChanged();
     }
-    protected SpannableStringBuilder toSpan(T item, int position){
+    protected SpannableStringBuilder toSpan(GtdDeedEntity item, int position){
         SpannableStringBuilder tmp = null;
         if(spanner != null){
             if(highLightPosition != null && highLightPosition.isPresent() && highLightPosition.get() == position)
@@ -79,7 +81,7 @@ public abstract class ABaseDeedRecyclerView<T,K extends BaseViewHolder> extends 
         return tmp;
     }
 
-    public interface IDeedSpanner<T>{
-        public @NonNull SpannableStringBuilder toSpan(int position, boolean highLight, @NonNull T item);
+    public interface IDeedSpanner{
+        public @NonNull SpannableStringBuilder toSpan(int position, boolean highLight, @NonNull GtdDeedEntity item);
     }
 }

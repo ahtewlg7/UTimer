@@ -21,7 +21,7 @@ import ahtewlg7.utimer.entity.view.BaseSectionEntity;
  * S : The SectionView Entity
  */
 
-public abstract class ABaseSectionRecyclerView<T extends BaseSectionEntity,K extends BaseViewHolder> extends ABaseDeedRecyclerView<T,K> {
+public abstract class ABaseSectionRecyclerView<T extends BaseSectionEntity, K extends BaseViewHolder> extends ABaseDeedRecyclerView<T, K> {
     public abstract int getViewHeadLayout();
 
     protected BaseSectionAdapter recyclerViewAdapter;
@@ -103,12 +103,8 @@ public abstract class ABaseSectionRecyclerView<T extends BaseSectionEntity,K ext
         return (BaseSectionAdapter)super.getAdapter();
     }
 
-    public abstract class BaseSectionAdapter extends BaseSectionQuickAdapter<T,K>{
+    public abstract class BaseSectionAdapter extends BaseSectionQuickAdapter<T, K>{
         public BaseSectionAdapter(List<T> dataList){
-            this(dataList, 0);
-        }
-
-        public BaseSectionAdapter(List<T> dataList, int columnNum){
             super(getViewItemLayout(), getViewHeadLayout(), dataList);
         }
 

@@ -10,8 +10,6 @@ import ahtewlg7.utimer.entity.ABaseEntity;
  */
 
 public class BaseSectionEntity<T extends ABaseEntity> extends SectionEntity<T> {
-    public static final String TAG = BaseSectionEntity.class.getSimpleName();
-
     protected boolean isMore;
 
     public BaseSectionEntity(boolean isHeader, String headerName, boolean isMore) {
