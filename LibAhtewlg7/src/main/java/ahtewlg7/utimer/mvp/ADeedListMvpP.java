@@ -8,6 +8,7 @@ import com.trello.rxlifecycle3.LifecycleProvider;
 import org.joda.time.LocalDate;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
@@ -102,9 +103,9 @@ public abstract class ADeedListMvpP {
                         @Override
                         public void accept(List<GtdDeedEntity> entityList) throws Exception {
                             if(ascOrder)
-                                Collections.sort(entityList, new DeedWarningTimeComparator().getAscOrder());
+                                Collections.sort(entityList, getDefaultAscComparator());
                             else
-                                Collections.sort(entityList, new DeedWarningTimeComparator().getDescOrder());
+                                Collections.sort(entityList, getDefaultDescComparator());
                         }
                     });
         }
@@ -152,6 +153,13 @@ public abstract class ADeedListMvpP {
             }
             return Flowable.just(busBean);
         }
+    }
+
+    protected Comparator<GtdDeedEntity> getDefaultAscComparator(){
+        return new DeedWarningTimeComparator().getAscOrder();
+    }
+    protected Comparator<GtdDeedEntity> getDefaultDescComparator(){
+        return new DeedWarningTimeComparator().getDescOrder();
     }
     public interface IADeedMvpV extends IRxLifeCycleBindView {
         public @NonNull LifecycleProvider getRxLifeCycleBindView();

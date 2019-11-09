@@ -15,10 +15,12 @@ import org.reactivestreams.Publisher;
 import org.reactivestreams.Subscription;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
 import ahtewlg7.utimer.comparator.ADateTimeComparator;
+import ahtewlg7.utimer.comparator.DeedWarningTimeComparator;
 import ahtewlg7.utimer.entity.busevent.DeedDoneBusEvent;
 import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
 import ahtewlg7.utimer.entity.view.EndDeedSectionEntity;
@@ -35,11 +37,13 @@ import io.reactivex.functions.Function;
 public class EndDeedListMvpP extends ADeedListMvpP {
     private IEndDeedMvpV mvpV;
     private Multimap<DATE_MONTH, EndDeedSectionEntity> monthSectionMap;
+    protected DeedWarningTimeComparator comparator;
 
     public EndDeedListMvpP(IEndDeedMvpV mvpV){
         super();
         this.mvpV           = mvpV;
         monthSectionMap     = HashMultimap.create();
+        comparator          = new DeedWarningTimeComparator();
     }
 
     @Override
@@ -141,7 +145,14 @@ public class EndDeedListMvpP extends ADeedListMvpP {
     public void toTagDeed(GtdDeedEntity deedEntity, DeedState deedState, int position) {
         
     }
-
+    @Override
+    protected Comparator<GtdDeedEntity> getDefaultAscComparator(){
+        return comparator.getAscOrder();
+    }
+    @Override
+    protected Comparator<GtdDeedEntity> getDefaultDescComparator(){
+        return comparator.getDescOrder();
+    }
     class EndDeedSectionEndTimeComparator extends ADateTimeComparator<EndDeedSectionEntity<GtdDeedEntity>> {
         @Override
         protected Optional<DateTime> getComparatorTime(EndDeedSectionEntity<GtdDeedEntity> e) {
