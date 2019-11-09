@@ -68,11 +68,7 @@ public abstract class ADeedListFragment<T,K extends BaseViewHolder> extends ABut
         tagInfoFactory      = new TagInfoFactory();
         mySpanClickListener = new MyClickListener();
 
-        getRecyclerView().init(getContext(), null,
-                null, null,
-                null,null,
-                null,null);
-        getRecyclerView().setSpanner(this);
+        toInitRecyclerView();
         listMvpP = getDeedMvpP();
 
         EventBusFatory.getInstance().getDefaultEventBus().register(this);
@@ -110,6 +106,13 @@ public abstract class ADeedListFragment<T,K extends BaseViewHolder> extends ABut
         }*/
     }
 
+    protected void toInitRecyclerView(){
+        getRecyclerView().init(getContext(), null,
+                null, null,
+                null,null,
+                null,null);
+        getRecyclerView().setSpanner(this);
+    }
     /**********************************************IGtdActionListMvpV**********************************************//*
     @Override
     public void onItemCreate(GtdDeedEntity data) {

@@ -15,10 +15,10 @@ import com.utimer.R;
 import java.util.List;
 
 import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
-import ahtewlg7.utimer.entity.view.BaseSectionEntity;
+import ahtewlg7.utimer.entity.view.EndDeedSectionEntity;
 import ahtewlg7.utimer.view.ABaseSectionRecyclerView;
 
-public class EndDeedRecyclerView extends ABaseSectionRecyclerView<BaseSectionEntity, BaseViewHolder> {
+public class EndDeedRecyclerView extends ABaseSectionRecyclerView<EndDeedSectionEntity, BaseViewHolder> {
     public EndDeedRecyclerView(Context context) {
         super(context);
     }
@@ -33,7 +33,7 @@ public class EndDeedRecyclerView extends ABaseSectionRecyclerView<BaseSectionEnt
 
     @Override
     public int getViewHeadLayout() {
-        return R.layout.view_section_item;
+        return R.layout.view_section_header;
     }
 
     @Override
@@ -43,12 +43,12 @@ public class EndDeedRecyclerView extends ABaseSectionRecyclerView<BaseSectionEnt
 
     @NonNull
     @Override
-    public BaseQuickAdapter<BaseSectionEntity, BaseViewHolder> createAdapter(List<BaseSectionEntity> entityList) {
+    public BaseQuickAdapter<EndDeedSectionEntity, BaseViewHolder> createAdapter(List<EndDeedSectionEntity> entityList) {
         return new EndDeedItemAdapter(entityList);
     }
 
     @Override
-    public void init(Context context, List<BaseSectionEntity> entityList,
+    public void init(Context context, List<EndDeedSectionEntity> entityList,
                      BaseQuickAdapter.OnItemClickListener itemClickListener,
                      BaseQuickAdapter.OnItemChildClickListener itemChildClickListener,
                      BaseQuickAdapter.OnItemLongClickListener itemLongClickListener,
@@ -59,22 +59,22 @@ public class EndDeedRecyclerView extends ABaseSectionRecyclerView<BaseSectionEnt
     }
 
     @Override
-    public void removeData(BaseSectionEntity baseSectionEntity) {
+    public void removeData(EndDeedSectionEntity baseSectionEntity) {
 
     }
 
     class EndDeedItemAdapter extends BaseSectionAdapter{
-        EndDeedItemAdapter(List<BaseSectionEntity> dataList){
+        EndDeedItemAdapter(List<EndDeedSectionEntity> dataList){
             super(dataList);
         }
 
         @Override
-        protected void convertHead(BaseViewHolder helper, BaseSectionEntity item) {
-            helper.setText(R.id.view_section_item_name, item.header);
+        protected void convertHead(BaseViewHolder helper, EndDeedSectionEntity item) {
+            helper.setText(R.id.view_section_header_name, item.header);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, BaseSectionEntity item) {
+        protected void convert(BaseViewHolder helper, EndDeedSectionEntity item) {
             helper.setText(R.id.view_section_item_name, ((GtdDeedEntity)(item.t)).getTitle());
         }
     }

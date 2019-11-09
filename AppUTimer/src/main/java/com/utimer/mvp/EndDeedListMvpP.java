@@ -3,21 +3,25 @@ package com.utimer.mvp;
 
 import androidx.annotation.NonNull;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.trello.rxlifecycle3.android.FragmentEvent;
 import com.trello.rxlifecycle3.components.support.RxFragment;
 
+import org.joda.time.DateTime;
 import org.reactivestreams.Publisher;
 import org.reactivestreams.Subscription;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
+import ahtewlg7.utimer.comparator.ADateTimeComparator;
 import ahtewlg7.utimer.entity.busevent.DeedDoneBusEvent;
 import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
-import ahtewlg7.utimer.entity.view.BaseSectionEntity;
+import ahtewlg7.utimer.entity.view.EndDeedSectionEntity;
 import ahtewlg7.utimer.enumtype.DATE_MONTH;
 import ahtewlg7.utimer.enumtype.DeedState;
 import ahtewlg7.utimer.mvp.ADeedListMvpP;
@@ -30,7 +34,7 @@ import io.reactivex.functions.Function;
 
 public class EndDeedListMvpP extends ADeedListMvpP {
     private IEndDeedMvpV mvpV;
-    private Multimap<DATE_MONTH, BaseSectionEntity> monthSectionMap;
+    private Multimap<DATE_MONTH, EndDeedSectionEntity> monthSectionMap;
 
     public EndDeedListMvpP(IEndDeedMvpV mvpV){
         super();
@@ -52,27 +56,28 @@ public class EndDeedListMvpP extends ADeedListMvpP {
                         return DATE_MONTH.valueOf(deedEntity.getEndTime().getMonthOfYear());
                     }
                 })
-                .flatMap(new Function<GroupedFlowable<DATE_MONTH, GtdDeedEntity>, Publisher<BaseSectionEntity<GtdDeedEntity>>>() {
+                .flatMap(new Function<GroupedFlowable<DATE_MONTH, GtdDeedEntity>, Publisher<EndDeedSectionEntity<GtdDeedEntity>>>() {
                     @Override
-                    public Publisher<BaseSectionEntity<GtdDeedEntity>> apply(GroupedFlowable<DATE_MONTH, GtdDeedEntity> entityGroupRx) throws Exception {
-                        return entityGroupRx.map(new Function<GtdDeedEntity, BaseSectionEntity<GtdDeedEntity>>() {
-                            @Override
-                            public BaseSectionEntity<GtdDeedEntity> apply(GtdDeedEntity deedEntity) throws Exception {
-                                return new BaseSectionEntity<GtdDeedEntity>(deedEntity);
-                            }
-                        })
-                                .startWith(new BaseSectionEntity<GtdDeedEntity>(true, entityGroupRx.getKey().getDetail(),true))
-                                .doOnNext(new Consumer<BaseSectionEntity<GtdDeedEntity>>() {
+                    public Publisher<EndDeedSectionEntity<GtdDeedEntity>> apply(GroupedFlowable<DATE_MONTH, GtdDeedEntity> entityGroupRx) throws Exception {
+                        return entityGroupRx.map(new Function<GtdDeedEntity, EndDeedSectionEntity<GtdDeedEntity>>() {
                                     @Override
-                                    public void accept(BaseSectionEntity<GtdDeedEntity> sectionEntity) throws Exception {
+                                    public EndDeedSectionEntity<GtdDeedEntity> apply(GtdDeedEntity deedEntity) throws Exception {
+                                        return new EndDeedSectionEntity<GtdDeedEntity>(entityGroupRx.getKey(), deedEntity);
+                                    }
+                                })
+                                .sorted(new EndDeedSectionEndTimeComparator().getDescOrder())
+                                .startWith(new EndDeedSectionEntity<GtdDeedEntity>(true, entityGroupRx.getKey(),true))
+                                .doOnNext(new Consumer<EndDeedSectionEntity<GtdDeedEntity>>() {
+                                    @Override
+                                    public void accept(EndDeedSectionEntity<GtdDeedEntity> sectionEntity) throws Exception {
                                         monthSectionMap.put(entityGroupRx.getKey(), sectionEntity);
                                     }
                                 });
                     }
                 })
-                .compose(((RxFragment)mvpV.getRxLifeCycleBindView()).<BaseSectionEntity<GtdDeedEntity>>bindUntilEvent(FragmentEvent.DESTROY))
+                .compose(((RxFragment)mvpV.getRxLifeCycleBindView()).<EndDeedSectionEntity<GtdDeedEntity>>bindUntilEvent(FragmentEvent.DESTROY))
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new MySafeSubscriber<BaseSectionEntity<GtdDeedEntity>>() {
+                .subscribe(new MySafeSubscriber<EndDeedSectionEntity<GtdDeedEntity>>() {
                     @Override
                     public void onSubscribe(Subscription s) {
                         super.onSubscribe(s);
@@ -82,10 +87,10 @@ public class EndDeedListMvpP extends ADeedListMvpP {
                     }
 
                     @Override
-                    public void onNext(BaseSectionEntity<GtdDeedEntity> sectionEntity) {
+                    public void onNext(EndDeedSectionEntity<GtdDeedEntity> sectionEntity) {
                         super.onNext(sectionEntity);
                         if(mvpV != null)
-                            ((IEndDeedMvpV)mvpV).onSectionLoad(sectionEntity);
+                            mvpV.onSectionLoad(sectionEntity);
                     }
 
                     @Override
@@ -99,7 +104,7 @@ public class EndDeedListMvpP extends ADeedListMvpP {
                     public void onComplete() {
                         super.onComplete();
                         if(mvpV != null)
-                            ((IEndDeedMvpV)mvpV).onSectionLoadSucc();
+                            mvpV.onSectionLoadSucc();
                     }
                 });
     }
@@ -108,9 +113,23 @@ public class EndDeedListMvpP extends ADeedListMvpP {
        toLoad(mvpM.toLoad(ascOrder, deedState));
     }
 
-    public List<BaseSectionEntity> getSectionEntity(DATE_MONTH month){
-        Collection<BaseSectionEntity> monthSection = monthSectionMap.get(month);
-       return monthSection == null ? null : Lists.newArrayList(monthSection);
+    public List<DATE_MONTH> getAllEndMonth(){
+       Set<DATE_MONTH> allEndMonth = monthSectionMap.keySet();
+       return allEndMonth == null ? null : Lists.newArrayList(allEndMonth);
+    }
+    public List<EndDeedSectionEntity> getAllSectionEntity(@NonNull List<DATE_MONTH> monthList){
+        List<DATE_MONTH> allMonth =  getAllEndMonth();
+        if(allMonth == null)
+            return null;
+        List<EndDeedSectionEntity> list = Lists.newLinkedList();
+        for(DATE_MONTH  month : allMonth){
+            Collection<EndDeedSectionEntity> sectionEntities = monthSectionMap.get(month);
+            if(monthList.contains(month)) {
+                list.addAll(sectionEntities);
+            }else if(!sectionEntities.isEmpty())
+                list.add((EndDeedSectionEntity)sectionEntities.toArray()[0]);
+        }
+       return list;
     }
 
     @Override
@@ -123,8 +142,14 @@ public class EndDeedListMvpP extends ADeedListMvpP {
         
     }
 
+    class EndDeedSectionEndTimeComparator extends ADateTimeComparator<EndDeedSectionEntity<GtdDeedEntity>> {
+        @Override
+        protected Optional<DateTime> getComparatorTime(EndDeedSectionEntity<GtdDeedEntity> e) {
+            return Optional.fromNullable(e.t.getEndTime());
+        }
+    }
     public interface IEndDeedMvpV extends IADeedMvpV{
-        public void onSectionLoad(BaseSectionEntity<GtdDeedEntity> sectionEntity);
+        public void onSectionLoad(EndDeedSectionEntity<GtdDeedEntity> sectionEntity);
         public void onSectionLoadSucc();
     }
 }

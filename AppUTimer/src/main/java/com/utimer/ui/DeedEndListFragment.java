@@ -5,7 +5,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
-import com.blankj.utilcode.util.ToastUtils;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.common.collect.Lists;
 import com.utimer.R;
 import com.utimer.mvp.EndDeedListMvpP;
@@ -16,7 +16,7 @@ import org.joda.time.DateTime;
 import java.util.List;
 
 import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
-import ahtewlg7.utimer.entity.view.BaseSectionEntity;
+import ahtewlg7.utimer.entity.view.EndDeedSectionEntity;
 import ahtewlg7.utimer.enumtype.DATE_MONTH;
 import ahtewlg7.utimer.enumtype.DeedState;
 import ahtewlg7.utimer.util.MyRInfo;
@@ -25,7 +25,6 @@ import io.reactivex.disposables.Disposable;
 
 import static ahtewlg7.utimer.enumtype.DeedState.DONE;
 import static ahtewlg7.utimer.enumtype.DeedState.TRASH;
-import static com.utimer.common.TagInfoFactory.INVALID_TAG_RID;
 
 public class DeedEndListFragment extends ABaseDeedSectionListFragment implements EndDeedListMvpP.IEndDeedMvpV {
     @BindView(R.id.fragment_deed_section_list_recycler_view)
@@ -33,7 +32,9 @@ public class DeedEndListFragment extends ABaseDeedSectionListFragment implements
 
     private Disposable disposable;
     private DeedState[] workState;
-    private List<BaseSectionEntity> showSectionList;
+    private DATE_MONTH currSelectedMonth;
+    private List<DATE_MONTH> showMonthList;
+    private SectionItemClickListener sectionItemClickListener;
 
     public static DeedEndListFragment newInstance() {
         Bundle args = new Bundle();
@@ -47,9 +48,16 @@ public class DeedEndListFragment extends ABaseDeedSectionListFragment implements
     public void onViewCreated(View inflateView) {
         super.onViewCreated(inflateView);
 
-        showLifeInfo        = false;
-        workState           = new DeedState[]{DONE, TRASH};
-        showSectionList     = Lists.newArrayList();
+        showLifeInfo    = false;
+        workState       = new DeedState[]{DONE, TRASH};
+        showMonthList   = Lists.newArrayList();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(disposable != null && !disposable.isDisposed())
+            disposable.dispose();
     }
 
     /**********************************************AToolbarBkFragment**********************************************/
@@ -65,18 +73,17 @@ public class DeedEndListFragment extends ABaseDeedSectionListFragment implements
 
     /**********************************************IBaseDeedMvpV**********************************************/
     @Override
-    public void onSectionLoad(BaseSectionEntity<GtdDeedEntity> sectionEntity) {
+    public void onSectionLoad(EndDeedSectionEntity<GtdDeedEntity> sectionEntity) {
     }
 
     @Override
     public void onSectionLoadSucc() {
-        List<BaseSectionEntity> sectionList = ((EndDeedListMvpP)listMvpP).getSectionEntity(DATE_MONTH.valueOf(DateTime.now().getMonthOfYear()));
-        recyclerView.resetData(sectionList);
+        toUpdateSectionView(DATE_MONTH.valueOf(DateTime.now().getMonthOfYear()));
     }
 
     @Override
     public void onLoadStart() {
-        showSectionList.clear();
+        showMonthList.clear();
     }
 
     @Override
@@ -115,8 +122,33 @@ public class DeedEndListFragment extends ABaseDeedSectionListFragment implements
     }
 
     @Override
+    protected void toInitRecyclerView(){
+        if(sectionItemClickListener == null)
+            sectionItemClickListener    = new SectionItemClickListener();
+        getRecyclerView().init(getContext(),  1, null,
+                sectionItemClickListener,null,
+                null,null);
+        getRecyclerView().setSpanner(this);
+    }
+
+    @Override
     protected void toLoadDeedOnShow() {
-        if(getLoadDeedState() != null)
-            ((EndDeedListMvpP)listMvpP).toLoadDeedByWeek(false, getLoadDeedState());
+        ((EndDeedListMvpP)listMvpP).toLoadDeedByWeek(false, getLoadDeedState());
+    }
+    private void toUpdateSectionView(DATE_MONTH dateMonth){
+        if(dateMonth == null || dateMonth == currSelectedMonth)
+            return;
+        currSelectedMonth = dateMonth;
+        showMonthList.clear();
+        showMonthList.add(dateMonth);
+        recyclerView.resetData(((EndDeedListMvpP) listMvpP).getAllSectionEntity(showMonthList));
+    }
+    class SectionItemClickListener implements BaseQuickAdapter.OnItemClickListener{
+        @Override
+        public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+           EndDeedSectionEntity entity = (EndDeedSectionEntity)adapter.getItem(position);
+           if(entity != null && entity.isHeader)
+               toUpdateSectionView(entity.getDateMonth());
+        }
     }
 }
