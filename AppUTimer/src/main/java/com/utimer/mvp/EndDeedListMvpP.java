@@ -15,11 +15,13 @@ import org.reactivestreams.Publisher;
 import org.reactivestreams.Subscription;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 
+import ahtewlg7.utimer.comparator.ABaseIntComparator;
 import ahtewlg7.utimer.comparator.ADateTimeComparator;
+import ahtewlg7.utimer.comparator.DateMonthComparator;
 import ahtewlg7.utimer.comparator.DeedWarningTimeComparator;
 import ahtewlg7.utimer.entity.busevent.DeedDoneBusEvent;
 import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
@@ -118,8 +120,9 @@ public class EndDeedListMvpP extends ADeedListMvpP {
     }
 
     public List<DATE_MONTH> getAllEndMonth(){
-       Set<DATE_MONTH> allEndMonth = monthSectionMap.keySet();
-       return allEndMonth == null ? null : Lists.newArrayList(allEndMonth);
+       List<DATE_MONTH> allEndMonthList = Lists.newArrayList(monthSectionMap.keySet());
+       Collections.sort(allEndMonthList,new DateMonthComparator().getDescOrder());
+        return allEndMonthList;
     }
     public List<EndDeedSectionEntity> getAllSectionEntity(@NonNull List<DATE_MONTH> monthList){
         List<DATE_MONTH> allMonth =  getAllEndMonth();
@@ -152,6 +155,12 @@ public class EndDeedListMvpP extends ADeedListMvpP {
     @Override
     protected Comparator<GtdDeedEntity> getDefaultDescComparator(){
         return comparator.getDescOrder();
+    }
+    class DateMonthGroupComparator extends ABaseIntComparator<GroupedFlowable<DATE_MONTH, GtdDeedEntity>>{
+        @Override
+        protected int getComparatorInt(GroupedFlowable<DATE_MONTH, GtdDeedEntity> groupedFlowable) {
+            return groupedFlowable.getKey().value();
+        }
     }
     class EndDeedSectionEndTimeComparator extends ADateTimeComparator<EndDeedSectionEntity<GtdDeedEntity>> {
         @Override
