@@ -75,7 +75,7 @@ dependencies {
     api 'com.trello.rxlifecycle3:rxlifecycle-components:3.0.0'
 
     api 'androidx.recyclerview:recyclerview:1.0.0'
-    api 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.46'
+    api 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.50'
 
     api 'org.greenrobot:eventbus:3.1.1'
 

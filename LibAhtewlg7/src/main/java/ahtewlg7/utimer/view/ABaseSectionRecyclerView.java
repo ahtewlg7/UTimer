@@ -54,7 +54,7 @@ public abstract class ABaseSectionRecyclerView<T extends BaseSectionEntity, K ex
         recyclerViewAdapter.toSetOnItemLongClickListener(itemLongClickListener);
         recyclerViewAdapter.toSetOnItemChildLongClickListener(itemChildLongClickListener);
         recyclerViewAdapter.bindToRecyclerView(this);
-        setLayoutManager(new GridLayoutManager(context, columnNum == 0 ? 2 : columnNum));
+        setLayoutManager(new GridLayoutManager(context, columnNum == 0 ? 1 : columnNum));
         setAdapter(recyclerViewAdapter);
     }
 
