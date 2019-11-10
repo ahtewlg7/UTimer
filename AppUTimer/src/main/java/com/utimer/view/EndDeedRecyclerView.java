@@ -12,10 +12,13 @@ import com.chad.library.adapter.base.listener.OnItemDragListener;
 import com.chad.library.adapter.base.listener.OnItemSwipeListener;
 import com.utimer.R;
 
+import org.joda.time.DateTime;
+
 import java.util.List;
 
 import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
 import ahtewlg7.utimer.entity.view.EndDeedSectionEntity;
+import ahtewlg7.utimer.util.DateTimeAction;
 import ahtewlg7.utimer.view.ABaseSectionRecyclerView;
 
 public class EndDeedRecyclerView extends ABaseSectionRecyclerView<EndDeedSectionEntity, BaseViewHolder> {
@@ -64,8 +67,10 @@ public class EndDeedRecyclerView extends ABaseSectionRecyclerView<EndDeedSection
     }
 
     class EndDeedItemAdapter extends BaseSectionAdapter{
+        DateTimeAction dateTimeAction;
         EndDeedItemAdapter(List<EndDeedSectionEntity> dataList){
             super(dataList);
+            dateTimeAction = new DateTimeAction();
         }
 
         @Override
@@ -75,7 +80,12 @@ public class EndDeedRecyclerView extends ABaseSectionRecyclerView<EndDeedSection
 
         @Override
         protected void convert(BaseViewHolder helper, EndDeedSectionEntity item) {
-            helper.setText(R.id.view_section_item_name, ((GtdDeedEntity)(item.t)).getTitle());
+            helper.setText(R.id.view_section_item_name, toSpan((GtdDeedEntity)(item.t), helper.getLayoutPosition()))
+                .setText(R.id.view_section_item_createtime, getFormatDate(((GtdDeedEntity)(item.t)).getCreateTime()))
+                .setText(R.id.view_section_item_endtime, getFormatDate(((GtdDeedEntity)(item.t)).getEndTime()));
+        }
+        private String getFormatDate(DateTime dateTime){
+            return dateTimeAction.toFormat(dateTime);
         }
     }
 }
