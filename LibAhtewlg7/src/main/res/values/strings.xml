@@ -45,4 +45,12 @@
     <string name="Oct">October</string>
     <string name="Nov">November</string>
     <string name="Dec">December</string>
+
+    <string name="Sun">Sunday</string>
+    <string name="Mon">Monday</string>
+    <string name="Tue">Tuesday</string>
+    <string name="Wed">Wednesday</string>
+    <string name="Thu">Thursday</string>
+    <string name="Fri">Friday</string>
+    <string name="Sat">Saturday</string>
 </resources>
