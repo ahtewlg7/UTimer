@@ -34,10 +34,11 @@ import io.reactivex.functions.Consumer;
 /**
  * Created by lw on 2019/6/25.
  */
-public abstract class ADeedListMvpP {
+public abstract class ADeedListMvpP<T> {
+    protected abstract GtdDeedEntity getDeedEntity(T t);
     protected abstract void toLoad(@NonNull Flowable<List<GtdDeedEntity>> loadRx);
     public abstract void toHandleBusEvent(DeedDoneBusEvent busEvent, DeedState... state);
-    public abstract void toTagDeed(final GtdDeedEntity deedEntity, final DeedState deedState, final int position);
+    public abstract void toTagDeed(final T entity, final DeedState deedState, final int position);
 
     protected BaseDeedMvpM mvpM;
     protected DeedStateGraph stateGraph;
@@ -49,8 +50,11 @@ public abstract class ADeedListMvpP {
         stateGraph.initNodes();
     }
 
-    public Set<DeedState> getNextState(@NonNull GtdDeedEntity deedEntity){
-        Optional<Set<DeedState>> deedStateOptional = stateGraph.getNextNodeList(deedEntity.getDeedState());
+    public Set<DeedState> getNextState(@NonNull T t){
+        GtdDeedEntity entity = getDeedEntity(t);
+        if(entity == null)
+            return null;
+        Optional<Set<DeedState>> deedStateOptional = stateGraph.getNextNodeList(entity.getDeedState());
         if(deedStateOptional.isPresent())
             return deedStateOptional.get();
         return null;
@@ -154,7 +158,6 @@ public abstract class ADeedListMvpP {
             return Flowable.just(busBean);
         }
     }
-
     protected Comparator<GtdDeedEntity> getDefaultAscComparator(){
         return new DeedWarningTimeComparator().getAscOrder();
     }
@@ -166,5 +169,12 @@ public abstract class ADeedListMvpP {
 
         public void onLoadStart();
         public void onLoadErr(Throwable err);
+    }
+    public interface  IADeedTagV<T> {
+        public void onTagStart(T entity,DeedState toState, int position);
+        public void onTagSucc(T entity, DeedState toState, int position);
+        public void onTagFail(T entity, DeedState toState, int position);
+        public void onTagErr(T entity,  DeedState toState, int position, Throwable err);
+        public void onTagEnd(T entity,  DeedState toState, int position);
     }
 }

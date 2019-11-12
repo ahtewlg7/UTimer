@@ -5,7 +5,9 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
+import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.utimer.R;
 import com.utimer.mvp.EndDeedListMvpP;
@@ -13,6 +15,7 @@ import com.utimer.view.EndDeedRecyclerView;
 
 import org.joda.time.DateTime;
 
+import java.util.Arrays;
 import java.util.List;
 
 import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
@@ -25,6 +28,7 @@ import io.reactivex.disposables.Disposable;
 
 import static ahtewlg7.utimer.enumtype.DeedState.DONE;
 import static ahtewlg7.utimer.enumtype.DeedState.TRASH;
+import static com.utimer.common.TagInfoFactory.INVALID_TAG_RID;
 
 public class DeedEndListFragment extends ABaseDeedSectionListFragment implements EndDeedListMvpP.IEndDeedMvpV {
     @BindView(R.id.fragment_deed_section_list_recycler_view)
@@ -92,16 +96,39 @@ public class DeedEndListFragment extends ABaseDeedSectionListFragment implements
             disposable.dispose();
     }
 
-    /*@Override
-    public void onTagSucc(GtdDeedEntity entity, DeedState toState, int position) {
-        *//*if(toState != TRASH &&  Arrays.asList(workState).contains(toState))
+    @Override
+    public void onTagStart(EndDeedSectionEntity<GtdDeedEntity> sectionEntity, DeedState toState, int position) {
+    }
+
+    @Override
+    public void onTagSucc(EndDeedSectionEntity<GtdDeedEntity> entity, DeedState toState, int position) {
+        if(toState != TRASH &&  Arrays.asList(workState).contains(toState))
             recyclerView.resetData(position, entity);
         else
-            recyclerView.removeData(entity);*//*
+            recyclerView.removeData(position);
         int strRid = tagInfoFactory.getTagDetailRid(toState);
         if(strRid != INVALID_TAG_RID)
             ToastUtils.showShort(strRid);
-    }*/
+    }
+
+    @Override
+    public void onTagFail(EndDeedSectionEntity<GtdDeedEntity> sectionEntity, DeedState toState, int position) {
+        ToastUtils.showShort(R.string.prompt_tag_fail);
+    }
+
+    @Override
+    public void onTagErr(EndDeedSectionEntity<GtdDeedEntity> sectionEntity, DeedState toState, int position, Throwable err) {
+        ToastUtils.showShort(R.string.prompt_tag_fail);
+        if(bottomSheetDialog.isShowing())
+            bottomSheetDialog.dismiss();
+    }
+
+    @Override
+    public void onTagEnd(EndDeedSectionEntity<GtdDeedEntity> sectionEntity, DeedState toState, int position) {
+        getRecyclerView().toHighLight(Optional.absent());
+        if(bottomSheetDialog.isShowing())
+            bottomSheetDialog.dismiss();
+    }
     /**********************************************ADeedListFragment**********************************************/
     @NonNull
     @Override
@@ -126,7 +153,7 @@ public class DeedEndListFragment extends ABaseDeedSectionListFragment implements
         if(sectionItemClickListener == null)
             sectionItemClickListener    = new SectionItemClickListener();
         getRecyclerView().init(getContext(),  1, null,
-                sectionItemClickListener,null,
+                sectionItemClickListener,sectionItemClickListener,
                 null,null);
         getRecyclerView().setSpanner(this);
     }
@@ -143,12 +170,20 @@ public class DeedEndListFragment extends ABaseDeedSectionListFragment implements
         showMonthList.add(dateMonth);
         recyclerView.resetData(((EndDeedListMvpP) listMvpP).getAllSectionEntity(showMonthList));
     }
-    class SectionItemClickListener implements BaseQuickAdapter.OnItemClickListener{
+    class SectionItemClickListener implements BaseQuickAdapter.OnItemClickListener,
+            BaseQuickAdapter.OnItemChildClickListener{
         @Override
         public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
            EndDeedSectionEntity entity = (EndDeedSectionEntity)adapter.getItem(position);
            if(entity != null && entity.isHeader)
                toUpdateSectionView(entity.getDateMonth());
+        }
+
+        @Override
+        public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+            EndDeedSectionEntity entity = (EndDeedSectionEntity)adapter.getItem(position);
+            if(entity != null && !entity.isHeader)
+                createBottomSheet(position);
         }
     }
 }

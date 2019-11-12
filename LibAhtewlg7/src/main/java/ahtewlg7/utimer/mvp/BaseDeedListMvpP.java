@@ -24,7 +24,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 /**
  * Created by lw on 2019/6/25.
  */
-public class BaseDeedListMvpP extends ADeedListMvpP {
+public class BaseDeedListMvpP extends ADeedListMvpP<GtdDeedEntity> {
     protected IBaseDeedMvpV mvpV;
 
     public BaseDeedListMvpP(IBaseDeedMvpV mvpV){
@@ -112,14 +112,14 @@ public class BaseDeedListMvpP extends ADeedListMvpP {
                     }
                 });
     }
-    public interface IBaseDeedMvpV extends IADeedMvpV{
+
+    @Override
+    protected GtdDeedEntity getDeedEntity(GtdDeedEntity deedEntity) {
+        return deedEntity;
+    }
+
+    public interface IBaseDeedMvpV extends IADeedMvpV, IADeedTagV<GtdDeedEntity>{
         public void onLoadSucc(List<GtdDeedEntity> entityList);
         public void onLoadSucc(GtdDeedEntity entity);
-
-        public void onTagStart(GtdDeedEntity entity,DeedState toState, int position);
-        public void onTagSucc(GtdDeedEntity entity, DeedState toState, int position);
-        public void onTagFail(GtdDeedEntity entity, DeedState toState, int position);
-        public void onTagErr(GtdDeedEntity entity,  DeedState toState, int position, Throwable err);
-        public void onTagEnd(GtdDeedEntity entity,  DeedState toState, int position);
     }
 }

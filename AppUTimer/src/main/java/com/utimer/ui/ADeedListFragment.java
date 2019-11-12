@@ -45,7 +45,7 @@ import ahtewlg7.utimer.util.Logcat;
 import ahtewlg7.utimer.util.MyRInfo;
 import ahtewlg7.utimer.view.ABaseDeedRecyclerView;
 
-public abstract class ADeedListFragment<T,K extends BaseViewHolder> extends AButterKnifeFragment
+public abstract class  ADeedListFragment<T,K extends BaseViewHolder> extends AButterKnifeFragment
         implements ABaseDeedRecyclerView.IDeedSpanner {
     public static final int INIT_POSITION = -1;
 
@@ -210,7 +210,7 @@ public abstract class ADeedListFragment<T,K extends BaseViewHolder> extends ABut
         //+++++++++++++++++++++++++++++++++++OnItemClickListener+++++++++++++++++++++++++++++++
         @Override
         public void onTagClick(int position, DeedState targetState) {
-            listMvpP.toTagDeed((GtdDeedEntity) getRecyclerView().getItem(position), targetState, position);
+            listMvpP.toTagDeed(getRecyclerView().getItem(position), targetState, position);
         }
         //+++++++++++++++++++++++++++++++++++OnDismissListener+++++++++++++++++++++++++++++++
         @Override
@@ -223,7 +223,7 @@ public abstract class ADeedListFragment<T,K extends BaseViewHolder> extends ABut
             Logcat.d("Warning","createBottomSheet failed");
             return;
         }
-        GtdDeedEntity currEntity = (GtdDeedEntity)getRecyclerView().getItem(position);
+        T currEntity = getRecyclerView().getItem(position);
         Set<DeedState> deedStateSet = listMvpP.getNextState(currEntity);
         if(deedStateSet == null)
             return;

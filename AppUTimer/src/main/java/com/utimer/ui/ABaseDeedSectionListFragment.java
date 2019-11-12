@@ -4,12 +4,12 @@ import androidx.annotation.NonNull;
 
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.trello.rxlifecycle3.LifecycleProvider;
-import com.utimer.mvp.EndDeedListMvpP;
 
 import ahtewlg7.utimer.entity.view.BaseSectionEntity;
+import ahtewlg7.utimer.mvp.ADeedListMvpP;
 
 public abstract class ABaseDeedSectionListFragment<T extends BaseSectionEntity> extends ADeedListFragment<T, BaseViewHolder>
-        implements EndDeedListMvpP.IEndDeedMvpV {
+        implements ADeedListMvpP.IADeedMvpV {
     @NonNull
     @Override
     public LifecycleProvider getRxLifeCycleBindView() {
