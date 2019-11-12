@@ -19,10 +19,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import ahtewlg7.utimer.comparator.ABaseIntComparator;
 import ahtewlg7.utimer.comparator.ADateTimeComparator;
 import ahtewlg7.utimer.comparator.DateMonthComparator;
 import ahtewlg7.utimer.comparator.DeedWarningTimeComparator;
+import ahtewlg7.utimer.entity.BaseEventBusBean;
 import ahtewlg7.utimer.entity.busevent.DeedDoneBusEvent;
 import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
 import ahtewlg7.utimer.entity.view.EndDeedSectionEntity;
@@ -36,7 +36,7 @@ import io.reactivex.flowables.GroupedFlowable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 
-public class EndDeedListMvpP extends ADeedListMvpP {
+public class EndDeedListMvpP extends ADeedListMvpP<EndDeedSectionEntity<GtdDeedEntity>> {
     private IEndDeedMvpV mvpV;
     private Multimap<DATE_MONTH, EndDeedSectionEntity> monthSectionMap;
     protected DeedWarningTimeComparator comparator;
@@ -141,12 +141,48 @@ public class EndDeedListMvpP extends ADeedListMvpP {
 
     @Override
     public void toHandleBusEvent(DeedDoneBusEvent busEvent, DeedState... state) {
-
     }
 
     @Override
-    public void toTagDeed(GtdDeedEntity deedEntity, DeedState deedState, int position) {
-        
+    public void toTagDeed(EndDeedSectionEntity<GtdDeedEntity> entity, DeedState deedState, int position) {
+        if(entity == null || entity.isHeader)
+            return;
+        mvpM.toTag(entity.t,deedState)
+                .compose(((RxFragment)mvpV.getRxLifeCycleBindView()).<Optional<BaseEventBusBean>>bindUntilEvent(FragmentEvent.DESTROY))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new MySafeSubscriber<Optional<BaseEventBusBean>>() {
+                    @Override
+                    public void onSubscribe(Subscription s) {
+                        super.onSubscribe(s);
+                        if(mvpV != null)
+                            mvpV.onTagStart(entity, deedState, position);
+                    }
+
+                    @Override
+                    public void onNext(Optional<BaseEventBusBean> busBeanOptional) {
+                        super.onNext(busBeanOptional);
+                        if(mvpV == null)
+                            return;
+                        if(busBeanOptional.isPresent())
+                            mvpV.onTagSucc(entity, deedState, position);
+                        else
+                            mvpV.onTagFail(entity, deedState, position);
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+                        super.onError(t);
+                        if(mvpV != null)
+                            mvpV.onTagErr(entity,deedState, position, t);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        super.onComplete();
+                        if(mvpV != null)
+                            mvpV.onTagEnd(entity,deedState, position);
+                    }
+                });
     }
     @Override
     protected Comparator<GtdDeedEntity> getDefaultAscComparator(){
@@ -156,19 +192,20 @@ public class EndDeedListMvpP extends ADeedListMvpP {
     protected Comparator<GtdDeedEntity> getDefaultDescComparator(){
         return comparator.getDescOrder();
     }
-    class DateMonthGroupComparator extends ABaseIntComparator<GroupedFlowable<DATE_MONTH, GtdDeedEntity>>{
-        @Override
-        protected int getComparatorInt(GroupedFlowable<DATE_MONTH, GtdDeedEntity> groupedFlowable) {
-            return groupedFlowable.getKey().value();
-        }
+
+    @Override
+    protected GtdDeedEntity getDeedEntity(EndDeedSectionEntity<GtdDeedEntity> entity) {
+        return entity.t;
     }
+
     class EndDeedSectionEndTimeComparator extends ADateTimeComparator<EndDeedSectionEntity<GtdDeedEntity>> {
         @Override
         protected Optional<DateTime> getComparatorTime(EndDeedSectionEntity<GtdDeedEntity> e) {
             return Optional.fromNullable(e.t.getEndTime());
         }
     }
-    public interface IEndDeedMvpV extends IADeedMvpV{
+    public interface IEndDeedMvpV extends IADeedMvpV,
+            IADeedTagV<EndDeedSectionEntity<GtdDeedEntity>>{
         public void onSectionLoad(EndDeedSectionEntity<GtdDeedEntity> sectionEntity);
         public void onSectionLoadSucc();
     }

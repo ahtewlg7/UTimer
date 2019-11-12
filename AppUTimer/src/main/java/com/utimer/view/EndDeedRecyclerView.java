@@ -11,6 +11,7 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.chad.library.adapter.base.listener.OnItemDragListener;
 import com.chad.library.adapter.base.listener.OnItemSwipeListener;
 import com.utimer.R;
+import com.utimer.common.WeekFactory;
 
 import org.joda.time.DateTime;
 
@@ -61,15 +62,19 @@ public class EndDeedRecyclerView extends ABaseSectionRecyclerView<EndDeedSection
         super.init(context,1, entityList, itemClickListener, itemChildClickListener, itemLongClickListener, itemChildLongClickListener);
     }
 
+    @Deprecated
     @Override
     public void removeData(EndDeedSectionEntity baseSectionEntity) {
-
+        //do nothing , this adapter is not supported
     }
 
     class EndDeedItemAdapter extends BaseSectionAdapter{
+        WeekFactory weekFactory;
         DateTimeAction dateTimeAction;
+
         EndDeedItemAdapter(List<EndDeedSectionEntity> dataList){
             super(dataList);
+            weekFactory    = new WeekFactory();
             dateTimeAction = new DateTimeAction();
         }
 
@@ -81,11 +86,12 @@ public class EndDeedRecyclerView extends ABaseSectionRecyclerView<EndDeedSection
         @Override
         protected void convert(BaseViewHolder helper, EndDeedSectionEntity item) {
             helper.setText(R.id.view_section_item_name, toSpan((GtdDeedEntity)(item.t), helper.getLayoutPosition()))
-                .setText(R.id.view_section_item_createtime, getFormatDate(((GtdDeedEntity)(item.t)).getCreateTime()))
-                .setText(R.id.view_section_item_endtime, getFormatDate(((GtdDeedEntity)(item.t)).getEndTime()));
+                .addOnClickListener(R.id.view_section_item_name)
+                .setText(R.id.view_section_item_createtime, getFormatDetail(((GtdDeedEntity)(item.t)).getCreateTime()))
+                .setText(R.id.view_section_item_endtime, getFormatDetail(((GtdDeedEntity)(item.t)).getEndTime()));
         }
-        private String getFormatDate(DateTime dateTime){
-            return dateTimeAction.toFormat(dateTime);
+        private String getFormatDetail(DateTime dateTime){
+            return dateTime == null ? " " : dateTimeAction.toFormat(dateTime) + " " + weekFactory.getWeekName(dateTime);
         }
     }
 }
