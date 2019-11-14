@@ -69,16 +69,16 @@ public class UTimerActivity extends AButterKnifeActivity{
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        EventBusFatory.getInstance().getDefaultEventBus().post(new ActivityBusEvent(ActivityEvent.STOP));
+    }
+
+    @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         if(getTopFragment().onKeyUp(keyCode, event))
             return true;
         return super.onKeyUp(keyCode, event);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        EventBusFatory.getInstance().getDefaultEventBus().post(new ActivityBusEvent(ActivityEvent.STOP));
     }
 
     @Override
