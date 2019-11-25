@@ -15,6 +15,7 @@ public abstract class AButterKnifeActivity extends BaseBinderRxActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initWindow();
         setContentView(getContentViewLayout());
 
         ButterKnife.bind(this);
@@ -23,5 +24,8 @@ public abstract class AButterKnifeActivity extends BaseBinderRxActivity {
     @Override
     public AButterKnifeFragment getTopFragment() {
         return (AButterKnifeFragment) super.getTopFragment();
+    }
+
+    protected void initWindow(){
     }
 }
