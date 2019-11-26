@@ -67,4 +67,5 @@
     <string name="prompt_deed_tag_defer">该工作必须做，而且必须得亲自做</string>
     <string name="prompt_deed_tag_delegate">该工作必须做，但可以委托别人做</string>
     <string name="prompt_deed_tag_done">该工作已完成</string>
+    <string name="prompt_finish_by_double_back">再按一次返回退出</string>
 </resources>

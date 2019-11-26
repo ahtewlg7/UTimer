@@ -13,6 +13,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.blankj.utilcode.util.ToastUtils;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.luck.picture.lib.PictureSelector;
@@ -33,6 +34,8 @@ import ahtewlg7.utimer.util.MySimpleObserver;
 import butterknife.BindView;
 
 public class UTimerActivity extends AButterKnifeActivity{
+    private static final long WAIT_TIME = 2000L;
+
     @BindView(R.id.activity_utimer_container)
     ConstraintLayout constraintLayout;
 
@@ -47,6 +50,7 @@ public class UTimerActivity extends AButterKnifeActivity{
     @BindView(R.id.activity_utimer_fragment_bn_deed)
     FloatingActionButton deedActionButton;
 
+    private long preTouchTime;
     private RxPermissions rxPermissions;
     private MenuButtonClickListener menuButtonClickListener;
 
@@ -93,6 +97,20 @@ public class UTimerActivity extends AButterKnifeActivity{
         if(getTopFragment().onTouchEvent(event))
             return true;
         return super.onTouchEvent(event);
+    }
+
+    @Override
+    public void onBackPressedSupport() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 1)
+            pop();
+        else {
+            if (System.currentTimeMillis() - preTouchTime < WAIT_TIME) {
+                finish();
+            } else {
+                preTouchTime = System.currentTimeMillis();
+                ToastUtils.showShort(R.string.prompt_finish_by_double_back);
+            }
+        }
     }
 
     @NonNull

@@ -97,6 +97,7 @@
     <string name="prompt_deed_tag_delegate">This job will be finished , but you can delegate it to someone</string>
     <string name="prompt_deed_tag_done">This job has been finished</string>
     <string name="prompt_tag_fail">tag failed, please try again</string>
+    <string name="prompt_finish_by_double_back">back again to exit</string>
 
     <string name="entity_invalid">the env is not ready , so pop it</string>
 </resources>

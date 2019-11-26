@@ -1,6 +1,7 @@
 package com.utimer.ui;
 
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -120,6 +121,24 @@ public class DeedsFragment extends AToolbarBkFragment{
                 break;
         }
         return result;
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK && prePosition != SCHEDULE.value()){
+            showHideFragment(fragments[SCHEDULE.value()], fragments[prePosition]);
+            prePosition = SCHEDULE.value();
+            tabLayout.setCurrentTab(prePosition);
+            return true;
+        }
+        return super.onKeyUp(keyCode, event);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK && prePosition != SCHEDULE.value())
+            return true;
+        return super.onKeyDown(keyCode, event);
     }
 
     private void initTabLayout(){
