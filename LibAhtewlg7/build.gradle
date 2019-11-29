@@ -82,6 +82,7 @@ dependencies {
     api 'me.yokeyword:fragmentation:1.3.6'
     api 'me.yokeyword:fragmentation-core:1.3.6'
     api 'me.yokeyword:fragmentation-swipeback:1.3.6'
+//    implementation 'me.yokeyword:fragmentationx:1.0.2'
 
     api 'com.jakewharton:disklrucache:2.0.2'
 

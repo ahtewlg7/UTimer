@@ -18,8 +18,6 @@ import me.yokeyword.fragmentation.SupportHelper;
 import me.yokeyword.fragmentation.anim.FragmentAnimator;
 
 public abstract class BaseRxActivity extends RxAppCompatActivity implements ISupportActivity {
-    public static final String TAG = BaseRxActivity.class.getSimpleName();
-
     protected final SupportActivityDelegate mDelegate = new SupportActivityDelegate(this);
 
     @Override

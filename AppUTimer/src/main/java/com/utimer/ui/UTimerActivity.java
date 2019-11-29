@@ -1,6 +1,7 @@
 package com.utimer.ui;
 
 import android.Manifest;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.KeyEvent;
@@ -19,9 +20,12 @@ import com.github.clans.fab.FloatingActionMenu;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
+import com.luck.picture.lib.entity.LocalMedia;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.trello.rxlifecycle3.android.ActivityEvent;
 import com.utimer.R;
+
+import java.util.List;
 
 import ahtewlg7.utimer.common.LibContextInit;
 import ahtewlg7.utimer.db.GreenDaoAction;
@@ -116,6 +120,17 @@ public class UTimerActivity extends AButterKnifeActivity{
     @NonNull
     protected Class<? extends BinderService> getBinderServiceClass() {
         return BaseBinderService.class;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == PictureConfig.CHOOSE_REQUEST) {
+                List<LocalMedia> images = PictureSelector.obtainMultipleResult(data);
+//                Log.i(TAG,"images = " + images);
+            }
+        }
     }
 
     public FloatingActionMenu getFloatingActionMenu(){
