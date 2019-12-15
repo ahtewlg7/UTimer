@@ -1,6 +1,9 @@
 package ahtewlg7.utimer.util;
 
 
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 
 import androidx.annotation.BoolRes;
@@ -12,19 +15,16 @@ import androidx.annotation.StringRes;
 import com.blankj.utilcode.util.Utils;
 
 
-/**
- * Created by 10139980 on 2016/11/15.
- */
-
-
 public class MyRInfo {
-    private static final String TAG = MyRInfo.class.getSimpleName();
-    
 	private MyRInfo() {
 	}
     
     public static Drawable getDrawableByID(@DrawableRes int id) throws RuntimeException{
         return Utils.getApp().getApplicationContext().getResources().getDrawable(id);
+    }
+    public static Bitmap getBitmapById(@DrawableRes int id) throws RuntimeException{
+        Resources res = Utils.getApp().getApplicationContext().getResources();
+        return BitmapFactory.decodeResource(res, id);
     }
     public static String getStringByID(@StringRes int id) throws RuntimeException{
         return Utils.getApp().getApplicationContext().getResources().getString(id);

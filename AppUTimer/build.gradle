@@ -85,7 +85,7 @@ dependencies {
 
     implementation 'com.haibin:calendarview:3.6.5'
 
-    implementation 'com.github.LuckSiege.PictureSelector:picture_library:v2.3.4'
+    implementation 'com.github.LuckSiege.PictureSelector:picture_library:v2.2.4'
 }
 repositories {
     mavenCentral()

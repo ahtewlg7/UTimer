@@ -8,7 +8,7 @@ import android.text.style.ClickableSpan;
 import android.view.MotionEvent;
 import android.widget.TextView;
 
-import ahtewlg7.utimer.view.md.ClickableImageSpan;
+import ahtewlg7.utimer.span.ClickableImageSpan;
 
 /**
  * Created by lw on 2016/6/6.

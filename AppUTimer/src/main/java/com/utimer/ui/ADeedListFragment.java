@@ -38,6 +38,7 @@ import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
 import ahtewlg7.utimer.entity.span.SimpleMultiSpanTag;
 import ahtewlg7.utimer.enumtype.DeedState;
 import ahtewlg7.utimer.factory.EventBusFatory;
+import ahtewlg7.utimer.md.MyBypass;
 import ahtewlg7.utimer.mvp.ADeedListMvpP;
 import ahtewlg7.utimer.span.TextClickableSpan;
 import ahtewlg7.utimer.state.GtdMachine;
@@ -56,6 +57,7 @@ public abstract class  ADeedListFragment<T,K extends BaseViewHolder> extends ABu
     protected int editIndex = -1;
     protected boolean showLifeInfo = true;
 
+    protected MyBypass myBypass;
     protected ADeedListMvpP listMvpP;
     protected TagInfoFactory tagInfoFactory;
     protected MyClickListener mySpanClickListener;
@@ -69,7 +71,8 @@ public abstract class  ADeedListFragment<T,K extends BaseViewHolder> extends ABu
         mySpanClickListener = new MyClickListener();
 
         toInitRecyclerView();
-        listMvpP = getDeedMvpP();
+        myBypass    = new MyBypass();
+        listMvpP    = getDeedMvpP();
 
         EventBusFatory.getInstance().getDefaultEventBus().register(this);
     }
@@ -137,24 +140,42 @@ public abstract class  ADeedListFragment<T,K extends BaseViewHolder> extends ABu
             spanny.append(multiSpanTag.getTagTitle().get(),
                     new ForegroundColorSpan(MyRInfo.getColorByID(contentColor)),
                     new StyleSpan(Typeface.BOLD));
-        if(item.getDeedState() != DeedState.TRASH && highLight)
-            spanny.append(item.getTitle().trim(),
-                    new TextClickableSpan(multiSpanTag, mySpanClickListener, MyRInfo.getColorByID(contentColor),false, position),
-                    new BackgroundColorSpan(bgColor),
-                    new ForegroundColorSpan(fgColor));
-        else if(item.getDeedState() != DeedState.TRASH)
-            spanny.append(item.getTitle().trim(),
-                    new TextClickableSpan(multiSpanTag, mySpanClickListener, MyRInfo.getColorByID(contentColor),false, position));
-        else if(highLight)
-            spanny.append(item.getTitle().trim(),
-                    new TextClickableSpan(multiSpanTag, mySpanClickListener, MyRInfo.getColorByID(contentColor),false, position),
+        if(item.getDeedState() != DeedState.TRASH && highLight) {
+            if(item.isLink())
+                spanny/*.append(item.getTitle().trim()).append("\n")*/
+                        .append(myBypass.toParseMd(item.getTitle().trim()).getMdCharSequence());
+            else
+                spanny.append(item.getTitle().trim(),
+                        new TextClickableSpan(multiSpanTag, mySpanClickListener, MyRInfo.getColorByID(contentColor), false, position),
+                        new BackgroundColorSpan(bgColor),
+                        new ForegroundColorSpan(fgColor));
+        }else if(item.getDeedState() != DeedState.TRASH) {
+            if(item.isLink())
+                spanny/*.append(item.getTitle().trim(),
+                        new TextClickableSpan(multiSpanTag, mySpanClickListener, MyRInfo.getColorByID(contentColor), false, position))*/
+                        .append(myBypass.toParseMd(item.getTitle().trim()).getMdCharSequence());
+            else
+                spanny.append(item.getTitle().trim(),
+                    new TextClickableSpan(multiSpanTag, mySpanClickListener, MyRInfo.getColorByID(contentColor), false, position));
+        }else if(highLight) {
+            if(item.isLink())
+                spanny/*.append(item.getTitle().trim()).append("\n")*/
+                        .append(myBypass.toParseMd(item.getTitle().trim()).getMdCharSequence());
+            else
+                spanny.append(item.getTitle().trim(),
+                    new TextClickableSpan(multiSpanTag, mySpanClickListener, MyRInfo.getColorByID(contentColor), false, position),
                     new BackgroundColorSpan(bgColor),
                     new ForegroundColorSpan(fgColor),
                     new StrikethroughSpan());
-        else
-            spanny.append(item.getTitle().trim(),
-                    new TextClickableSpan(multiSpanTag, mySpanClickListener, MyRInfo.getColorByID(contentColor),false, position),
+        }else {
+            if(item.isLink())
+                spanny/*.append(item.getTitle().trim()).append("\n")*/
+                        .append(myBypass.toParseMd(item.getTitle().trim()).getMdCharSequence());
+            else
+                spanny.append(item.getTitle().trim(),
+                    new TextClickableSpan(multiSpanTag, mySpanClickListener, MyRInfo.getColorByID(contentColor), false, position),
                     new StrikethroughSpan());
+        }
         if(moreTag.getTagTitle().isPresent())
             spanny.append(moreTag.getTagTitle().get(),
                     new TextClickableSpan(moreTag, mySpanClickListener, MyRInfo.getColorByID(moreColor),false, position));
@@ -194,7 +215,6 @@ public abstract class  ADeedListFragment<T,K extends BaseViewHolder> extends ABu
     public void onDeedDoneBusEvent(DeedDoneBusEvent eventBus) {
         listMvpP.toHandleBusEvent(eventBus, getLoadDeedState());
     }
-
     /**********************************************IGtdActionListMvpV**********************************************/
 
     class MyClickListener implements TextClickableSpan.ITextSpanClickListener,

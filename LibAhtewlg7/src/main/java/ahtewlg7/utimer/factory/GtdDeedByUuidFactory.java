@@ -115,18 +115,21 @@ public class GtdDeedByUuidFactory extends ABaseLruCacheFactory<String, GtdDeedEn
         return localDate == null ? 0 : dateUuidMultimap.get(localDate).size();
     }
     public Optional<GtdDeedEntity> create(String msg){
-        return create(msg, msg, null);
+        return create(msg, msg, null,false);
     }
     public Optional<GtdDeedEntity> create(String title, String detail){
-        return create(title, detail, null);
+        return create(title, detail, null,false);
     }
-
     public Optional<GtdDeedEntity> create(String title, String detail, DeedState state){
+        return create(title, detail, state,false);
+    }
+    public Optional<GtdDeedEntity> create(String title, String detail, DeedState state, boolean isLink){
         //the title and detail of Deed must not be null, when save the bean to DB
         if(TextUtils.isEmpty(title) && TextUtils.isEmpty(detail))
             return Optional.absent();
         GtdDeedBuilder builder  = new GtdDeedBuilder()
                 .setCreateTime(DateTime.now())
+                .setLink(isLink)
                 .setDeedState(state == null ? DeedState.MAYBE : state)
                 .setDetail(!TextUtils.isEmpty(detail) ? detail : title)
                 .setTitle(!TextUtils.isEmpty(title) ? title : detail)

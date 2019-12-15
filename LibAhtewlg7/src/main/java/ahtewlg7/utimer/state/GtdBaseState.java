@@ -4,8 +4,8 @@ import androidx.annotation.NonNull;
 
 import com.google.common.base.Optional;
 
-import ahtewlg7.utimer.entity.BaseGtdEntity;
 import ahtewlg7.utimer.entity.BaseEventBusBean;
+import ahtewlg7.utimer.entity.BaseGtdEntity;
 import ahtewlg7.utimer.entity.busevent.DeedBusEvent;
 import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
 import ahtewlg7.utimer.enumtype.GtdBusEventType;
@@ -25,7 +25,10 @@ public class GtdBaseState {
     }
 
     public Optional<BaseEventBusBean> toInbox(String title, String detail){
-        Optional<GtdDeedEntity> deedEntityOptional = GtdDeedByUuidFactory.getInstance().create(title, detail, INBOX);
+        return toInbox(title,detail,false);
+    }
+    public Optional<BaseEventBusBean> toInbox(String title, String detail, boolean isLink){
+        Optional<GtdDeedEntity> deedEntityOptional = GtdDeedByUuidFactory.getInstance().create(title, detail, INBOX, isLink);
         if(!deedEntityOptional.isPresent())
             return Optional.absent();
         BaseEventBusBean actionBusEvent = new DeedBusEvent(GtdBusEventType.CREATE, deedEntityOptional.get());

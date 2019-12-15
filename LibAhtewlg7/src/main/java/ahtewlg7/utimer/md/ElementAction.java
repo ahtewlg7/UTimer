@@ -8,8 +8,6 @@ import in.uncod.android.bypass.Element;
  * Created by lw on 2016/6/7.
  */
 public class ElementAction {
-    public static final String TAG = ElementAction.class.getSimpleName();
-
     public static final String ATTR_FLAGS           = MyRInfo.getStringByID(R.string.mypass_element_attr_flags);
     public static final String ATTR_ALT             = MyRInfo.getStringByID(R.string.mypass_element_attr_alt);
     public static final String ATTR_LINK            = MyRInfo.getStringByID(R.string.mypass_element_attr_link);

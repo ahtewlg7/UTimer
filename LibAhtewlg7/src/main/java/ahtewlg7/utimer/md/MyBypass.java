@@ -2,7 +2,6 @@ package ahtewlg7.utimer.md;
 
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.LeadingMarginSpan;
@@ -16,30 +15,36 @@ import android.util.Patterns;
 import android.view.View;
 
 import com.blankj.utilcode.util.Utils;
+import com.bumptech.glide.Glide;
+
+import java.io.File;
 
 import ahtewlg7.utimer.entity.md.EditElement;
+import ahtewlg7.utimer.span.ClickableImageSpan;
 import ahtewlg7.utimer.util.Logcat;
-import ahtewlg7.utimer.view.md.ClickableImageSpan;
 import in.uncod.android.bypass.Bypass;
 import in.uncod.android.bypass.Document;
 import in.uncod.android.bypass.Element;
 import in.uncod.android.bypass.ReverseSpannableStringBuilder;
 import in.uncod.android.bypass.style.HorizontalLineSpan;
 
+import static android.text.style.DynamicDrawableSpan.ALIGN_BOTTOM;
+
 /**
  * Created by lw on 2016/6/2.
  */
 public class MyBypass extends Bypass{
-    public static final String TAG = MyBypass.class.getSimpleName();
-
+    private MyImageGetter imageGetter;
     private SpanClickListener spanClickListener;
 
     public MyBypass() {
         super(Utils.getApp().getApplicationContext());
+        imageGetter = new MyImageGetter();
     }
 
     public MyBypass(Options options) {
         super(Utils.getApp().getApplicationContext(), options);
+        imageGetter = new MyImageGetter();
     }
 
     public void setSpanClickListener(SpanClickListener spanClickListener){
@@ -47,23 +52,19 @@ public class MyBypass extends Bypass{
     }
 
     public EditElement toParseMd(String rawTxt) {
-        return toParseMd(rawTxt ,null);
-    }
-
-    public EditElement toParseMd(String rawTxt, final MyImageGetter imageGetter) {
         Document document = processMarkdown(rawTxt);
         int size = document.getElementCount();
         CharSequence[] charSequenceArray = new CharSequence[size];
 
         for (int i = 0; i < size; i++)
-            charSequenceArray[i] = recurseElement(document.getElement(i), i, size, imageGetter);
+            charSequenceArray[i] = recurseElement(document.getElement(i), i, size);
 
         EditElement editElement = new EditElement(rawTxt);
+        editElement.setElement(document.getElement(0));
         editElement.setMdCharSequence(TextUtils.concat(charSequenceArray));
         return editElement;
     }
-    protected CharSequence recurseElement(Element element, int indexWithinParent, int numberOfSiblings,
-                                          MyImageGetter imageGetter){
+    protected CharSequence recurseElement(Element element, int indexWithinParent, int numberOfSiblings){
         if(element == null)
             return null;
 
@@ -111,7 +112,8 @@ public class MyBypass extends Bypass{
         if(imageGetter == null)
             Logcat.d(TAG,"recurseElement: imageGetter == null");
         //add end
-        if (type == Element.Type.IMAGE && imageGetter != null && !TextUtils.isEmpty(element.getAttribute("link"))) {
+        String link = element.getAttribute("link");
+        if (type == Element.Type.IMAGE && imageGetter != null && !TextUtils.isEmpty(link)) {
             imageDrawable = imageGetter.getDrawable(element);
         }
 
@@ -147,20 +149,17 @@ public class MyBypass extends Bypass{
                 break;
             case IMAGE:
                 // Display alt text (or title text) if there is no image
-//                if (imageDrawable == null) {
-                    String show = element.getAttribute("alt");
-                    if (TextUtils.isEmpty(show)) {
-                        show = element.getAttribute("title");
-                    }
-                    if (!TextUtils.isEmpty(show)) {
-                        show = "[" + show + "]\n";
-                        builder.append(show);
-                    }
-//                }
-//                else {
+                String show = element.getAttribute("alt");
+                if (TextUtils.isEmpty(show))
+                    show = element.getAttribute("title");
+                if (!TextUtils.isEmpty(show)) {
+                    show = "[" + show + "]\n";
+                    builder.append(show);
+                }
+                if (imageDrawable == null) {
 //                    // Character to be replaced
-//                    builder.append("\uFFFC");
-//                }
+                    builder.append("\uFFFC");
+                }
                 break;
         }
 
@@ -194,11 +193,6 @@ public class MyBypass extends Bypass{
                 }
             }
         }
-        toSetSpan(type,element, builder, imageDrawable);
-        return builder;
-    }
-
-    private void toSetSpan(Element.Type type, Element element, SpannableStringBuilder builder, Drawable imageDrawable){
         ElementAction elementAction = new ElementAction();
         switch (type) {
             case HEADER:
@@ -228,7 +222,7 @@ public class MyBypass extends Bypass{
                 break;
             case LINK:
             case AUTOLINK:
-                String link = elementAction.getLink(element);
+                link = elementAction.getLink(element);
                 if (!TextUtils.isEmpty(link) && Patterns.EMAIL_ADDRESS.matcher(link).matches()) {
                     link = "mailto:" + link;
                 }
@@ -249,25 +243,38 @@ public class MyBypass extends Bypass{
                 setSpan(builder, new HorizontalLineSpan(mOptions.mHruleColor, mHruleSize, mHruleTopBottomPadding));
                 break;
             case IMAGE:
-                if (imageDrawable != null)
-                    setImageClickSpan(builder,element,imageDrawable);
+                if (imageDrawable != null) {
+                    builder.append("\n");
+                    setSpan(builder, new ClickableImageSpan(imageDrawable, ALIGN_BOTTOM) {
+                        public void onClick(View view) {
+                            Logcat.d(TAG, "clickableSpan onClick");
+                            if (spanClickListener != null)
+                                spanClickListener.onSpanClick(view, element);
+                        }
+                    });
+                }
                 break;
         }
+        return builder;
     }
 
-    private void setImageClickSpan(SpannableStringBuilder builder, final Element element, final Drawable imageDrawable){
-       ClickableImageSpan clickableSpan = new ClickableImageSpan(imageDrawable) {
-            public void onClick(View view) {
-                Logcat.d(TAG,"clickableSpan onClick");
-                if(spanClickListener != null)
-                    spanClickListener.onSpanClick(view,element);
+    public class MyImageGetter implements ImageGetter {
+        public Drawable getDrawable(Element element) {
+            return getDrawable(element.getAttribute("link"));
+        }
+
+        @Override
+        public Drawable getDrawable(String source) {
+            Drawable drawable = null;
+            try {
+                File file = new File(source);
+                drawable = Glide.with(Utils.getApp()).asDrawable().load(file).submit().get();
+                drawable.setBounds(0, 0, 500, 700);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        };
-        builder.setSpan(clickableSpan, 0, builder.length() - 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-    }
-
-    public static interface MyImageGetter extends ImageGetter {
-        public Drawable getDrawable(Element element);
+            return drawable;
+        }
     }
     public static interface SpanClickListener {
         public void onSpanClick(View view, Element element);
