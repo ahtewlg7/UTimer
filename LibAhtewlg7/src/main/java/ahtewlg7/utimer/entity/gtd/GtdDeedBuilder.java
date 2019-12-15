@@ -16,9 +16,15 @@ import ahtewlg7.utimer.enumtype.DeedState;
 public class GtdDeedBuilder extends ABaseEntityBuilder<GtdDeedEntity, GtdDeedBuilder> {
     public static final String TAG = GtdDeedBuilder.class.getSimpleName();
 
+    protected boolean isLink;
     protected DeedState deedState;
     protected DeedEntityGdBean gdBean;
     protected List<DateTime> warningTimeList;
+
+    public GtdDeedBuilder setLink(boolean link) {
+        isLink = link;
+        return this;
+    }
 
     public GtdDeedBuilder setDeedState(DeedState deedState){
         this.deedState = deedState;

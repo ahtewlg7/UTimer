@@ -197,6 +197,7 @@ public class DbActionFacade {
         bean.setUuid(entity.getUuid());
         bean.setTitle(entity.getTitle());
         bean.setActionState(entity.getDeedState());
+        bean.setLink(entity.isLink());
         if(entity.getCreateTime() != null)
             bean.setCreateTime(entity.getCreateTime());
         else

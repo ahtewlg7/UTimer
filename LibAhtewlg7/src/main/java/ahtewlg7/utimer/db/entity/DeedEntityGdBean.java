@@ -58,6 +58,14 @@ public class DeedEntityGdBean {
     public void setTitle(String title) {
         this.title = title;
     }
+
+    public boolean isLink() {
+        return isLink;
+    }
+    public void setLink(boolean link) {
+        isLink = link;
+    }
+
     public String getDetail() {
         return this.detail;
     }
@@ -106,6 +114,12 @@ public class DeedEntityGdBean {
     public void setEndTime(DateTime endTime) {
         this.endTime = endTime;
     }
+    public boolean getIsLink() {
+        return this.isLink;
+    }
+    public void setIsLink(boolean isLink) {
+        this.isLink = isLink;
+    }
 
 
     @Id(autoincrement = true)
@@ -115,6 +129,8 @@ public class DeedEntityGdBean {
     private String uuid;
     @NotNull
     private String title;
+    @NotNull
+    private boolean isLink;
     @NotNull
     private String detail;
     private String attachFileRPath;
@@ -139,14 +155,15 @@ public class DeedEntityGdBean {
     @Convert(converter = W5h2HowMuchConverter.class, columnType = String.class)
     private W5h2HowMuch w5h2HowMuch;*/
 
-    @Generated(hash = 976942162)
+    @Generated(hash = 901471830)
     public DeedEntityGdBean(Long id, @NotNull String uuid, @NotNull String title,
-            @NotNull String detail, String attachFileRPath, DeedState actionState,
-            DateTime createTime, DateTime startTime, DateTime endTime,
-            List<DateTime> warningTimeList) {
+            boolean isLink, @NotNull String detail, String attachFileRPath,
+            DeedState actionState, DateTime createTime, DateTime startTime,
+            DateTime endTime, List<DateTime> warningTimeList) {
         this.id = id;
         this.uuid = uuid;
         this.title = title;
+        this.isLink = isLink;
         this.detail = detail;
         this.attachFileRPath = attachFileRPath;
         this.actionState = actionState;
@@ -158,4 +175,5 @@ public class DeedEntityGdBean {
     @Generated(hash = 1274789254)
     public DeedEntityGdBean() {
     }
+
 }

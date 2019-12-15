@@ -25,9 +25,10 @@ class GreenDaoOpenHelper extends DatabaseOpenHelper {
     private static final int DBV_0_0_18   = 7;
     private static final int DBV_0_01_07  = 8;
     private static final int DBV_0_02_01  = 9;
+    private static final int DBV_0_02_03  = 10;
 
     //the DB_VERSION must be same with schemaVersion of greenDao in LibAhtewlg7 build.gradle
-    public static int DB_VERSION = DBV_0_02_01;
+    public static int DB_VERSION = DBV_0_02_03;
 
     public GreenDaoOpenHelper(Context context, String name) {
         super(context, name, DB_VERSION);
@@ -98,6 +99,10 @@ class GreenDaoOpenHelper extends DatabaseOpenHelper {
             MaterialEntityGdBeanDao.createTable(wrap((SQLiteDatabase) db.getRawDatabase()),true);
             ProjectEntityGdBeanDao.createTable(wrap((SQLiteDatabase) db.getRawDatabase()),true);
             oldVersion = DBV_0_02_01;
+        }
+        if(oldVersion == DBV_0_02_01){
+            db.execSQL("ALTER   " + DeedEntityGdBeanDao.TABLENAME + " ADD COLUMN " + DeedEntityGdBeanDao.Properties.IsLink.columnName + " BOOLEAN");
+            oldVersion = DBV_0_02_03;
         }
     }
 }

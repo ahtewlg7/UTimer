@@ -5,8 +5,6 @@ import android.text.TextUtils;
 import in.uncod.android.bypass.Element;
 
 public class EditElement {
-    public static final String TAG = EditElement.class.getSimpleName();
-
     protected String rawText;
     protected Element mdElement;
     protected CharSequence mdCharSequence;
@@ -19,7 +17,6 @@ public class EditElement {
     public String getRawText(){
         return rawText;
     }
-
 
     public void setElement(Element mdElement) {
         this.mdElement = mdElement;

@@ -18,6 +18,7 @@ import ahtewlg7.utimer.enumtype.DeedState;
 
 
 public class GtdDeedEntity extends BaseGtdEntity<GtdDeedBuilder> implements Serializable {
+    private boolean isLink;
     private DeedState deedState;
     private DateTime startTime;
     private DateTime endTime;
@@ -25,6 +26,7 @@ public class GtdDeedEntity extends BaseGtdEntity<GtdDeedBuilder> implements Seri
 
     protected GtdDeedEntity(@Nonnull GtdDeedBuilder builder) {
         super(builder);
+        this.isLink = builder.isLink;
         if(builder.warningTimeList != null)
             setWarningTimeList(builder.warningTimeList);
         if(builder.gdBean != null)
@@ -49,6 +51,14 @@ public class GtdDeedEntity extends BaseGtdEntity<GtdDeedBuilder> implements Seri
         super.toMakeEntityOk();
         if(deedState == null)
             deedState = DeedState.MAYBE;
+    }
+
+    public boolean isLink() {
+        return isLink;
+    }
+
+    public void setLink(boolean link) {
+        isLink = link;
     }
 
     public Optional<DateTime> getFirstWorkTime() {
@@ -106,7 +116,6 @@ public class GtdDeedEntity extends BaseGtdEntity<GtdDeedBuilder> implements Seri
         else if(startTime != null)
             workTime = startTime;
         return workTime;
-
     }
 
     @Override
@@ -120,6 +129,7 @@ public class GtdDeedEntity extends BaseGtdEntity<GtdDeedBuilder> implements Seri
         uuid            = gdBean.getUuid();
         title           = gdBean.getTitle();
         detail          = gdBean.getDetail();
+        isLink          = gdBean.isLink();
         deedState       = gdBean.getActionState();
         createTime      = gdBean.getCreateTime();
         startTime       = gdBean.getStartTime();
