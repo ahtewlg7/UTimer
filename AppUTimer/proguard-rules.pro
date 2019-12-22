@@ -268,3 +268,15 @@
 # Configuration for bean
 #
 -keep class ahtewlg7.utimer.entity.w5h2.W5h2When {*;}
+
+
+# Configuration for Glide
+#
+-keep public class * implements com.bumptech.glide.module.GlideModule
+-keep public class * extends com.bumptech.glide.module.AppGlideModule
+-keep public enum com.bumptech.glide.load.ImageHeaderParser$** {
+  **[] $VALUES;
+  public *;
+}
+# for DexGuard only
+#-keepresourcexmlelements manifest/application/meta-data@value=GlideModule
