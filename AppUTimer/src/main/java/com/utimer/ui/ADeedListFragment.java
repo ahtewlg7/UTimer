@@ -141,37 +141,37 @@ public abstract class  ADeedListFragment<T,K extends BaseViewHolder> extends ABu
                     new ForegroundColorSpan(MyRInfo.getColorByID(contentColor)),
                     new StyleSpan(Typeface.BOLD));
         if(item.getDeedState() != DeedState.TRASH && highLight) {
-            if(item.isLink())
-                spanny/*.append(item.getTitle().trim()).append("\n")*/
-                        .append(myBypass.toParseMd(item.getTitle().trim()).getMdCharSequence());
-            else
+            if(item.isLink()) {
+                spanny.append(myBypass.toParseMd(item.getTitle().trim()).getMdCharSequence(),
+                        new BackgroundColorSpan(bgColor),
+                        new ForegroundColorSpan(fgColor));
+            }else
                 spanny.append(item.getTitle().trim(),
                         new TextClickableSpan(multiSpanTag, mySpanClickListener, MyRInfo.getColorByID(contentColor), false, position),
                         new BackgroundColorSpan(bgColor),
                         new ForegroundColorSpan(fgColor));
         }else if(item.getDeedState() != DeedState.TRASH) {
-            if(item.isLink())
-                spanny/*.append(item.getTitle().trim(),
-                        new TextClickableSpan(multiSpanTag, mySpanClickListener, MyRInfo.getColorByID(contentColor), false, position))*/
-                        .append(myBypass.toParseMd(item.getTitle().trim()).getMdCharSequence());
-            else
+            if(item.isLink()) {
+                spanny.append(myBypass.toParseMd(item.getTitle().trim()).getMdCharSequence(),
+                        new ForegroundColorSpan(MyRInfo.getColorByID(contentColor)));
+            }else
                 spanny.append(item.getTitle().trim(),
                     new TextClickableSpan(multiSpanTag, mySpanClickListener, MyRInfo.getColorByID(contentColor), false, position));
         }else if(highLight) {
-            if(item.isLink())
-                spanny/*.append(item.getTitle().trim()).append("\n")*/
-                        .append(myBypass.toParseMd(item.getTitle().trim()).getMdCharSequence());
-            else
+            if(item.isLink()) {
+                spanny.append(myBypass.toParseMd(item.getTitle().trim()).getMdCharSequence(),
+                        new BackgroundColorSpan(bgColor),
+                        new ForegroundColorSpan(fgColor));
+            }else
                 spanny.append(item.getTitle().trim(),
                     new TextClickableSpan(multiSpanTag, mySpanClickListener, MyRInfo.getColorByID(contentColor), false, position),
                     new BackgroundColorSpan(bgColor),
                     new ForegroundColorSpan(fgColor),
                     new StrikethroughSpan());
         }else {
-            if(item.isLink())
-                spanny/*.append(item.getTitle().trim()).append("\n")*/
-                        .append(myBypass.toParseMd(item.getTitle().trim()).getMdCharSequence());
-            else
+            if(item.isLink()) {
+                spanny.append(myBypass.toParseMd(item.getTitle().trim()).getMdCharSequence(),new ForegroundColorSpan(MyRInfo.getColorByID(contentColor)));
+            }else
                 spanny.append(item.getTitle().trim(),
                     new TextClickableSpan(multiSpanTag, mySpanClickListener, MyRInfo.getColorByID(contentColor), false, position),
                     new StrikethroughSpan());

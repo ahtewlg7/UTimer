@@ -2,6 +2,7 @@ package ahtewlg7.utimer.md;
 
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.LeadingMarginSpan;
@@ -61,7 +62,9 @@ public class MyBypass extends Bypass{
 
         EditElement editElement = new EditElement(rawTxt);
         editElement.setElement(document.getElement(0));
-        editElement.setMdCharSequence(TextUtils.concat(charSequenceArray));
+        for (CharSequence charSequence : charSequenceArray)
+            if(!TextUtils.isEmpty(charSequence))
+                editElement.setMdCharSequence(TextUtils.concat(charSequence));
         return editElement;
     }
     protected CharSequence recurseElement(Element element, int indexWithinParent, int numberOfSiblings){
@@ -86,7 +89,7 @@ public class MyBypass extends Bypass{
         CharSequence[] spans = new CharSequence[size];
 
         for (int i = 0; i < size; i++)
-            spans[i] = recurseElement(element.getChildren(i), i, size, imageGetter);
+            spans[i] = recurseElement(element.getChildren(i), i, size);
 
         // Clean up after we're done
         if (isOrderedList) {
@@ -118,6 +121,10 @@ public class MyBypass extends Bypass{
         }
 
         switch (type) {
+            /*case PARAGRAPH:
+                for(int i = 0; i < element.size() ; i++)
+                    builder.append(recurseElement(element.getChildren(i), i, element.size()));
+                break;*/
             case LIST:
                 if (element.getParent() != null
                         && element.getParent().getType() == Element.Type.LIST_ITEM) {
@@ -153,13 +160,13 @@ public class MyBypass extends Bypass{
                 if (TextUtils.isEmpty(show))
                     show = element.getAttribute("title");
                 if (!TextUtils.isEmpty(show)) {
-                    show = "[" + show + "]\n";
+//                    show = "[" + show + "]\n";
+                    show = "[" + show + "]";
                     builder.append(show);
                 }
-                if (imageDrawable == null) {
 //                    // Character to be replaced
+                if(imageDrawable != null)
                     builder.append("\uFFFC");
-                }
                 break;
         }
 
@@ -244,8 +251,7 @@ public class MyBypass extends Bypass{
                 break;
             case IMAGE:
                 if (imageDrawable != null) {
-                    builder.append("\n");
-                    setSpan(builder, new ClickableImageSpan(imageDrawable, ALIGN_BOTTOM) {
+                    setImageSpan(builder, new ClickableImageSpan(imageDrawable, ALIGN_BOTTOM) {
                         public void onClick(View view) {
                             Logcat.d(TAG, "clickableSpan onClick");
                             if (spanClickListener != null)
@@ -258,6 +264,9 @@ public class MyBypass extends Bypass{
         return builder;
     }
 
+    private void setImageSpan(SpannableStringBuilder builder, Object what) {
+        builder.setSpan(what, builder.length() - 1, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+    }
     public class MyImageGetter implements ImageGetter {
         public Drawable getDrawable(Element element) {
             return getDrawable(element.getAttribute("link"));

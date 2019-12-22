@@ -31,6 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_edit"
+            android:visibility="gone"
             app:fab_colorNormal="@color/colorAccent"
             app:fab_label="@string/add_video"
             app:fab_size="mini" />
@@ -39,6 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_edit"
+            android:visibility="gone"
             app:fab_colorNormal="@color/colorAccent"
             app:fab_label="@string/add_audio"
             app:fab_size="mini" />

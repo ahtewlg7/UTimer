@@ -1,6 +1,5 @@
 package com.utimer.ui;
 
-import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
@@ -11,6 +10,7 @@ import android.view.View;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.FragmentActivity;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -21,23 +21,23 @@ import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
-import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.trello.rxlifecycle3.android.ActivityEvent;
 import com.utimer.R;
 
 import java.util.List;
 
-import ahtewlg7.utimer.common.LibContextInit;
-import ahtewlg7.utimer.db.GreenDaoAction;
 import ahtewlg7.utimer.entity.busevent.ActivityBusEvent;
 import ahtewlg7.utimer.factory.EventBusFatory;
-import ahtewlg7.utimer.state.GtdMachine;
+import ahtewlg7.utimer.mvp.MainP;
 import ahtewlg7.utimer.ui.BinderService;
 import ahtewlg7.utimer.util.MyRInfo;
-import ahtewlg7.utimer.util.MySimpleObserver;
 import butterknife.BindView;
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.functions.Function;
 
-public class UTimerActivity extends AButterKnifeActivity{
+public class UTimerActivity extends AButterKnifeActivity
+    implements MainP.IMainV {
     private static final long WAIT_TIME = 2000L;
 
     @BindView(R.id.activity_utimer_container)
@@ -55,17 +55,17 @@ public class UTimerActivity extends AButterKnifeActivity{
     FloatingActionButton deedActionButton;
 
     private long preTouchTime;
-    private RxPermissions rxPermissions;
+    private MainP p;
     private MenuButtonClickListener menuButtonClickListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        rxPermissions  = new RxPermissions(this);
-        initFileSystem();
-        initFloatMenu();
+        p = new MainP(this);
+        p.initWorkContext();
 
+        initFloatMenu();
         if (findFragment(MainFragment.class) == null)
             loadRootFragment(R.id.activity_utimer_fragment_container, DeedsFragment.newInstance());
 //            loadRootFragment(R.id.activity_utimer_fragment_container, MainFragment.newInstance());//todo
@@ -127,10 +127,27 @@ public class UTimerActivity extends AButterKnifeActivity{
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == PictureConfig.CHOOSE_REQUEST) {
-                List<LocalMedia> images = PictureSelector.obtainMultipleResult(data);
-//                Log.i(TAG,"images = " + images);
+                p.toHandleMediaSelected(Observable.just(data).flatMap(new Function<Intent, ObservableSource<String>>() {
+                    @Override
+                    public ObservableSource<String> apply(Intent d) throws Exception {
+                        List<LocalMedia> images = PictureSelector.obtainMultipleResult(d);
+                        return Observable.fromIterable(images).map(new Function<LocalMedia, String>() {
+                            @Override
+                            public String apply(LocalMedia localMedia) throws Exception {
+                                return localMedia.getPath();
+                            }
+                        });
+                    }
+                }));
             }
         }
+    }
+
+    //++++++++++++++++++++++++++++++++++++++++++IMainV+++++++++++++++++++++++++++
+    @NonNull
+    @Override
+    public FragmentActivity getAttachAtivity() {
+        return this;
     }
 
     public FloatingActionMenu getFloatingActionMenu(){
@@ -139,10 +156,6 @@ public class UTimerActivity extends AButterKnifeActivity{
 
     public FloatingActionButton getDeedActionButton(){
         return deedActionButton;
-    }
-
-    public RxPermissions getRxPermissions(){
-        return rxPermissions;
     }
 
     public void toShowFloatMenu(boolean show){
@@ -166,19 +179,6 @@ public class UTimerActivity extends AButterKnifeActivity{
         floatingActionMenu.setClosedOnTouchOutside(true);
     }
 
-    private void initFileSystem(){
-        rxPermissions.request(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
-            .subscribe(new MySimpleObserver<Boolean>(){
-                @Override
-                public void onNext(Boolean aBoolean) {
-                    super.onNext(aBoolean);
-                    if(aBoolean) {
-                        LibContextInit.initWorkingFileSystem();
-                        GreenDaoAction.getInstance().init();
-                    }
-                }
-            });
-    }
     private void toCreateInboxDialog(){
         new MaterialDialog.Builder(UTimerActivity.this).title(R.string.create)
                 .inputType(InputType.TYPE_CLASS_TEXT)
@@ -200,7 +200,7 @@ public class UTimerActivity extends AButterKnifeActivity{
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         String title = dialog.getInputEditText().getText().toString();
-                        GtdMachine.getInstance().getCurrState(null).toInbox(title, title);
+                        p.toCreateDeeds(title,title);
                     }
                 }).show();
     }
