@@ -43,7 +43,7 @@ public class Element {
 	    private Type(int value) {
 	        this.value = value;
 	    }
-	    
+
 	    private static final Type[] TypeValues = Type.values();
 	    public static Type fromInteger(int x) {
 	    	for (Type type : TypeValues) {

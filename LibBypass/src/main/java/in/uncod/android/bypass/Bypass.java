@@ -83,11 +83,7 @@ public class Bypass {
 		mHruleTopBottomPadding = (int) dm.density * 10;
 	}
 
-	public CharSequence markdownToSpannable(String markdown) {
-		return markdownToSpannable(markdown, null);
-	}
-
-	public CharSequence markdownToSpannable(String markdown, ImageGetter imageGetter) {
+	public CharSequence toParseMd(String markdown, ImageGetter imageGetter) {
 		Document document = processMarkdown(markdown);
 
 		int size = document.getElementCount();
@@ -100,7 +96,7 @@ public class Bypass {
 		return TextUtils.concat(spans);
 	}
 
-	protected native Document processMarkdown(String markdown);
+	public native Document processMarkdown(String markdown);
 
 	// The 'numberOfSiblings' parameters refers to the number of siblings within the parent, including
 	// the 'element' parameter, as in "How many siblings are you?" rather than "How many siblings do
