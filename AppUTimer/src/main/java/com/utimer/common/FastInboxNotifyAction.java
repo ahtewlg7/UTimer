@@ -1,7 +1,6 @@
 package com.utimer.common;
 
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.RemoteInput;
 import android.app.Service;
@@ -20,7 +19,6 @@ import com.utimer.R;
 import java.util.List;
 
 import ahtewlg7.utimer.state.GtdMachine;
-import ahtewlg7.utimer.util.AndrManagerFactory;
 import ahtewlg7.utimer.util.BroadcastAction;
 import ahtewlg7.utimer.util.MyRInfo;
 import ahtewlg7.utimer.util.NotifyAction;
@@ -44,14 +42,12 @@ public class FastInboxNotifyAction {
     private boolean ifListening;
     private Service service;
     private NotifyAction notifyAction;
-    private NotificationManager notificationManager;
     private NotifyIntentReceiver notifyIntentReceiver;
 
     public FastInboxNotifyAction(Service service) {
         this.service     = service;
         notifyAction            = new NotifyAction();
         notifyIntentReceiver    = new NotifyIntentReceiver(service);
-        notificationManager     = new AndrManagerFactory().getNotificationManager();
     }
 
     public boolean isIfListening() {

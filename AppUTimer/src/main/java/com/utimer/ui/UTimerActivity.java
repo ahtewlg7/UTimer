@@ -24,9 +24,13 @@ import com.luck.picture.lib.entity.LocalMedia;
 import com.trello.rxlifecycle3.android.ActivityEvent;
 import com.utimer.R;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.List;
 
 import ahtewlg7.utimer.entity.busevent.ActivityBusEvent;
+import ahtewlg7.utimer.entity.material.MediaInfo;
 import ahtewlg7.utimer.factory.EventBusFatory;
 import ahtewlg7.utimer.mvp.MainP;
 import ahtewlg7.utimer.ui.BinderService;
@@ -35,6 +39,7 @@ import butterknife.BindView;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.functions.Function;
+import io.reactivex.subjects.PublishSubject;
 
 public class UTimerActivity extends AButterKnifeActivity
     implements MainP.IMainV {
@@ -56,6 +61,7 @@ public class UTimerActivity extends AButterKnifeActivity
 
     private long preTouchTime;
     private MainP p;
+    private PublishSubject<MediaInfo> mediaInfoRx;
     private MenuButtonClickListener menuButtonClickListener;
 
     @Override
@@ -69,6 +75,7 @@ public class UTimerActivity extends AButterKnifeActivity
         if (findFragment(MainFragment.class) == null)
             loadRootFragment(R.id.activity_utimer_fragment_container, DeedsFragment.newInstance());
 //            loadRootFragment(R.id.activity_utimer_fragment_container, MainFragment.newInstance());//todo
+        EventBusFatory.getInstance().getDefaultEventBus().register(this);
     }
 
     @Override
@@ -80,6 +87,12 @@ public class UTimerActivity extends AButterKnifeActivity
     protected void onStop() {
         super.onStop();
         EventBusFatory.getInstance().getDefaultEventBus().post(new ActivityBusEvent(ActivityEvent.STOP));
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBusFatory.getInstance().getDefaultEventBus().unregister(this);
     }
 
     @Override
@@ -127,14 +140,17 @@ public class UTimerActivity extends AButterKnifeActivity
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == PictureConfig.CHOOSE_REQUEST) {
-                p.toHandleMediaSelected(Observable.just(data).flatMap(new Function<Intent, ObservableSource<String>>() {
+                p.toHandleMediaSelected(Observable.just(data).flatMap(new Function<Intent, ObservableSource<MediaInfo>>() {
                     @Override
-                    public ObservableSource<String> apply(Intent d) throws Exception {
+                    public ObservableSource<MediaInfo> apply(Intent d) throws Exception {
                         List<LocalMedia> images = PictureSelector.obtainMultipleResult(d);
-                        return Observable.fromIterable(images).map(new Function<LocalMedia, String>() {
+                        return Observable.fromIterable(images).map(new Function<LocalMedia, MediaInfo>() {
                             @Override
-                            public String apply(LocalMedia localMedia) throws Exception {
-                                return localMedia.getPath();
+                            public MediaInfo apply(LocalMedia localMedia) throws Exception {
+                                MediaInfo mediaInfo = new MediaInfo();
+                                mediaInfo.setUrl(localMedia.getPath());
+                                mediaInfo.setMimeType(localMedia.getMimeType());
+                                return mediaInfo;
                             }
                         });
                     }
@@ -227,5 +243,11 @@ public class UTimerActivity extends AButterKnifeActivity
                     break;
             }
         }
+    }
+
+    /**********************************************EventBus**********************************************/
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMediaInfo(MediaInfo mediaInfo) {
+        p.toHandleMediaSelected(Observable.just(mediaInfo));
     }
 }
