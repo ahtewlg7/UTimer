@@ -68,7 +68,7 @@ dependencies {
     api 'com.alibaba:fastjson:1.1.71.android'
 
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
-    api 'com.google.guava:guava:24.0-android'
+    api 'com.google.guava:guava:28.2-android'
 
     api 'com.trello.rxlifecycle3:rxlifecycle:3.0.0'
     api 'com.trello.rxlifecycle3:rxlifecycle-android:3.0.0'

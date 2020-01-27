@@ -14,6 +14,7 @@ import com.tbruyelle.rxpermissions2.RxPermissions;
 import java.io.File;
 
 import ahtewlg7.utimer.common.LibContextInit;
+import ahtewlg7.utimer.common.MediaKvAction;
 import ahtewlg7.utimer.db.GreenDaoAction;
 import ahtewlg7.utimer.entity.material.MediaInfo;
 import ahtewlg7.utimer.factory.MdBuildFactory;
@@ -21,7 +22,7 @@ import ahtewlg7.utimer.state.GtdMachine;
 import ahtewlg7.utimer.util.MySimpleObserver;
 import io.reactivex.Observable;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 
 public class MainP {
@@ -68,18 +69,29 @@ public class MainP {
                         }
                     }
                 })
-                .map(new Function<MediaInfo, Optional<String>>() {
+                .filter(new Predicate<MediaInfo>() {
                     @Override
-                    public Optional<String> apply(MediaInfo mediaInfo) throws Exception {
-                        return m.toBuildMd(mediaInfo.getUrl());
+                    public boolean test(MediaInfo mediaInfo) throws Exception {
+                        boolean filter = false;
+                        try{
+                            if(!TextUtils.isEmpty(mediaInfo.getUrl()))
+                                filter =  MediaKvAction.getInstance().ifContain(mediaInfo.getUrl())
+                                        || mediaInfo.getUrl().startsWith(Utils.getApp().getExternalFilesDir(null).getAbsolutePath());
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                        return !filter;
                     }
                 })
-                .subscribe(new MySimpleObserver<Optional<String>>() {
+                .subscribe(new MySimpleObserver<MediaInfo>() {
                     @Override
-                    public void onNext(Optional<String> s) {
-                        super.onNext(s);
-                        if(s.isPresent())
+                    public void onNext(MediaInfo mediaInfo) {
+                        super.onNext(mediaInfo);
+                        Optional<String>  s = m.toBuildMd(mediaInfo.getUrl());
+                        if(s.isPresent()) {
+                            MediaKvAction.getInstance().encodeObj(mediaInfo.getUrl(),mediaInfo);
                             GtdMachine.getInstance().getCurrState(null).toInbox(s.get(), s.get(), true);
+                        }
                     }
                 });
     }

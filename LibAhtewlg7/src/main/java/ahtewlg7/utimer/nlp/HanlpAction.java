@@ -1,15 +1,11 @@
 package ahtewlg7.utimer.nlp;
 
 import android.content.res.AssetManager;
-import androidx.annotation.Nullable;
 import android.system.ErrnoException;
 import android.system.Os;
 import android.text.TextUtils;
 
 import com.blankj.utilcode.util.Utils;
-import com.google.common.base.Predicate;
-import com.google.common.collect.FluentIterable;
-import com.google.common.io.Files;
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.io.IIOAdapter;
 import com.hankcs.hanlp.seg.common.Term;
@@ -75,15 +71,7 @@ public class HanlpAction implements INlp {
             StringBuilder nlpAbsPath = new StringBuilder(fileSystemAction.getNlpDataAbsPath())
                     .append("data").append(File.separator)
                     .append("dictionary").append(File.separator);
-            File file = new File(nlpAbsPath.toString());
-            //todo
-            FluentIterable<File> fileList = Files.fileTreeTraverser().preOrderTraversal(file).filter(new Predicate<File>() {
-                @Override
-                public boolean apply(@Nullable File input) {
-                    return ifNlpSource(input);
-                }
-            });
-            result = fileList.size() > 0;
+            result = new File(nlpAbsPath.toString()).exists();
         }catch (Exception e){
             e.printStackTrace();
         }

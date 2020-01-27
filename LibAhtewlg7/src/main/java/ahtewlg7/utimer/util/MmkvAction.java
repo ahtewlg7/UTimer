@@ -1,69 +1,91 @@
 package ahtewlg7.utimer.util;
 
+import android.os.Parcelable;
 import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.blankj.utilcode.util.Utils;
 import com.tencent.mmkv.MMKV;
 
+
+
 public class MmkvAction {
-    private MMKV mmkv;
-    private boolean isInited = false;
+    protected MMKV mmkv;
+    protected boolean isInited = false;
 
-    private MmkvAction(){
+    public MmkvAction(){
         initMmkv();
-        mmkv = MMKV.defaultMMKV();
+        toMakeDb(null, -1);
     }
-
-    public static MmkvAction getInstance(){
-        return Builder.instance;
+    public MmkvAction(String mmId){
+        initMmkv();
+        toMakeDb(mmId, -1);
+    }
+    public MmkvAction(String mmId,int mode){
+        initMmkv();
+        toMakeDb(mmId,mode);
     }
 
     public boolean isInited() {
         return isInited;
     }
 
-    public void initMmkv(){
+    public boolean ifContain(String key){
+        return mmkv.contains(key);
+    }
+
+    public long decodeLong(String key){
+        return mmkv.decodeLong(key,0);
+    }
+    public boolean encodeLong(String key, long value){
+        return mmkv.encode(key, value);
+    }
+
+    public boolean decodeBoolean(String key){
+        return mmkv.decodeBool(key,false);
+    }
+    public boolean encodeBoolean(String key, boolean value){
+        return mmkv.encode(key, value);
+    }
+
+    public boolean encodeString(String key, String value){
+        return mmkv.encode(key, value);
+    }
+    public String decodeString(String key){
+        return mmkv.decodeString(key,"");
+    }
+
+    public <T> T decodeObjectByJson(String key, Class<T> tClass){
+        String tmp = decodeString(key);
+        if(TextUtils.isEmpty(tmp))
+            return null;
+        return JSON.parseObject(tmp,tClass);
+    }
+    public boolean  encodeObjectByJson(String key, Object obj){
+        return mmkv.encode(key, JSON.toJSONString(obj));
+    }
+
+    public <T extends Parcelable> T decodeObj(String key, Class<T> tClass){
+        return mmkv.decodeParcelable(key, tClass);
+    }
+    public boolean encodeObj(String key, Parcelable obj){
+        return mmkv.encode(key, obj);
+    }
+
+    protected void initMmkv(){
         if(isInited)
             return;
         String rootDir = MMKV.initialize(Utils.getApp());
         if(!TextUtils.isEmpty(rootDir))
             isInited = true;
     }
-    public long getLong(String key){
-        return mmkv.getLong(key,0);
-    }
-    public void putValue(String key, long value){
-        mmkv.putLong(key, value);
-    }
 
-    public boolean getBoolean(String key){
-        return mmkv.getBoolean(key,false);
-    }
-    public void putValue(String key, boolean value){
-        mmkv.putBoolean(key, value);
-    }
-
-    public String getString(String key){
-        return mmkv.getString(key,"");
-    }
-
-    public <T> T getObject(String key, Class<T> tClass){
-        String tmp = getString(key);
-        if(TextUtils.isEmpty(tmp))
-            return null;
-        return JSON.parseObject(tmp,tClass);
-    }
-
-    public void putObject(String key, Object obj){
-        putValue(key, JSON.toJSONString(obj));
-    }
-
-    public void putValue(String key, String value){
-        mmkv.putString(key, value);
-    }
-
-    private static class Builder{
-        private static final MmkvAction instance = new MmkvAction();
+    protected void toMakeDb(String mmId,int mode){
+        if(TextUtils.isEmpty(mmId))
+            mmkv = MMKV.defaultMMKV();
+        else if(mode != MMKV.MULTI_PROCESS_MODE && mode != MMKV.SINGLE_PROCESS_MODE)
+            mmkv = MMKV.mmkvWithID(mmId);
+        else
+            mmkv = MMKV.mmkvWithID(mmId, mode);
     }
 }
