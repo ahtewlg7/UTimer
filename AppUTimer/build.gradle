@@ -9,7 +9,7 @@ android {
         applicationId "com.utimer"
         minSdkVersion 24
         versionCode 35
-        versionName "0.02.03"
+        versionName "0.02.04"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
