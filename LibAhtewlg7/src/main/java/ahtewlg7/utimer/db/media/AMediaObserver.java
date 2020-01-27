@@ -1,4 +1,4 @@
-package ahtewlg7.utimer.util;
+package ahtewlg7.utimer.db.media;
 
 import android.database.ContentObserver;
 import android.database.Cursor;
@@ -9,36 +9,37 @@ import androidx.annotation.NonNull;
 
 import com.blankj.utilcode.util.Utils;
 
-import ahtewlg7.utimer.entity.material.IMediaInfo;
-import ahtewlg7.utimer.factory.MediaCursorFactory;
+import ahtewlg7.utimer.entity.material.MediaInfo;
 import io.reactivex.subjects.PublishSubject;
 
 public abstract class AMediaObserver extends ContentObserver  {
     protected abstract @NonNull Uri getRegisterUri();
-    protected abstract @NonNull Cursor toQueryCursor();
-    protected abstract IMediaInfo toParseCursor(Cursor c);
+    protected abstract Cursor toQueryCursor();
+    protected abstract MediaInfo toParseCursor(Cursor c);
 
-    protected PublishSubject<IMediaInfo> publishSubject;
-    protected MediaCursorFactory mediaCursorFactory;
+    protected PublishSubject<MediaInfo> publishSubject;
+    protected MediaCursorParser mediaCursorParser;
 
     public AMediaObserver(){
         super(new Handler());
-        publishSubject      = PublishSubject.create();
-        mediaCursorFactory  = new MediaCursorFactory();
+        publishSubject    = PublishSubject.create();
+        mediaCursorParser = new MediaCursorParser();
         Utils.getApp().getContentResolver().registerContentObserver(getRegisterUri(), true, this);
     }
 
     @Override
     public void onChange(boolean selfChange, Uri uri) {
         Cursor c = toQueryCursor();
+        if(c == null)
+            return;
         if (c.moveToNext()){
-            IMediaInfo iMediaInfo = toParseCursor(c);
+            MediaInfo iMediaInfo = toParseCursor(c);
             publishSubject.onNext(iMediaInfo);
         }
         c.close();
     }
 
-    public PublishSubject<IMediaInfo> toListenerMediaChange(){
+    public PublishSubject<MediaInfo> toListenerMediaChange(){
         return publishSubject;
     }
 }

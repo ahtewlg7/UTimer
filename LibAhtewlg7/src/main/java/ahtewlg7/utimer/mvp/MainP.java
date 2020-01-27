@@ -15,6 +15,7 @@ import java.io.File;
 
 import ahtewlg7.utimer.common.LibContextInit;
 import ahtewlg7.utimer.db.GreenDaoAction;
+import ahtewlg7.utimer.entity.material.MediaInfo;
 import ahtewlg7.utimer.factory.MdBuildFactory;
 import ahtewlg7.utimer.state.GtdMachine;
 import ahtewlg7.utimer.util.MySimpleObserver;
@@ -55,22 +56,22 @@ public class MainP {
                 });
     }
 
-    public void toHandleMediaSelected(@NonNull Observable<String> pathRx){
-        pathRx.subscribeOn(Schedulers.computation())
-                .doOnNext(new Consumer<String>() {
+    public void toHandleMediaSelected(@NonNull Observable<MediaInfo> mediaInfoRx){
+        mediaInfoRx.subscribeOn(Schedulers.computation())
+                .doOnNext(new Consumer<MediaInfo>() {
                     @Override
-                    public void accept(String s) throws Exception {
+                    public void accept(MediaInfo mediaInfo) throws Exception {
                         try{
-                            Glide.with(Utils.getApp()).asDrawable().load(new File(s)).submit().get();
+                            Glide.with(Utils.getApp()).asDrawable().load(new File(mediaInfo.getUrl())).submit().get();
                         }catch (Exception e){
                             e.printStackTrace();
                         }
                     }
                 })
-                .map(new Function<String, Optional<String>>() {
+                .map(new Function<MediaInfo, Optional<String>>() {
                     @Override
-                    public Optional<String> apply(String path) throws Exception {
-                        return m.toBuildMd(path);
+                    public Optional<String> apply(MediaInfo mediaInfo) throws Exception {
+                        return m.toBuildMd(mediaInfo.getUrl());
                     }
                 })
                 .subscribe(new MySimpleObserver<Optional<String>>() {
