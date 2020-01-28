@@ -14,13 +14,13 @@ import com.utimer.mvp.EndDeedListMvpP;
 import com.utimer.view.EndDeedRecyclerView;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 import java.util.Arrays;
 import java.util.List;
 
 import ahtewlg7.utimer.entity.gtd.GtdDeedEntity;
 import ahtewlg7.utimer.entity.view.EndDeedSectionEntity;
-import ahtewlg7.utimer.enumtype.DATE_MONTH;
 import ahtewlg7.utimer.enumtype.DeedState;
 import ahtewlg7.utimer.util.MyRInfo;
 import butterknife.BindView;
@@ -36,8 +36,8 @@ public class DeedEndListFragment extends ABaseDeedSectionListFragment implements
 
     private Disposable disposable;
     private DeedState[] workState;
-    private DATE_MONTH currSelectedMonth;
-    private List<DATE_MONTH> showMonthList;
+    private LocalDate currSelectedDate;
+    private List<LocalDate> showDateList;
     private SectionItemClickListener sectionItemClickListener;
 
     public static DeedEndListFragment newInstance() {
@@ -54,7 +54,7 @@ public class DeedEndListFragment extends ABaseDeedSectionListFragment implements
 
         showLifeInfo    = false;
         workState       = new DeedState[]{DONE, TRASH};
-        showMonthList   = Lists.newArrayList();
+        showDateList    = Lists.newArrayList();
     }
 
     @Override
@@ -82,12 +82,12 @@ public class DeedEndListFragment extends ABaseDeedSectionListFragment implements
 
     @Override
     public void onSectionLoadSucc() {
-        toUpdateSectionView(DATE_MONTH.valueOf(DateTime.now().getMonthOfYear()));
+        toUpdateSectionView(new LocalDate(DateTime.now().getYear(),DateTime.now().getMonthOfYear(), 1));
     }
 
     @Override
     public void onLoadStart() {
-        showMonthList.clear();
+        showDateList.clear();
     }
 
     @Override
@@ -162,13 +162,13 @@ public class DeedEndListFragment extends ABaseDeedSectionListFragment implements
     protected void toLoadDeedOnShow() {
         ((EndDeedListMvpP)listMvpP).toLoadDeedByWeek(false, getLoadDeedState());
     }
-    private void toUpdateSectionView(DATE_MONTH dateMonth){
-        if(dateMonth == null || dateMonth == currSelectedMonth)
+    private void toUpdateSectionView(LocalDate localDate){
+        if(localDate == null || localDate == currSelectedDate)
             return;
-        currSelectedMonth = dateMonth;
-        showMonthList.clear();
-        showMonthList.add(dateMonth);
-        recyclerView.resetData(((EndDeedListMvpP) listMvpP).getAllSectionEntity(showMonthList));
+        currSelectedDate = localDate;
+        showDateList.clear();
+        showDateList.add(localDate);
+        recyclerView.resetData(((EndDeedListMvpP) listMvpP).getAllSectionEntity(showDateList));
     }
     class SectionItemClickListener implements BaseQuickAdapter.OnItemClickListener,
             BaseQuickAdapter.OnItemChildClickListener{
@@ -176,7 +176,7 @@ public class DeedEndListFragment extends ABaseDeedSectionListFragment implements
         public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
            EndDeedSectionEntity entity = (EndDeedSectionEntity)adapter.getItem(position);
            if(entity != null && entity.isHeader)
-               toUpdateSectionView(entity.getDateMonth());
+               toUpdateSectionView(entity.getLocalDate());
         }
 
         @Override

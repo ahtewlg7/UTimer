@@ -17,6 +17,9 @@ public class BaseConfig {
     public String getSimpleDateTimeFormat(){
         return MyRInfo.getStringByID(R.string.config_datetime_format);
     }
+    public String getSimpleDateFormat(){
+        return MyRInfo.getStringByID(R.string.config_date_format);
+    }
 
     public String getMdFileSuffix(){
         return MyRInfo.getStringByID(R.string.config_md_file_suffix);

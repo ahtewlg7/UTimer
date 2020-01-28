@@ -2,14 +2,12 @@ package ahtewlg7.utimer.util;
 
 import androidx.annotation.NonNull;
 
-import com.google.common.base.Optional;
-
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import ahtewlg7.utimer.verctrl.BaseConfig;
-import ahtewlg7.utimer.verctrl.VcFactoryBuilder;
 
 /**
  * Created by lw on 2016/9/5.
@@ -17,13 +15,12 @@ import ahtewlg7.utimer.verctrl.VcFactoryBuilder;
 public class DateTimeAction {
     public static final String TAG = DateTimeAction.class.getSimpleName();
 
-    private String defaultFormat;
+    private String defaultDateTimeFormat;
+   private String defaultDateFormat;
 
     public DateTimeAction() {
-        Optional<? extends BaseConfig> configOptional = VcFactoryBuilder.getInstance().getVcConfig();
-        defaultFormat = new BaseConfig().getSimpleDateTimeFormat();
-        if(configOptional.isPresent())
-            defaultFormat = configOptional.get().getSimpleDateTimeFormat();
+        defaultDateTimeFormat = new BaseConfig().getSimpleDateTimeFormat();
+        defaultDateFormat     = new BaseConfig().getSimpleDateFormat();
     }
 
     public DateTime toNow(){
@@ -40,12 +37,15 @@ public class DateTimeAction {
         return dateTime1.isEqual(dateTime2.getMillis());
     }
 
-    public String getDefaultFormat(){
-        return defaultFormat;
+    public String getDefaultDateTimeFormat(){
+        return defaultDateTimeFormat;
+    }
+    public String getDefaultDateFormat(){
+        return defaultDateFormat;
     }
 
     public String toFormatNow(){
-        return toFormatNow(defaultFormat);
+        return toFormatNow(defaultDateTimeFormat);
     }
 
     public String toFormatNow(String format){
@@ -53,16 +53,24 @@ public class DateTimeAction {
     }
 
     public String toFormat(DateTime dateTime){
-        return toFormat(dateTime, defaultFormat);
+        return toFormat(dateTime, defaultDateTimeFormat);
     }
 
+    public String toFormat(LocalDate localDate){
+        return toFormat(localDate, defaultDateFormat);
+    }
+
+    public String toFormat(LocalDate localDate, String format){
+        DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern(format);
+        return dateTimeFormatter.print(localDate);
+    }
     public String toFormat(DateTime dateTime, String format){
         DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern(format);
         return dateTimeFormatter.print(dateTime);
     }
 
     public DateTime toDateTime(String dateTime) {
-        DateTimeFormatter format = DateTimeFormat.forPattern(defaultFormat);
+        DateTimeFormatter format = DateTimeFormat.forPattern(defaultDateTimeFormat);
         return DateTime.parse(dateTime, format);
     }
     public DateTime toDateTime(String dateTime, String timeFormat) {

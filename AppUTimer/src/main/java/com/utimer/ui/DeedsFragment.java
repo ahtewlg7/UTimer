@@ -168,7 +168,7 @@ public class DeedsFragment extends AToolbarBkFragment{
     }
 
     private void loadFragment(){
-        AButterKnifeFragment firstFragment = findChildFragment(DeedTodoListFragment.class);
+        AButterKnifeFragment firstFragment = findChildFragment(DeedScheduleListFragment.class);
         if (firstFragment == null) {
             fragments[I_TODO.value()]             = DeedTodoListFragment.newInstance();
             fragments[I_SCHEDULE.value()]         = DeedScheduleListFragment.newInstance();

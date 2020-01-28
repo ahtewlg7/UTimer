@@ -1,7 +1,9 @@
 package ahtewlg7.utimer.entity.view;
 
+import org.joda.time.LocalDate;
+
 import ahtewlg7.utimer.entity.ABaseEntity;
-import ahtewlg7.utimer.enumtype.DATE_MONTH;
+import ahtewlg7.utimer.util.DateTimeAction;
 
 
 /**
@@ -9,19 +11,19 @@ import ahtewlg7.utimer.enumtype.DATE_MONTH;
  */
 
 public class EndDeedSectionEntity<T extends ABaseEntity> extends BaseSectionEntity<T> {
-    protected DATE_MONTH dateMonth;
+    protected LocalDate localDate;
 
-    public EndDeedSectionEntity(boolean isHeader, DATE_MONTH dateMonth, boolean isMore) {
-        super(isHeader, dateMonth.getDetail(), isMore);
-        this.dateMonth  = dateMonth;
+    public EndDeedSectionEntity(boolean isHeader, LocalDate localDate, boolean isMore) {
+        super(isHeader, new DateTimeAction().toFormat(localDate), isMore);
+        this.localDate = localDate;
     }
 
-    public EndDeedSectionEntity(DATE_MONTH dateMonth, T gtdEntity){
+    public EndDeedSectionEntity(LocalDate localDate, T gtdEntity){
         super(gtdEntity);
-        this.dateMonth  = dateMonth;
+        this.localDate = localDate;
     }
 
-    public DATE_MONTH getDateMonth() {
-        return dateMonth;
+    public LocalDate getLocalDate() {
+        return localDate;
     }
 }
