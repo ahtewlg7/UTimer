@@ -47,21 +47,19 @@ public class BackgroundP {
 
     class BackgroundM{
         private NewImageObserver imageObserver;
-        private MediaKvAction mediaKvAction;
         private FastInboxNotifyAction notifyAction;
 
         BackgroundM(@NonNull Service service){
-            mediaKvAction = new MediaKvAction();
             imageObserver = new NewImageObserver();
             notifyAction = new FastInboxNotifyAction(service);
         }
         void toSaveLastTime(DateTime dateTime){
             if(dateTime != null)
-                mediaKvAction.setLastImageTime(dateTime);
+                MediaKvAction.getInstance().setLastImageTime(dateTime);
         }
 
         void toUdpateCursorQuery(){
-            imageObserver.setPreQueryTime(mediaKvAction.getLastImageTime());
+            imageObserver.setPreQueryTime(MediaKvAction.getInstance().getLastImageTime());
         }
 
         Observable<MediaInfo> toListenMediaChange() {

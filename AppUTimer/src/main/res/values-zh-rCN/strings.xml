@@ -20,6 +20,7 @@
     <string name="title_deed_list_todo">待做清单</string>
     <string name="title_deed_list_schedule">日程清单</string>
     <string name="title_deed_list_mark">留意清单</string>
+    <string name="title_deed_list_reference">原料清单</string>
     <string name="title_deed_list_end">终止清单</string>
 
     <string name="title_deed_tag">标记</string>

@@ -18,19 +18,18 @@ import ahtewlg7.utimer.mvp.BaseDeedListMvpP;
 import ahtewlg7.utimer.util.MyRInfo;
 import butterknife.BindView;
 
-import static ahtewlg7.utimer.enumtype.DeedState.USELESS;
-import static ahtewlg7.utimer.enumtype.DeedState.WISH;
+import static ahtewlg7.utimer.enumtype.DeedState.REFERENCE;
 
-public class DeedMarkListFragment extends ABaseDeedListFragment implements BaseDeedListMvpP.IBaseDeedMvpV {
+public class DeedReferenceListFragment extends ABaseDeedListFragment implements BaseDeedListMvpP.IBaseDeedMvpV {
     @BindView(R.id.fragment_deed_simple_list_recycler_view)
     SimpleDeedRecyclerView recyclerView;
 
     private DeedState[] workState;
 
-    public static DeedMarkListFragment newInstance() {
+    public static DeedReferenceListFragment newInstance() {
         Bundle args = new Bundle();
 
-        DeedMarkListFragment fragment = new DeedMarkListFragment();
+        DeedReferenceListFragment fragment = new DeedReferenceListFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -39,7 +38,7 @@ public class DeedMarkListFragment extends ABaseDeedListFragment implements BaseD
     public void onViewCreated(View inflateView) {
         super.onViewCreated(inflateView);
 
-        workState = new DeedState[]{WISH, USELESS};
+        workState = new DeedState[]{REFERENCE};
     }
 
     /**********************************************AToolbarBkFragment**********************************************/
@@ -50,7 +49,7 @@ public class DeedMarkListFragment extends ABaseDeedListFragment implements BaseD
 
     @Override
     protected String getTitle() {
-        return MyRInfo.getStringByID(R.string.title_deed_list_mark);
+        return MyRInfo.getStringByID(R.string.title_deed_list_reference);
     }
 
 

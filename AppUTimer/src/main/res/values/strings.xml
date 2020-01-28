@@ -40,7 +40,9 @@
     <string name="title_deed_list_todo">ToDoList</string>
     <string name="title_deed_list_schedule">ScheduleList</string>
     <string name="title_deed_list_mark">MarkList</string>
+    <string name="title_deed_list_reference">ReferenceList</string>
     <string name="title_deed_list_end">EndList</string>
+
     <string name="title_deed_tag">Tag</string>
     <string name="title_deed_tag_trash">Trash</string>
     <string name="title_deed_tag_reference">Reference</string>
