@@ -38,6 +38,7 @@
 
     <string name="title_calendar_today">T</string>
     <string name="title_deed_list_todo">ToDoList</string>
+    <string name="title_deed_list_new">InboxList</string>
     <string name="title_deed_list_schedule">ScheduleList</string>
     <string name="title_deed_list_mark">MarkList</string>
     <string name="title_deed_list_reference">ReferenceList</string>

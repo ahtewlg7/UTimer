@@ -22,6 +22,7 @@ import ahtewlg7.utimer.util.MyRInfo;
 import butterknife.BindView;
 
 import static com.utimer.ui.DeedsFragment.DEED_INDEX.I_END;
+import static com.utimer.ui.DeedsFragment.DEED_INDEX.I_INBOX;
 import static com.utimer.ui.DeedsFragment.DEED_INDEX.I_MARK;
 import static com.utimer.ui.DeedsFragment.DEED_INDEX.I_REFERENCE;
 import static com.utimer.ui.DeedsFragment.DEED_INDEX.I_SCHEDULE;
@@ -35,7 +36,7 @@ public class DeedsFragment extends AToolbarBkFragment{
 
     private int prePosition = 0;
     private ArrayList<CustomTabEntity> tabEntityList;
-    private AButterKnifeFragment[] fragments = new AButterKnifeFragment[5];
+    private AButterKnifeFragment[] fragments = new AButterKnifeFragment[6];
 
     public static DeedsFragment newInstance() {
         Bundle args = new Bundle();
@@ -148,6 +149,7 @@ public class DeedsFragment extends AToolbarBkFragment{
         tabEntityList.clear();
         tabEntityList.add(I_SCHEDULE.value(), new TabLayoutEntity(R.string.title_deed_list_schedule, 0,0));
         tabEntityList.add(I_TODO.value(), new TabLayoutEntity(R.string.title_deed_list_todo, 0,0));
+        tabEntityList.add(I_INBOX.value(), new TabLayoutEntity(R.string.title_deed_list_new, 0,0));
         tabEntityList.add(I_MARK.value(), new TabLayoutEntity(R.string.title_deed_list_mark, 0,0));
         tabEntityList.add(I_REFERENCE.value(), new TabLayoutEntity(R.string.title_deed_list_reference, 0,0));
         tabEntityList.add(I_END.value(),  new TabLayoutEntity(R.string.title_deed_list_end, 0,0));
@@ -170,17 +172,20 @@ public class DeedsFragment extends AToolbarBkFragment{
     private void loadFragment(){
         AButterKnifeFragment firstFragment = findChildFragment(DeedScheduleListFragment.class);
         if (firstFragment == null) {
-            fragments[I_TODO.value()]             = DeedTodoListFragment.newInstance();
             fragments[I_SCHEDULE.value()]         = DeedScheduleListFragment.newInstance();
+            fragments[I_TODO.value()]             = DeedTodoListFragment.newInstance();
+            fragments[I_INBOX.value()]            = DeedInboxListFragment.newInstance();
             fragments[I_MARK.value()]             = DeedMarkListFragment.newInstance();
             fragments[I_REFERENCE.value()]        = DeedReferenceListFragment.newInstance();
             fragments[I_END.value()]              = DeedEndListFragment.newInstance();
 
             loadMultipleRootFragment(R.id.fragment_deeds_fragment_container, prePosition,
-                    fragments[I_SCHEDULE.value()], fragments[I_TODO.value()], fragments[I_MARK.value()], fragments[I_REFERENCE.value()], fragments[I_END.value()]);
+                    fragments[I_SCHEDULE.value()], fragments[I_TODO.value()], fragments[I_INBOX.value()],
+                    fragments[I_MARK.value()], fragments[I_REFERENCE.value()], fragments[I_END.value()]);
         } else {
-            fragments[I_TODO.value()]         = firstFragment;
-            fragments[I_SCHEDULE.value()]     = DeedScheduleListFragment.newInstance();
+            fragments[I_SCHEDULE.value()]     = firstFragment;
+            fragments[I_TODO.value()]         = findChildFragment(DeedTodoListFragment.class);
+            fragments[I_INBOX.value()]        = findChildFragment(DeedInboxListFragment.class);
             fragments[I_MARK.value()]         = findChildFragment(DeedMarkListFragment.class);
             fragments[I_REFERENCE.value()]    = findChildFragment(DeedReferenceListFragment.class);
             fragments[I_END.value()]          = findChildFragment(DeedEndListFragment.class);
@@ -190,11 +195,11 @@ public class DeedsFragment extends AToolbarBkFragment{
     enum DEED_INDEX{
         I_SCHEDULE(0),
         I_TODO(1),
-        I_MARK(2),
-        I_REFERENCE(3),
-        I_END(4)
+        I_INBOX(2),
+        I_MARK(3),
+        I_REFERENCE(4),
+        I_END(5)
         /*,
-        INBOX(2),
         DEFER(3),
         DELEGATE(4),
         ONE_QUARTER(5),
@@ -214,19 +219,22 @@ public class DeedsFragment extends AToolbarBkFragment{
             DEED_INDEX tmp = null;
             switch (index){
                 case 0:
-                    tmp = I_TODO;
-                    break;
-                case 1:
                     tmp = I_SCHEDULE;
                     break;
+                case 1:
+                    tmp = I_TODO ;
+                    break;
                 case 2:
-                    tmp = I_MARK;
+                    tmp = I_INBOX;
                     break;
                 case 3:
-                    tmp = I_REFERENCE;
+                    tmp = I_MARK;
                     break;
                 case 4:
-                    tmp = I_END;
+                    tmp = I_REFERENCE;
+                    break;
+                case 5:
+                    tmp =  I_END;
                     break;
                 /*case 4:
                     tmp = DELEGATE;
@@ -239,9 +247,6 @@ public class DeedsFragment extends AToolbarBkFragment{
                     break;
                 case 7:
                     tmp = WISH;
-                    break;
-                case 8:
-                    tmp = I_REFERENCE;
                     break;
                 case 9:
                     tmp = MAYBE;
