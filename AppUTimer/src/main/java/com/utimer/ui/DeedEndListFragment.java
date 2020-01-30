@@ -163,11 +163,12 @@ public class DeedEndListFragment extends ABaseDeedSectionListFragment implements
         ((EndDeedListMvpP)listMvpP).toLoadDeedByWeek(false, getLoadDeedState());
     }
     private void toUpdateSectionView(LocalDate localDate){
-        if(localDate == null || localDate == currSelectedDate)
+        if(localDate == currSelectedDate)
             return;
         currSelectedDate = localDate;
         showDateList.clear();
-        showDateList.add(localDate);
+        if(localDate != null)
+            showDateList.add(localDate);
         recyclerView.resetData(((EndDeedListMvpP) listMvpP).getAllSectionEntity(showDateList));
     }
     class SectionItemClickListener implements BaseQuickAdapter.OnItemClickListener,
@@ -175,7 +176,9 @@ public class DeedEndListFragment extends ABaseDeedSectionListFragment implements
         @Override
         public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
            EndDeedSectionEntity entity = (EndDeedSectionEntity)adapter.getItem(position);
-           if(entity != null && entity.isHeader)
+           if(entity != null && entity.isHeader && currSelectedDate != null)
+               toUpdateSectionView(null);
+           else if(entity != null && entity.isHeader && currSelectedDate == null)
                toUpdateSectionView(entity.getLocalDate());
         }
 
