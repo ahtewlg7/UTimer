@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.utimer">
 
+    <uses-permission android:name="com.huawei.permission.sec.SDK_LAUNCHER" />
     <application
         android:name=".common.UTimerApplication"
         android:allowBackup="true"
