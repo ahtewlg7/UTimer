@@ -87,10 +87,11 @@ public class MainP {
                     @Override
                     public void onNext(MediaInfo mediaInfo) {
                         super.onNext(mediaInfo);
-                        Optional<String>  s = m.toBuildMd(mediaInfo.getUrl());
+                        String url = mediaInfo.getUrl();
+                        Optional<String>  s = m.toBuildMd(url);
                         if(s.isPresent()) {
                             MediaKvAction.getInstance().encodeObj(mediaInfo.getUrl(),mediaInfo);
-                            GtdMachine.getInstance().getCurrState(null).toInbox(s.get(), s.get(), true);
+                            GtdMachine.getInstance().getCurrState(null).toInbox(s.get(), url, true);
                         }
                     }
                 });
