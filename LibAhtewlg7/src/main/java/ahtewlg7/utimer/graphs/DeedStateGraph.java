@@ -168,6 +168,7 @@ public class DeedStateGraph implements IGraph<DeedState> {
         ((MutableGraph)graph).putEdge(CALENDAR, TRASH);
     }
     private void initWishNode(){
+        ((MutableGraph)graph).putEdge(WISH, REFERENCE);
         ((MutableGraph)graph).putEdge(WISH, SCHEDULE);
         ((MutableGraph)graph).putEdge(WISH, ONE_QUARTER);
         ((MutableGraph)graph).putEdge(WISH, DEFER);
@@ -178,6 +179,7 @@ public class DeedStateGraph implements IGraph<DeedState> {
         ((MutableGraph)graph).putEdge(WISH, TRASH);
     }
     private void initUselessNode(){
+        ((MutableGraph)graph).putEdge(USELESS, REFERENCE);
         ((MutableGraph)graph).putEdge(USELESS, SCHEDULE);
         ((MutableGraph)graph).putEdge(USELESS, ONE_QUARTER);
         ((MutableGraph)graph).putEdge(USELESS, DEFER);
@@ -191,6 +193,7 @@ public class DeedStateGraph implements IGraph<DeedState> {
         ((MutableGraph)graph).putEdge(DONE, TRASH);
     }
     private void initTrashNode(){
+        ((MutableGraph)graph).putEdge(TRASH, WISH);
         ((MutableGraph)graph).putEdge(TRASH, TRASH);
     }
 }
