@@ -35,7 +35,7 @@
     <string name="title_deed_tag_defer">准备做</string>
     <string name="title_deed_tag_delegate">别人做</string>
     <string name="title_deed_tag_done">已完成</string>
-    <string name="title_deed_tag_useless">待激活</string>
+    <string name="title_deed_tag_useless">鸡肋</string>
 
     <string name="title_deed">简讯</string>
     <string name="title_notify_fast_inbox">清空大脑</string>
