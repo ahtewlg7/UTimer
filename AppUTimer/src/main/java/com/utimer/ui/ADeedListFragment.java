@@ -1,12 +1,14 @@
 package com.utimer.ui;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.BackgroundColorSpan;
+import android.text.style.CharacterStyle;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
@@ -22,14 +24,18 @@ import com.binaryfork.spanny.Spanny;
 import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.google.common.base.Optional;
+import com.google.common.collect.Lists;
 import com.utimer.R;
 import com.utimer.common.TagInfoFactory;
+import com.utimer.entity.span.DeedSpanMediaTag;
 import com.utimer.entity.span.DeedSpanMoreTag;
 import com.utimer.view.DeedTagBottomSheetDialog;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.File;
+import java.util.List;
 import java.util.Set;
 
 import ahtewlg7.utimer.entity.busevent.DeedBusEvent;
@@ -43,6 +49,7 @@ import ahtewlg7.utimer.mvp.ADeedListMvpP;
 import ahtewlg7.utimer.span.TextClickableSpan;
 import ahtewlg7.utimer.state.GtdMachine;
 import ahtewlg7.utimer.util.Logcat;
+import ahtewlg7.utimer.util.PreviewIntentAction;
 import ahtewlg7.utimer.util.MyRInfo;
 import ahtewlg7.utimer.view.ABaseDeedRecyclerView;
 
@@ -61,6 +68,7 @@ public abstract class  ADeedListFragment<T,K extends BaseViewHolder> extends ABu
     protected ADeedListMvpP listMvpP;
     protected TagInfoFactory tagInfoFactory;
     protected MyClickListener mySpanClickListener;
+    protected PreviewIntentAction mediaPreviewAction;
     protected DeedTagBottomSheetDialog bottomSheetDialog;
 
     @Override
@@ -69,6 +77,7 @@ public abstract class  ADeedListFragment<T,K extends BaseViewHolder> extends ABu
 
         tagInfoFactory      = new TagInfoFactory();
         mySpanClickListener = new MyClickListener();
+        mediaPreviewAction  = new PreviewIntentAction();
 
         toInitRecyclerView();
         myBypass    = new MyBypass();
@@ -128,7 +137,9 @@ public abstract class  ADeedListFragment<T,K extends BaseViewHolder> extends ABu
     public SpannableStringBuilder toSpan(int position, boolean highLight, @NonNull GtdDeedEntity item) {
         SimpleMultiSpanTag multiSpanTag = getTagInfo(item);
         DeedSpanMoreTag moreTag         = new DeedSpanMoreTag(item);
+        DeedSpanMediaTag mediaSpanTag   = new DeedSpanMediaTag(item);
         multiSpanTag.setShowBracket(false);
+        mediaSpanTag.setShowBracket(false);
         moreTag.setShowBracket(true);
 
         @ColorRes int contentColor = getSpanColor(item, R.color.colorPrimary);
@@ -136,46 +147,28 @@ public abstract class  ADeedListFragment<T,K extends BaseViewHolder> extends ABu
         int bgColor                = MyRInfo.getColorByID(R.color.color_600);
         int fgColor                = MyRInfo.getColorByID(R.color.color_stand_c3);
         Spanny spanny = new Spanny();
+        CharSequence text = null;
+        List<CharacterStyle> spanList = Lists.newArrayList();
         if(multiSpanTag.getTagTitle().isPresent())
             spanny.append(multiSpanTag.getTagTitle().get(),
                     new ForegroundColorSpan(MyRInfo.getColorByID(contentColor)),
                     new StyleSpan(Typeface.BOLD));
-        if(item.getDeedState() != DeedState.TRASH && highLight) {
-            if(item.isLink()) {
-                spanny.append(myBypass.toParseMd(item.getTitle().trim()).getMdCharSequence(),
-                        new BackgroundColorSpan(bgColor),
-                        new ForegroundColorSpan(fgColor));
-            }else
-                spanny.append(item.getTitle().trim(),
-                        new TextClickableSpan(multiSpanTag, mySpanClickListener, MyRInfo.getColorByID(contentColor), false, position),
-                        new BackgroundColorSpan(bgColor),
-                        new ForegroundColorSpan(fgColor));
-        }else if(item.getDeedState() != DeedState.TRASH) {
-            if(item.isLink()) {
-                spanny.append(myBypass.toParseMd(item.getTitle().trim()).getMdCharSequence(),
-                        new ForegroundColorSpan(MyRInfo.getColorByID(contentColor)));
-            }else
-                spanny.append(item.getTitle().trim(),
-                    new TextClickableSpan(multiSpanTag, mySpanClickListener, MyRInfo.getColorByID(contentColor), false, position));
-        }else if(highLight) {
-            if(item.isLink()) {
-                spanny.append(myBypass.toParseMd(item.getTitle().trim()).getMdCharSequence(),
-                        new BackgroundColorSpan(bgColor),
-                        new ForegroundColorSpan(fgColor));
-            }else
-                spanny.append(item.getTitle().trim(),
-                    new TextClickableSpan(multiSpanTag, mySpanClickListener, MyRInfo.getColorByID(contentColor), false, position),
-                    new BackgroundColorSpan(bgColor),
-                    new ForegroundColorSpan(fgColor),
-                    new StrikethroughSpan());
+
+        if(item.isLink()) {
+            text = myBypass.toParseMd(item.getTitle().trim()).getMdCharSequence();
+            spanList.add(new TextClickableSpan(mediaSpanTag, mySpanClickListener, MyRInfo.getColorByID(contentColor), false, position));
         }else {
-            if(item.isLink()) {
-                spanny.append(myBypass.toParseMd(item.getTitle().trim()).getMdCharSequence(),new ForegroundColorSpan(MyRInfo.getColorByID(contentColor)));
-            }else
-                spanny.append(item.getTitle().trim(),
-                    new TextClickableSpan(multiSpanTag, mySpanClickListener, MyRInfo.getColorByID(contentColor), false, position),
-                    new StrikethroughSpan());
+            text = item.getTitle().trim();
+            spanList.add(new TextClickableSpan(multiSpanTag, mySpanClickListener, MyRInfo.getColorByID(contentColor), false, position));
         }
+        if(highLight){
+            spanList.add(new BackgroundColorSpan(bgColor));
+            spanList.add(new ForegroundColorSpan(fgColor));
+        }
+        if(item.getDeedState() == DeedState.TRASH)
+            spanList.add(new StrikethroughSpan());
+        if(!TextUtils.isEmpty(text) && !spanList.isEmpty())
+            spanny.append(text, spanList.toArray(new CharacterStyle[spanList.size()]));
         if(moreTag.getTagTitle().isPresent())
             spanny.append(moreTag.getTagTitle().get(),
                     new TextClickableSpan(moreTag, mySpanClickListener, MyRInfo.getColorByID(moreColor),false, position));
@@ -206,6 +199,8 @@ public abstract class  ADeedListFragment<T,K extends BaseViewHolder> extends ABu
 
     protected void onDeedClick(int position){
     }
+    protected void onMediaClick(int position){
+    }
     /**********************************************EventBus**********************************************/
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDeedBusEvent(DeedBusEvent eventBus) {
@@ -226,6 +221,8 @@ public abstract class  ADeedListFragment<T,K extends BaseViewHolder> extends ABu
                 onDeedClick(position);
             else if(o instanceof DeedSpanMoreTag)
                 createBottomSheet(position);
+            else if(o instanceof DeedSpanMediaTag)
+                onMediaClick(position);
         }
         //+++++++++++++++++++++++++++++++++++OnItemClickListener+++++++++++++++++++++++++++++++
         @Override
@@ -283,5 +280,17 @@ public abstract class  ADeedListFragment<T,K extends BaseViewHolder> extends ABu
                             GtdMachine.getInstance().getCurrState(deedEntity).toEdit(deedEntity,title, title);
                     }
                 }).show();
+    }
+    protected void toOpenMedia(@NonNull GtdDeedEntity deedEntity){
+        if(!deedEntity.isLink())
+            return;
+        Optional<String> path = deedEntity.getDetail();
+        if(!path.isPresent())
+            return;
+        Intent intent = mediaPreviewAction.getImgViewIntent(new File(path.get()));
+        if(intent != null)
+            getActivity().startActivity(intent);
+        else
+            ToastUtils.showShort(R.string.prompt_media_view_fail);
     }
 }

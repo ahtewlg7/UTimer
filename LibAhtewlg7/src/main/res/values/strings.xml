@@ -12,6 +12,7 @@
 
     <string name="title_calendar_scheme">Do</string>
 
+    <string name="prompt_media_view_fail">fail to view this media file</string>
     <string name="prompt_not_be_empty">it should not be empty</string>
     <string name="prompt_is_same_with_the_old">it is same with the old one</string>
     <string name="prompt_not_ready">Not Ready, Please Wait! </string>
