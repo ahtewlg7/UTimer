@@ -309,4 +309,11 @@ public class DeedScheduleListFragment extends ABaseDeedListFragment
                 tableAction.putValue(deedSchemeEntity.getDateTime().toLocalDate(), deedSchemeEntity.getUuid(), deedSchemeEntity);
         }
     }
+
+    @Override
+    protected void onMediaClick(int position){
+        GtdDeedEntity deedEntity = (GtdDeedEntity)recyclerView.getAdapter().getItem(position);
+        if(deedEntity != null)
+            toOpenMedia(deedEntity);
+    }
 }

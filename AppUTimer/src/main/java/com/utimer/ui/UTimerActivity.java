@@ -39,7 +39,6 @@ import butterknife.BindView;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.functions.Function;
-import io.reactivex.subjects.PublishSubject;
 
 public class UTimerActivity extends AButterKnifeActivity
     implements MainP.IMainV {
@@ -61,7 +60,6 @@ public class UTimerActivity extends AButterKnifeActivity
 
     private long preTouchTime;
     private MainP p;
-    private PublishSubject<MediaInfo> mediaInfoRx;
     private MenuButtonClickListener menuButtonClickListener;
 
     @Override

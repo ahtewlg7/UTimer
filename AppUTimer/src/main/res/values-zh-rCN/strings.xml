@@ -18,12 +18,12 @@
 
     <string name="title_calendar_today">今</string>
 
-    <string name="title_deed_list_todo">待做清单</string>
-    <string name="title_deed_list_new">新建清单</string>
-    <string name="title_deed_list_schedule">日程清单</string>
-    <string name="title_deed_list_mark">留意清单</string>
-    <string name="title_deed_list_reference">原料清单</string>
-    <string name="title_deed_list_end">终止清单</string>
+    <string name="title_deed_list_todo">待做</string>
+    <string name="title_deed_list_new">新建</string>
+    <string name="title_deed_list_schedule">日程</string>
+    <string name="title_deed_list_mark">留意</string>
+    <string name="title_deed_list_reference">原料</string>
+    <string name="title_deed_list_end">终止</string>
 
     <string name="title_deed_tag">标记</string>
     <string name="title_deed_tag_trash">清除</string>
@@ -35,7 +35,7 @@
     <string name="title_deed_tag_defer">准备做</string>
     <string name="title_deed_tag_delegate">别人做</string>
     <string name="title_deed_tag_done">已完成</string>
-    <string name="title_deed_tag_useless">已无效</string>
+    <string name="title_deed_tag_useless">待激活</string>
 
     <string name="title_deed">简讯</string>
     <string name="title_notify_fast_inbox">清空大脑</string>

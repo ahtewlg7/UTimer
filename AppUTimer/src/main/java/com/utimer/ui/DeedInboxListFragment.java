@@ -106,4 +106,10 @@ public class DeedInboxListFragment extends ABaseDeedListFragment implements Base
         if(deedEntity != null)
             toCreateEditDialog(deedEntity);
     }
+    @Override
+    protected void onMediaClick(int position){
+        GtdDeedEntity deedEntity = (GtdDeedEntity)recyclerView.getAdapter().getItem(position);
+        if(deedEntity != null)
+            toOpenMedia(deedEntity);
+    }
 }
