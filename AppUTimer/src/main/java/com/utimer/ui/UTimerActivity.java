@@ -136,24 +136,24 @@ public class UTimerActivity extends AButterKnifeActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            if (requestCode == PictureConfig.CHOOSE_REQUEST) {
-                p.toHandleMediaSelected(Observable.just(data).flatMap(new Function<Intent, ObservableSource<MediaInfo>>() {
-                    @Override
-                    public ObservableSource<MediaInfo> apply(Intent d) throws Exception {
-                        List<LocalMedia> images = PictureSelector.obtainMultipleResult(d);
-                        return Observable.fromIterable(images).map(new Function<LocalMedia, MediaInfo>() {
-                            @Override
-                            public MediaInfo apply(LocalMedia localMedia) throws Exception {
-                                MediaInfo mediaInfo = new MediaInfo();
-                                mediaInfo.setUrl(localMedia.getPath());
-                                mediaInfo.setMimeType(localMedia.getMimeType());
-                                return mediaInfo;
-                            }
-                        });
-                    }
-                }));
-            }
+        if (resultCode != RESULT_OK)
+            return;
+        if (requestCode == PictureConfig.CHOOSE_REQUEST) {
+            p.toHandleMediaSelected(Observable.just(data).flatMap(new Function<Intent, ObservableSource<MediaInfo>>() {
+                @Override
+                public ObservableSource<MediaInfo> apply(Intent d) throws Exception {
+                    List<LocalMedia> images = PictureSelector.obtainMultipleResult(d);
+                    return Observable.fromIterable(images).map(new Function<LocalMedia, MediaInfo>() {
+                        @Override
+                        public MediaInfo apply(LocalMedia localMedia) throws Exception {
+                            MediaInfo mediaInfo = new MediaInfo();
+                            mediaInfo.setUrl(localMedia.getPath());
+                            mediaInfo.setMimeType(localMedia.getMimeType());
+                            return mediaInfo;
+                        }
+                    });
+                }
+            }));
         }
     }
 
