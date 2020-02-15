@@ -160,8 +160,7 @@ public class MyBypass extends Bypass{
                 if (TextUtils.isEmpty(show))
                     show = element.getAttribute("title");
                 if (!TextUtils.isEmpty(show)) {
-//                    show = "[" + show + "]\n";
-                    show = "[" + show + "]";
+                    show = "[" + show + "]\n";
                     builder.append(show);
                 }
 //                    // Character to be replaced
