@@ -2,6 +2,8 @@ package com.utimer.ui;
 
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
@@ -10,8 +12,13 @@ import com.blankj.utilcode.util.ActivityUtils;
 import com.utimer.R;
 import com.utimer.mvp.WelcomeP;
 
+import butterknife.BindView;
+
 public class WelcomeActivity extends AButterKnifeActivity
         implements WelcomeP.IWelcomeV {
+    @BindView(R.id.fullscreen_content_detail)
+    TextView detailTv;
+
     private WelcomeP p;
 
     @Override
@@ -37,5 +44,9 @@ public class WelcomeActivity extends AButterKnifeActivity
     public void onPermissionRequest(boolean result) {
         if(result)
             ActivityUtils.startActivity(UTimerActivity.class);
+        else{
+            detailTv.setVisibility(View.VISIBLE);
+            detailTv.setText(R.string.prompt_permission_rw_deny);
+        }
     }
 }
