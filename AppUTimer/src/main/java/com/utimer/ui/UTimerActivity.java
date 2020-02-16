@@ -67,13 +67,14 @@ public class UTimerActivity extends AButterKnifeActivity
         super.onCreate(savedInstanceState);
 
         p = new MainP(this);
-        p.initWorkContext();
 
         initFloatMenu();
         if (findFragment(MainFragment.class) == null)
             loadRootFragment(R.id.activity_utimer_fragment_container, DeedsFragment.newInstance());
 //            loadRootFragment(R.id.activity_utimer_fragment_container, MainFragment.newInstance());//todo
         EventBusFatory.getInstance().getDefaultEventBus().register(this);
+
+        toBindService();
     }
 
     @Override
@@ -84,6 +85,7 @@ public class UTimerActivity extends AButterKnifeActivity
     @Override
     protected void onStop() {
         super.onStop();
+        toUnbindService();
         EventBusFatory.getInstance().getDefaultEventBus().post(new ActivityBusEvent(ActivityEvent.STOP));
     }
 
@@ -157,7 +159,7 @@ public class UTimerActivity extends AButterKnifeActivity
         }
     }
 
-    //++++++++++++++++++++++++++++++++++++++++++IMainV+++++++++++++++++++++++++++
+    //++++++++++++++++++++++++++++++++++++++++++IWelcomeV+++++++++++++++++++++++++++
     @NonNull
     @Override
     public FragmentActivity getAttachAtivity() {

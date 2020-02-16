@@ -1,7 +1,11 @@
 package com.utimer.common;
 
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
 import com.blankj.utilcode.util.ServiceUtils;
 import com.utimer.ui.BaseBinderService;
@@ -23,6 +27,8 @@ public class UTimerApplication extends MyApplication {
 
     @Override
     protected void toStartBinderService(){
+        if(ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+            && ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
         ServiceUtils.startService(BaseBinderService.class);
     }
 

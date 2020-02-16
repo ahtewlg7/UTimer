@@ -3,6 +3,7 @@
     package="com.utimer">
 
     <uses-permission android:name="com.huawei.permission.sec.SDK_LAUNCHER" />
+
     <application
         android:name=".common.UTimerApplication"
         android:allowBackup="true"
@@ -11,13 +12,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <service android:name="com.utimer.ui.BaseBinderService" />
 
-        <activity android:name=".ui.UTimerActivity">
+        <activity android:name="com.utimer.ui.WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name="com.utimer.ui.UTimerActivity"/>
+
     </application>
 </manifest>

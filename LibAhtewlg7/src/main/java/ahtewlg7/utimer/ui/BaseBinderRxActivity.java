@@ -2,7 +2,6 @@ package ahtewlg7.utimer.ui;
 
 import android.content.ComponentName;
 import android.content.Context;
-import android.os.Bundle;
 import android.os.IBinder;
 
 import androidx.annotation.NonNull;
@@ -19,38 +18,25 @@ public class BaseBinderRxActivity extends BaseRxActivity {
     protected void onServiceBinderConnected(ComponentName name){
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        serviceConn  = new ServiceConnection();
-        toBindService(serviceConn);
-    }
-    @Override
-    protected void onDestroy() {
-        toUnbindService(serviceConn);
-        super.onDestroy();
-    }
-
-
     protected @NonNull Class<? extends BinderService> getBinderServiceClass(){
         return BinderService.class;
     }
 
-    protected void toBindService(ServiceConnection serviceConn){
+    protected void toBindService(){
         try{
-            if(serviceConn != null) {
+            if(serviceConn == null)
+                serviceConn  = new ServiceConnection();
+
+            if(binderProxy == null)
                 ServiceUtils.bindService(getBinderServiceClass(), serviceConn, Context.BIND_AUTO_CREATE);
-            }
         }catch (Exception e){
             e.printStackTrace();
         }
     }
-    protected void toUnbindService(ServiceConnection serviceConn){
+    protected void toUnbindService(){
         try{
-            if(serviceConn != null) {
+            if(binderProxy != null && serviceConn != null)
                 ServiceUtils.unbindService(serviceConn);
-            }
         }catch (Exception e){
             e.printStackTrace();
         }
