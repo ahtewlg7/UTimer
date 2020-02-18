@@ -42,9 +42,10 @@ public class WelcomeActivity extends AButterKnifeActivity
 
     @Override
     public void onPermissionRequest(boolean result) {
-        if(result)
+        if(result) {
             ActivityUtils.startActivity(UTimerActivity.class);
-        else{
+            finish();
+        }else{
             detailTv.setVisibility(View.VISIBLE);
             detailTv.setText(R.string.prompt_permission_rw_deny);
         }
