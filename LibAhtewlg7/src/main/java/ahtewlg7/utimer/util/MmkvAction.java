@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSON;
 import com.blankj.utilcode.util.Utils;
 import com.tencent.mmkv.MMKV;
 
+import java.util.Set;
 
 
 public class MmkvAction {
@@ -55,6 +56,13 @@ public class MmkvAction {
         return mmkv.decodeString(key,"");
     }
 
+    public boolean encodeStringSet(String key, Set<String> value){
+        return mmkv.encode(key, value);
+    }
+    public Set<String> decodeStringSet(String key){
+        return mmkv.decodeStringSet(key,null);
+    }
+
     public <T> T decodeObjectByJson(String key, Class<T> tClass){
         String tmp = decodeString(key);
         if(TextUtils.isEmpty(tmp))
@@ -70,6 +78,10 @@ public class MmkvAction {
     }
     public boolean encodeObj(String key, Parcelable obj){
         return mmkv.encode(key, obj);
+    }
+
+    public void remove(String key){
+        mmkv.removeValueForKey(key);
     }
 
     protected void initMmkv(){

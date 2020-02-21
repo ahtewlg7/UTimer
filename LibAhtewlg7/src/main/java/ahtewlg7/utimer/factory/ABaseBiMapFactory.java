@@ -3,6 +3,8 @@ package ahtewlg7.utimer.factory;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
+import java.util.Set;
+
 //the key(or value) of BiMap must be unique with other key(or value)
 public abstract class ABaseBiMapFactory<K, V> {
     protected BiMap<K, V> baseMap;
@@ -42,6 +44,10 @@ public abstract class ABaseBiMapFactory<K, V> {
     }
     public void removeByValue(V v){
         baseMap.inverse().remove(v);
+    }
+
+    public Set<K> getAllKey(){
+        return baseMap.keySet();
     }
 
     public void clearAll(){
