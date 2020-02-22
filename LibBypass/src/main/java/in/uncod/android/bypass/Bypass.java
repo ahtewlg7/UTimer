@@ -1,6 +1,7 @@
 package in.uncod.android.bypass;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -404,6 +405,6 @@ public class Bypass {
 		 * This method is called when the parser encounters an image tag.
 		 */
 		public Drawable getDrawable(String source);
-
+		public Bitmap getBitmap(String source);
 	}
 }

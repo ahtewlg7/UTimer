@@ -36,9 +36,6 @@ import ahtewlg7.utimer.mvp.MainP;
 import ahtewlg7.utimer.ui.BinderService;
 import ahtewlg7.utimer.util.MyRInfo;
 import butterknife.BindView;
-import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
-import io.reactivex.functions.Function;
 
 public class UTimerActivity extends AButterKnifeActivity
     implements MainP.IMainV {
@@ -141,21 +138,13 @@ public class UTimerActivity extends AButterKnifeActivity
         if (resultCode != RESULT_OK)
             return;
         if (requestCode == PictureConfig.CHOOSE_REQUEST) {
-            p.toHandleMediaSelected(Observable.just(data).flatMap(new Function<Intent, ObservableSource<MediaInfo>>() {
-                @Override
-                public ObservableSource<MediaInfo> apply(Intent d) throws Exception {
-                    List<LocalMedia> images = PictureSelector.obtainMultipleResult(d);
-                    return Observable.fromIterable(images).map(new Function<LocalMedia, MediaInfo>() {
-                        @Override
-                        public MediaInfo apply(LocalMedia localMedia) throws Exception {
-                            MediaInfo mediaInfo = new MediaInfo();
-                            mediaInfo.setUrl(localMedia.getPath());
-                            mediaInfo.setMimeType(localMedia.getMimeType());
-                            return mediaInfo;
-                        }
-                    });
-                }
-            }));
+            List<LocalMedia> images = PictureSelector.obtainMultipleResult(data);
+            for(LocalMedia localMedia : images){
+                MediaInfo mediaInfo = new MediaInfo();
+                mediaInfo.setUrl(localMedia.getPath());
+                mediaInfo.setMimeType(localMedia.getMimeType());
+                p.toHandleMediaSelected(mediaInfo);
+            }
         }
     }
 
@@ -248,6 +237,6 @@ public class UTimerActivity extends AButterKnifeActivity
     /**********************************************EventBus**********************************************/
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMediaInfo(MediaInfo mediaInfo) {
-        p.toHandleMediaSelected(Observable.just(mediaInfo));
+        p.toHandleMediaSelected(mediaInfo);
     }
 }

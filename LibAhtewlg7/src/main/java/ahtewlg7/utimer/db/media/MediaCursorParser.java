@@ -37,13 +37,13 @@ public class MediaCursorParser {
     }
 
     public ImageMediaInfo getImageMediaInfo(Cursor cursor){
-        long size = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media.SIZE));
-        String title = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.TITLE));
-        String url = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+//        long size = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media.SIZE));
+        String title = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.TITLE)).trim();
+        String url = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA)).trim();
         String displayName = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME));
         int mimeType = cursor.getInt(cursor.getColumnIndex(MediaStore.Images.Media.MIME_TYPE));
-        DateTime modifyTime = new DateTime(cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media.DATE_MODIFIED)));
-        DateTime addTime = new DateTime(cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media.DATE_ADDED)));
+//        DateTime modifyTime = new DateTime(cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media.DATE_MODIFIED)));
+//        DateTime addTime = new DateTime(cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media.DATE_ADDED)));
         DateTime dateTaken = new DateTime(cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media.DATE_TAKEN)));
 
         ImageMediaInfo imageMediaInfo = new ImageMediaInfo();

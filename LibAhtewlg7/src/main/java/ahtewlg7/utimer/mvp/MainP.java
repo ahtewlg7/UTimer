@@ -5,29 +5,28 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 
-import com.blankj.utilcode.util.Utils;
-import com.bumptech.glide.Glide;
 import com.google.common.base.Optional;
-
-import java.io.File;
 
 import ahtewlg7.utimer.common.MediaKvAction;
 import ahtewlg7.utimer.entity.material.MediaInfo;
 import ahtewlg7.utimer.factory.MdBuildFactory;
 import ahtewlg7.utimer.state.GtdMachine;
 import ahtewlg7.utimer.util.MySimpleObserver;
-import io.reactivex.Observable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.PublishSubject;
 
 public class MainP {
     private MainM m;
     private IMainV v;
+    private PublishSubject<MediaInfo> mediaInfoRx;
 
     public MainP(@NonNull IMainV v){
         this.v = v;
-        m = new MainM();
+        m      = new MainM();
+        mediaInfoRx = PublishSubject.create();
+
+        toListenNewMedia();
     }
 
     public void toCreateDeeds(String title, String detail){
@@ -39,30 +38,16 @@ public class MainP {
             m.toCreateDeeds(title,title);
     }
 
-    public void toHandleMediaSelected(@NonNull Observable<MediaInfo> mediaInfoRx){
+    public void toHandleMediaSelected(@NonNull MediaInfo mediaInfo){
+        mediaInfoRx.onNext(mediaInfo);
+    }
+
+    private void toListenNewMedia(){
         mediaInfoRx.subscribeOn(Schedulers.computation())
-                .doOnNext(new Consumer<MediaInfo>() {
-                    @Override
-                    public void accept(MediaInfo mediaInfo) throws Exception {
-                        try{
-                            Glide.with(Utils.getApp()).asDrawable().load(new File(mediaInfo.getUrl())).submit().get();
-                        }catch (Exception e){
-                            e.printStackTrace();
-                        }
-                    }
-                })
                 .filter(new Predicate<MediaInfo>() {
                     @Override
                     public boolean test(MediaInfo mediaInfo) throws Exception {
-                        boolean filter = false;
-                        try{
-                            if(!TextUtils.isEmpty(mediaInfo.getUrl()))
-                                filter =  MediaKvAction.getInstance().ifContain(mediaInfo.getUrl())
-                                        || mediaInfo.getUrl().startsWith(Utils.getApp().getExternalFilesDir(null).getAbsolutePath());
-                        }catch (Exception e){
-                            e.printStackTrace();
-                        }
-                        return !filter;
+                        return !TextUtils.isEmpty(mediaInfo.getUrl()) && !MediaKvAction.getInstance().ifContain(mediaInfo.getUrl());
                     }
                 })
                 .subscribe(new MySimpleObserver<MediaInfo>() {
