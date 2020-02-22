@@ -1,5 +1,6 @@
 package ahtewlg7.utimer.md;
 
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.text.Spannable;
@@ -15,12 +16,14 @@ import android.text.style.URLSpan;
 import android.util.Patterns;
 import android.view.View;
 
+import com.blankj.utilcode.util.ImageUtils;
 import com.blankj.utilcode.util.Utils;
 import com.bumptech.glide.Glide;
 
 import java.io.File;
 
 import ahtewlg7.utimer.entity.md.EditElement;
+import ahtewlg7.utimer.factory.ThumbnailFactory;
 import ahtewlg7.utimer.span.ClickableImageSpan;
 import ahtewlg7.utimer.util.Logcat;
 import in.uncod.android.bypass.Bypass;
@@ -28,8 +31,6 @@ import in.uncod.android.bypass.Document;
 import in.uncod.android.bypass.Element;
 import in.uncod.android.bypass.ReverseSpannableStringBuilder;
 import in.uncod.android.bypass.style.HorizontalLineSpan;
-
-import static android.text.style.DynamicDrawableSpan.ALIGN_BOTTOM;
 
 /**
  * Created by lw on 2016/6/2.
@@ -110,14 +111,14 @@ public class MyBypass extends Bypass{
 
         // Retrieve the image now so we know whether we're going to have something to display later
         // If we don't, then show the alt text instead (if available).
-        Drawable imageDrawable = null;
+        Bitmap imageBitmap = null;
         //add by lw, 20160608
         if(imageGetter == null)
             Logcat.d(TAG,"recurseElement: imageGetter == null");
         //add end
         String link = element.getAttribute("link");
         if (type == Element.Type.IMAGE && imageGetter != null && !TextUtils.isEmpty(link)) {
-            imageDrawable = imageGetter.getDrawable(element);
+            imageBitmap = imageGetter.getBitmap(element);
         }
 
         switch (type) {
@@ -164,7 +165,7 @@ public class MyBypass extends Bypass{
                     builder.append(show);
                 }
 //                    // Character to be replaced
-                if(imageDrawable != null)
+                if(imageBitmap != null)
                     builder.append("\uFFFC");
                 break;
         }
@@ -249,8 +250,8 @@ public class MyBypass extends Bypass{
                 setSpan(builder, new HorizontalLineSpan(mOptions.mHruleColor, mHruleSize, mHruleTopBottomPadding));
                 break;
             case IMAGE:
-                if (imageDrawable != null) {
-                    setImageSpan(builder, new ClickableImageSpan(imageDrawable, ALIGN_BOTTOM) {
+                if(imageBitmap != null){
+                    setImageSpan(builder, new ClickableImageSpan(imageBitmap) {
                         public void onClick(View view) {
                             Logcat.d(TAG, "clickableSpan onClick");
                             if (spanClickListener != null)
@@ -266,7 +267,8 @@ public class MyBypass extends Bypass{
     private void setImageSpan(SpannableStringBuilder builder, Object what) {
         builder.setSpan(what, builder.length() - 1, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
-    public class MyImageGetter implements ImageGetter {
+
+    public class MyImageGetter implements Bypass.ImageGetter {
         public Drawable getDrawable(Element element) {
             return getDrawable(element.getAttribute("link"));
         }
@@ -279,9 +281,29 @@ public class MyBypass extends Bypass{
                 drawable = Glide.with(Utils.getApp()).asDrawable().load(file).submit().get();
                 drawable.setBounds(0, 0, 500, 700);
             } catch (Exception e) {
-                e.printStackTrace();
+                 e.printStackTrace();
             }
             return drawable;
+        }
+
+        public Bitmap getBitmap(Element element) {
+            return getBitmap(element.getAttribute("link").trim());
+        }
+
+        @Override
+        public Bitmap getBitmap(String source) {
+            Bitmap bitmap = null;
+            try{
+                if (ThumbnailFactory.getInstance().containsKey(source)) {
+                    bitmap = ThumbnailFactory.getInstance().getValue(source);
+                }else{
+                    bitmap = ImageUtils.getBitmap(source,500,500);
+                    ThumbnailFactory.getInstance().put(source, bitmap);
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            return bitmap;
         }
     }
     public static interface SpanClickListener {
