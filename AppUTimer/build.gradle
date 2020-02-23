@@ -8,8 +8,8 @@ android {
     defaultConfig {
         applicationId "com.utimer"
         minSdkVersion 24
-        versionCode 37
-        versionName "0.02.05"
+        versionCode 38
+        versionName "0.02.06"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
