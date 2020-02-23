@@ -50,16 +50,16 @@ public class FastInboxNotifyAction {
         notifyIntentReceiver    = new NotifyIntentReceiver(service);
     }
 
-    public boolean isIfListening() {
+    public boolean ifListening() {
         return ifListening;
     }
 
-    public void toEnableFastInboxNotify(){
+    public void toStartFastInboxNotify(){
         Notification notification = getNotification();
         notification.flags |= Notification.FLAG_ONGOING_EVENT;
         notifyAction.toStartNotify(ID_NOTIFY_FAST_INBOX, NAME_NOTIFY_FAST_INBOX, notification);
     }
-    public void toDisableFastInboxNotify(){
+    public void toStopFastInboNotify(){
         notifyAction.toStopNotify(ID_NOTIFY_FAST_INBOX);
     }
 
@@ -108,8 +108,8 @@ public class FastInboxNotifyAction {
                 if(!TextUtils.isEmpty(inputStuff))
                     GtdMachine.getInstance().getCurrState(null).toInbox(inputStuff, inputStuff);
             }
-            toDisableFastInboxNotify();
-            toEnableFastInboxNotify();
+            toStopFastInboNotify();
+            toStartFastInboxNotify();
         }
     }
 }

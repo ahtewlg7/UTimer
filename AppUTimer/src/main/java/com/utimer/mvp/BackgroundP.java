@@ -68,11 +68,11 @@ public class BackgroundP {
 
         void toStartNotify(){
             notifyAction.toStartListen();
-            notifyAction.toEnableFastInboxNotify();
+            notifyAction.toStartFastInboxNotify();
         }
         void toStopNotify(){
             notifyAction.toStopListen();
-            notifyAction.toDisableFastInboxNotify();
+            notifyAction.toStopFastInboNotify();
         }
     }
 
