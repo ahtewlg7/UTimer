@@ -15,14 +15,16 @@
 
         <service android:name="com.utimer.ui.BaseBinderService" />
 
-        <activity android:name="com.utimer.ui.WelcomeActivity">
+        <activity android:name="com.utimer.ui.WelcomeActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name="com.utimer.ui.UTimerActivity"/>
+        <activity android:name="com.utimer.ui.UTimerActivity"
+            android:screenOrientation="portrait"/>
 
     </application>
 </manifest>
