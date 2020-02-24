@@ -1,19 +1,19 @@
 package ahtewlg7.utimer.enumtype;
 
 public enum DeedState {
-    MAYBE(0, 1),//it may be parse by ai，but sometime it is not correct.
+    MAYBE(0, 8),//it may be parse by ai，but sometime it is not correct.
     TRASH(1, 11),
-    INBOX(2,0),
-    REFERENCE(10, 8),
-    WISH(4, 7),
-    ONE_QUARTER(5, 3),
-    PROJECT(6, 6),
-    DEFER(7, 4),
+    INBOX(2,7),
+    REFERENCE(10, 6),
+    WISH(4, 5),
+    ONE_QUARTER(5, 1),
+    PROJECT(6, 4),
+    DEFER(7, 2),
     CALENDAR(8, 12),//Deprecated： it is not used
-    DELEGATE(9, 5),
+    DELEGATE(9, 3),
     DONE(3, 9),
     USELESS(11, 10),
-    SCHEDULE(12, 2);
+    SCHEDULE(12, 0);
 
     private int value;
     private int order;
@@ -75,31 +75,31 @@ public enum DeedState {
         switch (index){
             default:
             case 0:
-                tmp = INBOX;
-                break;
-            case 1:
-                tmp = MAYBE;
-                break;
-            case 2:
                 tmp = SCHEDULE;
                 break;
-            case 3:
+            case 1:
                 tmp = ONE_QUARTER;
                 break;
-            case 4:
+            case 2:
                 tmp = DEFER;
                 break;
-            case 5:
+            case 3:
                 tmp = DELEGATE;
                 break;
-            case 6:
+            case 4:
                 tmp = PROJECT;
                 break;
-            case 7:
+            case 5:
                 tmp = WISH;
                 break;
-            case 8:
+            case 6:
                 tmp = REFERENCE;
+                break;
+            case 7:
+                tmp = INBOX;
+                break;
+            case 8:
+                tmp = MAYBE;
                 break;
             case 9:
                 tmp = DONE;
