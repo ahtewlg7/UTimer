@@ -63,7 +63,7 @@ dependencies {
 
     implementation 'androidx.appcompat:appcompat:1.0.2'
 
-    implementation 'org.greenrobot:greendao:3.2.2'
+    implementation 'org.greenrobot:greendao:3.3.0'
 
     api 'com.alibaba:fastjson:1.1.71.android'
 
