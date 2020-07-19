@@ -5,6 +5,9 @@ import android.graphics.BlurMaskFilter;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.text.TextUtils;
 import android.view.View;
@@ -15,7 +18,10 @@ import com.haibin.calendarview.WeekView;
 import com.utimer.R;
 import com.utimer.common.CalendarSchemeFactory;
 
+import org.joda.time.LocalDate;
+
 import ahtewlg7.utimer.entity.gtd.DeedSchemeEntity;
+import ahtewlg7.utimer.util.DateTimeAction;
 import ahtewlg7.utimer.util.MyRInfo;
 
 import static ahtewlg7.utimer.entity.gtd.DeedSchemeEntity.INVALID_PROGRESS;
@@ -24,6 +30,11 @@ public class CalendarWeekView extends WeekView {
 
 
     private int mRadius;
+
+    /**
+     *  背景当前年/月画笔
+     */
+    private Paint mBackgroundPaint = new Paint();
 
     /**
      * 自定义魅族标记的文本画笔
@@ -68,10 +79,17 @@ public class CalendarWeekView extends WeekView {
 
     private float mSchemeBaseLine;
 
+    private DateTimeAction dateTimeAction;
     private CalendarSchemeFactory calendarInfoFactory;
 
     public CalendarWeekView(Context context) {
         super(context);
+        mBackgroundPaint.setTextSize(dipToPx(context, 40));
+        mBackgroundPaint.setColor(MyRInfo.getColorByID(R.color.color_stand_c4));
+        mBackgroundPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OVER));
+        mBackgroundPaint.setAntiAlias(true);
+        mBackgroundPaint.setFakeBoldText(true);
+
         mTextPaint.setTextSize(dipToPx(context, 8));
         mTextPaint.setColor(0xffffffff);
         mTextPaint.setAntiAlias(true);
@@ -124,6 +142,7 @@ public class CalendarWeekView extends WeekView {
         setLayerType(View.LAYER_TYPE_SOFTWARE, mSchemeBasicPaint);
         mSchemeBasicPaint.setMaskFilter(new BlurMaskFilter(28, BlurMaskFilter.Blur.SOLID));
 
+        dateTimeAction      = new DateTimeAction();
         calendarInfoFactory = new CalendarSchemeFactory();
     }
 
@@ -137,6 +156,8 @@ public class CalendarWeekView extends WeekView {
 
     @Override
     protected boolean onDrawSelected(Canvas canvas, Calendar calendar, int x, boolean hasScheme) {
+        toDrawCalendar(canvas, calendar);
+
         int cx = x + mItemWidth / 2;
         int cy = mItemHeight / 2;
         canvas.drawCircle(cx, cy, mRadius, mSelectedPaint);
@@ -218,5 +239,19 @@ public class CalendarWeekView extends WeekView {
     private static int dipToPx(Context context, float dpValue) {
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);
+    }
+
+
+    /**
+     * 绘制当前年/月
+     */
+    private void toDrawCalendar(Canvas canvas, Calendar calendar){
+        Rect bounds = new Rect();
+        String msg  = dateTimeAction.toFormat(new LocalDate(calendar.getYear(),calendar.getMonth(),calendar.getDay()));
+
+        mBackgroundPaint.getTextBounds(msg, 0, msg.length(), bounds);
+        Paint.FontMetricsInt fontMetrics = mBackgroundPaint.getFontMetricsInt();
+        int baseline = (getMeasuredHeight() - fontMetrics.bottom + fontMetrics.top) / 2 - fontMetrics.top;
+        canvas.drawText(msg,getMeasuredWidth() / 2 - bounds.width() / 2, baseline, mBackgroundPaint);
     }
 }
